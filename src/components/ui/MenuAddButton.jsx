@@ -1,19 +1,61 @@
+import { useState } from "react";
 import {useTranslation} from "react-i18next";
 
 function MenuAddButton({onClick}){
-    const {t} = useTranslation();
-    return (
-        <>
-            <button className="button-26 z-10" role="button" onClick={onClick}>
-                <div className="button-26__content">
-                    <span className="button-26__text flex flex-col justify-center items-center gap-3 text">
-                       {<img src={"/images/add.png"} alt={"addNewButton"} className="w-12 h-12"/>}
-                        <p className="text-sm">{t("buttons.addNew")}</p>
-                    </span>
-                </div>
-            </button>
-        </>
-    )
+    const [pressed, setPressed] = useState(false);
+
+  const handleClick = () => {
+    setPressed(true);
+    setTimeout(() => setPressed(false), 150);
+    onClick?.();
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      role="button"
+      className={`
+        relative z-10 flex flex-col items-center justify-center gap-2
+        w-24 h-24
+        rounded-2xl cursor-pointer select-none overflow-hidden
+        border border-white/25
+        bg-white/10
+        shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
+        backdrop-blur-md
+        transition-all duration-200 ease-out
+        hover:bg-white/20 hover:border-white/40 hover:-translate-y-0.5
+        hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_12px_40px_rgba(0,0,0,0.3)]
+        active:translate-y-0 active:scale-95 active:bg-white/15
+        ${pressed ? "scale-95" : "scale-100"}
+      `}
+    >
+      {/* Top glare streak */}
+      <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+      {/* Inner light sheen */}
+      <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/15 via-transparent to-white/5" />
+
+      {/* + Icon */}
+      <span className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-white/15 border border-white/20 shadow-inner">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-5 h-5 text-white drop-shadow"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      </span>
+
+      {/* Label */}
+      <span className="relative text-[11px] font-light tracking-wide text-white/90 drop-shadow text-center leading-tight px-1">
+        Add New
+      </span>
+    </button>
+  );
 }
 
 export default MenuAddButton;

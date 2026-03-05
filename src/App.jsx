@@ -19,12 +19,14 @@ import MenuAdmin from "./pages/menu/MenuAdmin.jsx";
 import DepartmentList from "./pages/department/DepartmentList.jsx";
 import MenuTvFetched from "./pages/menu/MenuTvFetched.jsx";
 import ProductionLineList from "./pages/productionLine/ProductionLineList.jsx";
+import MenuTesting from "./pages/menu/MenuTesing.jsx";
 
 function App() {
   return (
     <Suspense fallback={<p>Loading</p>}>
         <Routes>
-
+          {/* Testing routes */}
+          <Route path="/admin-menu-testing" element={<MenuTesting/>}/>
           {/* Public routes */}
           <Route path="/" element={<Navigate to="/login" replace />}/>
           <Route path="/login" element={<Login/>}/>
