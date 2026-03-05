@@ -1,0 +1,55 @@
+{
+  "name": "이름",
+  "validation": {
+    "required": "필수"
+  },
+  "user": {
+    "title": "사용자",
+    "management": "사용자 관리",
+    "profile": "사용자 프로필",
+    "settings": "사용자 설정"
+  },
+  "status": {
+    "soon": "출시 예정",
+    "available": "사용 가능",
+    "unavailable": "사용 불가"
+  },
+  "profile": {
+    "title": "프로필",
+    "logout": "로그아웃"
+  },
+  "tv": {
+    "create": "TV 생성",
+    "title": "TV",
+    "dashboard": "TV 대시보드"
+  },
+  "product": {
+    "title": "제품",
+    "realStatus": "제품 실제 상태",
+    "line": "생산 라인"
+  },
+  "manage": {
+    "department": "부서 관리",
+    "shift": "교대 관리"
+  },
+  "master": {
+    "dataSetup": "마스터 데이터 설정"
+  },
+  "buttons": {
+    "addNew": "새로 추가"
+  },
+  "department": {
+    "create": "부서 생성"
+  },
+  "table": {
+    "createdAt": "생성일",
+    "rowPerPage": "페이지당 행 수",
+    "id": "ID",
+    "action": "작업",
+    "view": "보기",
+    "edit": "편집",
+    "delete": "삭제",
+    "noData": "데이터 없음",
+    "updatedAt": "수정일"
+  }
+}

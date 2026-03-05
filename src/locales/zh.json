@@ -1,0 +1,55 @@
+{
+  "name": "姓名",
+  "validation": {
+    "required": "必填"
+  },
+  "user": {
+    "title": "用户",
+    "management": "用户管理",
+    "profile": "用户资料",
+    "settings": "用户设置"
+  },
+  "status": {
+    "soon": "即将推出",
+    "available": "可用",
+    "unavailable": "不可用"
+  },
+  "profile": {
+    "title": "个人资料",
+    "logout": "退出登录"
+  },
+  "tv": {
+    "create": "创建电视",
+    "title": "电视",
+    "dashboard": "电视仪表板"
+  },
+  "product": {
+    "title": "产品",
+    "realStatus": "产品真实状态",
+    "line": "生产线"
+  },
+  "manage": {
+    "department": "管理部门",
+    "shift": "管理班次"
+  },
+  "master": {
+    "dataSetup": "主数据设置"
+  },
+  "buttons": {
+    "addNew": "添加新项"
+  },
+  "department": {
+    "create": "创建部门"
+  },
+  "table": {
+    "createdAt": "创建时间",
+    "rowPerPage": "每页行数",
+    "id": "ID",
+    "action": "操作",
+    "view": "查看",
+    "edit": "编辑",
+    "delete": "删除",
+    "noData": "暂无数据",
+    "updatedAt": "更新时间"
+  }
+}

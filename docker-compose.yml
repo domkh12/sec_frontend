@@ -1,0 +1,16 @@
+services:
+  sec_website:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sec_website
+    image: sec_website
+    ports:
+      - "8766:80"
+    restart: unless-stopped
+    networks:
+      - sec-net
+
+networks:
+  sec-net:
+    driver: bridge

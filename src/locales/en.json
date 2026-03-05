@@ -1,0 +1,55 @@
+{
+  "name": "Name",
+  "validation": {
+    "required": "Required"
+  },
+  "user": {
+    "title": "User",
+    "management": "User Management",
+    "profile": "User Profile",
+    "settings": "User Settings"
+  },
+  "status": {
+    "soon": "Coming Soon",
+    "available": "Available",
+    "unavailable": "Unavailable"
+  },
+  "profile": {
+    "title": "Profile",
+    "logout": "Logout"
+  },
+  "tv": {
+    "create": "Create TV",
+    "title": "TV",
+    "dashboard": "TV Dashboard"
+  },
+  "product": {
+    "title": "Product",
+    "realStatus": "Product Real Status",
+    "line": "Production Line"
+  },
+  "manage": {
+    "department": "Manage Department",
+    "shift": "Manage Shift"
+  },
+  "master": {
+    "dataSetup": "Master Data Setup"
+  },
+  "buttons": {
+    "addNew": "Add New"
+  },
+  "department": {
+    "create": "Create Department"
+  },
+  "table": {
+    "createdAt": "Created At",
+    "rowPerPage": "Rows per page",
+    "id": "ID",
+    "action": "Action",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "noData": "No data available",
+    "updatedAt": "Updated At"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "Pangalan",
+  "validation": {
+    "required": "Kinakailangan"
+  },
+  "user": {
+    "title": "User",
+    "management": "Pamamahala ng User",
+    "profile": "Profile ng User",
+    "settings": "Mga Setting ng User"
+  },
+  "status": {
+    "soon": "Paparating Na",
+    "available": "Available",
+    "unavailable": "Hindi Available"
+  },
+  "profile": {
+    "title": "Profile",
+    "logout": "Mag-logout"
+  },
+  "tv": {
+    "create": "Lumikha ng TV",
+    "title": "TV",
+    "dashboard": "TV Dashboard"
+  },
+  "product": {
+    "title": "Produkto",
+    "realStatus": "Tunay na Status ng Produkto",
+    "line": "Production Line"
+  },
+  "manage": {
+    "department": "Pamahalaan ang Department"
+  },
+  "master": {
+    "dataSetup": "Master Data Setup",
+    "shift": "Pamahalaan ang Shift"
+  },
+  "buttons": {
+    "addNew": "Magdagdag ng Bago"
+  },
+  "department": {
+    "create": "Lumikha ng Departamento"
+  },
+  "table": {
+    "createdAt": "Nilikha Noong",
+    "rowPerPage": "Mga hilera bawat pahina",
+    "id": "ID",
+    "action": "Aksyon",
+    "view": "Tingnan",
+    "edit": "I-edit",
+    "delete": "Tanggalin",
+    "noData": "Walang available na data",
+    "updatedAt": "Na-update Noong"
+  }
+}
