@@ -1,5 +1,13 @@
 {
   "name": "Name",
+  "system": "System",
+  "materials": "Materials",
+  "dataSetup": "Data Setup",
+  "administration": "Administration",
+  "settings": "Settings",
+  "auditLog": "Audit Log",
+  "roles": "Roles",
+  "accessControl": "Access Control",
   "validation": {
     "required": "Required"
   },
@@ -24,7 +32,7 @@
     "dashboard": "TV Dashboard"
   },
   "product": {
-    "title": "Product",
+    "title": "Products",
     "realStatus": "Product Real Status",
     "line": "Production Line"
   },
@@ -32,14 +40,12 @@
     "department": "Manage Department",
     "shift": "Manage Shift"
   },
-  "master": {
-    "dataSetup": "Master Data Setup"
-  },
   "buttons": {
     "addNew": "Add New"
   },
   "department": {
-    "create": "Create Department"
+    "create": "Create Department",
+    "title": "Dept"
   },
   "table": {
     "createdAt": "Created At",
@@ -50,6 +56,14 @@
     "edit": "Edit",
     "delete": "Delete",
     "noData": "No data available",
-    "updatedAt": "Updated At"
+    "updatedAt": "Updated At",
+    "workers": "Workers",
+    "target": "Target",
+    "actual": "Actual",
+    "efficiency": "Efficiency",
+    "department": "Department"
+  },
+  "factory": {
+    "structure": "Factory Structure"
   }
 }

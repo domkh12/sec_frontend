@@ -5,6 +5,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import utilReducer from "../feature/util/utilSlice.js"
 import tvReducer from "../feature/tv/tvSlice.js"
 import departmentReducer from "../feature/department/departmentSlice.js"
+import productionReducer from "../feature/productionLine/productionLineSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
     auth: authReducer,
     util: utilReducer,
     tv: tvReducer,
-    department: departmentReducer
+    department: departmentReducer,
+    productionLine: productionReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

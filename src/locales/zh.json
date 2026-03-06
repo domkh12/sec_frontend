@@ -1,5 +1,13 @@
 {
   "name": "姓名",
+  "system": "系统",
+  "materials": "材料",
+  "dataSetup": "主数据设置",
+  "administration": "管理",
+  "settings": "设置",
+  "auditLog": "审计日志",
+  "roles": "角色",
+  "accessControl": "访问控制",
   "validation": {
     "required": "必填"
   },
@@ -32,14 +40,12 @@
     "department": "管理部门",
     "shift": "管理班次"
   },
-  "master": {
-    "dataSetup": "主数据设置"
-  },
   "buttons": {
     "addNew": "添加新项"
   },
   "department": {
-    "create": "创建部门"
+    "create": "创建部门",
+    "title": "部门"
   },
   "table": {
     "createdAt": "创建时间",
@@ -50,6 +56,13 @@
     "edit": "编辑",
     "delete": "删除",
     "noData": "暂无数据",
-    "updatedAt": "更新时间"
+    "updatedAt": "更新时间",
+    "workers": "工人",
+    "target": "目标",
+    "actual": "实际",
+    "efficiency": "效率"
+  },
+  "factory": {
+    "structure": "工厂结构"
   }
 }

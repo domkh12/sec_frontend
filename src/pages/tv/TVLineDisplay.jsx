@@ -126,7 +126,10 @@ function TVLineDisplay() {
     useEffect(() => {
         const tick = () => {
             const now = new Date();
-            setCurrentTime(now.toLocaleTimeString("en-US", { hour12: false }));
+            setCurrentTime(now.toLocaleTimeString("en-US", { 
+                hour12: false,
+                timeZone: "Asia/Phnom_Penh"  // ← add this
+            }));
         };
         tick();
         const id = setInterval(tick, 1000);

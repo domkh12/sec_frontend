@@ -1,7 +1,15 @@
 {
   "name": "ឈ្មោះ",
+  "system": "ប្រព័ន្ធ",
+  "materials": "សម្ភារៈ",
+  "settings": "ការកំណត់",
+  "dataSetup": "ការរៀបចំទិន្នន័យមេ",
+  "administration": "រដ្ឋបាល",
+  "auditLog": "កំណត់ត្រាសវនកម្ម",
+  "roles": "តួនាទី",
+  "accessControl": "ការគ្រប់គ្រងការចូលប្រើ",
   "validation": {
-    "required": "ត្រូវការបំពេញ"
+    "required": "ត្រូវការ"
   },
   "user": {
     "title": "អ្នកប្រើប្រាស់",
@@ -32,14 +40,12 @@
     "department": "គ្រប់គ្រងនាយកដ្ឋាន",
     "shift": "គ្រប់គ្រងវេន"
   },
-  "master": {
-    "dataSetup": "ការរៀបចំទិន្នន័យមេ"
-  },
   "buttons": {
     "addNew": "បន្ថែមថ្មី"
   },
   "department": {
-    "create": "បង្កើតនាយកដ្ឋាន"
+    "create": "បង្កើតនាយកដ្ឋាន",
+    "title": "នាយកដ្ឋាន"
   },
   "table": {
     "createdAt": "បង្កើតនៅ",
@@ -50,6 +56,13 @@
     "edit": "កែសម្រួល",
     "delete": "លុប",
     "noData": "មិនមានទិន្នន័យ",
-    "updatedAt": "ធ្វើបច្ចុប្បន្នភាពនៅ"
+    "updatedAt": "ធ្វើបច្ចុប្បន្នភាពនៅ",
+    "workers": "កម្មករ",
+    "target": "គោលដៅ",
+    "actual": "ជាក់ស្តែង",
+    "efficiency": "ប្រសិទ្ធភាព"
+  },
+  "factory": {
+    "structure": "រចនាសម្ព័ន្ធរោងចក្រ"
   }
 }

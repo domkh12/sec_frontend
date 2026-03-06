@@ -58,7 +58,7 @@ function DepartmentList(){
     }
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required(t("validation.required"))
+        department: Yup.string().required(t("validation.required"))
     });
 
     const handleSubmit = async (values, {resetForm}) => {
@@ -66,13 +66,13 @@ function DepartmentList(){
             if (departmentDataForUpdate) {
                  await updateDept({
                     id: departmentDataForUpdate.id,
-                    name: values.name,
+                    department: values.department,
                 }).unwrap();
                 dispatch(setAlertDept({type: "success", message: "Update successfully"}));
                 dispatch(setDepartmentDataForUpdate(null));
             }else {
                 await createDept({
-                    name: values.name,
+                    department: values.department,
                 }).unwrap();
                 dispatch(setAlertDept({type: "success", message: "Create successfully"}));
             }
@@ -86,11 +86,11 @@ function DepartmentList(){
     };
 
     const fields = [
-        { name: "name",     label: "name",     type: "text" },
+        { name: "department",     label: "table.department",     type: "text" },
     ];
 
     const initialValues ={
-        name: ""
+        department: ""
     }
 
     const handleEdit = (row) => {
@@ -125,8 +125,8 @@ function DepartmentList(){
             align: "left",
         },
         {
-            id: "name",
-            label: t("name"),
+            id: "department",
+            label: t("department.title"),
             minWidth: 130,
             align: "left",
         },
@@ -150,13 +150,22 @@ function DepartmentList(){
 
     if (isSuccess) content = (
         <div className="pb-10">
-            <CardList>
+            <div className={`
+                    relative z-10 gap-2
+                    px-5 py-2.5 m-2
+                    rounded-xl overflow-hidden
+                    border border-white/25
+                    bg-white/10
+                    shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
+                    backdrop-blur-md
+                    transition-all duration-200 ease-out
+                `}>
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditDepartment(true))}/>
                 </div>
                 <TableCus columns={columns} data={deptData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
-            </CardList>
+            </div>
             <DialogAddEditCus
                 fields={fields}
                 title={departmentDataForUpdate ? "Update Department" : "Create Department"}

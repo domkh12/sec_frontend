@@ -12,7 +12,7 @@ body{
 }
 
 .bg-main{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(".././images/bg.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.942), rgba(0, 0, 0, 0.827)),url(".././images/bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     min-height: 100vh;

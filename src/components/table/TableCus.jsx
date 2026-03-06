@@ -30,7 +30,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                                 key={col.id}
                                 align={col.align}
                                 style={{ minWidth: col.minWidth }}
-                                sx={{ border: "1px solid #ccc", textAlign: "center" }}
+                                sx={{ border: "1px solid #ccc", textAlign: "center", color: "white" }}
                             >
                                 {col.id === "action" ? (
                                     <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
@@ -72,7 +72,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                                         )}
                                     </Box>
                                 ) : (
-                                    entities[id][col.id] || ""
+                                    entities[id][col.id] || `—`
                                 )}
                             </TableCell>
                         ))}
@@ -89,8 +89,8 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
     );
 
     return (
-        <>
-            <TableContainer>
+        <div className="rounded-xl overflow-hidden">
+            <TableContainer sx={{ borderTopLeftRadius: "12px", borderTopRightRadius: "12px"}}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -122,7 +122,19 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
             <TablePagination
                 sx={{
                     border: "1px solid #ccc",
+                    borderEndStartRadius: "12px",
+                    borderEndEndRadius: "12px",
                     borderTop: "none",
+                    color: "white",
+                    "& .MuiTablePagination-actions button": {
+                        color: "white",
+                    },
+                    "& .MuiTablePagination-actions button.Mui-disabled": {
+                        color: "white",
+                    },
+                    "& .MuiSelect-icon": {
+                        color: "white",
+                    },
                 }}
                 rowsPerPageOptions={[20, 50, 100]}
                 component="div"
@@ -133,7 +145,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-        </>
+        </div>
     );
 }
 

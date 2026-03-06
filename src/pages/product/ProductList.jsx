@@ -13,7 +13,8 @@ import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useGe
 import { setAlertDept, setIsOpenDeleteDeptDialog, setIsOpenDialogAddOrEditProductionLine, setIsOpenSnackbarProductionLine, setPageNoProductionLine, setPageSizeProductionLine, setProductionLineDataForUpdate } from "../../redux/feature/productionLine/productionLineSlice.js";
 import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
 
-function ProductionLineList(){
+
+function ProductList() {
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
@@ -37,7 +38,6 @@ function ProductionLineList(){
         pageSize: 999
     });
     
-
     const handleChangePage = (event, newPage) => {
         dispatch(setPageNoProductionLine(newPage + 1));
     };
@@ -135,44 +135,44 @@ function ProductionLineList(){
 
     const columns = [
         {
-            id: "id",
-            label: t("id"),
+            id: "code",
+            label: t("code"),
             minWidth: 50,
             align: "left",
         },
         {
-            id: "line",
-            label: t("product.line"),
+            id: "styleName",
+            label: t("styleName"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "dept",
-            label: t("department.title"),
+            id: "category",
+            label: t("category"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "workers",
-            label: t("table.workers"),
+            id: "buyer",
+            label: t("buyer"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "target",
-            label: t("table.target"),
+            id: "smv",
+            label: t("smv"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "actual",
-            label: t("table.actual"),
+            id: "color",
+            label: t("color"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "efficiency",
-            label: t("table.efficiency"),
+            id: "status",
+            label: "status",
             minWidth: 130,
             align: "left",
         },
@@ -237,4 +237,4 @@ function ProductionLineList(){
     return content;
 }
 
-export default ProductionLineList;
+export default ProductList

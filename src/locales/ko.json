@@ -1,5 +1,13 @@
 {
   "name": "이름",
+  "system": "시스템",
+  "materials": "자재",
+  "dataSetup": "마스터 데이터 설정",
+  "administration": "관리",
+  "settings": "설정",
+  "auditLog": "감사 로그",
+  "roles": "역할",
+  "accessControl": "접근 제어",
   "validation": {
     "required": "필수"
   },
@@ -32,14 +40,12 @@
     "department": "부서 관리",
     "shift": "교대 관리"
   },
-  "master": {
-    "dataSetup": "마스터 데이터 설정"
-  },
   "buttons": {
     "addNew": "새로 추가"
   },
   "department": {
-    "create": "부서 생성"
+    "create": "부서 생성",
+    "title": "부서"
   },
   "table": {
     "createdAt": "생성일",
@@ -50,6 +56,13 @@
     "edit": "편집",
     "delete": "삭제",
     "noData": "데이터 없음",
-    "updatedAt": "수정일"
+    "updatedAt": "수정일",
+    "workers": "작업자",
+    "target": "목표",
+    "actual": "실제",
+    "efficiency": "효율"
+  },
+  "factory": {
+    "structure": "공장 구조"
   }
 }

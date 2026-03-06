@@ -1,5 +1,13 @@
 {
   "name": "Pangalan",
+  "system": "Sistema",
+  "settings": "Mga Setting",
+  "administration": "Administrasyon",
+  "dataSetup": "Pag-setup ng Master Data",
+  "auditLog": "Audit Log",
+  "roles": "Mga Papel",
+  "materials": "Mga Materyales",
+  "accessControl": "Kontrol sa Access",
   "validation": {
     "required": "Kinakailangan"
   },
@@ -10,7 +18,7 @@
     "settings": "Mga Setting ng User"
   },
   "status": {
-    "soon": "Paparating Na",
+    "soon": "Malapit Na",
     "available": "Available",
     "unavailable": "Hindi Available"
   },
@@ -25,21 +33,19 @@
   },
   "product": {
     "title": "Produkto",
-    "realStatus": "Tunay na Status ng Produkto",
-    "line": "Production Line"
+    "realStatus": "Tunay na Katayuan ng Produkto",
+    "line": "Linya ng Produksyon"
   },
   "manage": {
-    "department": "Pamahalaan ang Department"
-  },
-  "master": {
-    "dataSetup": "Master Data Setup",
+    "department": "Pamahalaan ang Departamento",
     "shift": "Pamahalaan ang Shift"
   },
   "buttons": {
     "addNew": "Magdagdag ng Bago"
   },
   "department": {
-    "create": "Lumikha ng Departamento"
+    "create": "Lumikha ng Departamento",
+    "title": "Dept"
   },
   "table": {
     "createdAt": "Nilikha Noong",
@@ -50,6 +56,13 @@
     "edit": "I-edit",
     "delete": "Tanggalin",
     "noData": "Walang available na data",
-    "updatedAt": "Na-update Noong"
+    "updatedAt": "Na-update Noong",
+    "workers": "Mga Manggagawa",
+    "target": "Target",
+    "actual": "Aktwal",
+    "efficiency": "Kahusayan"
+  },
+  "factory": {
+    "structure": "Istraktura ng Pabrika"
   }
 }
