@@ -21,6 +21,7 @@ import MenuTvFetched from "./pages/menu/MenuTvFetched.jsx";
 import ProductionLineList from "./pages/productionLine/ProductionLineList.jsx";
 import MenuTesting from "./pages/menu/MenuTesing.jsx";
 import ProductList from "./pages/product/ProductList.jsx";
+import Profile from "./pages/profile/Profile.jsx";
 
 function App() {
   return (
@@ -48,7 +49,8 @@ function App() {
                                   <Route index element={<MenuTv/>}/>
                                   <Route path=":name" element={<TVLineInput/>}/>
                               </Route>
-                               <Route path="products" element={<ProductList/>}/>
+                              <Route path="products" element={<ProductList/>}/>
+                              <Route path="profile" element={<Profile/>}/>
                           </Route>
                       </Route>
 
@@ -62,6 +64,7 @@ function App() {
                                   <Route path=":name" element={<TvDashboardDisplay/>}/>
                               </Route>
                               <Route path="products" element={<ProductList/>}/>
+                              <Route path="profile" element={<Profile/>}/>
                           </Route>
                       </Route>
 
@@ -69,6 +72,7 @@ function App() {
                           <Route path="/tv">
                               <Route index element={<LayoutTvOperator/>}/>
                               <Route path=":name" element={<TvDashboardDisplay/>}/>
+                              <Route path="profile" element={<Profile/>}/>
                           </Route>
                       </Route>
 

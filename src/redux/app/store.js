@@ -6,6 +6,7 @@ import utilReducer from "../feature/util/utilSlice.js"
 import tvReducer from "../feature/tv/tvSlice.js"
 import departmentReducer from "../feature/department/departmentSlice.js"
 import productionReducer from "../feature/productionLine/productionLineSlice.js"
+import productReducer from "../feature/product/productSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
     util: utilReducer,
     tv: tvReducer,
     department: departmentReducer,
-    productionLine: productionReducer
+    productionLine: productionReducer,
+    product: productReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

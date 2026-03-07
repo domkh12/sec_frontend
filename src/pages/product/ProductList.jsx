@@ -9,9 +9,10 @@ import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
-import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useGetProductionLineQuery, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
+import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
 import { setAlertDept, setIsOpenDeleteDeptDialog, setIsOpenDialogAddOrEditProductionLine, setIsOpenSnackbarProductionLine, setPageNoProductionLine, setPageSizeProductionLine, setProductionLineDataForUpdate } from "../../redux/feature/productionLine/productionLineSlice.js";
 import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
+import {useGetProductQuery} from "../../redux/feature/product/productApiSlice.js";
 
 
 function ProductList() {
@@ -19,17 +20,17 @@ function ProductList() {
     const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const pageNo = useSelector((state) => state.productionLine.pageNo);
-    const pageSize = useSelector((state) => state.productionLine.pageSize);
-    const productionlineDataForUpdate = useSelector((state) => state.productionLine.productionlineDataForUpdate);
-    const isOpen = useSelector((state) => state.productionLine.isOpenDialogAddOrEditProductionLine);
-    const isOpenSnackbar = useSelector((state) => state.productionLine.isOpenSnackbarProductionLine);
-    const alertDept = useSelector((state) => state.productionLine.alertDept);
-    const isOpenDeleteDialog = useSelector((state) => state.productionLine.isOpenDeleteDeptDialog);
+    const pageNo = useSelector((state) => state.product.pageNo);
+    const pageSize = useSelector((state) => state.product.pageSize);
+    const productionlineDataForUpdate = useSelector((state) => state.product.productionlineDataForUpdate);
+    const isOpen = useSelector((state) => state.product.isOpenDialogAddOrEditProductionLine);
+    const isOpenSnackbar = useSelector((state) => state.product.isOpenSnackbarProductionLine);
+    const alertDept = useSelector((state) => state.product.alertDept);
+    const isOpenDeleteDialog = useSelector((state) => state.product.isOpenDeleteDeptDialog);
     const[createDept] = useCreateProductionLineMutation();
     const [updateDept] = useUpdateProductionLineMutation();
     const [deleteDept] = useDeleteProductionLineMutation();
-    const {data: prodData, isLoading, isSuccess} = useGetProductionLineQuery({
+    const {data: prodData, isLoading, isSuccess} = useGetProductQuery({
         pageNo: pageNo,
         pageSize: pageSize
     });
@@ -141,7 +142,7 @@ function ProductList() {
             align: "left",
         },
         {
-            id: "styleName",
+            id: "name",
             label: t("styleName"),
             minWidth: 130,
             align: "left",

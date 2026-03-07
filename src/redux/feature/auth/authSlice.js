@@ -6,10 +6,14 @@ const authSlice = createSlice({
   // initial data
   initialState: {
     token: null,
+    profile: {}
   },
 
   // function
   reducers: {
+    setProfile: (state, action) => {
+      state.profile = action.payload;
+    },
     setCredentials: (state, action) => {
       const { accessToken } = action.payload;
       state.token = accessToken;
@@ -21,6 +25,7 @@ const authSlice = createSlice({
 });
 
 export const {
+  setProfile,
   setCredentials,
   logOut,
   setQrCodeUrl,

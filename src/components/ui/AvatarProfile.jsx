@@ -16,12 +16,15 @@ import PersonTwoToneIcon from '@mui/icons-material/PersonTwoTone';
 import useLocalStorage from "../../hook/useLocalStorage.jsx";
 import {useSendLogoutMutation} from "../../redux/feature/auth/authApiSlice.js";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 function AvatarProfile() {
     const { t } = useTranslation();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
+    const profile = useSelector((state) => state.auth.profile);
+    console.log(profile)
 
     const [sendLogout, { isLoading, isSuccess, isError, error }] =
         useSendLogoutMutation();
@@ -65,7 +68,7 @@ function AvatarProfile() {
     };
 
     const handleProfile = () => {
-        console.log('Go to profile');
+        navigate("profile");
         handleClose();
     };
 
@@ -88,15 +91,15 @@ function AvatarProfile() {
             >
                 <Avatar
                     src={user.avatar}
-                    alt={user.name}
+                    alt={profile.username}
                     sx={{ width: 40, height: 40 }}
                 />
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <Typography variant="body2" fontWeight={600}>
-                        {user.name}
+                        {profile.username}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                        {user.role}
+                        {profile.role}
                     </Typography>
                 </Box>
                 <KeyboardArrowDownIcon
@@ -123,10 +126,10 @@ function AvatarProfile() {
                 {/* User Info Header */}
                 <Box sx={{ px: 2, py: 1.5 }}>
                     <Typography variant="body2" fontWeight={600}>
-                        {user.name}
+                        {profile.username}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                        {user.role}
+                        {profile.role}
                     </Typography>
                 </Box>
 

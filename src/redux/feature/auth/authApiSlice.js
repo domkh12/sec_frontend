@@ -97,7 +97,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
 
     getUserProfile: builder.query({
       query: () => ({
-        url: `/auth/profiles`,
+        url: `/auth/me`,
       }),
       providesTags: (result, error, arg) => {
         if (result?.ids) {
@@ -108,7 +108,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
 
     updateUserProfile: builder.mutation({
       query: ({ ...initialUserData }) => ({
-        url: `/auth/profiles`,
+        url: `/auth/me`,
         method: "PUT",
         body: { ...initialUserData },
       }),
