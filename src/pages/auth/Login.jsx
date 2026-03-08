@@ -52,9 +52,9 @@ function Login() {
             if (authData.isRemember && authData.userRoles !== "") {
                 if (authData.userRoles === "ROLE_ADMIN") {
                     navigate("/admin");
-                } else if (authData.userRoles === "ROLE_PRODUCTION_MANAGER") {
+                } else if (authData.userRoles === "ROLE_HR_MANAGER") {
                     navigate("/manager");
-                } else if (authData.userRoles === "ROLE_TV_OPERATOR") {
+                } else if (authData.userRoles === "ROLE_VIEWER") {
                     navigate("/tv");
                 }
             }
@@ -63,7 +63,7 @@ function Login() {
     }, []);
 
     const validationSchema = Yup.object().shape({
-        username: Yup.string().required(("Username is requried")),
+        username: Yup.string().required(("Username is required")),
         password: Yup.string().required(("Password is required"))
     });
 
@@ -91,7 +91,7 @@ function Login() {
 
                 const roles = scope ? scope.split(" ") : [];
                 console.log(roles)
-                if (roles.includes(ROLES.ROLE_PRODUCTION_MANAGER)) {
+                if (roles.includes(ROLES.ROLE_HR_MANAGER)) {
                     try {
                         navigate("/manager");
                         saveLoginInfo(roles, username);
@@ -105,7 +105,7 @@ function Login() {
                     } catch (err) {
                         console.log(err);
                     }
-                } else if (roles.includes(ROLES.ROLE_TV_OPERATOR)) {
+                } else if (roles.includes(ROLES.ROLE_VIEWER)) {
                     try {
                         navigate("/tv");
                         saveLoginInfo(roles, username);

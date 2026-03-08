@@ -5,7 +5,7 @@ function DataNotFound() {
     return(
         <div className="flex flex-col gap-5 justify-center items-center p-5">
             <img src={"/images/no-data.png"} alt={"not found image"} className="w-1/10 hz-auto"/>
-            <p>{t("table.noData")}</p>
+            <p className="text-white">{t("table.noData")}</p>
         </div>
     )
 }

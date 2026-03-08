@@ -8,16 +8,16 @@ const productSlice = createSlice({
         isOpenDialogAddOrEditProduct: false,
         productDataForUpdate: null,
         isOpenSnackbarProduct: false,
-        isOpenDeleteDeptDialog: false,
-        alertDept: {type: "success", message: ""}
+        isOpenDeleteProductDialog: false,
+        alertProduct: {type: "success", message: ""}
 
     },
     reducers: {
-        setIsOpenDeleteDeptDialog: (state, action) => {
-            state.isOpenDeleteDeptDialog = action.payload;
+        setIsOpenDeleteProductDialog: (state, action) => {
+            state.isOpenDeleteProductDialog = action.payload;
         },
-        setAlertDept: (state, action) => {
-            state.alertDept = action.payload;
+        setAlertProduct: (state, action) => {
+            state.alertProduct = action.payload;
         },
         setIsOpenSnackbarProduct: (state, action) => {
             state.isOpenSnackbarProduct = action.payload;
@@ -38,8 +38,8 @@ const productSlice = createSlice({
 });
 
 export const {
-    setIsOpenDeleteDeptDialog,
-    setAlertDept,
+    setIsOpenDeleteProductDialog,
+    setAlertProduct,
     setIsOpenSnackbarProduct,
     setProductDataForUpdate,
     setIsOpenDialogAddOrEditProduct,

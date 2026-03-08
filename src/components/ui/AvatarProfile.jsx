@@ -24,7 +24,6 @@ function AvatarProfile() {
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
     const profile = useSelector((state) => state.auth.profile);
-    console.log(profile)
 
     const [sendLogout, { isLoading, isSuccess, isError, error }] =
         useSendLogoutMutation();

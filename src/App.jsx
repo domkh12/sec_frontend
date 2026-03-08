@@ -41,7 +41,7 @@ function App() {
                   <Route element={<Prefetch/>}>
 
                       {/* Start dash manager */}
-                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_PRODUCTION_MANAGER]}/>}>
+                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_HR_MANAGER]}/>}>
                           <Route path="/manager" element={<LayoutManager/>}>
                               <Route index element={<MenuManager/>}/>
                               <Route path="users" element={<UserList/>}/>
@@ -68,7 +68,7 @@ function App() {
                           </Route>
                       </Route>
 
-                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_TV_OPERATOR]}/>}>
+                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_VIEWER]}/>}>
                           <Route path="/tv">
                               <Route index element={<LayoutTvOperator/>}/>
                               <Route path=":name" element={<TvDashboardDisplay/>}/>

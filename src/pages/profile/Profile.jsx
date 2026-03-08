@@ -1,208 +1,270 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { t } from "i18next";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import {Button, Stack, Typography, Box, Avatar, Divider, TextField} from "@mui/material";
+
 import CardList from "../../components/ui/CardList.jsx";
 import CardGlassBlur2 from "../../components/ui/CardGlassBlur2.jsx";
 import InputFileUpload from "../../components/ui/InputFileUpload.jsx";
-import { useSelector } from "react-redux";
 import BackButton from "../../components/ui/BackButton.jsx";
-import {useNavigate} from "react-router-dom";
+import { useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSlice.js";
 
+// ── Validation Schema ──────────────────────────────────────────────────────────
+const validationSchema = Yup.object({
+    firstName: Yup.string().required(t("validation.required")),
+    lastName:  Yup.string().required(t("validation.required")),
+    phone:     Yup.string().matches(/^\+?[0-9\s\-()]{7,20}$/, t("validation.invalidPhone")),
+    birthday: Yup.mixed()
+        .nullable()
+        .test("valid-date", t("validation.invalidDate"), (val) =>
+            val === null || dayjs(val).isValid()
+        ),
+});
+
+// ── Shared MUI TextField style ─────────────────────────────────────────────────
+const fieldSx = {
+    "& .MuiOutlinedInput-root": {
+        borderRadius: "12px",
+        background: "rgba(255,255,255,0.04)",
+        "& fieldset": { borderColor: "rgba(255,255,255,0.08)" },
+        "&:hover fieldset": { borderColor: "rgba(6,182,212,0.4)" },
+        "&.Mui-focused fieldset": { borderColor: "rgba(6,182,212,0.6)" },
+    },
+    "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.4)", fontSize: 12 },
+    "& .MuiInputLabel-root.Mui-focused": { color: "rgb(6,182,212)" },
+    "& .MuiOutlinedInput-input": { color: "#e2e8f0", fontSize: 14 },
+    "& .MuiFormHelperText-root": { color: "#f87171" },
+};
+
+// ── Component ──────────────────────────────────────────────────────────────────
 function Profile() {
-    const user = useSelector((state) => state.auth.profile);
+    const user     = useSelector((state) => state.auth.profile);
     const navigate = useNavigate();
-    const [username, setUsername]   = useState(user.username   ?? "");
-    const [firstName, setFirstName] = useState(user.firstName  ?? "");
-    const [lastName, setLastName]   = useState(user.lastName   ?? "");
-    const [phone, setPhone]         = useState(user.phoneNumber ?? "");
+    const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
+
+    const initialValues = {
+        firstName: user.firstName   ?? "",
+        lastName:  user.lastName    ?? "",
+        phone:     user.phoneNumber ?? "",
+        birthday:  user.dateOfBirth ? dayjs(user.dateOfBirth) : null,  // dayjs object or null
+    };
+
+    const handleSubmit = async (values) => {
+        try {
+            await updateProfile({
+                firstName:   values.firstName,
+                lastName:    values.lastName,
+                phoneNumber: values.phone,
+                dateOfBirth: values.birthday ? values.birthday.format("YYYY-MM-DD") : null,  // format before sending
+            }).unwrap();
+        } catch (err) {
+            console.error("Error updating profile:", err);
+        }
+    };
 
     return (
         <CardList>
-        <BackButton onClick={() => navigate("/admin")}/>
-            {/* ── 1. Hero / Identity card ─────────────────────────────────── */}
+            <BackButton onClick={() => navigate("/admin")} />
+
+            {/* ── 1. Identity Card ─────────────────────────────────────────────── */}
             <CardGlassBlur2>
-                {/* Banner strip */}
-                <div className="relative h-12 rounded-xl overflow-hidden mb-10">
+                {/* Role badge */}
+                <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+                    <Typography
+                        sx={{
+                            fontSize: 10, fontWeight: 700, letterSpacing: 2,
+                            textTransform: "uppercase", color: "#a5f3fc",
+                            border: "1px solid rgba(6,182,212,0.4)",
+                            background: "rgba(8,145,178,0.2)",
+                            borderRadius: "999px", px: 1.5, py: 0.5,
+                        }}
+                    >
+                        {user.role}
+                    </Typography>
+                </Box>
 
-                    {/* Role badge */}
-                    <span className="absolute top-3 right-4
-                           text-[10px] font-bold tracking-widest uppercase
-                           text-cyan-200 border border-cyan-400/40
-                           bg-cyan-900/30 backdrop-blur-sm
-                           px-3 py-1 rounded-full">
-            {user.role}
-          </span>
-                </div>
+                {/* Avatar + name */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box sx={{ position: "relative" }}>
+                        <Box sx={{
+                            p: "3px", borderRadius: "50%",
+                            background: "linear-gradient(135deg, #22d3ee, #6366f1)",
+                            boxShadow: "0 0 20px rgba(6,182,212,0.45)",
+                        }}>
+                            <Avatar src={user.avatar} alt={user.username} sx={{ width: 64, height: 64, border: "3px solid #0f172a" }} />
+                        </Box>
+                        {/* Online dot */}
+                        <Box sx={{
+                            position: "absolute", bottom: 2, right: 2,
+                            width: 12, height: 12, borderRadius: "50%",
+                            bgcolor: "#34d399", border: "2px solid #0f172a",
+                            boxShadow: "0 0 8px #34d399",
+                        }} />
+                    </Box>
 
-                {/* Avatar + name row — overlaps banner */}
-                <div className="flex items-end justify-between -mt-16 px-2">
-                    {/* Avatar with glowing ring */}
-                    <div className="relative">
-                        <div className="p-[3px] rounded-full
-                            bg-gradient-to-br from-cyan-400 to-indigo-500
-                            shadow-[0_0_20px_rgba(6,182,212,0.45)]">
-                            <div className="rounded-full border-[3px] border-slate-900 overflow-hidden w-20 h-20">
-                                <img
-                                    src={user.avatar}
-                                    alt={user.username}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        </div>
-                        {/* online dot */}
-                        <span className="absolute bottom-1 right-1
-                             w-4 h-4 rounded-full bg-emerald-400
-                             border-2 border-slate-900
-                             shadow-[0_0_8px_#34d399]" />
-                    </div>
-
-                    {/* Name block */}
-                    <div className="text-right pb-1">
-                        <p className="text-lg font-bold text-slate-100 leading-tight tracking-tight">
+                    <Box>
+                        <Typography sx={{ color: "#f1f5f9", fontWeight: 700, fontSize: 16 }}>
                             {user.firstName} {user.lastName}
-                        </p>
-                        <p className="text-xs text-white mt-0.5">@{user.username}</p>
-                    </div>
-                </div>
+                        </Typography>
+                        <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
+                            @{user.username}
+                        </Typography>
+                    </Box>
+                </Box>
 
-                {/* Quick stats row */}
-                <div className="grid grid-cols-3 gap-3 mt-5">
+                {/* Quick stats */}
+                <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1.5, mt: 3 }}>
                     {[
                         { label: "User ID",  value: `#${user.id}` },
-                        { label: "Phone",    value: `+${user.phoneNumber}` },
-                        { label: "Birthday", value: user.dateOfBirth },
+                        { label: "Phone",    value: user.phoneNumber ? `+${user.phoneNumber}` : "—" },
+                        { label: "Birthday", value: user.dateOfBirth ?? "—" },
                     ].map(({ label, value }) => (
-                        <div key={label}
-                             className="bg-white/5 border border-white/[0.06] rounded-xl
-                            px-3 py-3 text-center">
-                            <p className="text-[9px] font-bold tracking-widest uppercase text-white mb-1">
+                        <Box key={label} sx={{
+                            background: "rgba(255,255,255,0.05)",
+                            border: "1px solid rgba(255,255,255,0.06)",
+                            borderRadius: "12px", px: 1.5, py: 1.5, textAlign: "center",
+                        }}>
+                            <Typography sx={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.5)", mb: 0.5 }}>
                                 {label}
-                            </p>
-                            <p className="text-xs font-semibold text-white truncate">{value}</p>
-                        </div>
+                            </Typography>
+                            <Typography sx={{ fontSize: 11, fontWeight: 600, color: "#f1f5f9" }} noWrap>
+                                {value}
+                            </Typography>
+                        </Box>
                     ))}
-                </div>
+                </Box>
             </CardGlassBlur2>
 
-            {/* ── 2. Photo upload card ─────────────────────────────────────── */}
+            {/* ── 2. Photo Upload Card ─────────────────────────────────────────── */}
             <CardGlassBlur2>
-                <p className="text-[10px] font-bold tracking-widest uppercase text-white mb-4">
+                <Typography sx={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.7)", mb: 2 }}>
                     Profile Photo
-                </p>
+                </Typography>
 
-                <div className="flex items-center gap-4
-                        border border-dashed border-cyan-500/25
-                        rounded-xl p-4 bg-white/[0.02]">
-                    {/* Thumbnail */}
-                    <div className="w-14 h-14 rounded-xl overflow-hidden
-                          border border-white/10 flex-shrink-0">
-                        <img src={user.avatar} alt="thumb" className="w-full h-full object-cover" />
-                    </div>
+                <Box sx={{
+                    display: "flex", alignItems: "center", gap: 2,
+                    border: "1px dashed rgba(6,182,212,0.25)",
+                    borderRadius: "12px", p: 2, background: "rgba(255,255,255,0.02)",
+                }}>
+                    <Avatar src={user.avatar} variant="rounded" sx={{ width: 52, height: 52, border: "1px solid rgba(255,255,255,0.1)" }} />
 
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white">Change picture</p>
-                        <p className="text-[11px] text-white mt-0.5">JPG or PNG · max 5 MB</p>
-                    </div>
+                    <Box sx={{ flex: 1 }}>
+                        <Typography sx={{ color: "#f1f5f9", fontSize: 13, fontWeight: 500 }}>Change picture</Typography>
+                        <Typography sx={{ color: "rgba(255,255,255,0.4)", fontSize: 11, mt: 0.3 }}>JPG or PNG · max 5 MB</Typography>
+                    </Box>
 
-                    {/* Actions */}
-                    <div className="flex flex-col gap-2 flex-shrink-0">
+                    <Stack spacing={1}>
                         <InputFileUpload />
-                        <button
-                            disabled
-                            className="text-[11px] font-semibold text-red-400/40
-                         border border-red-400/20 rounded-lg px-3 py-1.5
-                         cursor-not-allowed"
+                        <Button
+                            size="small"
+                            sx={{
+                                fontSize: 11, fontWeight: 600, color: "#f87171",
+                                border: "1px solid rgba(248,113,113,0.5)", borderRadius: "8px",
+                                "&:hover": { background: "rgba(239,68,68,0.15)", borderColor: "#f87171" },
+                            }}
                         >
                             Remove
-                        </button>
-                    </div>
-                </div>
+                        </Button>
+                    </Stack>
+                </Box>
             </CardGlassBlur2>
 
-            {/* ── 3. Edit profile card ─────────────────────────────────────── */}
+            {/* ── 3. Edit Profile Card ─────────────────────────────────────────── */}
             <CardGlassBlur2>
-                <p className="text-[10px] font-bold tracking-widest uppercase text-white mb-4">
+                <Typography sx={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.7)", mb: 3 }}>
                     Edit Profile
-                </p>
+                </Typography>
 
-                <div className="flex flex-col gap-4">
-                    {/* Username */}
-                    <div>
-                        <label className="text-[10px] font-bold tracking-widest uppercase
-                              text-white mb-1.5 block">
-                            Username
-                        </label>
-                        <input
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full bg-white/[0.04] border border-white/[0.08]
-                         rounded-xl px-4 py-2.5 text-sm text-slate-200
-                         placeholder-slate-600 outline-none
-                         focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/10
-                         transition-all duration-200"
-                            placeholder="username"
-                        />
-                    </div>
+                <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} enableReinitialize>
+                    {({ values, errors, touched, handleChange, handleBlur }) => (
+                        <Form>
+                            <Stack spacing={2.5}>
+                                {/* First Name / Last Name */}
+                                <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+                                    <TextField
+                                        name="firstName"
+                                        label="First Name"
+                                        value={values.firstName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.firstName && Boolean(errors.firstName)}
+                                        helperText={touched.firstName && errors.firstName}
+                                        sx={fieldSx}
+                                    />
+                                    <TextField
+                                        name="lastName"
+                                        label="Last Name"
+                                        value={values.lastName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.lastName && Boolean(errors.lastName)}
+                                        helperText={touched.lastName && errors.lastName}
+                                        sx={fieldSx}
+                                    />
+                                </Box>
 
-                    {/* First / Last */}
-                    <div className="grid grid-cols-2 gap-3">
-                        {[
-                            { label: "First Name", val: firstName, set: setFirstName, ph: "First" },
-                            { label: "Last Name",  val: lastName,  set: setLastName,  ph: "Last"  },
-                        ].map(({ label, val, set, ph }) => (
-                            <div key={label}>
-                                <label className="text-[10px] font-bold tracking-widest uppercase
-                                  text-white mb-1.5 block">
-                                    {label}
-                                </label>
-                                <input
-                                    value={val}
-                                    onChange={(e) => set(e.target.value)}
-                                    placeholder={ph}
-                                    className="w-full bg-white/[0.04] border border-white/[0.08]
-                             rounded-xl px-4 py-2.5 text-sm text-slate-200
-                             placeholder-slate-600 outline-none
-                             focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/10
-                             transition-all duration-200"
+                                {/* Phone */}
+                                <TextField
+                                    name="phone"
+                                    label="Phone Number"
+                                    placeholder="+1 234 567 890"
+                                    value={values.phone}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.phone && Boolean(errors.phone)}
+                                    helperText={touched.phone && errors.phone}
+                                    sx={fieldSx}
                                 />
-                            </div>
-                        ))}
-                    </div>
 
-                    {/* Phone */}
-                    <div>
-                        <label className="text-[10px] font-bold tracking-widest uppercase
-                              text-white mb-1.5 block">
-                            Phone Number
-                        </label>
-                        <input
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full bg-white/[0.04] border border-white/[0.08]
-                         rounded-xl px-4 py-2.5 text-sm text-slate-200
-                         placeholder-slate-600 outline-none
-                         focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/10
-                         transition-all duration-200"
-                            placeholder="+1 234 567 890"
-                        />
-                    </div>
-                </div>
+                                {/* Birthday */}
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="Birthday"
+                                        value={values.birthday}
+                                        onChange={(val) => setFieldValue("birthday", val)}
+                                        disableFuture
+                                        slotProps={{
+                                            textField: {
+                                                onBlur: () => handleBlur({ target: { name: "birthday" } }),
+                                                error: touched.birthday && Boolean(errors.birthday),
+                                                helperText: touched.birthday && errors.birthday,
+                                                sx: fieldSx,
+                                                fullWidth: true,
+                                            },
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                            </Stack>
 
-                {/* Divider */}
-                <div className="h-px bg-white/[0.05] my-5" />
+                            <Divider sx={{ borderColor: "rgba(255,255,255,0.05)", my: 3 }} />
 
-                {/* Save */}
-                <button
-                    className="w-full py-3 rounded-xl text-sm font-bold tracking-wide
-                     bg-gradient-to-r from-cyan-500 to-indigo-500 text-white
-                     shadow-[0_4px_20px_rgba(6,182,212,0.3)]
-                     hover:opacity-90 hover:translate-y-[-1px]
-                     active:translate-y-0 active:opacity-100
-                     transition-all duration-150"
-                >
-                    Save Changes
-                </button>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                disabled={isLoading}
+                                sx={{
+                                    py: 1.5, borderRadius: "12px", fontWeight: 700,
+                                    fontSize: 14, letterSpacing: 1, textTransform: "none",
+                                    background: "linear-gradient(90deg, #06b6d4, #6366f1)",
+                                    color: "#fff",
+                                    boxShadow: "0 4px 20px rgba(6,182,212,0.3)",
+                                    "&:hover": { opacity: 0.9, transform: "translateY(-1px)" },
+                                    "&:active": { transform: "translateY(0)" },
+                                    transition: "all 0.15s ease",
+                                }}
+                            >
+                                {isLoading ? "Saving…" : "Save Changes"}
+                            </Button>
+                        </Form>
+                    )}
+                </Formik>
             </CardGlassBlur2>
-
         </CardList>
     );
 }

@@ -13,6 +13,11 @@ import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useUp
 import { setAlertDept, setIsOpenDeleteDeptDialog, setIsOpenDialogAddOrEditProductionLine, setIsOpenSnackbarProductionLine, setPageNoProductionLine, setPageSizeProductionLine, setProductionLineDataForUpdate } from "../../redux/feature/productionLine/productionLineSlice.js";
 import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
 import {useGetProductQuery} from "../../redux/feature/product/productApiSlice.js";
+import {
+    setIsOpenDeleteProductDialog,
+    setIsOpenDialogAddOrEditProduct,
+    setIsOpenSnackbarProduct, setProductDataForUpdate
+} from "../../redux/feature/product/productSlice.js";
 
 
 function ProductList() {
@@ -22,11 +27,11 @@ function ProductList() {
     const dispatch = useDispatch();
     const pageNo = useSelector((state) => state.product.pageNo);
     const pageSize = useSelector((state) => state.product.pageSize);
-    const productionlineDataForUpdate = useSelector((state) => state.product.productionlineDataForUpdate);
-    const isOpen = useSelector((state) => state.product.isOpenDialogAddOrEditProductionLine);
-    const isOpenSnackbar = useSelector((state) => state.product.isOpenSnackbarProductionLine);
-    const alertDept = useSelector((state) => state.product.alertDept);
-    const isOpenDeleteDialog = useSelector((state) => state.product.isOpenDeleteDeptDialog);
+    const productDataForUpdate = useSelector((state) => state.product.productDataForUpdate);
+    const isOpen = useSelector((state) => state.product.isOpenDialogAddOrEditProduct);
+    const isOpenSnackbar = useSelector((state) => state.product.isOpenSnackbarProduct);
+    const alertProduct = useSelector((state) => state.product.alertProduct);
+    const isOpenDeleteDialog = useSelector((state) => state.product.isOpenDeleteProductDialog);
     const[createDept] = useCreateProductionLineMutation();
     const [updateDept] = useUpdateProductionLineMutation();
     const [deleteDept] = useDeleteProductionLineMutation();
@@ -49,8 +54,8 @@ function ProductList() {
     };
 
     const handleClose = () => {
-        dispatch(setIsOpenDialogAddOrEditProductionLine(false));
-        dispatch(setProductionLineDataForUpdate(null));
+        dispatch(setIsOpenDialogAddOrEditProduct(false));
+        dispatch(setProductDataForUpdate(null));
     }
 
     const validationSchema = Yup.object().shape({
@@ -60,9 +65,9 @@ function ProductList() {
 
     const handleSubmit = async (values, {resetForm}) => {
         try {
-            if (productionlineDataForUpdate) {
+            if (productDataForUpdate) {
                  await updateDept({
-                    id: productionlineDataForUpdate.id,
+                    id: productDataForUpdate.id,
                     line: values.line,
                     deptId: values.deptId,
                 }).unwrap();
@@ -85,20 +90,11 @@ function ProductList() {
     };
 
     const fields = [
-        { name: "line",     label: "product.line",     type: "text" },
-        {
-            id: "deptId",
-            name: "deptId",
-            label: t("department.title"),
-            type: "autocomplete",
-            minWidth: 130,
-            fetchOptions: async () => {
-                return Object.values(deptData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.department,
-                }));
-            },
-        },
+        { name: "code",     label: "code",     type: "text" },
+        { name: "styleName",     label: "styleName",     type: "text" },
+        { name: "category",     label: "category",     type: "text" },
+        { name: "color",     label: "color",     type: "text" },
+        { name: "size", label: "size", type: "text" },
     ];
 
     const initialValues ={
@@ -108,7 +104,7 @@ function ProductList() {
 
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditProductionLine(true));
-        dispatch(setProductionLineDataForUpdate({
+        dispatch(setProductDataForUpdate({
         id: row.id,
         line: row.line,
         deptId: row.deptId,
@@ -116,7 +112,7 @@ function ProductList() {
     };
 
     const handleDeleteOpen = (row) => {
-        dispatch(setIsOpenDeleteDeptDialog(true));
+        dispatch(setIsOpenDeleteProductDialog(true));
         setId(row.id);
     };
 
@@ -203,35 +199,35 @@ function ProductList() {
                 `}>
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
-                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProductionLine(true))}/>
+                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProduct(true))}/>
                 </div>
                 <TableCus columns={columns} data={prodData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
             </div>
             <DialogAddEditCus
                 fields={fields}
-                title={productionlineDataForUpdate ? "Update ProductionLine" : "Create ProductionLine"}
+                title={productDataForUpdate ? "Update Product" : "Create Product"}
                 isOpen={isOpen}
                 onClose={handleClose}
-                isUpdate={!!productionlineDataForUpdate}
+                isUpdate={!!productDataForUpdate}
                 validationSchema={validationSchema}
                 handleSubmit={handleSubmit}
-                initialValues={productionlineDataForUpdate ? productionlineDataForUpdate : initialValues}/>
+                initialValues={productDataForUpdate ? productDataForUpdate : initialValues}/>
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
-                onClose={() => dispatch(setIsOpenSnackbarProductionLine(false))}
+                onClose={() => dispatch(setIsOpenSnackbarProduct(false))}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert
-                    onClose={() => dispatch(setIsOpenSnackbarProductionLine(false))}
-                    severity={alertDept.type}
+                    onClose={() => dispatch(setIsOpenSnackbarProduct(false))}
+                    severity={alertProduct.type}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {alertDept.message}
+                    {alertProduct.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))} handleDelete={handleDelete}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteProductDialog(false))} handleDelete={handleDelete}/>
         </div>
     )
 
