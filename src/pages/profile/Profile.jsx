@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -7,13 +7,14 @@ import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {Button, Stack, Typography, Box, Avatar, Divider, TextField} from "@mui/material";
-
+import {Button, Stack, Typography, Box, Avatar, Divider, TextField, Snackbar, Alert} from "@mui/material";
 import CardList from "../../components/ui/CardList.jsx";
 import CardGlassBlur2 from "../../components/ui/CardGlassBlur2.jsx";
 import InputFileUpload from "../../components/ui/InputFileUpload.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
-import { useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSlice.js";
+import {useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSlice.js";
+import {setAlertProfile, setIsOpenSnackbarProfile} from "../../redux/feature/auth/authSlice.js";
+import {setAlertDept} from "../../redux/feature/department/departmentSlice.js";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
@@ -46,13 +47,16 @@ const fieldSx = {
 function Profile() {
     const user     = useSelector((state) => state.auth.profile);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const isOpenSnackbar = useSelector((state) => state.auth.isOpenSnackbarProfile);
+    const alertProfile = useSelector((state) => state.auth.alert);
     const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
 
     const initialValues = {
         firstName: user.firstName   ?? "",
         lastName:  user.lastName    ?? "",
         phone:     user.phoneNumber ?? "",
-        birthday:  user.dateOfBirth ? dayjs(user.dateOfBirth) : null,  // dayjs object or null
+        birthday:  user.dateOfBirth ? dayjs(user.dateOfBirth) : null,
     };
 
     const handleSubmit = async (values) => {
@@ -63,12 +67,17 @@ function Profile() {
                 phoneNumber: values.phone,
                 dateOfBirth: values.birthday ? values.birthday.format("YYYY-MM-DD") : null,  // format before sending
             }).unwrap();
+            dispatch(setAlertProfile({type: "success", message: "Update successfully"}));
+            dispatch(setIsOpenSnackbarProfile(true));
         } catch (err) {
             console.error("Error updating profile:", err);
+            dispatch(setAlertProfile({type: "error", message: err.data.error.description}));
+            dispatch(setIsOpenSnackbarProfile(true));
         }
     };
 
     return (
+        <>
         <CardList>
             <BackButton onClick={() => navigate("/admin")} />
 
@@ -182,7 +191,7 @@ function Profile() {
                 </Typography>
 
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} enableReinitialize>
-                    {({ values, errors, touched, handleChange, handleBlur }) => (
+                    {({ values, errors, touched, handleChange, handleBlur, setFieldValue }) => (
                         <Form>
                             <Stack spacing={2.5}>
                                 {/* First Name / Last Name */}
@@ -266,6 +275,22 @@ function Profile() {
                 </Formik>
             </CardGlassBlur2>
         </CardList>
+        <Snackbar
+            open={isOpenSnackbar}
+            autoHideDuration={6000}
+            onClose={() => dispatch(setIsOpenSnackbarProfile(false))}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+            <Alert
+                onClose={() => dispatch(setIsOpenSnackbarProfile(false))}
+                severity={alertProfile.type}
+                variant="filled"
+                sx={{ width: '100%' }}
+            >
+                {alertProfile.message}
+            </Alert>
+        </Snackbar>
+        </>
     );
 }
 

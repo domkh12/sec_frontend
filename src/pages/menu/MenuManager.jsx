@@ -3,6 +3,7 @@ import {yellow} from "@mui/material/colors";
 import MenuButton from "../../components/ui/MenuButton.jsx";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
+import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
 
 function MenuManager(){
     const {t} = useTranslation();
@@ -26,6 +27,7 @@ function MenuManager(){
                     </div>
                 </div>
             </div>
+
             <div className="flex flex-col justify-center items-center">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('dataSetup')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
@@ -34,7 +36,6 @@ function MenuManager(){
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('factory.structure')}</Typography>
                         <MenuButton title={`${t("manage.department")}`} iconPath={"/images/production.png"} onClick={() => navigate("departments")}/>
                         <MenuButton title={`${t("product.line")}`} iconPath={"/images/production_line.png"} onClick={() => navigate("production-lines")}/>
-                        
                         <MenuButton title={`${t('manage.shift')}`} iconPath={"/images/shift.png"} onClick={() => navigate("shifts")}/>
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
@@ -42,9 +43,23 @@ function MenuManager(){
                         <MenuButton title={`${t("product.title")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
                         <MenuButton title={`${t("materials")}`} iconPath={"/images/material.png"} onClick={() => navigate("products")}/>
                     </div>
-
                 </div>
             </div>
+
+            {/* ── HR Monitor Section ── */}
+            <div className="flex flex-col justify-center items-center">
+                <Typography variant="h6" sx={{color: yellow[600]}}>HR Monitor</Typography>
+                <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
+                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                    <Typography variant={"body1"} sx={{color: yellow[600]}}>Quality Control</Typography>
+                    <MenuButton
+                        title="Input Data"
+                        iconPath={"/images/smart-tv.png"}
+                        onClick={() => navigate("tv-menu")}
+                    />
+                </div>
+            </div>
+
         </div>
     )
 }

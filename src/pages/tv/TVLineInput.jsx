@@ -25,6 +25,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import AddIcon from '@mui/icons-material/Add';
 import BackButton from "../../components/ui/BackButton.jsx";
+import CardList from "../../components/ui/CardList.jsx";
 
 const HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
 const HOUR_LABELS = { h8:"8:00", h9:"9:00", h10:"10:00", h11:"11:00", h13:"13:00", h14:"14:00", h15:"15:00", h16:"16:00", h17:"17:00", h18:"18:00" };
@@ -295,7 +296,7 @@ function TVLineInput() {
     const initialValues = mapApiToFormValues(tvData);
 
     return (
-        <Card sx={{zIndex: 100, paddingY: 2}}>
+        <CardList>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Formik
                 initialValues={initialValues}
@@ -319,7 +320,7 @@ function TVLineInput() {
                                     {/* Page title */}
                                     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
                                         <Box>
-                                            <Typography variant="caption" color="text.disabled" letterSpacing={3} display="block">
+                                            <Typography variant="caption" color="white" letterSpacing={3} display="block">
                                                 PRODUCTION MANAGEMENT
                                             </Typography>
                                             <Typography variant="h5" fontWeight={900} color="primary.main" letterSpacing={1}>
@@ -330,7 +331,7 @@ function TVLineInput() {
                                     </Stack>
 
                                     {/* SECTION 1 — Order Information */}
-                                    <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                                    <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
                                         <SectionHeader icon={<AssignmentIcon />} title="Order Information" color="success.main" />
                                             <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                                             {orderFields.map(({ key, label, type }) => (
@@ -388,7 +389,7 @@ function TVLineInput() {
                                     </Paper>
 
                                     {/* SECTION 2 — Target Settings */}
-                                    <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                                    <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
                                         <SectionHeader icon={<AccessTimeIcon />} title="Target Settings" color="primary.main" />
                                         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             {/* Line & Worker */}
@@ -446,7 +447,7 @@ function TVLineInput() {
                                     </Paper>
 
                                     {/* SECTION 3 — Hourly Data */}
-                                    <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+                                    <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
                                         <SectionHeader icon={<TodayIcon />} title="Hourly Data" color="warning.dark" />
                                         <Box sx={{ overflowX: "auto" }}>
                                             <Table size="small" sx={{ minWidth: 1000 }}>
@@ -569,7 +570,7 @@ function TVLineInput() {
                                             variant="outlined"
                                             color="primary"
                                             startIcon={<AddIcon />}
-                                            sx={{ fontWeight: 700 }}
+                                            sx={{ fontWeight: 700, color: "white", borderColor: "white" }}
                                             onClick={handleCreateTvData}
                                         >
                                             Create new row
@@ -592,7 +593,7 @@ function TVLineInput() {
                 }}
             </Formik>
         </LocalizationProvider>
-        </Card>
+        </CardList>
     );
 }
 

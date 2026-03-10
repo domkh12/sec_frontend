@@ -6,11 +6,19 @@ const authSlice = createSlice({
   // initial data
   initialState: {
     token: null,
-    profile: {}
+    profile: {},
+    isOpenSnackbarProfile: false,
+    alert: { type: "success", message: "" },
   },
 
   // function
   reducers: {
+    setAlertProfile: (state, action) => {
+      state.alert = action.payload;
+    },
+    setIsOpenSnackbarProfile: (state, action) => {
+      state.isOpenSnackbarProfile = action.payload;
+    },
     setProfile: (state, action) => {
       state.profile = action.payload;
     },
@@ -25,6 +33,8 @@ const authSlice = createSlice({
 });
 
 export const {
+  setAlertProfile,
+  setIsOpenSnackbarProfile,
   setProfile,
   setCredentials,
   logOut,

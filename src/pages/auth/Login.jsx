@@ -125,7 +125,7 @@ function Login() {
             } else if (error.status === 401) {
                 setErrorMsg("Email or Password is incorrect.");
             } else {
-                setErrorMsg(error?.data?.message);
+                setErrorMsg(error?.data?.error?.description);
             }
         } finally {
             setSubmitting(false);
