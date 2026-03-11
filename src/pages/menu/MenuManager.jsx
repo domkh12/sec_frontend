@@ -32,12 +32,6 @@ function MenuManager(){
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap justify-center items-start gap-5">
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('factory.structure')}</Typography>
-                        <MenuButton title={`${t("manage.department")}`} iconPath={"/images/production.png"} onClick={() => navigate("departments")}/>
-                        <MenuButton title={`${t("product.line")}`} iconPath={"/images/production_line.png"} onClick={() => navigate("production-lines")}/>
-                        <MenuButton title={`${t('manage.shift')}`} iconPath={"/images/shift.png"} onClick={() => navigate("shifts")}/>
-                    </div>
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("product.title")}</Typography>
                         <MenuButton title={`${t("product.title")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
                         <MenuButton title={`${t("materials")}`} iconPath={"/images/material.png"} onClick={() => navigate("products")}/>
