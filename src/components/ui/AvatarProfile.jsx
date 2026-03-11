@@ -89,9 +89,13 @@ function AvatarProfile() {
                 }}
             >
                 <Avatar
-                    src={user.avatar}
+                    src={profile.avatar}
                     alt={profile.username}
-                    sx={{ width: 40, height: 40 }}
+                    sx={{
+                        width: 40,
+                        height: 40,
+                        border: '3px solid white'
+                        }}
                 />
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     <Typography variant="body2" fontWeight={600}>

@@ -4,28 +4,28 @@ import { jwtDecode } from "jwt-decode";
 
 function useAuth() {
     const token = useSelector(selectCurrentToken);
-    let isProductionManager = false;
+    let isHrManager = false;
     let isAdmin = false;
-    let isTvOperator = false;
-    let status = ["Production_Manager"];
+    let isViewer = false;
+    let status = ["HR_Manager"];
     if (token) {
         const decoded = jwtDecode(token);
 
         const { jti: username, scope } = decoded;
         const roles = scope ? scope.split(" ") : [];
 
-        isProductionManager = scope.includes("ROLE_PRODUCTION_MANAGER");
+        isHrManager = scope.includes("ROLE_HR_MANAGER");
         isAdmin = scope.includes("ROLE_ADMIN");
-        isTvOperator = scope.includes("ROLE_TV_OPERATOR");
+        isViewer = scope.includes("ROLE_VIEWER");
 
-        if (isTvOperator) status = "Tv_Operator";
+        if (isViewer) status = "Viewer";
         if (isAdmin) status = "Admin";
-        if (isProductionManager) status = "Production_Manager";
+        if (isHrManager) status = "HR_Manager";
 
-        return { username, roles, status, isProductionManager, isAdmin, isTvOperator };
+        return { username, roles, status, isHrManager, isAdmin, isViewer };
     }
 
-    return { username: "", roles: [], isProductionManager, isAdmin, isTvOperator, status };
+    return { username: "", roles: [], isHrManager, isAdmin, isViewer, status };
 }
 
 export default useAuth;

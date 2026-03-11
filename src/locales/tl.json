@@ -60,7 +60,16 @@
     "workers": "Mga Manggagawa",
     "target": "Target",
     "actual": "Aktwal",
-    "efficiency": "Kahusayan"
+    "efficiency": "Kahusayan",
+    "email": "Email",
+    "role": "Papel",
+    "department": "Departamento",
+    "status": "Katayuan",
+    "lastLogin": "Huling Login",
+    "firstName": "Pangalan",
+    "lastName": "Apelyido",
+    "employeeId": "Employee ID",
+    "phoneNumber": "Numero ng Telepono"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

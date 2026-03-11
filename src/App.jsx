@@ -59,12 +59,13 @@ function App() {
                               <Route index element={<MenuAdmin/>}/>
                               <Route path="departments" element={<DepartmentList/>}/>
                               <Route path="production-lines" element={<ProductionLineList/>}/>
-                              <Route path="tv">
-                                  <Route index element={<MenuTvFetched/>}/>
-                                  <Route path=":name" element={<TvDashboardDisplay/>}/>
+                              <Route path="tv-menu">
+                                  <Route index element={<MenuTv/>}/>
+                                  <Route path=":name" element={<TVLineInput/>}/>
                               </Route>
                               <Route path="products" element={<ProductList/>}/>
                               <Route path="profile" element={<Profile/>}/>
+                              <Route path="users" element={<UserList/>}/>
                           </Route>
                       </Route>
 

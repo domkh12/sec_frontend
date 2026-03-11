@@ -63,7 +63,9 @@ export const apiSlice = createApi({
     "TvData",
     "TvGeneralData",
     "ProductionLine",
-    "Product"
+    "Product",
+    "User",
+    "Role"
   ],
   endpoints: (builder) => ({}),
 });

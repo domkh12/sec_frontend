@@ -10,9 +10,11 @@ import {setIsOpenCreateTVDialog} from "../../redux/feature/tv/tvSlice.js";
 import DialogAddTv from "../../components/dialog/DialogAddTv.jsx";
 import ParticlesBackground from "../../components/ui/ParticlesBackground.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
+import useAuth from "../../hook/useAuth.jsx";
 
 function MenuTv() {
     const navigate = useNavigate();
+    const {isAdmin} = useAuth();
     const {t} = useTranslation();
     const {data:tv, isLoading, isSuccess} = useGetTvQuery();
     const dispatch = useDispatch();
@@ -22,9 +24,8 @@ function MenuTv() {
 
     if (isSuccess) content = (
         <main>
-            <ParticlesBackground backgroundColor="transparent" dotCount={50}/>
             {/*<TopBar title={t("tv.title")} backUrl={"/manager"}/>*/}
-            <BackButton onClick={() => navigate("/manager")}/>
+            <BackButton onClick={() => navigate(`${isAdmin ? "/admin" : "/manager"}`)}/>
             <div className="flex flex-wrap gap-4 my-10 justify-center items-center">
                 {tv.map((tv) => (
                     <MenuButton key={tv.id} title={tv.name} iconPath={"/images/smart-tv.png"} onClick={() => navigate(tv.name)}/>

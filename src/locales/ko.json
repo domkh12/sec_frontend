@@ -60,7 +60,16 @@
     "workers": "작업자",
     "target": "목표",
     "actual": "실제",
-    "efficiency": "효율"
+    "efficiency": "효율",
+    "email": "이메일",
+    "role": "역할",
+    "department": "부서",
+    "status": "상태",
+    "lastLogin": "마지막 로그인",
+    "firstName": "이름",
+    "lastName": "성",
+    "employeeId": "직원 ID",
+    "phoneNumber": "전화번호"
   },
   "factory": {
     "structure": "공장 구조"

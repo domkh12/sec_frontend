@@ -7,6 +7,8 @@ import tvReducer from "../feature/tv/tvSlice.js"
 import departmentReducer from "../feature/department/departmentSlice.js"
 import productionReducer from "../feature/productionLine/productionLineSlice.js"
 import productReducer from "../feature/product/productSlice.js"
+import userReducer from "../feature/user/userSlice.js"
+import roleReducer from "../feature/role/roleSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -16,7 +18,9 @@ const store = configureStore({
     tv: tvReducer,
     department: departmentReducer,
     productionLine: productionReducer,
-    product: productReducer
+    product: productReducer,
+    user: userReducer,
+    role: roleReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

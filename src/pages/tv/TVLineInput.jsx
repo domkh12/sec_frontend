@@ -26,6 +26,7 @@ import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import AddIcon from '@mui/icons-material/Add';
 import BackButton from "../../components/ui/BackButton.jsx";
 import CardList from "../../components/ui/CardList.jsx";
+import useAuth from "../../hook/useAuth.jsx";
 
 const HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
 const HOUR_LABELS = { h8:"8:00", h9:"9:00", h10:"10:00", h11:"11:00", h13:"13:00", h14:"14:00", h15:"15:00", h16:"16:00", h17:"17:00", h18:"18:00" };
@@ -188,6 +189,7 @@ function TVLineInput() {
     const [createTvData] = useCreateTvDataMutation();
     const [saveError, setSaveError] = useState(null);
     const { t } = useTranslation();
+    const {isAdmin, isHrManager} = useAuth();
     const [showSuccess, setShowSuccess] = useState(false);
     const navigate = useNavigate();
     const {
@@ -316,7 +318,7 @@ function TVLineInput() {
                         <Form className="pb-8">
                             <div>
                                 <Box maxWidth={1280} mx="auto">
-                                    <BackButton onClick={() => navigate("/manager/tv-menu")}/>
+                                    <BackButton onClick={() => navigate(`${isAdmin ? "/admin/tv-menu" : "/manager/tv-menu"}`)}/>
                                     {/* Page title */}
                                     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
                                         <Box>

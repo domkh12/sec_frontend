@@ -61,7 +61,15 @@
     "target": "Target",
     "actual": "Actual",
     "efficiency": "Efficiency",
-    "department": "Department"
+    "department": "Department",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "lastLogin": "Last Login",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "employeeId": "Employee ID",
+    "phoneNumber": "Phone Number"
   },
   "factory": {
     "structure": "Factory Structure"

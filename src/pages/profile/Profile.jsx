@@ -15,6 +15,7 @@ import BackButton from "../../components/ui/BackButton.jsx";
 import {useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSlice.js";
 import {setAlertProfile, setIsOpenSnackbarProfile} from "../../redux/feature/auth/authSlice.js";
 import {setAlertDept} from "../../redux/feature/department/departmentSlice.js";
+import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
@@ -51,6 +52,7 @@ function Profile() {
     const isOpenSnackbar = useSelector((state) => state.auth.isOpenSnackbarProfile);
     const alertProfile = useSelector((state) => state.auth.alert);
     const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
+    const [uploadFile, { isLoading: isLoadingUpload }] = useUploadFileMutation();
 
     const initialValues = {
         firstName: user.firstName   ?? "",
@@ -75,6 +77,28 @@ function Profile() {
             dispatch(setIsOpenSnackbarProfile(true));
         }
     };
+
+    const handleUploadImage = async (even) => {
+        console.log("Uploading file:", even.target.files[0]);
+        if (!even.target.files[0]) return;
+        try {
+            const formData = new FormData();
+            formData.append("file", even.target.files[0]);
+            const response = await uploadFile(formData).unwrap();
+            console.log("Upload response:", response.uri);
+            await updateProfile({ avatar: response.uri }).unwrap();
+        }catch (err) {
+            console.error("Error uploading file:", err);
+        }
+    }
+
+    const handleRemoveImage = async () => {
+        try {
+            await updateProfile({ avatar: "" }).unwrap();
+        }catch (err) {
+            console.error("Error removing image:", err);
+        }
+    }
 
     return (
         <>
@@ -169,7 +193,7 @@ function Profile() {
                     </Box>
 
                     <Stack spacing={1}>
-                        <InputFileUpload />
+                        <InputFileUpload onChange={handleUploadImage} isLoading={isLoadingUpload}/>
                         <Button
                             size="small"
                             sx={{
@@ -177,6 +201,7 @@ function Profile() {
                                 border: "1px solid rgba(248,113,113,0.5)", borderRadius: "8px",
                                 "&:hover": { background: "rgba(239,68,68,0.15)", borderColor: "#f87171" },
                             }}
+                            onClick={handleRemoveImage}
                         >
                             Remove
                         </Button>

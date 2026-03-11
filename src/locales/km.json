@@ -60,7 +60,16 @@
     "workers": "កម្មករ",
     "target": "គោលដៅ",
     "actual": "ជាក់ស្តែង",
-    "efficiency": "ប្រសិទ្ធភាព"
+    "efficiency": "ប្រសិទ្ធភាព",
+    "email": "អ៊ីមែល",
+    "role": "តួនាទី",
+    "department": "នាយកដ្ឋាន",
+    "status": "ស្ថានភាព",
+    "lastLogin": "ចូលលើកចុងក្រោយ",
+    "firstName": "នាមខ្លួន",
+    "lastName": "នាមត្រកូល",
+    "employeeId": "លេខសម្គាល់បុគ្គលិក",
+    "phoneNumber": "លេខទូរស័ព្ទ"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"

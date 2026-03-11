@@ -3,18 +3,17 @@ import {yellow} from "@mui/material/colors";
 import MenuButton from "../../components/ui/MenuButton.jsx";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
-import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
 
 function MenuManager(){
     const {t} = useTranslation();
     const navigate = useNavigate();
 
     return(
-        <div className="flex justify-center items-start gap-5 pt-10">
-            <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-wrap justify-center items-start gap-5 pt-10 px-4">
+            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('administration')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex justify-start items-start gap-5">
+                <div className="flex flex-wrap justify-center items-start gap-5">
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("accessControl")}</Typography>
                         <MenuButton title={t('user.title')} iconPath={"/images/team.png"} onClick={() => navigate("users")}/>
@@ -28,10 +27,10 @@ function MenuManager(){
                 </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('dataSetup')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex justify-start items-start gap-5">
+                <div className="flex flex-wrap justify-center items-start gap-5">
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('factory.structure')}</Typography>
                         <MenuButton title={`${t("manage.department")}`} iconPath={"/images/production.png"} onClick={() => navigate("departments")}/>
@@ -46,8 +45,7 @@ function MenuManager(){
                 </div>
             </div>
 
-            {/* ── HR Monitor Section ── */}
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>HR Monitor</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
@@ -59,7 +57,6 @@ function MenuManager(){
                     />
                 </div>
             </div>
-
         </div>
     )
 }
