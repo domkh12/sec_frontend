@@ -70,10 +70,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [{ type: "User", id: "LIST" }],
         }),
 
+        setActive: builder.mutation({
+            query: (id) => ({
+                url: `/users/${id}/active`,
+                method: "PATCH",
+            }),
+        }),
+
+        setInactive: builder.mutation({
+            query: (id) => ({
+                url: `/users/${id}/inactive`,
+                method: "PATCH",
+            }),
+        }),
+
     }),
 });
 
 export const {
+    useSetInactiveMutation,
+    useSetActiveMutation,
     useUpdateUserMutation,
     useDeleteUserMutation,
     useCreateUserMutation,

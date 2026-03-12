@@ -8,8 +8,18 @@
   "auditLog": "កំណត់ត្រាសវនកម្ម",
   "roles": "តួនាទី",
   "accessControl": "ការគ្រប់គ្រងការចូលប្រើ",
+  "hrMonitor": "ត្រួតពិនិត្យធនធានមនុស្ស",
+  "qualityControl": "ត្រួតពិនិត្យគុណភាព",
+  "inputData": "បញ្ចូលទិន្នន័យ",
   "validation": {
-    "required": "ត្រូវការ"
+    "required": "ត្រូវការ",
+    "minLength": "ប្រវែងអប្បបរមាគឺ {{min}} តួអក្សរ",
+    "maxLength": "ប្រវែងអតិបរមាគឺ {{max}} តួអក្សរ",
+    "invalidEmail": "អាសយដ្ឋានអ៊ីមែលមិនត្រឹមត្រូវ",
+    "invalidPhone": "លេខទូរស័ព្ទមិនត្រឹមត្រូវ",
+    "usernameFormat": "ឈ្មោះអ្នកប្រើប្រាស់ត្រូវតែមានតែអក្សរ លេខ និងសញ្ញា underscore",
+    "passwordUppercase": "ពាក្យសម្ងាត់ត្រូវតែមានអក្សរធំយ៉ាងហោចណាស់មួយ",
+    "passwordMismatch": "ពាក្យសម្ងាត់មិនត្រូវគ្នា"
   },
   "user": {
     "title": "អ្នកប្រើប្រាស់",
@@ -41,7 +51,10 @@
     "shift": "គ្រប់គ្រងវេន"
   },
   "buttons": {
-    "addNew": "បន្ថែមថ្មី"
+    "addNew": "បន្ថែមថ្មី",
+    "create": "បង្កើត",
+    "cancel": "បោះបង់",
+    "update": "ធ្វើបច្ចុប្បន្នភាព"
   },
   "department": {
     "create": "បង្កើតនាយកដ្ឋាន",
@@ -69,7 +82,11 @@
     "firstName": "នាមខ្លួន",
     "lastName": "នាមត្រកូល",
     "employeeId": "លេខសម្គាល់បុគ្គលិក",
-    "phoneNumber": "លេខទូរស័ព្ទ"
+    "phoneNumber": "លេខទូរស័ព្ទ",
+    "productionLine": "ខ្សែផលិតកម្ម",
+    "confirmPassword": "បញ្ជាក់ពាក្យសម្ងាត់",
+    "username": "ឈ្មោះអ្នកប្រើប្រាស់",
+    "password": "ពាក្យសម្ងាត់"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"

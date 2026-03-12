@@ -15,12 +15,12 @@ export const roleApiSlice = apiSlice.injectEndpoints({
                 },
             }),
             transformResponse: (responseData) => {
-                const loadedDept = responseData.content.map((role) => {
+                const loadedRole = responseData.content.map((role) => {
                     role.id = role.id;
                     return role;
                 });
                 return {
-                    ...roleAdapter.setAll(initialState, loadedDept),
+                    ...roleAdapter.setAll(initialState, loadedRole),
                     totalPages: responseData.page.totalPages,
                     totalElements: responseData.page.totalElements,
                     pageNo: responseData.page.number,

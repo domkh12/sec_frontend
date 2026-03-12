@@ -8,8 +8,18 @@
   "auditLog": "감사 로그",
   "roles": "역할",
   "accessControl": "접근 제어",
+  "hrMonitor": "인사 모니터",
+  "qualityControl": "품질 관리",
+  "inputData": "데이터 입력",
   "validation": {
-    "required": "필수"
+    "required": "필수",
+    "minLength": "최소 길이는 {{min}}자입니다",
+    "maxLength": "최대 길이는 {{max}}자입니다",
+    "invalidEmail": "유효하지 않은 이메일 주소",
+    "invalidPhone": "유효하지 않은 전화번호",
+    "usernameFormat": "사용자명은 문자, 숫자, 밑줄만 포함할 수 있습니다",
+    "passwordUppercase": "비밀번호는 최소 하나의 대문자를 포함해야 합니다",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다"
   },
   "user": {
     "title": "사용자",
@@ -41,7 +51,10 @@
     "shift": "교대 관리"
   },
   "buttons": {
-    "addNew": "새로 추가"
+    "addNew": "새로 추가",
+    "create": "생성",
+    "cancel": "취소",
+    "update": "수정"
   },
   "department": {
     "create": "부서 생성",
@@ -69,7 +82,11 @@
     "firstName": "이름",
     "lastName": "성",
     "employeeId": "직원 ID",
-    "phoneNumber": "전화번호"
+    "phoneNumber": "전화번호",
+    "productionLine": "생산 라인",
+    "confirmPassword": "비밀번호 확인",
+    "username": "사용자명",
+    "password": "비밀번호"
   },
   "factory": {
     "structure": "공장 구조"

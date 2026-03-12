@@ -5,8 +5,9 @@ import {
 import { Autocomplete } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
+import PasswordField from "../ui/PasswordField.jsx";
 
 function DialogAddEditCus({
                               title,
@@ -22,6 +23,16 @@ function DialogAddEditCus({
     const formikRef = useRef(null);
     const [dynamicOptions, setDynamicOptions] = useState({});
     const [loadingFields, setLoadingFields] = useState({});
+
+    const requiredFields = useMemo(() => {
+        if (!validationSchema) return {};
+        const result = {};
+        Object.keys(validationSchema.fields ?? {}).forEach((key) => {
+            const tests = validationSchema.fields[key]?.tests ?? [];
+            result[key] = tests.some((t) => t.OPTIONS?.name === "required");
+        });
+        return result;
+    }, [validationSchema]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -91,9 +102,15 @@ function DialogAddEditCus({
     const renderField = ({ values, errors, touched, handleChange, handleBlur, setFieldValue }, field) => {
         const resolvedOptions = dynamicOptions[field.name] ?? field.options ?? [];
         const isLoading = loadingFields[field.name] ?? false;
+        const isRequired = requiredFields[field.name] ?? false;
 
         const commonProps = {
-            label: t(field.label),
+            label: isRequired ? (
+                <span>
+                    {t(field.label)}
+                    <span style={{ color: "rgba(252,100,100,0.9)", marginLeft: "3px" }}>*</span>
+                </span>
+            ) : t(field.label),
             id: field.name,
             size: "small",
             fullWidth: true,
@@ -114,6 +131,18 @@ function DialogAddEditCus({
                         onChange={handleChange}
                         onBlur={handleBlur}
                         value={values[field.name]}
+                    />
+                );
+
+            case "password":
+                return (
+                    <PasswordField
+                        key={field.name}
+                        {...commonProps}
+                        name={field.name}
+                        value={values[field.name]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                     />
                 );
 
@@ -222,7 +251,12 @@ function DialogAddEditCus({
                 return (
                     <DatePicker
                         key={field.name}
-                        label={t(field.label)}
+                        label={isRequired ? (
+                            <span>
+                                {t(field.label)}
+                                <span style={{ color: "rgba(252,100,100,0.9)", marginLeft: "3px" }}>*</span>
+                            </span>
+                        ) : t(field.label)}
                         value={values[field.name]}
                         onChange={(date) => setFieldValue(field.name, date)}
                         slotProps={{
@@ -273,7 +307,6 @@ function DialogAddEditCus({
                         0 8px 24px rgba(0,0,0,0.3)
                     `,
                     overflow: "hidden",
-                    // subtle top highlight stripe
                     "&::before": {
                         content: '""',
                         position: "absolute",
@@ -287,7 +320,6 @@ function DialogAddEditCus({
                 },
             }}
         >
-            {/* Header */}
             <DialogTitle
                 sx={{
                     fontWeight: 600,
@@ -314,7 +346,6 @@ function DialogAddEditCus({
                 {title}
             </DialogTitle>
 
-            {/* Thin divider */}
             <div style={{
                 margin: "10px 20px 0",
                 height: "1px",
@@ -338,12 +369,23 @@ function DialogAddEditCus({
                                 pt: 2,
                                 px: 2.5,
                                 pb: 1.5,
+                                maxHeight: "60vh",
+                                overflowY: "auto",
+                                "&::-webkit-scrollbar": { width: "4px" },
+                                "&::-webkit-scrollbar-track": { background: "transparent" },
+                                "&::-webkit-scrollbar-thumb": {
+                                    background: "rgba(255,255,255,0.15)",
+                                    borderRadius: "4px",
+                                    "&:hover": { background: "rgba(255,255,255,0.25)" },
+                                },
                             }}
                         >
-                            {fields.map((field) => renderField(formikProps, field))}
+                            {fields
+                                .filter((field) => !(isUpdate && field.hideOnUpdate))
+                                .map((field) => renderField(formikProps, field))
+                            }
                         </DialogContent>
 
-                        {/* Thin divider */}
                         <div style={{
                             margin: "0 20px 10px",
                             height: "1px",
@@ -371,7 +413,7 @@ function DialogAddEditCus({
                                     },
                                 }}
                             >
-                                Cancel
+                                {t("buttons.cancel")}
                             </Button>
                             <Button
                                 variant="contained"
@@ -396,7 +438,7 @@ function DialogAddEditCus({
                                     transition: "all 0.18s ease",
                                 }}
                             >
-                                {isUpdate ? "Update" : "Create"}
+                                {isUpdate ? t("buttons.update") : t("buttons.create")}
                             </Button>
                         </DialogActions>
                     </Form>

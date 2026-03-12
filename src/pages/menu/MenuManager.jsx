@@ -15,11 +15,6 @@ function MenuManager(){
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap justify-center items-start gap-5">
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("accessControl")}</Typography>
-                        <MenuButton title={t('user.title')} iconPath={"/images/team.png"} onClick={() => navigate("users")}/>
-                        <MenuButton title={t('roles')} iconPath={"/images/insurance.png"} onClick={() => navigate("users")}/>
-                    </div>
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('system')}</Typography>
                         <MenuButton title={t('settings')} iconPath={"/images/gear.png"} onClick={() => navigate("settings")}/>
                         <MenuButton title={t('auditLog')} iconPath={"/images/audit.png"} onClick={() => navigate("settings")}/>

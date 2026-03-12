@@ -22,6 +22,7 @@ import ProductionLineList from "./pages/productionLine/ProductionLineList.jsx";
 import MenuTesting from "./pages/menu/MenuTesing.jsx";
 import ProductList from "./pages/product/ProductList.jsx";
 import Profile from "./pages/profile/Profile.jsx";
+import RoleList from "./pages/role/RoleList.jsx";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
                               <Route path="products" element={<ProductList/>}/>
                               <Route path="profile" element={<Profile/>}/>
                               <Route path="users" element={<UserList/>}/>
+                              <Route path="roles" element={<RoleList/>}/>
                           </Route>
                       </Route>
 

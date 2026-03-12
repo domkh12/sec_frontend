@@ -178,6 +178,25 @@ const DATA = {
 const STATS = { activeLines:12, todayOutput:4820, efficiency:91, openDefects:7, totalWorkers:476, pendingOrders:3 };
 
 // ═══════════════════════════════════════════════════════════════
+// PERMISSION REQUESTS DATA (initial seed)
+// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// PERMISSION RECORDS DATA
+// ═══════════════════════════════════════════════════════════════
+const PERMISSION_TYPES = [
+  "System Access","Module Access","Data Export","Report Access",
+  "Override Authority","Special Operation","Admin Privilege","Temporary Elevation",
+];
+
+const INITIAL_PERMISSIONS = [
+  { id:"PR-001", worker:"Malis Heng", dept:"Sewing", position:"Machine Operator", type:"Module Access", module:"Quality", fromDate:"2026-03-06", toDate:"2026-03-20", reason:"Requested to view defect reports for Line A1 improvement project", status:"Approved", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 08:00", note:"Read-only access approved for 2 weeks." },
+  { id:"PR-002", worker:"Dara Pich", dept:"Production", position:"Supervisor", type:"Data Export", module:"Production", fromDate:"2026-03-05", toDate:"2026-03-05", reason:"Monthly KPI report export for management meeting", status:"Approved", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 07:30", note:"One-time export approved." },
+  { id:"PR-003", worker:"Bopha Ly", dept:"Cutting", position:"Cutter", type:"Override Authority", module:"Work Orders", fromDate:"2026-03-07", toDate:"2026-03-10", reason:"Requested to update cutting targets while supervisor is on leave", status:"Pending", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 09:00", note:"" },
+  { id:"PR-004", worker:"Ratha Sok", dept:"Quality", position:"QC Inspector", type:"System Access", module:"HR", fromDate:"2026-03-10", toDate:"2026-03-31", reason:"Assisting HR with attendance audit for QC department", status:"Rejected", enteredBy:"Sophea Keo", enteredAt:"2026-03-04 14:00", note:"Not permitted. Coordinate through HR Manager." },
+  { id:"PR-005", worker:"Sina Kem", dept:"Embroidery", position:"Lead Operator", type:"Report Access", module:"Finance", fromDate:"2026-03-08", toDate:"2026-03-15", reason:"Needs costing data for new embroidery style pricing proposal", status:"Pending", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 10:00", note:"" },
+];
+
+// ═══════════════════════════════════════════════════════════════
 // DESIGN SYSTEM
 // ═══════════════════════════════════════════════════════════════
 const ACCENT = {
@@ -194,12 +213,12 @@ const ACCENT = {
 function GlassCard({ children, color="amber", className="" }) {
   const a = ACCENT[color];
   return (
-    <div className={`relative rounded-2xl overflow-hidden p-5 ${className}`}
-      style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", border:`1px solid ${a.border}`, boxShadow:`inset 0 1px 0 rgba(255,255,255,0.1),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
-      <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
-      <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"/>
-      {children}
-    </div>
+      <div className={`relative rounded-2xl overflow-hidden p-5 ${className}`}
+           style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", border:`1px solid ${a.border}`, boxShadow:`inset 0 1px 0 rgba(255,255,255,0.1),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
+        <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
+        <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"/>
+        {children}
+      </div>
   );
 }
 
@@ -209,60 +228,60 @@ function Badge({ children, color="amber" }) {
 }
 
 function StatusBadge({ status }) {
-  const map = { "Active":"green","Online":"green","In Progress":"blue","Resolved":"green","Paid":"green","Pass":"green","Running":"green","Delivered":"green","Confirmed":"green","Permanent":"blue","Present":"green","Approved":"green","In Transit":"blue","Scheduled":"blue","Processing":"amber","Inactive":"gray","Offline":"gray","Pending":"amber","OT":"cyan","Idle":"gray","Draft":"gray","Delayed":"rose","Open":"rose","Rework":"amber","Absent":"rose","Critical":"rose","Major":"amber","Minor":"blue","Fail":"rose","High":"rose","Medium":"amber","Low":"green","Contract":"violet" };
+  const map = { "Active":"green","Online":"green","In Progress":"blue","Resolved":"green","Paid":"green","Pass":"green","Running":"green","Delivered":"green","Confirmed":"green","Permanent":"blue","Present":"green","Approved":"green","In Transit":"blue","Scheduled":"blue","Processing":"amber","Inactive":"gray","Offline":"gray","Pending":"amber","OT":"cyan","Idle":"gray","Draft":"gray","Delayed":"rose","Open":"rose","Rework":"amber","Absent":"rose","Critical":"rose","Major":"amber","Minor":"blue","Fail":"rose","High":"rose","Medium":"amber","Low":"green","Contract":"violet","Rejected":"rose","Urgent":"rose","Normal":"blue" };
   return <Badge color={map[status]||"gray"}>{status}</Badge>;
 }
 
 function Table({ cols, rows, color="blue" }) {
   const a = ACCENT[color];
   return (
-    <div className="overflow-x-auto rounded-xl" style={{ border:`1px solid ${a.border}` }}>
-      <table className="w-full text-xs">
-        <thead><tr style={{ background:a.bg, borderBottom:`1px solid ${a.border}` }}>{cols.map(c=><th key={c} className="text-left px-3 py-2.5 font-semibold tracking-wider uppercase text-white/50 whitespace-nowrap">{c}</th>)}</tr></thead>
-        <tbody>{rows.map((row,i)=><tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">{row.map((cell,j)=><td key={j} className="px-3 py-2.5 text-white/75 whitespace-nowrap">{cell}</td>)}</tr>)}</tbody>
-      </table>
-    </div>
+      <div className="overflow-x-auto rounded-xl" style={{ border:`1px solid ${a.border}` }}>
+        <table className="w-full text-xs">
+          <thead><tr style={{ background:a.bg, borderBottom:`1px solid ${a.border}` }}>{cols.map(c=><th key={c} className="text-left px-3 py-2.5 font-semibold tracking-wider uppercase text-white/50 whitespace-nowrap">{c}</th>)}</tr></thead>
+          <tbody>{rows.map((row,i)=><tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">{row.map((cell,j)=><td key={j} className="px-3 py-2.5 text-white/75 whitespace-nowrap">{cell}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
   );
 }
 
 function PageHeader({ title, subtitle, icon, onBack, color="amber" }) {
   const a = ACCENT[color];
   return (
-    <div className="flex items-center gap-4 mb-6">
-      <button onClick={onBack} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back
-      </button>
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{icon}</div>
-      <div className="min-w-0">
-        <h2 className="text-base font-bold text-white/90 truncate">{title}</h2>
-        <p className="text-[10px] text-white/35 uppercase tracking-widest">{subtitle}</p>
+      <div className="flex items-center gap-4 mb-6">
+        <button onClick={onBack} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back
+        </button>
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{icon}</div>
+        <div className="min-w-0">
+          <h2 className="text-base font-bold text-white/90 truncate">{title}</h2>
+          <p className="text-[10px] text-white/35 uppercase tracking-widest">{subtitle}</p>
+        </div>
       </div>
-    </div>
   );
 }
 
 function StatCard({ label, value, icon, color="amber", sub }) {
   const a = ACCENT[color];
   return (
-    <div className="rounded-xl px-4 py-3 flex items-center gap-3"
-      style={{ background:"rgba(255,255,255,0.05)", backdropFilter:"blur(12px)", border:`1px solid ${a.border}`, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)" }}>
-      <span className="text-xl">{icon}</span>
-      <div>
-        <div className="text-lg font-bold leading-none" style={{ color:a.text }}>{value}</div>
-        <div className="text-[10px] text-white/35 tracking-wide uppercase mt-0.5">{label}</div>
-        {sub && <div className="text-[9px] text-white/25 mt-0.5">{sub}</div>}
+      <div className="rounded-xl px-4 py-3 flex items-center gap-3"
+           style={{ background:"rgba(255,255,255,0.05)", backdropFilter:"blur(12px)", border:`1px solid ${a.border}`, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)" }}>
+        <span className="text-xl">{icon}</span>
+        <div>
+          <div className="text-lg font-bold leading-none" style={{ color:a.text }}>{value}</div>
+          <div className="text-[10px] text-white/35 tracking-wide uppercase mt-0.5">{label}</div>
+          {sub && <div className="text-[9px] text-white/25 mt-0.5">{sub}</div>}
+        </div>
       </div>
-    </div>
   );
 }
 
 function ProgressBar({ value }) {
   const col = value>=90?"#34d399":value>=75?"#60a5fa":value>=50?"#fbbf24":"#fb7185";
   return (
-    <div className="flex items-center gap-2 min-w-[80px]">
-      <div className="flex-1 h-1.5 rounded-full bg-white/10"><div className="h-full rounded-full" style={{ width:`${Math.min(value,100)}%`, background:col }}/></div>
-      <span className="text-[10px] font-medium w-8 text-right" style={{ color:col }}>{value}%</span>
-    </div>
+      <div className="flex items-center gap-2 min-w-[80px]">
+        <div className="flex-1 h-1.5 rounded-full bg-white/10"><div className="h-full rounded-full" style={{ width:`${Math.min(value,100)}%`, background:col }}/></div>
+        <span className="text-[10px] font-medium w-8 text-right" style={{ color:col }}>{value}%</span>
+      </div>
   );
 }
 
@@ -270,8 +289,352 @@ function Stars({ rating }) {
   return <span className="text-amber-400 text-xs">{"★".repeat(Math.round(rating))}{"☆".repeat(5-Math.round(rating))} <span className="text-white/40">{rating}</span></span>;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// INPUT COMPONENTS
+// ═══════════════════════════════════════════════════════════════
+function FormField({ label, required, children }) {
+  return (
+      <div>
+        <label className="block text-[10px] font-semibold text-white/40 uppercase tracking-widest mb-1.5">
+          {label}{required && <span className="text-rose-400 ml-0.5">*</span>}
+        </label>
+        {children}
+      </div>
+  );
+}
+
+const inputCls = "w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 placeholder-white/20 focus:outline-none focus:border-amber-400/50 focus:bg-white/8 transition-all";
+const selectCls = "w-full bg-[#1a1c18] border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 focus:outline-none focus:border-amber-400/50 transition-all appearance-none";
 
 // ═══════════════════════════════════════════════════════════════
+// HR ENTRY MODAL — HR records the worker's permission request
+// ═══════════════════════════════════════════════════════════════
+function HREntryModal({ onClose, onSave }) {
+  const BLANK = { worker:"", dept:"", position:"", type:"", module:"", fromDate:"", toDate:"", reason:"", status:"Pending", note:"" };
+  const [form, setForm] = useState(BLANK);
+  const [saved, setSaved] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const modules = ["Production","Quality","HR","Finance","Procurement","Maintenance","Administration","Reports","All Modules"];
+  const valid = form.worker && form.dept && form.type && form.module && form.fromDate && form.toDate && form.reason;
+
+  const handleSave = () => {
+    if (!valid) return;
+    onSave(form);
+    setSaved(true);
+    setTimeout(() => onClose(), 1800);
+  };
+
+  const daysDiff = (a,b) => { const d=new Date(b)-new Date(a); return isNaN(d)?0:Math.max(0,Math.round(d/86400000)+1); };
+
+  return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:"rgba(0,0,0,0.78)",backdropFilter:"blur(10px)"}}>
+        <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-3xl"
+             style={{background:"linear-gradient(145deg,rgba(28,26,18,0.98),rgba(18,20,16,0.99))",border:"1px solid rgba(251,191,36,0.22)",boxShadow:"0 40px 100px rgba(0,0,0,0.8),0 0 80px rgba(251,191,36,0.06)"}}>
+          <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-amber-400/60 to-amber-300/20 rounded-b-full"/>
+
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 pt-6 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0" style={{background:"rgba(251,191,36,0.15)",border:"1px solid rgba(251,191,36,0.3)"}}>🔐</div>
+              <div>
+                <h3 className="text-sm font-bold text-white/90">Record Permission Request</h3>
+                <p className="text-[10px] text-white/30 uppercase tracking-widest">HR Entry • On Behalf of Worker</p>
+              </div>
+            </div>
+            <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 transition-all text-xl leading-none">×</button>
+          </div>
+
+          {saved ? (
+              <div className="flex flex-col items-center py-14 px-6">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-4" style={{background:"rgba(52,211,153,0.15)",border:"1px solid rgba(52,211,153,0.3)"}}>✅</div>
+                <p className="text-sm font-semibold text-emerald-400 mb-1">Record Saved</p>
+                <p className="text-xs text-white/35 text-center">Permission request has been recorded successfully.</p>
+              </div>
+          ) : (
+              <div className="px-6 pb-6 space-y-4">
+
+                {/* ── SECTION: Worker Info ── */}
+                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
+                  <p className="text-[9px] text-amber-400/50 font-semibold uppercase tracking-widest mb-3">Worker Information</p>
+                  <div className="grid grid-cols-1 gap-3">
+                    <FormField label="Worker Name" required>
+                      <div className="relative">
+                        <select className={selectCls} value={form.worker}
+                                onChange={e => {
+                                  const emp = DATA.employees.find(em=>em.name===e.target.value);
+                                  setForm(f=>({...f, worker:e.target.value, dept:emp?.dept||"", position:emp?.position||""}));
+                                }}>
+                          <option value="">Select worker…</option>
+                          {DATA.employees.map(e=><option key={e.id} value={e.name}>{e.name} — {e.position} ({e.dept})</option>)}
+                        </select>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                      </div>
+                    </FormField>
+                    {form.worker && (
+                        <div className="flex items-center gap-3 rounded-xl p-3" style={{background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.15)"}}>
+                          <div className="w-8 h-8 rounded-lg bg-amber-400/15 flex items-center justify-center text-sm shrink-0">👷</div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-white/80 truncate">{form.worker}</p>
+                            <p className="text-[10px] text-white/35">{form.position} · {form.dept}</p>
+                          </div>
+                          <Badge color="amber">Selected</Badge>
+                        </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* ── SECTION: Permission Details ── */}
+                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
+                  <p className="text-[9px] text-blue-400/50 font-semibold uppercase tracking-widest mb-3">Permission Details</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <FormField label="Permission Type" required>
+                      <div className="relative">
+                        <select className={selectCls} value={form.type} onChange={e=>set("type",e.target.value)}>
+                          <option value="">Select type…</option>
+                          {PERMISSION_TYPES.map(t=><option key={t} value={t}>{t}</option>)}
+                        </select>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                      </div>
+                    </FormField>
+                    <FormField label="Module / Area" required>
+                      <div className="relative">
+                        <select className={selectCls} value={form.module} onChange={e=>set("module",e.target.value)}>
+                          <option value="">Select module…</option>
+                          {modules.map(m=><option key={m} value={m}>{m}</option>)}
+                        </select>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                      </div>
+                    </FormField>
+                  </div>
+                </div>
+
+                {/* ── SECTION: Date Range ── */}
+                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
+                  <p className="text-[9px] text-green-400/50 font-semibold uppercase tracking-widest mb-3">Access Period</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <FormField label="From Date" required>
+                      <input type="date" className={inputCls} value={form.fromDate} onChange={e=>set("fromDate",e.target.value)} style={{colorScheme:"dark"}}/>
+                    </FormField>
+                    <FormField label="Until Date" required>
+                      <input type="date" className={inputCls} value={form.toDate} onChange={e=>set("toDate",e.target.value)} style={{colorScheme:"dark"}}/>
+                    </FormField>
+                  </div>
+                  {form.fromDate && form.toDate && daysDiff(form.fromDate,form.toDate) > 0 && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <span className="text-[10px] text-white/30">Duration:</span>
+                        <span className="text-[10px] font-semibold text-green-400">{daysDiff(form.fromDate,form.toDate)} day(s)</span>
+                      </div>
+                  )}
+                </div>
+
+                {/* ── SECTION: Reason & Note ── */}
+                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
+                  <p className="text-[9px] text-violet-400/50 font-semibold uppercase tracking-widest mb-3">Reason & Notes</p>
+                  <div className="space-y-3">
+                    <FormField label="Reason Given by Worker" required>
+                  <textarea className={`${inputCls} resize-none`} rows={3}
+                            placeholder="What did the worker say they need this access for…"
+                            value={form.reason} onChange={e=>set("reason",e.target.value)}/>
+                    </FormField>
+                    <FormField label="HR Note (optional)">
+                      <input type="text" className={inputCls} placeholder="Internal note from HR…"
+                             value={form.note} onChange={e=>set("note",e.target.value)}/>
+                    </FormField>
+                  </div>
+                </div>
+
+                {/* Status toggle */}
+                <FormField label="Initial Status">
+                  <div className="flex gap-2">
+                    {["Pending","Approved","Rejected"].map(s=>(
+                        <button key={s} onClick={()=>set("status",s)}
+                                className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s
+                                    ? s==="Approved"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300"
+                                        : s==="Rejected"?"bg-rose-400/20 border-rose-400/40 text-rose-300"
+                                            : "bg-amber-400/20 border-amber-400/40 text-amber-300"
+                                    : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
+                          {s==="Approved"?"✓":s==="Rejected"?"✗":"⏳"} {s}
+                        </button>
+                    ))}
+                  </div>
+                </FormField>
+
+                {!valid && <p className="text-[10px] text-white/20 text-center">Fill in all required fields (*) to save</p>}
+
+                <div className="flex gap-3 pt-1">
+                  <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                  <button onClick={handleSave} disabled={!valid}
+                          className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold transition-all disabled:opacity-25 disabled:cursor-not-allowed"
+                          style={{background:"linear-gradient(135deg,rgba(251,191,36,0.28),rgba(251,191,36,0.12))",border:"1px solid rgba(251,191,36,0.4)",color:"#fbbf24"}}>
+                    💾 Save Record
+                  </button>
+                </div>
+              </div>
+          )}
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PERMISSIONS PAGE — HR manages all records
+// ═══════════════════════════════════════════════════════════════
+function PermissionsPage({ onBack }) {
+  const [records, setRecords] = useState(INITIAL_PERMISSIONS);
+  const [showEntry, setShowEntry] = useState(false);
+  const [editing, setEditing] = useState(null); // id of inline-status-editing
+  const [filter, setFilter] = useState("All");
+
+  const handleSave = (form) => {
+    const id = `PR-${String(records.length+1).padStart(3,"0")}`;
+    setRecords(r=>[{ ...form, id, enteredBy:"Sophea Keo", enteredAt:new Date().toISOString().slice(0,16).replace("T"," ") }, ...r]);
+  };
+
+  const changeStatus = (id, status) => {
+    setRecords(r=>r.map(x=>x.id===id?{...x,status}:x));
+    setEditing(null);
+  };
+
+  const deleteRecord = (id) => setRecords(r=>r.filter(x=>x.id!==id));
+
+  const filters = ["All","Pending","Approved","Rejected"];
+  const filtered = filter==="All" ? records : records.filter(r=>r.status===filter);
+
+  const daysDiff = (a,b)=>{ const d=new Date(b)-new Date(a); return isNaN(d)?0:Math.max(0,Math.round(d/86400000)+1); };
+
+  const statusColor = { Approved:"green", Pending:"amber", Rejected:"rose" };
+
+  return (
+      <div>
+        {showEntry && <HREntryModal onClose={()=>setShowEntry(false)} onSave={handleSave}/>}
+
+        <PageHeader title="Permission Records" subtitle="HR • Access Control Entry" icon="🔐" onBack={onBack} color="amber"/>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Records" value={records.length} icon="🔐" color="amber"/>
+          <StatCard label="Pending" value={records.filter(r=>r.status==="Pending").length} icon="⏳" color="amber"/>
+          <StatCard label="Approved" value={records.filter(r=>r.status==="Approved").length} icon="✅" color="green"/>
+          <StatCard label="Rejected" value={records.filter(r=>r.status==="Rejected").length} icon="✗" color="rose"/>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <div className="flex gap-2">
+            {filters.map(f=>(
+                <button key={f} onClick={()=>setFilter(f)}
+                        className={`px-3 py-1.5 rounded-xl text-[11px] font-medium border transition-all ${filter===f
+                            ?"bg-amber-400/20 border-amber-400/40 text-amber-300"
+                            :"bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
+                  {f}
+                </button>
+            ))}
+          </div>
+          <button onClick={()=>setShowEntry(true)}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all hover:-translate-y-0.5"
+                  style={{background:"linear-gradient(135deg,rgba(251,191,36,0.25),rgba(251,191,36,0.1))",border:"1px solid rgba(251,191,36,0.4)",color:"#fbbf24"}}>
+            + New Entry
+          </button>
+        </div>
+
+        {/* Records list */}
+        <div className="space-y-3">
+          {filtered.map(rec => {
+            const sc = statusColor[rec.status] || "gray";
+            const a = ACCENT[sc];
+            return (
+                <div key={rec.id} className="relative rounded-2xl overflow-hidden transition-all hover:-translate-y-px"
+                     style={{background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))",border:`1px solid ${a.border}`,boxShadow:`0 4px 20px rgba(0,0,0,0.3),0 0 24px ${a.bg}`}}>
+                  <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${a.bar}`}/>
+
+                  <div className="p-4">
+                    {/* Top row */}
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 font-bold"
+                             style={{background:a.bg,border:`1px solid ${a.border}`,color:a.text}}>
+                          {rec.worker.split(" ").map(w=>w[0]).join("").slice(0,2)}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                            <span className="font-mono text-[10px] text-white/30">{rec.id}</span>
+                            <StatusBadge status={rec.status}/>
+                          </div>
+                          <p className="text-xs font-semibold text-white/85 truncate">{rec.worker}</p>
+                          <p className="text-[10px] text-white/35">{rec.position} · {rec.dept}</p>
+                        </div>
+                      </div>
+
+                      {/* Type + Module */}
+                      <div className="text-right shrink-0">
+                        <p className="text-[11px] font-semibold text-white/65 mb-1">{rec.type}</p>
+                        <Badge color="blue">{rec.module}</Badge>
+                      </div>
+                    </div>
+
+                    {/* Date range */}
+                    <div className="mt-3 flex items-center gap-3 flex-wrap">
+                      <div className="flex items-center gap-1.5 text-[11px]">
+                        <span className="text-amber-400/60">📅</span>
+                        <span className="text-white/55">{rec.fromDate}</span>
+                        <span className="text-white/20 mx-0.5">→</span>
+                        <span className="text-white/55">{rec.toDate}</span>
+                        <span className="ml-1 px-1.5 py-0.5 rounded-md text-[9px]"
+                              style={{background:"rgba(255,255,255,0.07)",color:"rgba(255,255,255,0.4)"}}>
+                      {daysDiff(rec.fromDate,rec.toDate)}d
+                    </span>
+                      </div>
+                      <span className="text-[10px] text-white/25">Entered by {rec.enteredBy} · {rec.enteredAt}</span>
+                    </div>
+
+                    {/* Reason */}
+                    <div className="mt-2.5 rounded-lg px-3 py-2 text-[11px] text-white/50 leading-relaxed"
+                         style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)"}}>
+                      <span className="text-white/25 text-[9px] uppercase tracking-widest mr-2">Reason</span>{rec.reason}
+                    </div>
+
+                    {/* HR Note */}
+                    {rec.note && (
+                        <div className="mt-2 rounded-lg px-3 py-1.5 text-[10px] text-white/40 italic"
+                             style={{background:"rgba(251,191,36,0.05)",border:"1px solid rgba(251,191,36,0.12)"}}>
+                          💬 {rec.note}
+                        </div>
+                    )}
+
+                    {/* Actions row */}
+                    <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
+                      {/* Status changer */}
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[9px] text-white/25 uppercase tracking-widest mr-1">Status:</span>
+                        {["Pending","Approved","Rejected"].map(s=>(
+                            <button key={s} onClick={()=>changeStatus(rec.id,s)}
+                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all ${rec.status===s
+                                        ? s==="Approved"?"bg-emerald-400/25 border-emerald-400/40 text-emerald-300"
+                                            : s==="Rejected"?"bg-rose-400/25 border-rose-400/40 text-rose-300"
+                                                : "bg-amber-400/25 border-amber-400/40 text-amber-300"
+                                        : "bg-white/5 border-white/8 text-white/25 hover:text-white/50 hover:bg-white/8"}`}>
+                              {s==="Approved"?"✓":s==="Rejected"?"✗":"⏳"} {s}
+                            </button>
+                        ))}
+                      </div>
+                      <button onClick={()=>deleteRecord(rec.id)}
+                              className="px-2.5 py-1 rounded-lg text-[10px] text-rose-400/50 hover:text-rose-400 hover:bg-rose-400/10 border border-transparent hover:border-rose-400/20 transition-all">
+                        🗑 Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+            );
+          })}
+          {filtered.length===0 && (
+              <div className="text-center py-14 text-white/20 text-sm">No {filter.toLowerCase()} records found</div>
+          )}
+        </div>
+      </div>
+  );
+}
+
 // ALL PAGES
 // ═══════════════════════════════════════════════════════════════
 
@@ -338,40 +701,40 @@ function ReportsPage({onBack}){const reports=[{icon:"📊",title:"Daily Producti
 function MenuButton({title,iconPath,onClick,badge}){
   const [pressed,setPressed]=useState(false);
   return(
-    <button onClick={()=>{setPressed(true);setTimeout(()=>setPressed(false),150);onClick?.();}}
-      className={`relative flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-2xl cursor-pointer select-none overflow-hidden border border-white/20 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_4px_20px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-200 hover:bg-white/18 hover:border-amber-400/40 hover:-translate-y-0.5 active:scale-95 ${pressed?"scale-95":"scale-100"}`}>
-      <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"/>
-      <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/12 via-transparent to-transparent"/>
-      {badge&&<span className="absolute -top-1 -right-1 z-20 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-400 text-[9px] font-bold text-gray-900 flex items-center justify-center shadow">{badge}</span>}
-      <img src={iconPath} alt={title} className="relative w-8 h-8 object-contain drop-shadow-md flex-shrink-0" onError={e=>{e.target.src="https://api.iconify.design/mdi:dots-grid.svg?color=white";}}/>
-      <span className="relative text-[10px] font-light tracking-wide text-white/85 text-center leading-tight px-1 drop-shadow">{title}</span>
-    </button>
+      <button onClick={()=>{setPressed(true);setTimeout(()=>setPressed(false),150);onClick?.();}}
+              className={`relative flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-2xl cursor-pointer select-none overflow-hidden border border-white/20 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_4px_20px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-200 hover:bg-white/18 hover:border-amber-400/40 hover:-translate-y-0.5 active:scale-95 ${pressed?"scale-95":"scale-100"}`}>
+        <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"/>
+        <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/12 via-transparent to-transparent"/>
+        {badge&&<span className="absolute -top-1 -right-1 z-20 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-400 text-[9px] font-bold text-gray-900 flex items-center justify-center shadow">{badge}</span>}
+        <img src={iconPath} alt={title} className="relative w-8 h-8 object-contain drop-shadow-md flex-shrink-0" onError={e=>{e.target.src="https://api.iconify.design/mdi:dots-grid.svg?color=white";}}/>
+        <span className="relative text-[10px] font-light tracking-wide text-white/85 text-center leading-tight px-1 drop-shadow">{title}</span>
+      </button>
   );
 }
 
 function Section({title,icon,color="amber",children}){
   const a=ACCENT[color];
   return(
-    <div className="relative rounded-3xl overflow-hidden p-5"
-      style={{background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)",backdropFilter:"blur(20px)",border:`1px solid ${a.border}`,boxShadow:`inset 0 1px 0 rgba(255,255,255,0.12),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}`}}>
-      <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
-      <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-3xl"/>
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">{icon}</span>
-        <span className="text-sm font-semibold tracking-widest uppercase" style={{color:a.text}}>{title}</span>
+      <div className="relative rounded-3xl overflow-hidden p-5"
+           style={{background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)",backdropFilter:"blur(20px)",border:`1px solid ${a.border}`,boxShadow:`inset 0 1px 0 rgba(255,255,255,0.12),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}`}}>
+        <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-3xl"/>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-lg">{icon}</span>
+          <span className="text-sm font-semibold tracking-widest uppercase" style={{color:a.text}}>{title}</span>
+        </div>
+        {children}
       </div>
-      {children}
-    </div>
   );
 }
 
 function Group({label,color="amber",children}){
   const c={amber:"text-amber-300/60 border-amber-400/20",blue:"text-blue-300/60 border-blue-400/20",green:"text-emerald-300/60 border-emerald-400/20",rose:"text-rose-300/60 border-rose-400/20",violet:"text-violet-300/60 border-violet-400/20",cyan:"text-cyan-300/60 border-cyan-400/20",orange:"text-orange-300/60 border-orange-400/20",teal:"text-teal-300/60 border-teal-400/20"}[color];
   return(
-    <div className="mb-4 last:mb-0">
-      <p className={`text-[9px] font-semibold tracking-[0.18em] uppercase mb-3 pb-1 border-b ${c}`}>{label}</p>
-      <div className="flex flex-wrap gap-3">{children}</div>
-    </div>
+      <div className="mb-4 last:mb-0">
+        <p className={`text-[9px] font-semibold tracking-[0.18em] uppercase mb-3 pb-1 border-b ${c}`}>{label}</p>
+        <div className="flex flex-wrap gap-3">{children}</div>
+      </div>
   );
 }
 
@@ -380,6 +743,7 @@ function Group({label,color="amber",children}){
 // ═══════════════════════════════════════════════════════════════
 export default function MenuTesting(){
   const [page,setPage]=useState(null);
+  const [permBadge,setPermBadge]=useState(2); // pending count
   const nav=(p)=>setPage(p);
   const back=()=>setPage(null);
 
@@ -393,147 +757,161 @@ export default function MenuTesting(){
     suppliers:<SuppliersPage onBack={back}/>, "purchase-orders":<PurchaseOrdersPage onBack={back}/>, shipments:<ShipmentsPage onBack={back}/>,
     employees:<EmployeesPage onBack={back}/>, attendance:<AttendancePage onBack={back}/>, leave:<LeavePage onBack={back}/>,
     payroll:<PayrollPage onBack={back}/>, reports:<ReportsPage onBack={back}/>,
+    permissions:<PermissionsPage onBack={back}/>,
   };
 
   const I=(name,color="white")=>`https://api.iconify.design/mdi:${name}.svg?color=${color}`;
 
   return(
-    <>
-      <style>{`
+      <>
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
         .admin-root{font-family:'Sora',sans-serif;}
         @keyframes fadein{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
         .fadein{animation:fadein 0.45s cubic-bezier(.22,1,.36,1) both;}
+        input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.5);}
       `}</style>
 
-      <div className="admin-root min-h-screen p-5 lg:p-8"
-        style={{background:"radial-gradient(ellipse at 10% 10%,#1c2d1a 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,#1a1f2e 0%,transparent 50%),radial-gradient(ellipse at 55% 45%,#1e1a10 0%,transparent 60%),#0c0e0b"}}>
+        <div className="admin-root min-h-screen p-5 lg:p-8"
+             style={{background:"radial-gradient(ellipse at 10% 10%,#1c2d1a 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,#1a1f2e 0%,transparent 50%),radial-gradient(ellipse at 55% 45%,#1e1a10 0%,transparent 60%),#0c0e0b"}}>
 
-        <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)",backgroundSize:"28px 28px"}}/>
-        <div className="fixed w-96 h-96 rounded-full opacity-10 blur-[100px] pointer-events-none -top-24 -left-24 animate-pulse" style={{background:"#854d0e"}}/>
-        <div className="fixed w-72 h-72 rounded-full opacity-10 blur-[80px] pointer-events-none bottom-0 right-0 animate-pulse" style={{background:"#1d4ed8",animationDelay:"2s"}}/>
+          <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)",backgroundSize:"28px 28px"}}/>
+          <div className="fixed w-96 h-96 rounded-full opacity-10 blur-[100px] pointer-events-none -top-24 -left-24 animate-pulse" style={{background:"#854d0e"}}/>
+          <div className="fixed w-72 h-72 rounded-full opacity-10 blur-[80px] pointer-events-none bottom-0 right-0 animate-pulse" style={{background:"#1d4ed8",animationDelay:"2s"}}/>
 
-        {/* Header */}
-        <div className="relative z-10 mb-7 fadein flex items-center gap-4">
-          {page&&<button onClick={back} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Menu</button>}
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{background:"rgba(251,191,36,0.15)",border:"1px solid rgba(251,191,36,0.3)"}}>🏭</div>
-          <div>
-            <h1 className="text-lg font-bold text-white/90 tracking-tight">SEC Mega Factory</h1>
-            <p className="text-[10px] text-white/30 tracking-widest uppercase font-light">Garment ERP System</p>
+          {/* Header */}
+          <div className="relative z-10 mb-7 fadein flex items-center gap-4">
+            {page&&<button onClick={back} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Menu</button>}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{background:"rgba(251,191,36,0.15)",border:"1px solid rgba(251,191,36,0.3)"}}>🏭</div>
+            <div>
+              <h1 className="text-lg font-bold text-white/90 tracking-tight">SEC Mega Factory</h1>
+              <p className="text-[10px] text-white/30 tracking-widest uppercase font-light">Garment ERP System</p>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              {/* Quick permission request button in header */}
+              {!page && (
+                  <button onClick={() => nav("permissions")}
+                          className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all border"
+                          style={{ background:"rgba(251,191,36,0.12)", border:"1px solid rgba(251,191,36,0.3)", color:"#fbbf24" }}>
+                    🔐 Permissions
+                    {permBadge > 0 && <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 text-[8px] font-bold text-gray-900 flex items-center justify-center">{permBadge}</span>}
+                  </button>
+              )}
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full" style={{background:"rgba(52,211,153,0.12)",border:"1px solid rgba(52,211,153,0.25)"}}>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"/>
+                <span className="text-[10px] text-emerald-400 font-medium tracking-wider uppercase">Live</span>
+              </div>
+            </div>
           </div>
-          <div className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-full" style={{background:"rgba(52,211,153,0.12)",border:"1px solid rgba(52,211,153,0.25)"}}>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"/>
-            <span className="text-[10px] text-emerald-400 font-medium tracking-wider uppercase">Live</span>
+
+          {/* Content */}
+          <div className="relative z-10 fadein" key={page}>
+            {page&&PAGES[page]?PAGES[page]:(
+                <>
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3 mb-6">
+                    {[{l:"Active Lines",v:"12",i:"⚡",c:"amber"},{l:"Today Output",v:"4,820",i:"👕",c:"green"},{l:"Efficiency",v:"91%",i:"📈",c:"blue"},{l:"Open Defects",v:"7",i:"⚠️",c:"rose"},{l:"Work Orders",v:"5",i:"📋",c:"violet"},{l:"Workers",v:"476",i:"👷",c:"cyan"}].map(s=>
+                        <StatCard key={s.l} label={s.l} value={s.v} icon={s.i} color={s.c}/>
+                    )}
+                  </div>
+
+                  {/* Menu Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+
+                    {/* 1 – Administration */}
+                    <Section title="Administration" icon="🛡️" color="amber">
+                      <Group label="Access Control" color="amber">
+                        <MenuButton title="Users" iconPath={I("account-group")} onClick={()=>nav("users")}/>
+                        <MenuButton title="Roles" iconPath={I("shield-account")} onClick={()=>nav("roles")}/>
+                        <MenuButton title="Permissions" iconPath={I("key-chain")} onClick={()=>nav("permissions")} badge={permBadge||undefined}/>
+                      </Group>
+                      <Group label="System" color="amber">
+                        <MenuButton title="Audit Log" iconPath={I("clipboard-text-clock")} onClick={()=>nav("audit-log")} badge="6"/>
+                        <MenuButton title="Settings" iconPath={I("cog")} onClick={()=>nav("settings")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 2 – Data Setup */}
+                    <Section title="Data Setup" icon="⚙️" color="blue">
+                      <Group label="Factory" color="blue">
+                        <MenuButton title="Departments" iconPath={I("domain")} onClick={()=>nav("departments")}/>
+                        <MenuButton title="Prod. Lines" iconPath={I("source-branch")} onClick={()=>nav("production-lines")}/>
+                        <MenuButton title="Shifts" iconPath={I("clock-time-four")} onClick={()=>nav("shifts")}/>
+                      </Group>
+                      <Group label="Products" color="blue">
+                        <MenuButton title="Products" iconPath={I("tshirt-crew")} onClick={()=>nav("products")}/>
+                        <MenuButton title="Materials" iconPath={I("layers")} onClick={()=>nav("materials")}/>
+                        <MenuButton title="Standards" iconPath={I("ruler")} onClick={()=>nav("standards")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 3 – Production */}
+                    <Section title="Production" icon="🏗️" color="green">
+                      <Group label="Planning" color="green">
+                        <MenuButton title="Work Orders" iconPath={I("clipboard-list")} onClick={()=>nav("work-orders")} badge="3"/>
+                        <MenuButton title="Schedule" iconPath={I("calendar-month")} onClick={()=>nav("schedule")}/>
+                      </Group>
+                      <Group label="Monitoring" color="green">
+                        <MenuButton title="Real-time" iconPath={I("monitor-eye")} onClick={()=>nav("realtime")}/>
+                        <MenuButton title="TV Display" iconPath={I("television-play")} onClick={()=>nav("tv")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 4 – Quality */}
+                    <Section title="Quality Control" icon="🔬" color="rose">
+                      <Group label="Inspection" color="rose">
+                        <MenuButton title="Inspections" iconPath={I("magnify-scan")} onClick={()=>nav("inspections")}/>
+                        <MenuButton title="Defects" iconPath={I("alert-circle")} onClick={()=>nav("defects")} badge="2"/>
+                      </Group>
+                      <Group label="Reports" color="rose">
+                        <MenuButton title="Dashboard" iconPath={I("view-dashboard")} onClick={()=>nav("dashboard")}/>
+                        <MenuButton title="Reports" iconPath={I("chart-bar")} onClick={()=>nav("reports")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 5 – HR */}
+                    <Section title="Human Resources" icon="👷" color="violet">
+                      <Group label="Workforce" color="violet">
+                        <MenuButton title="Employees" iconPath={I("account-hard-hat")} onClick={()=>nav("employees")}/>
+                        <MenuButton title="Attendance" iconPath={I("calendar-check")} onClick={()=>nav("attendance")}/>
+                      </Group>
+                      <Group label="Compensation" color="violet">
+                        <MenuButton title="Leave" iconPath={I("beach")} onClick={()=>nav("leave")}/>
+                        <MenuButton title="Payroll" iconPath={I("cash-multiple")} onClick={()=>nav("payroll")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 6 – Procurement */}
+                    <Section title="Procurement" icon="📦" color="teal">
+                      <Group label="Partners" color="teal">
+                        <MenuButton title="Suppliers" iconPath={I("factory")} onClick={()=>nav("suppliers")}/>
+                        <MenuButton title="Buyers" iconPath={I("handshake")} onClick={()=>nav("buyers")}/>
+                      </Group>
+                      <Group label="Orders" color="teal">
+                        <MenuButton title="Purchase PO" iconPath={I("package-variant")} onClick={()=>nav("purchase-orders")}/>
+                        <MenuButton title="Shipments" iconPath={I("ferry")} onClick={()=>nav("shipments")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 7 – Finance */}
+                    <Section title="Finance" icon="💰" color="violet">
+                      <Group label="Costing" color="violet">
+                        <MenuButton title="Cost Sheet" iconPath={I("calculator")} onClick={()=>nav("costing")}/>
+                      </Group>
+                    </Section>
+
+                    {/* 8 – Maintenance */}
+                    <Section title="Maintenance" icon="🔧" color="orange">
+                      <Group label="Assets" color="orange">
+                        <MenuButton title="Machines" iconPath={I("tools")} onClick={()=>nav("machines")}/>
+                      </Group>
+                    </Section>
+
+                  </div>
+                </>
+            )}
           </div>
         </div>
-
-        {/* Content */}
-        <div className="relative z-10 fadein" key={page}>
-          {page&&PAGES[page]?PAGES[page]:(
-            <>
-              {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3 mb-6">
-                {[{l:"Active Lines",v:"12",i:"⚡",c:"amber"},{l:"Today Output",v:"4,820",i:"👕",c:"green"},{l:"Efficiency",v:"91%",i:"📈",c:"blue"},{l:"Open Defects",v:"7",i:"⚠️",c:"rose"},{l:"Work Orders",v:"5",i:"📋",c:"violet"},{l:"Workers",v:"476",i:"👷",c:"cyan"}].map(s=>
-                  <StatCard key={s.l} label={s.l} value={s.v} icon={s.i} color={s.c}/>
-                )}
-              </div>
-
-              {/* Menu Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-
-                {/* 1 – Administration */}
-                <Section title="Administration" icon="🛡️" color="amber">
-                  <Group label="Access Control" color="amber">
-                    <MenuButton title="Users" iconPath={I("account-group")} onClick={()=>nav("users")}/>
-                    <MenuButton title="Roles" iconPath={I("shield-account")} onClick={()=>nav("roles")}/>
-                  </Group>
-                  <Group label="System" color="amber">
-                    <MenuButton title="Audit Log" iconPath={I("clipboard-text-clock")} onClick={()=>nav("audit-log")} badge="6"/>
-                    <MenuButton title="Settings" iconPath={I("cog")} onClick={()=>nav("settings")}/>
-                  </Group>
-                </Section>
-
-                {/* 2 – Data Setup */}
-                <Section title="Data Setup" icon="⚙️" color="blue">
-                  <Group label="Factory" color="blue">
-                    <MenuButton title="Departments" iconPath={I("domain")} onClick={()=>nav("departments")}/>
-                    <MenuButton title="Prod. Lines" iconPath={I("source-branch")} onClick={()=>nav("production-lines")}/>
-                    <MenuButton title="Shifts" iconPath={I("clock-time-four")} onClick={()=>nav("shifts")}/>
-                  </Group>
-                  <Group label="Products" color="blue">
-                    <MenuButton title="Products" iconPath={I("tshirt-crew")} onClick={()=>nav("products")}/>
-                    <MenuButton title="Materials" iconPath={I("layers")} onClick={()=>nav("materials")}/>
-                    <MenuButton title="Standards" iconPath={I("ruler")} onClick={()=>nav("standards")}/>
-                  </Group>
-                </Section>
-
-                {/* 3 – Production */}
-                <Section title="Production" icon="🏗️" color="green">
-                  <Group label="Planning" color="green">
-                    <MenuButton title="Work Orders" iconPath={I("clipboard-list")} onClick={()=>nav("work-orders")} badge="3"/>
-                    <MenuButton title="Schedule" iconPath={I("calendar-month")} onClick={()=>nav("schedule")}/>
-                  </Group>
-                  <Group label="Monitoring" color="green">
-                    <MenuButton title="Real-time" iconPath={I("monitor-eye")} onClick={()=>nav("realtime")}/>
-                    <MenuButton title="TV Display" iconPath={I("television-play")} onClick={()=>nav("tv")}/>
-                  </Group>
-                </Section>
-
-                {/* 4 – Quality */}
-                <Section title="Quality Control" icon="🔬" color="rose">
-                  <Group label="Inspection" color="rose">
-                    <MenuButton title="Inspections" iconPath={I("magnify-scan")} onClick={()=>nav("inspections")}/>
-                    <MenuButton title="Defects" iconPath={I("alert-circle")} onClick={()=>nav("defects")} badge="2"/>
-                  </Group>
-                  <Group label="Reports" color="rose">
-                    <MenuButton title="Dashboard" iconPath={I("view-dashboard")} onClick={()=>nav("dashboard")}/>
-                    <MenuButton title="Reports" iconPath={I("chart-bar")} onClick={()=>nav("reports")}/>
-                  </Group>
-                </Section>
-
-                {/* 5 – HR */}
-                <Section title="Human Resources" icon="👷" color="violet">
-                  <Group label="Workforce" color="violet">
-                    <MenuButton title="Employees" iconPath={I("account-hard-hat")} onClick={()=>nav("employees")}/>
-                    <MenuButton title="Attendance" iconPath={I("calendar-check")} onClick={()=>nav("attendance")}/>
-                  </Group>
-                  <Group label="Compensation" color="violet">
-                    <MenuButton title="Leave" iconPath={I("beach")} onClick={()=>nav("leave")}/>
-                    <MenuButton title="Payroll" iconPath={I("cash-multiple")} onClick={()=>nav("payroll")}/>
-                  </Group>
-                </Section>
-
-                {/* 6 – Procurement */}
-                <Section title="Procurement" icon="📦" color="teal">
-                  <Group label="Partners" color="teal">
-                    <MenuButton title="Suppliers" iconPath={I("factory")} onClick={()=>nav("suppliers")}/>
-                    <MenuButton title="Buyers" iconPath={I("handshake")} onClick={()=>nav("buyers")}/>
-                  </Group>
-                  <Group label="Orders" color="teal">
-                    <MenuButton title="Purchase PO" iconPath={I("package-variant")} onClick={()=>nav("purchase-orders")}/>
-                    <MenuButton title="Shipments" iconPath={I("ferry")} onClick={()=>nav("shipments")}/>
-                  </Group>
-                </Section>
-
-                {/* 7 – Finance */}
-                <Section title="Finance" icon="💰" color="violet">
-                  <Group label="Costing" color="violet">
-                    <MenuButton title="Cost Sheet" iconPath={I("calculator")} onClick={()=>nav("costing")}/>
-                  </Group>
-                </Section>
-
-                {/* 8 – Maintenance */}
-                <Section title="Maintenance" icon="🔧" color="orange">
-                  <Group label="Assets" color="orange">
-                    <MenuButton title="Machines" iconPath={I("tools")} onClick={()=>nav("machines")}/>
-                  </Group>
-                </Section>
-
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+      </>
   );
 }

@@ -14,7 +14,7 @@ function useWebsocketServer(destination) {
     const [isConnected, setIsConnected] = useState(false);
     const [reconnectAttempts, setReconnectAttempts] = useState(0);
     const token = useSelector(selectCurrentToken);
-
+    const user = useSelector((state) => state.auth.profile);
     const MAX_RECONNECT_ATTEMPTS = 5;
     const RECONNECT_INTERVAL = 3000; // 3 seconds
 
@@ -169,6 +169,11 @@ function useWebsocketServer(destination) {
             return;
         }
 
+        if (!user?.id) {  // 👈 guard
+            console.log("WebSocket: No user id available, waiting...");
+            return;
+        }
+
         console.log("WebSocket: All required parameters available, connecting...", {
             hasToken: !!token,
             destination,
@@ -204,7 +209,8 @@ function useWebsocketServer(destination) {
             // Enhanced error handling for the connection
             socketClient.current.connect(
                 {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    userId: String(user.id),
                 },
                 () => onConnected(destination),
                 (error) => {
@@ -250,7 +256,7 @@ function useWebsocketServer(destination) {
             setError(connectionError);
             setIsLoading(false);
         }
-    }, [token, destination, onConnected, onError, disconnect, isTokenError, refreshPage]);
+    }, [token, destination, onConnected, user?.id, onError, disconnect, isTokenError, refreshPage]);
 
     // Manual reconnect function
     const reconnect = useCallback(() => {

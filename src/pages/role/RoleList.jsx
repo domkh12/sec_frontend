@@ -1,19 +1,14 @@
-import BackButton from "../../components/ui/BackButton.jsx";
-import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    useCreateUserMutation, useDeleteUserMutation,
+    useCreateUserMutation,
+    useDeleteUserMutation, useGetUserQuery,
     useUpdateUserMutation
 } from "../../redux/feature/user/userApiSlice.js";
-import * as Yup from "yup";
-import {Alert, Backdrop, Snackbar} from "@mui/material";
-import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
-import TableCus from "../../components/table/TableCus.jsx";
-import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
-import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
-import {useGetUserQuery} from "../../redux/feature/user/userApiSlice.js";
+import {useGetProductionLineQuery} from "../../redux/feature/productionLine/productionLineApiSlice.js";
+import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
 import {
     setAlertUser, setIsOpenDeleteUserDialog,
     setIsOpenDialogAddOrEditUser, setIsOpenSnackbarUser,
@@ -21,10 +16,15 @@ import {
     setPageSizeUser,
     setUserDataForUpdate
 } from "../../redux/feature/user/userSlice.js";
-import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
-import {useGetProductionLineQuery} from "../../redux/feature/productionLine/productionLineApiSlice.js";
+import * as Yup from "yup";
+import {Alert, Backdrop, Snackbar} from "@mui/material";
+import BackButton from "../../components/ui/BackButton.jsx";
+import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
+import TableCus from "../../components/table/TableCus.jsx";
+import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
+import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 
-function UserList(){
+function RoleList(){
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
@@ -349,4 +349,4 @@ function UserList(){
     return content;
 }
 
-export default UserList;
+export default RoleList;

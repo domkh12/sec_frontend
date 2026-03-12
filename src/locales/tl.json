@@ -8,8 +8,18 @@
   "roles": "Mga Papel",
   "materials": "Mga Materyales",
   "accessControl": "Kontrol sa Access",
+  "hrMonitor": "HR Monitor",
+  "qualityControl": "Kontrol ng Kalidad",
+  "inputData": "Magpasok ng Data",
   "validation": {
-    "required": "Kinakailangan"
+    "required": "Kinakailangan",
+    "minLength": "Minimum na haba ay {{min}} characters",
+    "maxLength": "Maximum na haba ay {{max}} characters",
+    "invalidEmail": "Hindi wastong email address",
+    "invalidPhone": "Hindi wastong phone number",
+    "usernameFormat": "Ang username ay dapat naglalaman lamang ng mga titik, numero, at underscore",
+    "passwordUppercase": "Ang password ay dapat maglaman ng kahit isang malaking titik",
+    "passwordMismatch": "Ang mga password ay hindi nagtutugma"
   },
   "user": {
     "title": "User",
@@ -41,7 +51,10 @@
     "shift": "Pamahalaan ang Shift"
   },
   "buttons": {
-    "addNew": "Magdagdag ng Bago"
+    "addNew": "Magdagdag ng Bago",
+    "create": "Lumikha",
+    "cancel": "Kanselahin",
+    "update": "I-update"
   },
   "department": {
     "create": "Lumikha ng Departamento",
@@ -69,7 +82,11 @@
     "firstName": "Pangalan",
     "lastName": "Apelyido",
     "employeeId": "Employee ID",
-    "phoneNumber": "Numero ng Telepono"
+    "phoneNumber": "Numero ng Telepono",
+    "productionLine": "Production Line",
+    "confirmPassword": "Kumpirmahin ang Password",
+    "username": "Username",
+    "password": "Password"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

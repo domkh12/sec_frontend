@@ -17,7 +17,7 @@ function MenuAdmin(){
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("accessControl")}</Typography>
                         <MenuButton title={t('user.title')} iconPath={"/images/team.png"} onClick={() => navigate("users")}/>
-                        <MenuButton title={t('roles')} iconPath={"/images/insurance.png"} onClick={() => navigate("users")}/>
+                        <MenuButton title={t('roles')} iconPath={"/images/insurance.png"} onClick={() => navigate("roles")}/>
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('system')}</Typography>
@@ -46,12 +46,12 @@ function MenuAdmin(){
             </div>
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
-                <Typography variant="h6" sx={{color: yellow[600]}}>HR Monitor</Typography>
+                <Typography variant="h6" sx={{color: yellow[600]}}>{t('hrMonitor')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>Quality Control</Typography>
+                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('qualityControl')}</Typography>
                     <MenuButton
-                        title="Input Data"
+                        title={`${t('inputData')}`}
                         iconPath={"/images/smart-tv.png"}
                         onClick={() => navigate("tv-menu")}
                     />

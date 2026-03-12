@@ -8,8 +8,18 @@
   "auditLog": "审计日志",
   "roles": "角色",
   "accessControl": "访问控制",
+  "hrMonitor": "人力资源监控",
+  "qualityControl": "质量控制",
+  "inputData": "输入数据",
   "validation": {
-    "required": "必填"
+    "required": "必填",
+    "minLength": "最小长度为 {{min}} 个字符",
+    "maxLength": "最大长度为 {{max}} 个字符",
+    "invalidEmail": "无效的邮箱地址",
+    "invalidPhone": "无效的电话号码",
+    "usernameFormat": "用户名只能包含字母、数字和下划线",
+    "passwordUppercase": "密码必须包含至少一个大写字母",
+    "passwordMismatch": "密码不匹配"
   },
   "user": {
     "title": "用户",
@@ -41,7 +51,10 @@
     "shift": "管理班次"
   },
   "buttons": {
-    "addNew": "添加新项"
+    "addNew": "添加新项",
+    "create": "创建",
+    "cancel": "取消",
+    "update": "更新"
   },
   "department": {
     "create": "创建部门",
@@ -69,7 +82,11 @@
     "firstName": "名字",
     "lastName": "姓氏",
     "employeeId": "员工编号",
-    "phoneNumber": "电话号码"
+    "phoneNumber": "电话号码",
+    "productionLine": "生产线",
+    "confirmPassword": "确认密码",
+    "username": "用户名",
+    "password": "密码"
   },
   "factory": {
     "structure": "工厂结构"
