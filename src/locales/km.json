@@ -11,6 +11,11 @@
   "hrMonitor": "ត្រួតពិនិត្យធនធានមនុស្ស",
   "qualityControl": "ត្រួតពិនិត្យគុណភាព",
   "inputData": "បញ្ចូលទិន្នន័យ",
+  "code": "លេខកូដ",
+  "styleName": "ឈ្មោះម៉ូដ",
+  "category": "ប្រភេទ",
+  "color": "ពណ៌",
+  "size": "ទំហំ",
   "validation": {
     "required": "ត្រូវការ",
     "minLength": "ប្រវែងអប្បបរមាគឺ {{min}} តួអក្សរ",
@@ -86,7 +91,9 @@
     "productionLine": "ខ្សែផលិតកម្ម",
     "confirmPassword": "បញ្ជាក់ពាក្យសម្ងាត់",
     "username": "ឈ្មោះអ្នកប្រើប្រាស់",
-    "password": "ពាក្យសម្ងាត់"
+    "password": "ពាក្យសម្ងាត់",
+    "description": "ការពិពណ៌នា",
+    "users": "អ្នកប្រើប្រាស់"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"

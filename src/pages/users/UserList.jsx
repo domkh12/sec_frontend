@@ -89,7 +89,7 @@ function UserList(){
             .required(t("validation.required")),
 
         username: Yup.string()
-            .min(3, t("validation.minLength", { min: 3 }))
+            .min(2, t("validation.minLength", { min: 2 }))
             .max(20, t("validation.maxLength", { max: 20 }))
             .matches(/^[a-zA-Z0-9_]+$/, t("validation.usernameFormat"))
             .required(t("validation.required")),

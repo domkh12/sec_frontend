@@ -1,240 +1,34 @@
 import {useTranslation} from "react-i18next";
-import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    useCreateUserMutation,
-    useDeleteUserMutation, useGetUserQuery,
-    useUpdateUserMutation
-} from "../../redux/feature/user/userApiSlice.js";
-import {useGetProductionLineQuery} from "../../redux/feature/productionLine/productionLineApiSlice.js";
 import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
 import {
-    setAlertUser, setIsOpenDeleteUserDialog,
-    setIsOpenDialogAddOrEditUser, setIsOpenSnackbarUser,
-    setPageNoUser,
-    setPageSizeUser,
-    setUserDataForUpdate
-} from "../../redux/feature/user/userSlice.js";
-import * as Yup from "yup";
+    setPageNoRole,
+    setPageSizeRole,
+} from "../../redux/feature/role/roleSlice.js";
 import {Alert, Backdrop, Snackbar} from "@mui/material";
 import BackButton from "../../components/ui/BackButton.jsx";
-import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import TableCus from "../../components/table/TableCus.jsx";
-import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
-import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 
 function RoleList(){
     const {t} = useTranslation();
-    const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const pageNo = useSelector((state) => state.user.pageNo);
-    const pageSize = useSelector((state) => state.user.pageSize);
-    const userDataForUpdate = useSelector((state) => state.user.userDataForUpdate);
-    const isOpen = useSelector((state) => state.user.isOpenDialogAddOrEditUser);
-    const isOpenSnackbar = useSelector((state) => state.user.isOpenSnackbarUser);
-    const alertUser = useSelector((state) => state.user.alertUser);
-    const isOpenDeleteDialog = useSelector((state) => state.user.isOpenDeleteUserDialog);
-
-    const[createUser] = useCreateUserMutation();
-    const [updateUser] = useUpdateUserMutation();
-    const [deleteUser] = useDeleteUserMutation();
-    const {data: prodLineData} = useGetProductionLineQuery({
-        pageNo: 1,
-        pageSize: 999
-    });
-    const {data: userData, isLoading, isSuccess} = useGetUserQuery({
+    const pageNo = useSelector((state) => state.role.pageNo);
+    const pageSize = useSelector((state) => state.role.pageSize);
+    const {data: roleData, isLoading, isSuccess} = useGetRoleQuery({
         pageNo: pageNo,
         pageSize: pageSize
     });
-    const {data: roleData} = useGetRoleQuery({
-        pageNo: 1,
-        pageSize: 999
-    });
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoUser(newPage + 1));
+        dispatch(setPageNoRole(newPage + 1));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeUser(event.target.value));
-        dispatch(setPageNoUser(1));
+        dispatch(setPageSizeRole(event.target.value));
+        dispatch(setPageNoRole(1));
     };
-
-    const handleClose = () => {
-        dispatch(setIsOpenDialogAddOrEditUser(false));
-        dispatch(setUserDataForUpdate(null));
-    }
-
-    const validationSchema = Yup.object().shape({
-        employeeId: Yup.string()
-            .required(t("validation.required")),
-
-        firstName: Yup.string()
-            .min(2, t("validation.minLength", { min: 2 }))
-            .required(t("validation.required")),
-
-        lastName: Yup.string()
-            .min(2, t("validation.minLength", { min: 2 }))
-            .required(t("validation.required")),
-
-        email: Yup.string()
-            .email(t("validation.invalidEmail"))
-            .nullable()
-            .optional(),
-
-        phoneNumber: Yup.string()
-            .matches(/^[0-9+\s\-()]{7,15}$/, t("validation.invalidPhone"))
-            .required(t("validation.required")),
-
-        username: Yup.string()
-            .min(3, t("validation.minLength", { min: 3 }))
-            .max(20, t("validation.maxLength", { max: 20 }))
-            .matches(/^[a-zA-Z0-9_]+$/, t("validation.usernameFormat"))
-            .required(t("validation.required")),
-
-        password: userDataForUpdate
-            ? Yup.string()          // not required on update
-            : Yup.string()
-                .min(8, t("validation.minLength", { min: 8 }))
-                .matches(/[A-Z]/, t("validation.passwordUppercase"))
-                .matches(/[0-9]/, t("validation.passwordNumber"))
-                .required(t("validation.required")),
-
-        confirmPassword: userDataForUpdate
-            ? Yup.string()          // not required on update
-            : Yup.string()
-                .oneOf([Yup.ref("password"), null], t("validation.passwordMismatch"))
-                .required(t("validation.required")),
-
-        role: Yup.number().typeError(t("validation.required"))
-            .required(t("validation.required")),
-    });
-
-    const handleSubmit = async (values, {resetForm}) => {
-        try {
-            if (userDataForUpdate) {
-                await updateUser({
-                    id: userDataForUpdate.id,
-                    employeeId: values.employeeId,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.email,
-                    phoneNumber: values.phoneNumber,
-                    username: values.username,
-                    password: values.password,
-                    roleId: values.role,
-                    lineId: values.productionLine
-                }).unwrap();
-                dispatch(setAlertUser({type: "success", message: "Update successfully"}));
-                dispatch(setUserDataForUpdate(null));
-            }else {
-                await createUser({
-                    employeeId: values.employeeId,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.email,
-                    phoneNumber: values.phoneNumber,
-                    username: values.username,
-                    password: values.password,
-                    roleId: values.role,
-                    lineId: values.productionLine
-                }).unwrap();
-                dispatch(setAlertUser({type: "success", message: "Create successfully"}));
-            }
-            dispatch(setIsOpenSnackbarUser(true));
-            dispatch(setIsOpenDialogAddOrEditUser(false));
-            resetForm();
-        } catch (error) {
-            dispatch(setAlertUser({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarUser(true));
-        }
-    };
-
-    const fields = [
-        { name: "employeeId", label: "table.employeeId", type: "text" },
-        { name: "firstName",     label: "table.firstName",     type: "text" },
-        { name: "lastName",     label: "table.lastName",     type: "text" },
-        { name: "email",     label: "table.email",     type: "email" },
-        { name: "phoneNumber",     label: "table.phoneNumber",     type: "text" },
-        { name: "username", label: "table.username", type: "text"},
-        { name: "password",         label: "table.password",         type: "password", hideOnUpdate: true },
-        { name: "confirmPassword",  label: "table.confirmPassword",  type: "password", hideOnUpdate: true },
-        {
-            name: "role",
-            label: "table.role",
-            type: "autocomplete",
-            minWidth: 130,
-            fetchOptions: async () => {
-                return Object.values(roleData?.entities ?? {}).map((role) => ({
-                    value: role.id,
-                    label: role.name,
-                }));
-            },
-        },
-        {
-            name: "productionLine",
-            label: "table.productionLine",
-            type: "autocomplete",
-            minWidth: 130,
-            fetchOptions: async () => {
-                return Object.values(prodLineData?.entities ?? {}).map((prodLine) => ({
-                    value: prodLine.id,
-                    label: prodLine.line,
-                }));
-            },
-        }
-    ];
-
-    const initialValues = {
-        employeeId: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        username: "",
-        password: "",
-        confirmPassword: "",
-        role: "",
-        productionLine: "",
-    };
-
-    const handleEdit = (row) => {
-        console.log(row)
-        dispatch(setIsOpenDialogAddOrEditUser(true));
-        dispatch(setUserDataForUpdate({
-            id: row.id,
-            employeeId: row.employeeId,
-            firstName: row.firstName,
-            lastName: row.lastName,
-            email: row.email,
-            phoneNumber: row.phoneNumber,
-            username: row.username,
-            role: row.roleId,
-            productionLine: row.lineId
-
-        }));
-    };
-
-    const handleDeleteOpen = (row) => {
-        dispatch(setIsOpenDeleteUserDialog(true));
-        setId(row.id);
-    };
-
-    const handleDelete = async () => {
-        console.log(id);
-        try {
-            await deleteUser({id: id}).unwrap();
-            dispatch(setIsOpenDeleteUserDialog(false));
-            dispatch(setAlertUser({type: "success", message: "Delete successfully"}));
-            dispatch(setIsOpenSnackbarUser(true));
-        }catch (error) {
-            dispatch(setIsOpenDeleteUserDialog(false));
-            dispatch(setAlertUser({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarUser(true));
-        }
-    }
 
     const columns = [
         {
@@ -244,51 +38,21 @@ function RoleList(){
             align: "left",
         },
         {
-            id: "firstName",
-            label: t("table.firstName"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "lastName",
-            label: t("table.lastName"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "email",
-            label: t("table.email"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "role",
+            id: "name",
             label: t("table.role"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "department",
-            label: t("table.department"),
+            id: "description",
+            label: t("table.description"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "status",
-            label: t("table.status"),
+            id: "users",
+            label: t("table.users"),
             minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "lastLogin",
-            label: t("table.lastLogin"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "action",
-            label: t("table.action"),
-            minWidth: 50,
             align: "left",
         },
     ]
@@ -312,35 +76,9 @@ function RoleList(){
                 `}>
                     <div className="flex justify-between items-center">
                         <BackButton onClick={() => navigate("/admin")}/>
-                        <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditUser(true))}/>
                     </div>
-                    <TableCus columns={columns} data={userData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
+                    <TableCus columns={columns} data={roleData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>
                 </div>
-                <DialogAddEditCus
-                    fields={fields}
-                    title={userDataForUpdate ? "Update User" : "Create User"}
-                    isOpen={isOpen}
-                    onClose={handleClose}
-                    isUpdate={!!userDataForUpdate}
-                    validationSchema={validationSchema}
-                    handleSubmit={handleSubmit}
-                    initialValues={userDataForUpdate ? userDataForUpdate : initialValues}/>
-                <Snackbar
-                    open={isOpenSnackbar}
-                    autoHideDuration={6000}
-                    onClose={() => dispatch(setIsOpenSnackbarUser(false))}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                >
-                    <Alert
-                        onClose={() => dispatch(setIsOpenSnackbarUser(false))}
-                        severity={alertUser.type}
-                        variant="filled"
-                        sx={{ width: '100%' }}
-                    >
-                        {alertUser.message}
-                    </Alert>
-                </Snackbar>
-                <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteUserDialog(false))} handleDelete={handleDelete}/>
             </div>
         )
     }

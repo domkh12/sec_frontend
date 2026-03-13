@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ═══════════════════════════════════════════════════════════════
 // STATIC DATA
@@ -177,16 +177,7 @@ const DATA = {
 
 const STATS = { activeLines:12, todayOutput:4820, efficiency:91, openDefects:7, totalWorkers:476, pendingOrders:3 };
 
-// ═══════════════════════════════════════════════════════════════
-// PERMISSION REQUESTS DATA (initial seed)
-// ═══════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════
-// PERMISSION RECORDS DATA
-// ═══════════════════════════════════════════════════════════════
-const PERMISSION_TYPES = [
-  "System Access","Module Access","Data Export","Report Access",
-  "Override Authority","Special Operation","Admin Privilege","Temporary Elevation",
-];
+const PERMISSION_TYPES = ["System Access","Module Access","Data Export","Report Access","Override Authority","Special Operation","Admin Privilege","Temporary Elevation"];
 
 const INITIAL_PERMISSIONS = [
   { id:"PR-001", worker:"Malis Heng", dept:"Sewing", position:"Machine Operator", type:"Module Access", module:"Quality", fromDate:"2026-03-06", toDate:"2026-03-20", reason:"Requested to view defect reports for Line A1 improvement project", status:"Approved", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 08:00", note:"Read-only access approved for 2 weeks." },
@@ -197,24 +188,27 @@ const INITIAL_PERMISSIONS = [
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// DESIGN SYSTEM
+// DESIGN TOKENS
 // ═══════════════════════════════════════════════════════════════
 const ACCENT = {
-  amber:  { text:"#fbbf24", border:"rgba(251,191,36,0.3)",  bg:"rgba(251,191,36,0.1)",  bar:"from-amber-400/70 to-amber-300/30"   },
-  blue:   { text:"#60a5fa", border:"rgba(96,165,250,0.3)",   bg:"rgba(96,165,250,0.1)",   bar:"from-blue-400/70 to-blue-300/30"    },
-  green:  { text:"#34d399", border:"rgba(52,211,153,0.3)",   bg:"rgba(52,211,153,0.1)",   bar:"from-emerald-400/70 to-emerald-300/30" },
-  rose:   { text:"#fb7185", border:"rgba(251,113,133,0.3)",  bg:"rgba(251,113,133,0.1)",  bar:"from-rose-400/70 to-rose-300/30"    },
-  violet: { text:"#a78bfa", border:"rgba(167,139,250,0.3)",  bg:"rgba(167,139,250,0.1)",  bar:"from-violet-400/70 to-violet-300/30"  },
-  cyan:   { text:"#22d3ee", border:"rgba(34,211,238,0.3)",   bg:"rgba(34,211,238,0.1)",   bar:"from-cyan-400/70 to-cyan-300/30"    },
-  orange: { text:"#fb923c", border:"rgba(251,146,60,0.3)",   bg:"rgba(251,146,60,0.1)",   bar:"from-orange-400/70 to-orange-300/30"  },
-  teal:   { text:"#2dd4bf", border:"rgba(45,212,191,0.3)",   bg:"rgba(45,212,191,0.1)",   bar:"from-teal-400/70 to-teal-300/30"    },
+  amber:  { text:"#fbbf24", border:"rgba(251,191,36,0.3)",  bg:"rgba(251,191,36,0.1)",  bar:"from-amber-400/70 to-amber-300/30" },
+  blue:   { text:"#60a5fa", border:"rgba(96,165,250,0.3)",  bg:"rgba(96,165,250,0.1)",  bar:"from-blue-400/70 to-blue-300/30" },
+  green:  { text:"#34d399", border:"rgba(52,211,153,0.3)",  bg:"rgba(52,211,153,0.1)",  bar:"from-emerald-400/70 to-emerald-300/30" },
+  rose:   { text:"#fb7185", border:"rgba(251,113,133,0.3)", bg:"rgba(251,113,133,0.1)", bar:"from-rose-400/70 to-rose-300/30" },
+  violet: { text:"#a78bfa", border:"rgba(167,139,250,0.3)", bg:"rgba(167,139,250,0.1)", bar:"from-violet-400/70 to-violet-300/30" },
+  cyan:   { text:"#22d3ee", border:"rgba(34,211,238,0.3)",  bg:"rgba(34,211,238,0.1)",  bar:"from-cyan-400/70 to-cyan-300/30" },
+  orange: { text:"#fb923c", border:"rgba(251,146,60,0.3)",  bg:"rgba(251,146,60,0.1)",  bar:"from-orange-400/70 to-orange-300/30" },
+  teal:   { text:"#2dd4bf", border:"rgba(45,212,191,0.3)",  bg:"rgba(45,212,191,0.1)",  bar:"from-teal-400/70 to-teal-300/30" },
 };
 
+// ═══════════════════════════════════════════════════════════════
+// BASE COMPONENTS
+// ═══════════════════════════════════════════════════════════════
 function GlassCard({ children, color="amber", className="" }) {
   const a = ACCENT[color];
   return (
       <div className={`relative rounded-2xl overflow-hidden p-5 ${className}`}
-           style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)", backdropFilter:"blur(20px)", WebkitBackdropFilter:"blur(20px)", border:`1px solid ${a.border}`, boxShadow:`inset 0 1px 0 rgba(255,255,255,0.1),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
+           style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)", backdropFilter:"blur(20px)", border:`1px solid ${a.border}`, boxShadow:`inset 0 1px 0 rgba(255,255,255,0.1),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
         <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
         <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"/>
         {children}
@@ -223,15 +217,85 @@ function GlassCard({ children, color="amber", className="" }) {
 }
 
 function Badge({ children, color="amber" }) {
-  const c = { amber:"bg-amber-400/20 text-amber-300 border-amber-400/30", blue:"bg-blue-400/20 text-blue-300 border-blue-400/30", green:"bg-emerald-400/20 text-emerald-300 border-emerald-400/30", rose:"bg-rose-400/20 text-rose-300 border-rose-400/30", violet:"bg-violet-400/20 text-violet-300 border-violet-400/30", cyan:"bg-cyan-400/20 text-cyan-300 border-cyan-400/30", orange:"bg-orange-400/20 text-orange-300 border-orange-400/30", gray:"bg-white/10 text-white/50 border-white/15" }[color]||"bg-white/10 text-white/50 border-white/15";
+  const c = { amber:"bg-amber-400/20 text-amber-300 border-amber-400/30", blue:"bg-blue-400/20 text-blue-300 border-blue-400/30", green:"bg-emerald-400/20 text-emerald-300 border-emerald-400/30", rose:"bg-rose-400/20 text-rose-300 border-rose-400/30", violet:"bg-violet-400/20 text-violet-300 border-violet-400/30", cyan:"bg-cyan-400/20 text-cyan-300 border-cyan-400/30", orange:"bg-orange-400/20 text-orange-300 border-orange-400/30", gray:"bg-white/10 text-white/50 border-white/15", teal:"bg-teal-400/20 text-teal-300 border-teal-400/30" }[color]||"bg-white/10 text-white/50 border-white/15";
   return <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${c}`}>{children}</span>;
 }
 
 function StatusBadge({ status }) {
-  const map = { "Active":"green","Online":"green","In Progress":"blue","Resolved":"green","Paid":"green","Pass":"green","Running":"green","Delivered":"green","Confirmed":"green","Permanent":"blue","Present":"green","Approved":"green","In Transit":"blue","Scheduled":"blue","Processing":"amber","Inactive":"gray","Offline":"gray","Pending":"amber","OT":"cyan","Idle":"gray","Draft":"gray","Delayed":"rose","Open":"rose","Rework":"amber","Absent":"rose","Critical":"rose","Major":"amber","Minor":"blue","Fail":"rose","High":"rose","Medium":"amber","Low":"green","Contract":"violet","Rejected":"rose","Urgent":"rose","Normal":"blue" };
+  const map = { "Active":"green","Online":"green","In Progress":"blue","Resolved":"green","Paid":"green","Pass":"green","Running":"green","Delivered":"green","Confirmed":"green","Permanent":"blue","Present":"green","Approved":"green","In Transit":"blue","Scheduled":"blue","Processing":"amber","Inactive":"gray","Offline":"gray","Pending":"amber","OT":"cyan","Idle":"gray","Draft":"gray","Delayed":"rose","Open":"rose","Rework":"amber","Absent":"rose","Critical":"rose","Major":"amber","Minor":"blue","Fail":"rose","High":"rose","Medium":"amber","Low":"green","Contract":"violet","Rejected":"rose","Urgent":"rose","Normal":"blue","Completed":"green" };
   return <Badge color={map[status]||"gray"}>{status}</Badge>;
 }
 
+function ProgressBar({ value, showLabel=true }) {
+  const col = value>=90?"#34d399":value>=75?"#60a5fa":value>=50?"#fbbf24":"#fb7185";
+  return (
+      <div className="flex items-center gap-2 min-w-[90px]">
+        <div className="flex-1 h-1.5 rounded-full bg-white/10">
+          <div className="h-full rounded-full transition-all duration-500" style={{ width:`${Math.min(value,100)}%`, background:col }}/>
+        </div>
+        {showLabel && <span className="text-[10px] font-semibold w-8 text-right" style={{ color:col }}>{value}%</span>}
+      </div>
+  );
+}
+
+function Stars({ rating }) {
+  return <span className="text-amber-400 text-xs">{"★".repeat(Math.round(rating))}{"☆".repeat(5-Math.round(rating))} <span className="text-white/40">{rating}</span></span>;
+}
+
+function StatCard({ label, value, icon, color="amber", sub, trend }) {
+  const a = ACCENT[color];
+  return (
+      <div className="rounded-xl px-4 py-3 flex items-center gap-3"
+           style={{ background:"rgba(255,255,255,0.05)", backdropFilter:"blur(12px)", border:`1px solid ${a.border}`, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)" }}>
+        <span className="text-xl">{icon}</span>
+        <div className="flex-1 min-w-0">
+          <div className="text-lg font-bold leading-none" style={{ color:a.text }}>{value}</div>
+          <div className="text-[10px] text-white/35 tracking-wide uppercase mt-0.5">{label}</div>
+          {sub && <div className="text-[9px] text-white/25 mt-0.5">{sub}</div>}
+        </div>
+        {trend && <div className={`text-[10px] font-semibold ${trend>0?"text-emerald-400":"text-rose-400"}`}>{trend>0?"↑":"↓"}{Math.abs(trend)}%</div>}
+      </div>
+  );
+}
+
+function PageHeader({ title, subtitle, icon, onBack, color="amber", actions }) {
+  const a = ACCENT[color];
+  return (
+      <div className="flex items-center gap-4 mb-6">
+        <button onClick={onBack} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0 hover:-translate-y-px active:translate-y-0 transition-all">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back
+        </button>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{icon}</div>
+        <div className="flex-1 min-w-0">
+          <h2 className="text-base font-bold text-white/90 truncate">{title}</h2>
+          <p className="text-[10px] text-white/35 uppercase tracking-widest">{subtitle}</p>
+        </div>
+        {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FORM PRIMITIVES
+// ═══════════════════════════════════════════════════════════════
+function FormField({ label, required, children, hint }) {
+  return (
+      <div>
+        <label className="block text-[10px] font-semibold text-white/40 uppercase tracking-widest mb-1.5">
+          {label}{required && <span className="text-rose-400 ml-0.5">*</span>}
+        </label>
+        {children}
+        {hint && <p className="text-[9px] text-white/20 mt-1">{hint}</p>}
+      </div>
+  );
+}
+
+const inputCls = "w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 placeholder-white/20 focus:outline-none focus:border-amber-400/50 focus:bg-white/8 transition-all";
+const selectCls = "w-full bg-[#1a1c18] border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 focus:outline-none focus:border-amber-400/50 transition-all appearance-none";
+
+// ═══════════════════════════════════════════════════════════════
+// SCROLLABLE TABLE WRAPPER
+// ═══════════════════════════════════════════════════════════════
 function Table({ cols, rows, color="blue" }) {
   const a = ACCENT[color];
   return (
@@ -244,232 +308,284 @@ function Table({ cols, rows, color="blue" }) {
   );
 }
 
-function PageHeader({ title, subtitle, icon, onBack, color="amber" }) {
-  const a = ACCENT[color];
-  return (
-      <div className="flex items-center gap-4 mb-6">
-        <button onClick={onBack} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Back
-        </button>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{icon}</div>
-        <div className="min-w-0">
-          <h2 className="text-base font-bold text-white/90 truncate">{title}</h2>
-          <p className="text-[10px] text-white/35 uppercase tracking-widest">{subtitle}</p>
-        </div>
-      </div>
-  );
-}
-
-function StatCard({ label, value, icon, color="amber", sub }) {
-  const a = ACCENT[color];
-  return (
-      <div className="rounded-xl px-4 py-3 flex items-center gap-3"
-           style={{ background:"rgba(255,255,255,0.05)", backdropFilter:"blur(12px)", border:`1px solid ${a.border}`, boxShadow:"inset 0 1px 0 rgba(255,255,255,0.07)" }}>
-        <span className="text-xl">{icon}</span>
-        <div>
-          <div className="text-lg font-bold leading-none" style={{ color:a.text }}>{value}</div>
-          <div className="text-[10px] text-white/35 tracking-wide uppercase mt-0.5">{label}</div>
-          {sub && <div className="text-[9px] text-white/25 mt-0.5">{sub}</div>}
-        </div>
-      </div>
-  );
-}
-
-function ProgressBar({ value }) {
-  const col = value>=90?"#34d399":value>=75?"#60a5fa":value>=50?"#fbbf24":"#fb7185";
-  return (
-      <div className="flex items-center gap-2 min-w-[80px]">
-        <div className="flex-1 h-1.5 rounded-full bg-white/10"><div className="h-full rounded-full" style={{ width:`${Math.min(value,100)}%`, background:col }}/></div>
-        <span className="text-[10px] font-medium w-8 text-right" style={{ color:col }}>{value}%</span>
-      </div>
-  );
-}
-
-function Stars({ rating }) {
-  return <span className="text-amber-400 text-xs">{"★".repeat(Math.round(rating))}{"☆".repeat(5-Math.round(rating))} <span className="text-white/40">{rating}</span></span>;
-}
-
 // ═══════════════════════════════════════════════════════════════
-// INPUT COMPONENTS
+// MODAL SHELL
 // ═══════════════════════════════════════════════════════════════
-function FormField({ label, required, children }) {
+function Modal({ title, subtitle, icon, accentColor="amber", onClose, children, maxW="max-w-lg" }) {
+  const a = ACCENT[accentColor];
   return (
-      <div>
-        <label className="block text-[10px] font-semibold text-white/40 uppercase tracking-widest mb-1.5">
-          {label}{required && <span className="text-rose-400 ml-0.5">*</span>}
-        </label>
-        {children}
-      </div>
-  );
-}
-
-const inputCls = "w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 placeholder-white/20 focus:outline-none focus:border-amber-400/50 focus:bg-white/8 transition-all";
-const selectCls = "w-full bg-[#1a1c18] border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 focus:outline-none focus:border-amber-400/50 transition-all appearance-none";
-
-// ═══════════════════════════════════════════════════════════════
-// HR ENTRY MODAL — HR records the worker's permission request
-// ═══════════════════════════════════════════════════════════════
-function HREntryModal({ onClose, onSave }) {
-  const BLANK = { worker:"", dept:"", position:"", type:"", module:"", fromDate:"", toDate:"", reason:"", status:"Pending", note:"" };
-  const [form, setForm] = useState(BLANK);
-  const [saved, setSaved] = useState(false);
-  const set = (k,v) => setForm(f=>({...f,[k]:v}));
-
-  const modules = ["Production","Quality","HR","Finance","Procurement","Maintenance","Administration","Reports","All Modules"];
-  const valid = form.worker && form.dept && form.type && form.module && form.fromDate && form.toDate && form.reason;
-
-  const handleSave = () => {
-    if (!valid) return;
-    onSave(form);
-    setSaved(true);
-    setTimeout(() => onClose(), 1800);
-  };
-
-  const daysDiff = (a,b) => { const d=new Date(b)-new Date(a); return isNaN(d)?0:Math.max(0,Math.round(d/86400000)+1); };
-
-  return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:"rgba(0,0,0,0.78)",backdropFilter:"blur(10px)"}}>
-        <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-3xl"
-             style={{background:"linear-gradient(145deg,rgba(28,26,18,0.98),rgba(18,20,16,0.99))",border:"1px solid rgba(251,191,36,0.22)",boxShadow:"0 40px 100px rgba(0,0,0,0.8),0 0 80px rgba(251,191,36,0.06)"}}>
-          <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-amber-400/60 to-amber-300/20 rounded-b-full"/>
-
-          {/* Header */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.78)", backdropFilter:"blur(10px)" }}>
+        <div className={`relative w-full ${maxW} max-h-[92vh] overflow-y-auto rounded-3xl`}
+             style={{ background:"linear-gradient(145deg,rgba(28,26,18,0.98),rgba(18,20,16,0.99))", border:`1px solid ${a.border}`, boxShadow:`0 40px 100px rgba(0,0,0,0.8),0 0 80px ${a.bg}` }}>
+          <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
           <div className="flex items-center justify-between px-6 pt-6 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0" style={{background:"rgba(251,191,36,0.15)",border:"1px solid rgba(251,191,36,0.3)"}}>🔐</div>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{icon}</div>
               <div>
-                <h3 className="text-sm font-bold text-white/90">Record Permission Request</h3>
-                <p className="text-[10px] text-white/30 uppercase tracking-widest">HR Entry • On Behalf of Worker</p>
+                <h3 className="text-sm font-bold text-white/90">{title}</h3>
+                <p className="text-[10px] text-white/30 uppercase tracking-widest">{subtitle}</p>
               </div>
             </div>
             <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 transition-all text-xl leading-none">×</button>
           </div>
+          {children}
+        </div>
+      </div>
+  );
+}
 
-          {saved ? (
-              <div className="flex flex-col items-center py-14 px-6">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-4" style={{background:"rgba(52,211,153,0.15)",border:"1px solid rgba(52,211,153,0.3)"}}>✅</div>
-                <p className="text-sm font-semibold text-emerald-400 mb-1">Record Saved</p>
-                <p className="text-xs text-white/35 text-center">Permission request has been recorded successfully.</p>
+function SavedState({ message="Changes Saved", accentColor="green" }) {
+  const a = ACCENT[accentColor];
+  return (
+      <div className="flex flex-col items-center py-14 px-6">
+        <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-4" style={{ background:a.bg, border:`1px solid ${a.border}` }}>✅</div>
+        <p className="text-sm font-semibold" style={{ color:a.text }}>{message}</p>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONFIRM DELETE MODAL
+// ═══════════════════════════════════════════════════════════════
+function ConfirmDeleteModal({ title, desc, onClose, onConfirm }) {
+  return (
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.82)", backdropFilter:"blur(12px)" }}>
+        <div className="relative w-full max-w-sm rounded-3xl overflow-hidden"
+             style={{ background:"linear-gradient(145deg,rgba(28,26,18,0.98),rgba(18,20,16,0.99))", border:"1px solid rgba(251,113,133,0.3)", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
+          <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-rose-400/60 to-rose-300/20 rounded-b-full"/>
+          <div className="px-6 py-6 text-center">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style={{ background:"rgba(251,113,133,0.15)", border:"1px solid rgba(251,113,133,0.3)" }}>🗑️</div>
+            <h3 className="text-sm font-bold text-white/90 mb-1">{title}</h3>
+            {desc && <p className="text-xs text-white/40 mb-4">{desc}</p>}
+            <p className="text-[11px] text-rose-300/70 mb-5">This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+              <button onClick={onConfirm} className="flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all" style={{ background:"rgba(251,113,133,0.2)", border:"1px solid rgba(251,113,133,0.4)", color:"#fb7185" }}>🗑 Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SEARCH + FILTER TOOLBAR
+// ═══════════════════════════════════════════════════════════════
+function SearchBar({ value, onChange, placeholder="Search…" }) {
+  return (
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/25 text-sm pointer-events-none">🔍</span>
+        <input type="text" placeholder={placeholder} className={inputCls} style={{ paddingLeft:"2rem" }} value={value} onChange={e=>onChange(e.target.value)}/>
+        {value && <button onClick={()=>onChange("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/60 transition-colors text-lg leading-none">×</button>}
+      </div>
+  );
+}
+
+function FilterSelect({ value, onChange, options, allLabel="All" }) {
+  return (
+      <div className="relative">
+        <select className="bg-[#1a1c18] border border-white/15 rounded-xl px-3 py-1.5 text-[11px] text-white/60 focus:outline-none focus:border-amber-400/40 transition-all appearance-none pr-6"
+                value={value} onChange={e=>onChange(e.target.value)}>
+          <option value="All">{allLabel}</option>
+          {options.map(o=><option key={o} value={o}>{o}</option>)}
+        </select>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 pointer-events-none text-[9px]">▼</span>
+      </div>
+  );
+}
+
+function FilterPills({ options, value, onChange }) {
+  return (
+      <div className="flex gap-1.5 flex-wrap">
+        {options.map(o=>(
+            <button key={o.label} onClick={()=>onChange(o.value)}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all ${value===o.value ? "bg-amber-400/20 border-amber-400/40 text-amber-300" : "bg-white/5 border-white/8 text-white/30 hover:text-white/50 hover:bg-white/8"}`}>
+              {o.label}
+            </button>
+        ))}
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── USERS PAGE ──────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function EditUserModal({ user, onClose, onSave }) {
+  const [form, setForm] = useState({ ...user });
+  const [saved, setSaved] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const handleSave = () => { onSave(form); setSaved(true); setTimeout(()=>onClose(),1400); };
+  return (
+      <Modal title="Edit User" subtitle={`ID: ${user.id}`} icon="✏️" accentColor="amber" onClose={onClose}>
+        {saved ? <SavedState message="User Updated"/> : (
+            <div className="px-6 pb-6 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Full Name" required><input type="text" className={inputCls} value={form.name} onChange={e=>set("name",e.target.value)}/></FormField>
+                <FormField label="Email" required><input type="email" className={inputCls} value={form.email} onChange={e=>set("email",e.target.value)}/></FormField>
               </div>
-          ) : (
-              <div className="px-6 pb-6 space-y-4">
-
-                {/* ── SECTION: Worker Info ── */}
-                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
-                  <p className="text-[9px] text-amber-400/50 font-semibold uppercase tracking-widest mb-3">Worker Information</p>
-                  <div className="grid grid-cols-1 gap-3">
-                    <FormField label="Worker Name" required>
-                      <div className="relative">
-                        <select className={selectCls} value={form.worker}
-                                onChange={e => {
-                                  const emp = DATA.employees.find(em=>em.name===e.target.value);
-                                  setForm(f=>({...f, worker:e.target.value, dept:emp?.dept||"", position:emp?.position||""}));
-                                }}>
-                          <option value="">Select worker…</option>
-                          {DATA.employees.map(e=><option key={e.id} value={e.name}>{e.name} — {e.position} ({e.dept})</option>)}
-                        </select>
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
-                      </div>
-                    </FormField>
-                    {form.worker && (
-                        <div className="flex items-center gap-3 rounded-xl p-3" style={{background:"rgba(251,191,36,0.06)",border:"1px solid rgba(251,191,36,0.15)"}}>
-                          <div className="w-8 h-8 rounded-lg bg-amber-400/15 flex items-center justify-center text-sm shrink-0">👷</div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-white/80 truncate">{form.worker}</p>
-                            <p className="text-[10px] text-white/35">{form.position} · {form.dept}</p>
-                          </div>
-                          <Badge color="amber">Selected</Badge>
-                        </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* ── SECTION: Permission Details ── */}
-                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
-                  <p className="text-[9px] text-blue-400/50 font-semibold uppercase tracking-widest mb-3">Permission Details</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <FormField label="Permission Type" required>
-                      <div className="relative">
-                        <select className={selectCls} value={form.type} onChange={e=>set("type",e.target.value)}>
-                          <option value="">Select type…</option>
-                          {PERMISSION_TYPES.map(t=><option key={t} value={t}>{t}</option>)}
-                        </select>
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
-                      </div>
-                    </FormField>
-                    <FormField label="Module / Area" required>
-                      <div className="relative">
-                        <select className={selectCls} value={form.module} onChange={e=>set("module",e.target.value)}>
-                          <option value="">Select module…</option>
-                          {modules.map(m=><option key={m} value={m}>{m}</option>)}
-                        </select>
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
-                      </div>
-                    </FormField>
-                  </div>
-                </div>
-
-                {/* ── SECTION: Date Range ── */}
-                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
-                  <p className="text-[9px] text-green-400/50 font-semibold uppercase tracking-widest mb-3">Access Period</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <FormField label="From Date" required>
-                      <input type="date" className={inputCls} value={form.fromDate} onChange={e=>set("fromDate",e.target.value)} style={{colorScheme:"dark"}}/>
-                    </FormField>
-                    <FormField label="Until Date" required>
-                      <input type="date" className={inputCls} value={form.toDate} onChange={e=>set("toDate",e.target.value)} style={{colorScheme:"dark"}}/>
-                    </FormField>
-                  </div>
-                  {form.fromDate && form.toDate && daysDiff(form.fromDate,form.toDate) > 0 && (
-                      <div className="mt-2 flex items-center gap-2">
-                        <span className="text-[10px] text-white/30">Duration:</span>
-                        <span className="text-[10px] font-semibold text-green-400">{daysDiff(form.fromDate,form.toDate)} day(s)</span>
-                      </div>
-                  )}
-                </div>
-
-                {/* ── SECTION: Reason & Note ── */}
-                <div className="rounded-xl px-4 py-3" style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)"}}>
-                  <p className="text-[9px] text-violet-400/50 font-semibold uppercase tracking-widest mb-3">Reason & Notes</p>
-                  <div className="space-y-3">
-                    <FormField label="Reason Given by Worker" required>
-                  <textarea className={`${inputCls} resize-none`} rows={3}
-                            placeholder="What did the worker say they need this access for…"
-                            value={form.reason} onChange={e=>set("reason",e.target.value)}/>
-                    </FormField>
-                    <FormField label="HR Note (optional)">
-                      <input type="text" className={inputCls} placeholder="Internal note from HR…"
-                             value={form.note} onChange={e=>set("note",e.target.value)}/>
-                    </FormField>
-                  </div>
-                </div>
-
-                {/* Status toggle */}
-                <FormField label="Initial Status">
-                  <div className="flex gap-2">
-                    {["Pending","Approved","Rejected"].map(s=>(
-                        <button key={s} onClick={()=>set("status",s)}
-                                className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s
-                                    ? s==="Approved"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300"
-                                        : s==="Rejected"?"bg-rose-400/20 border-rose-400/40 text-rose-300"
-                                            : "bg-amber-400/20 border-amber-400/40 text-amber-300"
-                                    : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
-                          {s==="Approved"?"✓":s==="Rejected"?"✗":"⏳"} {s}
-                        </button>
-                    ))}
-                  </div>
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Role">
+                  <div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
                 </FormField>
-
-                {!valid && <p className="text-[10px] text-white/20 text-center">Fill in all required fields (*) to save</p>}
-
-                <div className="flex gap-3 pt-1">
-                  <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
-                  <button onClick={handleSave} disabled={!valid}
-                          className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold transition-all disabled:opacity-25 disabled:cursor-not-allowed"
-                          style={{background:"linear-gradient(135deg,rgba(251,191,36,0.28),rgba(251,191,36,0.12))",border:"1px solid rgba(251,191,36,0.4)",color:"#fbbf24"}}>
-                    💾 Save Record
-                  </button>
+                <FormField label="Department">
+                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}>{DATA.departments.map(d=><option key={d.id} value={d.name}>{d.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+              </div>
+              <FormField label="Status">
+                <div className="flex gap-2">
+                  {["Active","Inactive"].map(s=>(
+                      <button key={s} onClick={()=>set("status",s)}
+                              className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Active"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":"bg-rose-400/20 border-rose-400/40 text-rose-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
+                        {s==="Active"?"✓":"🔒"} {s}
+                      </button>
+                  ))}
                 </div>
+              </FormField>
+              <div className="flex gap-3 pt-1">
+                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                <button onClick={handleSave} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold" style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.28),rgba(251,191,36,0.12))", border:"1px solid rgba(251,191,36,0.4)", color:"#fbbf24" }}>💾 Save Changes</button>
+              </div>
+            </div>
+        )}
+      </Modal>
+  );
+}
+
+function AddUserModal({ onClose, onSave }) {
+  const [form, setForm] = useState({ name:"", email:"", role:"", dept:"", status:"Active" });
+  const [saved, setSaved] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const valid = form.name && form.email && form.role && form.dept;
+  const handleSave = () => { if(!valid) return; onSave(form); setSaved(true); setTimeout(()=>onClose(),1400); };
+  return (
+      <Modal title="Add New User" subtitle="System Access Account" icon="➕" accentColor="blue" onClose={onClose}>
+        {saved ? <SavedState message="User Added" accentColor="green"/> : (
+            <div className="px-6 pb-6 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Full Name" required><input type="text" className={inputCls} placeholder="Full name" value={form.name} onChange={e=>set("name",e.target.value)}/></FormField>
+                <FormField label="Email" required><input type="email" className={inputCls} placeholder="user@sec.com" value={form.email} onChange={e=>set("email",e.target.value)}/></FormField>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Role" required>
+                  <div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}><option value="">Select role…</option>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+                <FormField label="Department" required>
+                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}><option value="">Select dept…</option>{DATA.departments.map(d=><option key={d.id} value={d.name}>{d.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+              </div>
+              <FormField label="Status">
+                <div className="flex gap-2">
+                  {["Active","Inactive"].map(s=>(
+                      <button key={s} onClick={()=>set("status",s)}
+                              className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Active"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":"bg-rose-400/20 border-rose-400/40 text-rose-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
+                        {s==="Active"?"✓":"🔒"} {s}
+                      </button>
+                  ))}
+                </div>
+              </FormField>
+              {!valid && <p className="text-[10px] text-white/20 text-center">Fill in all required fields</p>}
+              <div className="flex gap-3 pt-1">
+                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                <button onClick={handleSave} disabled={!valid} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25 disabled:cursor-not-allowed" style={{ background:"linear-gradient(135deg,rgba(96,165,250,0.28),rgba(96,165,250,0.12))", border:"1px solid rgba(96,165,250,0.4)", color:"#60a5fa" }}>➕ Add User</button>
+              </div>
+            </div>
+        )}
+      </Modal>
+  );
+}
+
+function UsersPage({ onBack }) {
+  const [users, setUsers] = useState(DATA.users);
+  const [search, setSearch] = useState("");
+  const [filterRole, setFilterRole] = useState("All");
+  const [filterDept, setFilterDept] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [editUser, setEditUser] = useState(null);
+  const [deleteUser, setDeleteUser] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+
+  const allRoles = Array.from(new Set(DATA.users.map(u=>u.role)));
+  const allDepts = Array.from(new Set(DATA.users.map(u=>u.dept)));
+
+  const filtered = users.filter(u => {
+    const q = search.toLowerCase();
+    return (!q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.role.toLowerCase().includes(q) || u.dept.toLowerCase().includes(q))
+        && (filterRole==="All" || u.role===filterRole)
+        && (filterDept==="All" || u.dept===filterDept)
+        && (filterStatus==="All" || u.status===filterStatus);
+  });
+
+  const hasFilters = search || filterRole!=="All" || filterDept!=="All" || filterStatus!=="All";
+
+  return (
+      <div>
+        {editUser && <EditUserModal user={editUser} onClose={()=>setEditUser(null)} onSave={f=>{setUsers(us=>us.map(u=>u.id===f.id?{...u,...f}:u));setEditUser(null);}}/>}
+        {deleteUser && <ConfirmDeleteModal title="Delete User?" desc={`${deleteUser.name} — ${deleteUser.role}`} onClose={()=>setDeleteUser(null)} onConfirm={()=>{setUsers(us=>us.filter(u=>u.id!==deleteUser.id));setDeleteUser(null);}}/>}
+        {showAdd && <AddUserModal onClose={()=>setShowAdd(false)} onSave={f=>{setUsers(us=>[{...f,id:Math.max(...us.map(u=>u.id))+1,lastLogin:"Never"},...us]);}}/>}
+
+        <PageHeader title="User Management" subtitle="Administration • Access Control" icon="👥" onBack={onBack} color="amber"
+                    actions={<button onClick={()=>setShowAdd(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(96,165,250,0.25),rgba(96,165,250,0.1))", border:"1px solid rgba(96,165,250,0.4)", color:"#60a5fa" }}>➕ Add User</button>}/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Users" value={users.length} icon="👤" color="amber"/>
+          <StatCard label="Active" value={users.filter(u=>u.status==="Active").length} icon="✅" color="green"/>
+          <StatCard label="Inactive" value={users.filter(u=>u.status==="Inactive").length} icon="🔒" color="rose"/>
+          <StatCard label="Roles" value={DATA.roles.length} icon="🛡️" color="blue"/>
+        </div>
+
+        {/* Toolbar */}
+        <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search by name, email, role, department…"/>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] text-white/25 uppercase tracking-widest shrink-0">Filter:</span>
+            <FilterSelect value={filterRole} onChange={setFilterRole} options={allRoles} allLabel="All Roles"/>
+            <FilterSelect value={filterDept} onChange={setFilterDept} options={allDepts} allLabel="All Depts"/>
+            <FilterPills options={[{label:"All",value:"All"},{label:"Active",value:"Active"},{label:"Inactive",value:"Inactive"}]} value={filterStatus} onChange={setFilterStatus}/>
+            {hasFilters && <button onClick={()=>{setSearch("");setFilterRole("All");setFilterDept("All");setFilterStatus("All");}} className="px-2.5 py-1 rounded-lg text-[10px] text-white/30 hover:text-white/60 border border-white/8 hover:border-white/20 transition-all">✕ Clear</button>}
+            <span className="ml-auto text-[10px] text-white/25">
+            <span className="text-white/50 font-medium">{filtered.length}</span> of {users.length} users{hasFilters&&<span className="text-amber-400/50 ml-1">(filtered)</span>}
+          </span>
+          </div>
+        </div>
+
+        {/* User rows */}
+        <div className="space-y-2">
+          {filtered.map(u=>{
+            const ac = u.status==="Active" ? ACCENT.green : ACCENT.rose;
+            const initials = u.name.split(" ").map(w=>w[0]).join("").slice(0,2);
+            return (
+                <div key={u.id} className="relative rounded-2xl overflow-hidden transition-all hover:-translate-y-px group" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))", border:`1px solid ${ac.border}` }}>
+                  <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${ac.bar}`}/>
+                  <div className="flex items-center gap-4 px-4 py-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold shrink-0" style={{ background:ac.bg, border:`1px solid ${ac.border}`, color:ac.text }}>{initials}</div>
+                    <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-4 gap-x-4 items-center">
+                      <div>
+                        <p className="text-xs font-semibold text-white/90 truncate">{u.name}</p>
+                        <p className="text-[10px] text-white/40 truncate font-mono">{u.email}</p>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1 md:mt-0">
+                        <Badge color="amber">{u.role}</Badge>
+                        <Badge color="blue">{u.dept}</Badge>
+                      </div>
+                      <div className="hidden md:block">
+                        <p className="text-[10px] text-white/30">Last login</p>
+                        <p className="text-[11px] text-white/55">{u.lastLogin}</p>
+                      </div>
+                      <div><StatusBadge status={u.status}/></div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={()=>setEditUser(u)} className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all hover:-translate-y-px" style={{ background:"rgba(251,191,36,0.12)", border:"1px solid rgba(251,191,36,0.3)", color:"#fbbf24" }}>✏️ Edit</button>
+                      <button onClick={()=>setDeleteUser(u)} className="px-2.5 py-1.5 rounded-lg text-[11px] border transition-all hover:-translate-y-px" style={{ background:"rgba(251,113,133,0.1)", border:"1px solid rgba(251,113,133,0.25)", color:"#fb7185" }}>🗑</button>
+                    </div>
+                  </div>
+                </div>
+            );
+          })}
+          {filtered.length===0 && (
+              <div className="text-center py-14">
+                <p className="text-3xl mb-3">🔍</p>
+                <p className="text-sm text-white/30">No users match your search</p>
+                {hasFilters && <button onClick={()=>{setSearch("");setFilterRole("All");setFilterDept("All");setFilterStatus("All");}} className="mt-3 text-[11px] text-amber-400/60 hover:text-amber-400 transition-colors">Clear filters</button>}
               </div>
           )}
         </div>
@@ -478,82 +594,540 @@ function HREntryModal({ onClose, onSave }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// PERMISSIONS PAGE — HR manages all records
+// ── WORK ORDERS PAGE ─────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
+function AddWorkOrderModal({ onClose, onSave }) {
+  const [form, setForm] = useState({ product:"", buyer:"", qty:"", due:"", line:"", status:"Pending", done:0, priority:"Medium" });
+  const [saved, setSaved] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const valid = form.product && form.buyer && form.qty && form.due && form.line;
+  const handleSave = () => { if(!valid) return; onSave(form); setSaved(true); setTimeout(()=>onClose(),1400); };
+  return (
+      <Modal title="New Work Order" subtitle="Production Planning" icon="📋" accentColor="green" onClose={onClose}>
+        {saved ? <SavedState message="Work Order Created" accentColor="green"/> : (
+            <div className="px-6 pb-6 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Product" required>
+                  <div className="relative"><select className={selectCls} value={form.product} onChange={e=>set("product",e.target.value)}><option value="">Select product…</option>{DATA.products.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+                <FormField label="Buyer" required>
+                  <div className="relative"><select className={selectCls} value={form.buyer} onChange={e=>set("buyer",e.target.value)}><option value="">Select buyer…</option>{DATA.buyers.map(b=><option key={b.id} value={b.name}>{b.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Quantity" required><input type="number" className={inputCls} placeholder="e.g. 5000" value={form.qty} onChange={e=>set("qty",e.target.value)}/></FormField>
+                <FormField label="Due Date" required><input type="date" className={inputCls} value={form.due} onChange={e=>set("due",e.target.value)} style={{ colorScheme:"dark" }}/></FormField>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Line" required>
+                  <div className="relative"><select className={selectCls} value={form.line} onChange={e=>set("line",e.target.value)}><option value="">Select line…</option>{DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name} ({l.dept})</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+                <FormField label="Priority">
+                  <div className="relative"><select className={selectCls} value={form.priority} onChange={e=>set("priority",e.target.value)}><option value="Critical">Critical</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+              </div>
+              {!valid && <p className="text-[10px] text-white/20 text-center">Fill in all required fields</p>}
+              <div className="flex gap-3 pt-1">
+                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                <button onClick={handleSave} disabled={!valid} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>📋 Create Order</button>
+              </div>
+            </div>
+        )}
+      </Modal>
+  );
+}
+
+function EditWorkOrderModal({ wo, onClose, onSave }) {
+  const [form, setForm] = useState({ ...wo });
+  const [saved, setSaved] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const handleSave = () => { onSave(form); setSaved(true); setTimeout(()=>onClose(),1400); };
+  return (
+      <Modal title="Edit Work Order" subtitle={wo.id} icon="✏️" accentColor="green" onClose={onClose}>
+        {saved ? <SavedState message="Work Order Updated" accentColor="green"/> : (
+            <div className="px-6 pb-6 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Status">
+                  <div className="relative"><select className={selectCls} value={form.status} onChange={e=>set("status",e.target.value)}>{["Pending","In Progress","Delayed","Completed"].map(s=><option key={s} value={s}>{s}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+                <FormField label="Priority">
+                  <div className="relative"><select className={selectCls} value={form.priority} onChange={e=>set("priority",e.target.value)}>{["Critical","High","Medium","Low"].map(p=><option key={p} value={p}>{p}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                </FormField>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <FormField label="Done (pcs)"><input type="number" className={inputCls} value={form.done} onChange={e=>set("done",Number(e.target.value))}/></FormField>
+                <FormField label="Due Date"><input type="date" className={inputCls} value={form.due} onChange={e=>set("due",e.target.value)} style={{ colorScheme:"dark" }}/></FormField>
+              </div>
+              <FormField label="Line">
+                <div className="relative"><select className={selectCls} value={form.line} onChange={e=>set("line",e.target.value)}>{DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+              </FormField>
+              <div className="flex gap-3 pt-1">
+                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                <button onClick={handleSave} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>💾 Save Changes</button>
+              </div>
+            </div>
+        )}
+      </Modal>
+  );
+}
+
+function WorkOrdersPage({ onBack }) {
+  const [orders, setOrders] = useState(DATA.workOrders);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [filterPriority, setFilterPriority] = useState("All");
+  const [editWO, setEditWO] = useState(null);
+  const [deleteWO, setDeleteWO] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [view, setView] = useState("cards"); // cards | table
+
+  const filtered = orders.filter(o => {
+    const q = search.toLowerCase();
+    return (!q || o.id.toLowerCase().includes(q) || o.product.toLowerCase().includes(q) || o.buyer.toLowerCase().includes(q) || o.line.toLowerCase().includes(q))
+        && (filterStatus==="All" || o.status===filterStatus)
+        && (filterPriority==="All" || o.priority===filterPriority);
+  });
+
+  const priorityColor = { Critical:"rose", High:"rose", Medium:"amber", Low:"green" };
+  const statusColor = { "In Progress":"blue", Pending:"amber", Delayed:"rose", Completed:"green" };
+
+  const addOrder = (form) => {
+    const newId = `WO-2026-00${orders.length+1}`;
+    setOrders(os=>[{ ...form, id:newId, qty:Number(form.qty), done:0 }, ...os]);
+  };
+
+  return (
+      <div>
+        {editWO && <EditWorkOrderModal wo={editWO} onClose={()=>setEditWO(null)} onSave={f=>{setOrders(os=>os.map(o=>o.id===f.id?{...o,...f}:o));setEditWO(null);}}/>}
+        {deleteWO && <ConfirmDeleteModal title="Delete Work Order?" desc={`${deleteWO.id} — ${deleteWO.product}`} onClose={()=>setDeleteWO(null)} onConfirm={()=>{setOrders(os=>os.filter(o=>o.id!==deleteWO.id));setDeleteWO(null);}}/>}
+        {showAdd && <AddWorkOrderModal onClose={()=>setShowAdd(false)} onSave={addOrder}/>}
+
+        <PageHeader title="Work Orders" subtitle="Production • Planning" icon="📋" onBack={onBack} color="green"
+                    actions={<button onClick={()=>setShowAdd(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>+ New Order</button>}/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="In Progress" value={orders.filter(w=>w.status==="In Progress").length} icon="⚙️" color="blue"/>
+          <StatCard label="Pending" value={orders.filter(w=>w.status==="Pending").length} icon="⏳" color="amber"/>
+          <StatCard label="Delayed" value={orders.filter(w=>w.status==="Delayed").length} icon="⚠️" color="rose"/>
+          <StatCard label="Total Qty" value={orders.reduce((s,w)=>s+Number(w.qty),0).toLocaleString()} icon="👕" color="green"/>
+        </div>
+
+        {/* Toolbar */}
+        <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search by order ID, product, buyer, line…"/>
+          <div className="flex flex-wrap items-center gap-2">
+            <FilterSelect value={filterStatus} onChange={setFilterStatus} options={["In Progress","Pending","Delayed","Completed"]} allLabel="All Status"/>
+            <FilterSelect value={filterPriority} onChange={setFilterPriority} options={["Critical","High","Medium","Low"]} allLabel="All Priority"/>
+            {(search||filterStatus!=="All"||filterPriority!=="All") && <button onClick={()=>{setSearch("");setFilterStatus("All");setFilterPriority("All");}} className="px-2.5 py-1 rounded-lg text-[10px] text-white/30 hover:text-white/60 border border-white/8 transition-all">✕ Clear</button>}
+            <div className="ml-auto flex items-center gap-1.5">
+              {["cards","table"].map(v=>(
+                  <button key={v} onClick={()=>setView(v)}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] border transition-all ${view===v?"bg-green-400/20 border-green-400/40 text-green-300":"bg-white/5 border-white/8 text-white/30 hover:bg-white/8"}`}>
+                    {v==="cards"?"⊞ Cards":"☰ Table"}
+                  </button>
+              ))}
+            </div>
+          </div>
+          <span className="text-[10px] text-white/25 block"><span className="text-white/50 font-medium">{filtered.length}</span> of {orders.length} orders</span>
+        </div>
+
+        {/* Cards view */}
+        {view==="cards" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {filtered.map(wo=>{
+                const pct = wo.qty>0 ? Math.round(wo.done/wo.qty*100) : 0;
+                const sc = statusColor[wo.status]||"gray";
+                const a = ACCENT[sc];
+                return (
+                    <div key={wo.id} className="relative rounded-2xl overflow-hidden group" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))", border:`1px solid ${a.border}`, transition:"transform 0.15s ease" }}
+                         onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
+                      <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.bar}`}/>
+                      <div className="p-4">
+                        {/* Header */}
+                        <div className="flex items-start justify-between gap-2 mb-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-mono text-[10px] text-white/30">{wo.id}</span>
+                              <StatusBadge status={wo.priority}/>
+                            </div>
+                            <p className="text-sm font-bold text-white/90">{wo.product}</p>
+                            <p className="text-[11px] text-white/45 mt-0.5">{wo.buyer} · {wo.line}</p>
+                          </div>
+                          <StatusBadge status={wo.status}/>
+                        </div>
+
+                        {/* Progress */}
+                        <div className="mb-3">
+                          <div className="flex justify-between text-[10px] text-white/40 mb-1.5">
+                            <span>Progress</span>
+                            <span className="font-semibold" style={{ color:pct>=90?"#34d399":pct>=60?"#60a5fa":"#fbbf24" }}>{wo.done.toLocaleString()} / {Number(wo.qty).toLocaleString()} pcs</span>
+                          </div>
+                          <div className="w-full h-2 rounded-full bg-white/10">
+                            <div className="h-full rounded-full transition-all duration-700" style={{ width:`${pct}%`, background:pct>=90?"#34d399":pct>=60?"#60a5fa":pct>=30?"#fbbf24":"#fb7185" }}/>
+                          </div>
+                          <div className="text-right text-[10px] font-bold mt-1" style={{ color:pct>=90?"#34d399":pct>=60?"#60a5fa":"#fbbf24" }}>{pct}%</div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-[10px] text-white/35">
+                            <span>📅</span>
+                            <span>Due: <span className="text-white/60">{wo.due}</span></span>
+                          </div>
+                          <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={()=>setEditWO(wo)} className="px-2 py-1 rounded-lg text-[10px] border transition-all" style={{ background:"rgba(251,191,36,0.1)", border:"1px solid rgba(251,191,36,0.25)", color:"#fbbf24" }}>✏️ Edit</button>
+                            <button onClick={()=>setDeleteWO(wo)} className="px-2 py-1 rounded-lg text-[10px] border transition-all" style={{ background:"rgba(251,113,133,0.08)", border:"1px solid rgba(251,113,133,0.2)", color:"#fb7185" }}>🗑</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                );
+              })}
+            </div>
+        )}
+
+        {/* Table view */}
+        {view==="table" && (
+            <GlassCard color="green">
+              <Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Priority","Status",""]}
+                     rows={filtered.map(wo=>[
+                       <span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,
+                       wo.product, wo.buyer,
+                       Number(wo.qty).toLocaleString(), wo.done.toLocaleString(),
+                       <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,
+                       wo.line, wo.due,
+                       <StatusBadge status={wo.priority}/>, <StatusBadge status={wo.status}/>,
+                       <div className="flex gap-1">
+                         <button onClick={()=>setEditWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,191,36,0.1)", color:"#fbbf24" }}>✏️</button>
+                         <button onClick={()=>setDeleteWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,113,133,0.1)", color:"#fb7185" }}>🗑</button>
+                       </div>
+                     ])}/>
+            </GlassCard>
+        )}
+
+        {filtered.length===0 && (
+            <div className="text-center py-14">
+              <p className="text-3xl mb-3">📋</p>
+              <p className="text-sm text-white/30">No work orders match your filter</p>
+            </div>
+        )}
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── SCHEDULE PAGE (FIXED) ────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function SchedulePage({ onBack }) {
+  const [activeWO, setActiveWO] = useState(null);
+
+  // Build week dates relative to today (Mar 5 = Wed)
+  const weekDates = [
+    { label:"Mon", date:"Mar 03", iso:"2026-03-03", past:true },
+    { label:"Tue", date:"Mar 04", iso:"2026-03-04", past:true },
+    { label:"Wed", date:"Mar 05", iso:"2026-03-05", today:true },
+    { label:"Thu", date:"Mar 06", iso:"2026-03-06" },
+    { label:"Fri", date:"Mar 07", iso:"2026-03-07" },
+    { label:"Sat", date:"Mar 08", iso:"2026-03-08" },
+  ];
+
+  // Map each line to its active work orders
+  const lineToWO = {};
+  DATA.workOrders.forEach(wo => {
+    if (!lineToWO[wo.line]) lineToWO[wo.line] = [];
+    lineToWO[wo.line].push(wo);
+  });
+
+  const getCellState = (line, day) => {
+    const wos = lineToWO[line.name] || [];
+    if (!wos.length) return { state:"idle", wo:null };
+    const wo = wos[0];
+    if (day.past) return { state:"done", wo };
+    if (day.today) return { state:"active", wo };
+    if (wo.status==="Delayed") return { state:"delayed", wo };
+    return { state:"planned", wo };
+  };
+
+  const cellStyle = (state) => {
+    switch(state) {
+      case "done":    return { bg:"rgba(255,255,255,0.06)", text:"rgba(255,255,255,0.35)", label:"Done", dot:"#34d399" };
+      case "active":  return { bg:"rgba(52,211,153,0.18)", text:"#34d399", label:"Today", dot:"#34d399" };
+      case "delayed": return { bg:"rgba(251,113,133,0.15)", text:"#fb7185", label:"Delayed", dot:"#fb7185" };
+      case "planned": return { bg:"rgba(96,165,250,0.12)", text:"#60a5fa", label:"Plan", dot:"#60a5fa" };
+      default:        return { bg:"rgba(255,255,255,0.03)", text:"rgba(255,255,255,0.15)", label:"—", dot:"transparent" };
+    }
+  };
+
+  const priorityGlyph = { Critical:"🔴", High:"🟠", Medium:"🟡", Low:"🟢" };
+
+  return (
+      <div>
+        {/* WO detail popover */}
+        {activeWO && (
+            <div className="fixed inset-0 z-40 flex items-end md:items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.6)", backdropFilter:"blur(6px)" }} onClick={()=>setActiveWO(null)}>
+              <div className="relative w-full max-w-sm rounded-2xl p-5" style={{ background:"linear-gradient(145deg,rgba(22,24,18,0.98),rgba(14,16,12,0.99))", border:"1px solid rgba(52,211,153,0.3)" }} onClick={e=>e.stopPropagation()}>
+                <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-green-400/60 to-green-300/20 rounded-b-full"/>
+                <button onClick={()=>setActiveWO(null)} className="absolute top-3 right-3 w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                <p className="font-mono text-[10px] text-white/30 mb-1">{activeWO.id}</p>
+                <p className="text-sm font-bold text-white/90 mb-0.5">{activeWO.product}</p>
+                <p className="text-[11px] text-white/45 mb-3">{activeWO.buyer} · {activeWO.line}</p>
+                <div className="space-y-2 mb-3">
+                  <div className="flex justify-between text-xs"><span className="text-white/40">Total Qty</span><span className="text-white/80">{activeWO.qty.toLocaleString()} pcs</span></div>
+                  <div className="flex justify-between text-xs"><span className="text-white/40">Completed</span><span className="text-green-400">{activeWO.done.toLocaleString()} pcs</span></div>
+                  <div className="flex justify-between text-xs"><span className="text-white/40">Due Date</span><span className="text-white/80">{activeWO.due}</span></div>
+                  <div className="flex justify-between text-xs"><span className="text-white/40">Priority</span><StatusBadge status={activeWO.priority}/></div>
+                </div>
+                <ProgressBar value={Math.round(activeWO.done/activeWO.qty*100)}/>
+              </div>
+            </div>
+        )}
+
+        <PageHeader title="Production Schedule" subtitle="Production • Planning" icon="📅" onBack={onBack} color="green"/>
+
+        {/* Week legend */}
+        <div className="flex items-center gap-4 mb-4 flex-wrap">
+          <span className="text-[10px] text-white/30 uppercase tracking-widest">Week of Mar 3–8, 2026</span>
+          <div className="flex items-center gap-3">
+            {[{dot:"#34d399",label:"Done / Today"},{dot:"#60a5fa",label:"Planned"},{dot:"#fb7185",label:"Delayed"},{dot:"rgba(255,255,255,0.15)",label:"Idle"}].map(l=>(
+                <div key={l.label} className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full" style={{ background:l.dot }}/>
+                  <span className="text-[10px] text-white/35">{l.label}</span>
+                </div>
+            ))}
+          </div>
+        </div>
+
+        <GlassCard color="green">
+          {/* Work order quick reference */}
+          <div className="mb-5 p-3 rounded-xl" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+            <p className="text-[9px] text-green-400/50 font-semibold uppercase tracking-widest mb-2">Active Work Orders This Week</p>
+            <div className="flex flex-wrap gap-2">
+              {DATA.workOrders.map(wo=>(
+                  <button key={wo.id} onClick={()=>setActiveWO(wo)}
+                          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all hover:-translate-y-0.5"
+                          style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.6)" }}>
+                    <span>{priorityGlyph[wo.priority]}</span>
+                    <span className="font-mono">{wo.id.split("-").pop()}</span>
+                    <span className="text-white/40">{wo.product.split(" ").slice(0,2).join(" ")}</span>
+                    <StatusBadge status={wo.status}/>
+                  </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Schedule grid */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs border-separate" style={{ borderSpacing:"0 2px" }}>
+              <thead>
+              <tr>
+                <th className="text-left px-3 py-2 text-white/40 font-semibold text-[11px] w-24 sticky left-0" style={{ background:"rgba(12,14,10,0.7)" }}>Line</th>
+                {weekDates.map(d=>(
+                    <th key={d.iso} className={`px-2 py-2 text-center text-[11px] font-semibold w-24 ${d.today?"text-green-400":"text-white/40"}`}>
+                      <div>{d.label}</div>
+                      <div className={`text-[9px] font-normal mt-0.5 ${d.today?"text-green-300/70":"text-white/20"}`}>{d.date}</div>
+                      {d.today && <div className="mx-auto mt-1 w-1 h-1 rounded-full bg-green-400"/>}
+                    </th>
+                ))}
+                <th className="text-left px-3 py-2 text-white/40 font-semibold text-[11px] min-w-[140px]">Work Order</th>
+                <th className="text-left px-3 py-2 text-white/40 font-semibold text-[11px]">Progress</th>
+              </tr>
+              </thead>
+              <tbody>
+              {DATA.productionLines.map((line,i)=>{
+                const wos = lineToWO[line.name] || [];
+                const wo = wos[0] || null;
+                return (
+                    <tr key={i} className="group">
+                      <td className="px-3 py-2 sticky left-0 rounded-l-xl" style={{ background:"rgba(12,14,10,0.5)" }}>
+                        <p className="font-semibold text-green-300/80">{line.name}</p>
+                        <p className="text-[9px] text-white/30">{line.dept}</p>
+                      </td>
+                      {weekDates.map(day=>{
+                        const { state, wo:cellWO } = getCellState(line, day);
+                        const cs = cellStyle(state);
+                        return (
+                            <td key={day.iso} className="px-1.5 py-2 text-center">
+                              <button
+                                  onClick={()=>cellWO&&setActiveWO(cellWO)}
+                                  className={`w-full h-10 rounded-xl text-[10px] font-medium flex items-center justify-center gap-1 transition-all ${cellWO?"hover:scale-105 cursor-pointer":"cursor-default"} ${day.today?"ring-1 ring-green-400/40":""}`}
+                                  style={{ background:cs.bg, color:cs.text }}>
+                                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:cs.dot }}/>
+                                {cs.label}
+                              </button>
+                            </td>
+                        );
+                      })}
+                      <td className="px-3 py-2">
+                        {wo ? (
+                            <button onClick={()=>setActiveWO(wo)} className="text-left hover:bg-white/5 rounded-lg p-1 transition-colors w-full">
+                              <p className="font-mono text-[9px] text-white/30">{wo.id}</p>
+                              <p className="text-[11px] text-white/70 truncate max-w-[130px]">{wo.product}</p>
+                              <p className="text-[9px] text-white/35">{wo.buyer}</p>
+                            </button>
+                        ) : <span className="text-white/15 text-[10px]">No order</span>}
+                      </td>
+                      <td className="px-3 py-2 rounded-r-xl min-w-[120px]">
+                        {wo ? <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/> : <span className="text-white/15 text-[10px]">—</span>}
+                      </td>
+                    </tr>
+                );
+              })}
+              </tbody>
+            </table>
+          </div>
+        </GlassCard>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── PERMISSIONS PAGE ─────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function HREntryModal({ onClose, onSave }) {
+  const BLANK = { worker:"", dept:"", position:"", type:"", module:"", fromDate:"", toDate:"", reason:"", status:"Pending", note:"" };
+  const [form, setForm] = useState(BLANK);
+  const [saved, setSaved] = useState(false);
+  const set = (k,v) => setForm(f=>({...f,[k]:v}));
+  const modules = ["Production","Quality","HR","Finance","Procurement","Maintenance","Administration","Reports","All Modules"];
+  const valid = form.worker && form.dept && form.type && form.module && form.fromDate && form.toDate && form.reason;
+  const daysDiff = (a,b)=>{ const d=new Date(b)-new Date(a); return isNaN(d)?0:Math.max(0,Math.round(d/86400000)+1); };
+  const handleSave = () => { if(!valid) return; onSave(form); setSaved(true); setTimeout(()=>onClose(),1800); };
+  return (
+      <Modal title="Record Permission Request" subtitle="HR Entry • On Behalf of Worker" icon="🔐" accentColor="amber" onClose={onClose}>
+        {saved ? <SavedState message="Record Saved" accentColor="green"/> : (
+            <div className="px-6 pb-6 space-y-4">
+              <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                <p className="text-[9px] text-amber-400/50 font-semibold uppercase tracking-widest mb-3">Worker Information</p>
+                <FormField label="Worker Name" required>
+                  <div className="relative">
+                    <select className={selectCls} value={form.worker} onChange={e=>{ const emp=DATA.employees.find(em=>em.name===e.target.value); setForm(f=>({...f,worker:e.target.value,dept:emp?.dept||"",position:emp?.position||""})); }}>
+                      <option value="">Select worker…</option>
+                      {DATA.employees.map(e=><option key={e.id} value={e.name}>{e.name} — {e.position} ({e.dept})</option>)}
+                    </select>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                  </div>
+                </FormField>
+                {form.worker && (
+                    <div className="flex items-center gap-3 rounded-xl p-3 mt-2" style={{ background:"rgba(251,191,36,0.06)", border:"1px solid rgba(251,191,36,0.15)" }}>
+                      <div className="w-8 h-8 rounded-lg bg-amber-400/15 flex items-center justify-center text-sm shrink-0">👷</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-white/80 truncate">{form.worker}</p>
+                        <p className="text-[10px] text-white/35">{form.position} · {form.dept}</p>
+                      </div>
+                      <Badge color="amber">Selected</Badge>
+                    </div>
+                )}
+              </div>
+              <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                <p className="text-[9px] text-blue-400/50 font-semibold uppercase tracking-widest mb-3">Permission Details</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField label="Permission Type" required>
+                    <div className="relative"><select className={selectCls} value={form.type} onChange={e=>set("type",e.target.value)}><option value="">Select type…</option>{PERMISSION_TYPES.map(t=><option key={t} value={t}>{t}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                  </FormField>
+                  <FormField label="Module / Area" required>
+                    <div className="relative"><select className={selectCls} value={form.module} onChange={e=>set("module",e.target.value)}><option value="">Select module…</option>{modules.map(m=><option key={m} value={m}>{m}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                  </FormField>
+                </div>
+              </div>
+              <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                <p className="text-[9px] text-green-400/50 font-semibold uppercase tracking-widest mb-3">Access Period</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField label="From Date" required><input type="date" className={inputCls} value={form.fromDate} onChange={e=>set("fromDate",e.target.value)} style={{ colorScheme:"dark" }}/></FormField>
+                  <FormField label="Until Date" required><input type="date" className={inputCls} value={form.toDate} onChange={e=>set("toDate",e.target.value)} style={{ colorScheme:"dark" }}/></FormField>
+                </div>
+                {form.fromDate&&form.toDate&&daysDiff(form.fromDate,form.toDate)>0&&(
+                    <div className="mt-2 flex items-center gap-2"><span className="text-[10px] text-white/30">Duration:</span><span className="text-[10px] font-semibold text-green-400">{daysDiff(form.fromDate,form.toDate)} day(s)</span></div>
+                )}
+              </div>
+              <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                <p className="text-[9px] text-violet-400/50 font-semibold uppercase tracking-widest mb-3">Reason & Notes</p>
+                <div className="space-y-3">
+                  <FormField label="Reason Given by Worker" required>
+                    <textarea className={`${inputCls} resize-none`} rows={3} placeholder="What did the worker say they need this access for…" value={form.reason} onChange={e=>set("reason",e.target.value)}/>
+                  </FormField>
+                  <FormField label="HR Note (optional)">
+                    <input type="text" className={inputCls} placeholder="Internal note from HR…" value={form.note} onChange={e=>set("note",e.target.value)}/>
+                  </FormField>
+                </div>
+              </div>
+              <FormField label="Initial Status">
+                <div className="flex gap-2">
+                  {["Pending","Approved","Rejected"].map(s=>(
+                      <button key={s} onClick={()=>set("status",s)}
+                              className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s
+                                  ? s==="Approved"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300"
+                                      : s==="Rejected"?"bg-rose-400/20 border-rose-400/40 text-rose-300"
+                                          : "bg-amber-400/20 border-amber-400/40 text-amber-300"
+                                  : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
+                        {s==="Approved"?"✓":s==="Rejected"?"✗":"⏳"} {s}
+                      </button>
+                  ))}
+                </div>
+              </FormField>
+              {!valid && <p className="text-[10px] text-white/20 text-center">Fill in all required fields (*) to save</p>}
+              <div className="flex gap-3 pt-1">
+                <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                <button onClick={handleSave} disabled={!valid} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25 disabled:cursor-not-allowed" style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.28),rgba(251,191,36,0.12))", border:"1px solid rgba(251,191,36,0.4)", color:"#fbbf24" }}>💾 Save Record</button>
+              </div>
+            </div>
+        )}
+      </Modal>
+  );
+}
+
 function PermissionsPage({ onBack }) {
   const [records, setRecords] = useState(INITIAL_PERMISSIONS);
   const [showEntry, setShowEntry] = useState(false);
-  const [editing, setEditing] = useState(null); // id of inline-status-editing
   const [filter, setFilter] = useState("All");
+  const [search, setSearch] = useState("");
 
   const handleSave = (form) => {
     const id = `PR-${String(records.length+1).padStart(3,"0")}`;
     setRecords(r=>[{ ...form, id, enteredBy:"Sophea Keo", enteredAt:new Date().toISOString().slice(0,16).replace("T"," ") }, ...r]);
   };
 
-  const changeStatus = (id, status) => {
-    setRecords(r=>r.map(x=>x.id===id?{...x,status}:x));
-    setEditing(null);
-  };
-
+  const changeStatus = (id,status) => setRecords(r=>r.map(x=>x.id===id?{...x,status}:x));
   const deleteRecord = (id) => setRecords(r=>r.filter(x=>x.id!==id));
-
-  const filters = ["All","Pending","Approved","Rejected"];
-  const filtered = filter==="All" ? records : records.filter(r=>r.status===filter);
-
   const daysDiff = (a,b)=>{ const d=new Date(b)-new Date(a); return isNaN(d)?0:Math.max(0,Math.round(d/86400000)+1); };
-
   const statusColor = { Approved:"green", Pending:"amber", Rejected:"rose" };
+
+  const filtered = records.filter(r=>{
+    const q = search.toLowerCase();
+    return (filter==="All"||r.status===filter) && (!q||r.worker.toLowerCase().includes(q)||r.type.toLowerCase().includes(q)||r.module.toLowerCase().includes(q));
+  });
 
   return (
       <div>
         {showEntry && <HREntryModal onClose={()=>setShowEntry(false)} onSave={handleSave}/>}
+        <PageHeader title="Permission Records" subtitle="HR • Access Control Entry" icon="🔐" onBack={onBack} color="amber"
+                    actions={<button onClick={()=>setShowEntry(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.25),rgba(251,191,36,0.1))", border:"1px solid rgba(251,191,36,0.4)", color:"#fbbf24" }}>+ New Entry</button>}/>
 
-        <PageHeader title="Permission Records" subtitle="HR • Access Control Entry" icon="🔐" onBack={onBack} color="amber"/>
-
-        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-          <StatCard label="Total Records" value={records.length} icon="🔐" color="amber"/>
+          <StatCard label="Total" value={records.length} icon="🔐" color="amber"/>
           <StatCard label="Pending" value={records.filter(r=>r.status==="Pending").length} icon="⏳" color="amber"/>
           <StatCard label="Approved" value={records.filter(r=>r.status==="Approved").length} icon="✅" color="green"/>
           <StatCard label="Rejected" value={records.filter(r=>r.status==="Rejected").length} icon="✗" color="rose"/>
         </div>
 
-        {/* Toolbar */}
-        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-          <div className="flex gap-2">
-            {filters.map(f=>(
-                <button key={f} onClick={()=>setFilter(f)}
-                        className={`px-3 py-1.5 rounded-xl text-[11px] font-medium border transition-all ${filter===f
-                            ?"bg-amber-400/20 border-amber-400/40 text-amber-300"
-                            :"bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
-                  {f}
-                </button>
-            ))}
+        <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search by worker, type, module…"/>
+          <div className="flex items-center gap-2 flex-wrap">
+            <FilterPills options={["All","Pending","Approved","Rejected"].map(f=>({label:f,value:f}))} value={filter} onChange={setFilter}/>
+            <span className="ml-auto text-[10px] text-white/25"><span className="text-white/50 font-medium">{filtered.length}</span> records</span>
           </div>
-          <button onClick={()=>setShowEntry(true)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all hover:-translate-y-0.5"
-                  style={{background:"linear-gradient(135deg,rgba(251,191,36,0.25),rgba(251,191,36,0.1))",border:"1px solid rgba(251,191,36,0.4)",color:"#fbbf24"}}>
-            + New Entry
-          </button>
         </div>
 
-        {/* Records list */}
         <div className="space-y-3">
-          {filtered.map(rec => {
-            const sc = statusColor[rec.status] || "gray";
+          {filtered.map(rec=>{
+            const sc = statusColor[rec.status]||"gray";
             const a = ACCENT[sc];
             return (
-                <div key={rec.id} className="relative rounded-2xl overflow-hidden transition-all hover:-translate-y-px"
-                     style={{background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))",border:`1px solid ${a.border}`,boxShadow:`0 4px 20px rgba(0,0,0,0.3),0 0 24px ${a.bg}`}}>
+                <div key={rec.id} className="relative rounded-2xl overflow-hidden hover:-translate-y-px transition-all" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))", border:`1px solid ${a.border}`, boxShadow:`0 4px 20px rgba(0,0,0,0.3)` }}>
                   <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${a.bar}`}/>
-
                   <div className="p-4">
-                    {/* Top row */}
                     <div className="flex items-start justify-between gap-3 flex-wrap">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 font-bold"
-                             style={{background:a.bg,border:`1px solid ${a.border}`,color:a.text}}>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 font-bold" style={{ background:a.bg, border:`1px solid ${a.border}`, color:a.text }}>
                           {rec.worker.split(" ").map(w=>w[0]).join("").slice(0,2)}
                         </div>
                         <div className="min-w-0">
@@ -565,46 +1139,26 @@ function PermissionsPage({ onBack }) {
                           <p className="text-[10px] text-white/35">{rec.position} · {rec.dept}</p>
                         </div>
                       </div>
-
-                      {/* Type + Module */}
                       <div className="text-right shrink-0">
                         <p className="text-[11px] font-semibold text-white/65 mb-1">{rec.type}</p>
                         <Badge color="blue">{rec.module}</Badge>
                       </div>
                     </div>
-
-                    {/* Date range */}
                     <div className="mt-3 flex items-center gap-3 flex-wrap">
                       <div className="flex items-center gap-1.5 text-[11px]">
                         <span className="text-amber-400/60">📅</span>
                         <span className="text-white/55">{rec.fromDate}</span>
                         <span className="text-white/20 mx-0.5">→</span>
                         <span className="text-white/55">{rec.toDate}</span>
-                        <span className="ml-1 px-1.5 py-0.5 rounded-md text-[9px]"
-                              style={{background:"rgba(255,255,255,0.07)",color:"rgba(255,255,255,0.4)"}}>
-                      {daysDiff(rec.fromDate,rec.toDate)}d
-                    </span>
+                        <span className="ml-1 px-1.5 py-0.5 rounded-md text-[9px]" style={{ background:"rgba(255,255,255,0.07)", color:"rgba(255,255,255,0.4)" }}>{daysDiff(rec.fromDate,rec.toDate)}d</span>
                       </div>
-                      <span className="text-[10px] text-white/25">Entered by {rec.enteredBy} · {rec.enteredAt}</span>
+                      <span className="text-[10px] text-white/25">by {rec.enteredBy} · {rec.enteredAt}</span>
                     </div>
-
-                    {/* Reason */}
-                    <div className="mt-2.5 rounded-lg px-3 py-2 text-[11px] text-white/50 leading-relaxed"
-                         style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)"}}>
+                    <div className="mt-2.5 rounded-lg px-3 py-2 text-[11px] text-white/50 leading-relaxed" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)" }}>
                       <span className="text-white/25 text-[9px] uppercase tracking-widest mr-2">Reason</span>{rec.reason}
                     </div>
-
-                    {/* HR Note */}
-                    {rec.note && (
-                        <div className="mt-2 rounded-lg px-3 py-1.5 text-[10px] text-white/40 italic"
-                             style={{background:"rgba(251,191,36,0.05)",border:"1px solid rgba(251,191,36,0.12)"}}>
-                          💬 {rec.note}
-                        </div>
-                    )}
-
-                    {/* Actions row */}
+                    {rec.note && <div className="mt-2 rounded-lg px-3 py-1.5 text-[10px] text-white/40 italic" style={{ background:"rgba(251,191,36,0.05)", border:"1px solid rgba(251,191,36,0.12)" }}>💬 {rec.note}</div>}
                     <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
-                      {/* Status changer */}
                       <div className="flex items-center gap-1.5">
                         <span className="text-[9px] text-white/25 uppercase tracking-widest mr-1">Status:</span>
                         {["Pending","Approved","Rejected"].map(s=>(
@@ -618,119 +1172,83 @@ function PermissionsPage({ onBack }) {
                             </button>
                         ))}
                       </div>
-                      <button onClick={()=>deleteRecord(rec.id)}
-                              className="px-2.5 py-1 rounded-lg text-[10px] text-rose-400/50 hover:text-rose-400 hover:bg-rose-400/10 border border-transparent hover:border-rose-400/20 transition-all">
-                        🗑 Delete
-                      </button>
+                      <button onClick={()=>deleteRecord(rec.id)} className="px-2.5 py-1 rounded-lg text-[10px] text-rose-400/50 hover:text-rose-400 hover:bg-rose-400/10 border border-transparent hover:border-rose-400/20 transition-all">🗑 Delete</button>
                     </div>
                   </div>
                 </div>
             );
           })}
-          {filtered.length===0 && (
-              <div className="text-center py-14 text-white/20 text-sm">No {filter.toLowerCase()} records found</div>
-          )}
+          {filtered.length===0 && <div className="text-center py-14 text-white/20 text-sm">No records found</div>}
         </div>
       </div>
   );
 }
 
-// ALL PAGES
 // ═══════════════════════════════════════════════════════════════
-
-function UsersPage({onBack}){return(<div><PageHeader title="User Management" subtitle="Administration • Access Control" icon="👥" onBack={onBack} color="amber"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.users.length} icon="👤" color="amber"/><StatCard label="Active" value={DATA.users.filter(u=>u.status==="Active").length} icon="✅" color="green"/><StatCard label="Inactive" value={DATA.users.filter(u=>u.status==="Inactive").length} icon="🔒" color="rose"/><StatCard label="Roles" value={DATA.roles.length} icon="🛡️" color="blue"/></div><GlassCard color="amber"><Table color="amber" cols={["#","Name","Email","Role","Department","Status","Last Login"]} rows={DATA.users.map(u=>[u.id,<span className="font-medium text-white/90">{u.name}</span>,<span className="text-white/50 font-mono text-[10px]">{u.email}</span>,u.role,u.dept,<StatusBadge status={u.status}/>,u.lastLogin])}/></GlassCard></div>);}
-
+// ── ALL OTHER PAGES ──────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
 function RolesPage({onBack}){return(<div><PageHeader title="Roles & Permissions" subtitle="Administration • Access Control" icon="🛡️" onBack={onBack} color="amber"/><GlassCard color="amber"><Table color="amber" cols={["#","Role","Description","Users","Permissions"]} rows={DATA.roles.map(r=>[r.id,<span className="font-semibold text-amber-300">{r.name}</span>,r.desc,r.users,<Badge color="blue">{r.permissions} perms</Badge>])}/></GlassCard></div>);}
-
 function AuditLogPage({onBack}){return(<div><PageHeader title="Audit Log" subtitle="Administration • System" icon="📜" onBack={onBack} color="amber"/><GlassCard color="amber"><div className="space-y-2">{DATA.auditLog.map((log,i)=>(<div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 transition-colors"><div className="w-7 h-7 rounded-lg flex items-center justify-center text-sm shrink-0 bg-amber-400/15 border border-amber-400/25">📝</div><div className="flex-1 min-w-0"><p className="text-xs text-white/80">{log.action}</p><p className="text-[10px] text-white/35 mt-0.5">{log.user} • {log.time}</p></div><Badge color="amber">{log.module}</Badge></div>))}</div></GlassCard></div>);}
-
 function SettingsPage({onBack}){const settings=[{group:"Factory",items:[{label:"Factory Name",value:"SEC Mega Factory"},{label:"Location",value:"Phnom Penh, Cambodia"},{label:"Timezone",value:"UTC+7"}]},{group:"Production",items:[{label:"Working Days",value:"Mon – Sat"},{label:"Shifts/Day",value:"3"},{label:"OT Policy",value:"Max 2 hrs/day"}]},{group:"Notifications",items:[{label:"Defect Alert",value:"qc@sec-factory.com"},{label:"Low Stock Alert",value:"Enabled"},{label:"Delay Warning",value:"Enabled"}]},{group:"Integration",items:[{label:"ERP System",value:"SAP B1"},{label:"API Version",value:"v2.4.1"},{label:"Backup",value:"Daily 02:00"}]}];return(<div><PageHeader title="System Settings" subtitle="Administration • System" icon="⚙️" onBack={onBack} color="amber"/><div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">{settings.map((s,i)=>(<GlassCard key={i} color="amber"><p className="text-[10px] font-semibold text-amber-400/70 uppercase tracking-widest mb-3">{s.group}</p><div className="space-y-3">{s.items.map((item,j)=>(<div key={j} className="flex flex-col gap-0.5"><span className="text-[10px] text-white/35 uppercase tracking-wide">{item.label}</span><span className="text-xs text-white/75">{item.value}</span></div>))}</div></GlassCard>))}</div></div>);}
-
 function DepartmentsPage({onBack}){return(<div><PageHeader title="Departments" subtitle="Data Setup • Factory Structure" icon="🏢" onBack={onBack} color="blue"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Departments" value={DATA.departments.length} icon="🏢" color="blue"/><StatCard label="Total Workers" value={STATS.totalWorkers} icon="👷" color="green"/><StatCard label="Total Lines" value={DATA.productionLines.length} icon="⚡" color="amber"/><StatCard label="Floors" value={6} icon="🏗️" color="violet"/></div><GlassCard color="blue"><Table color="blue" cols={["#","Department","Head","Floor","Lines","Workers","Status"]} rows={DATA.departments.map(d=>[d.id,<span className="font-semibold text-blue-300">{d.name}</span>,d.head,<Badge color="violet">Floor {d.floor}</Badge>,d.lines,d.workers,<StatusBadge status={d.status}/>])}/></GlassCard></div>);}
-
 function ProductionLinesPage({onBack}){return(<div><PageHeader title="Production Lines" subtitle="Data Setup • Factory Structure" icon="🏗️" onBack={onBack} color="blue"/><GlassCard color="blue"><Table color="blue" cols={["Line","Dept","Supervisor","Workers","Target","Actual","Efficiency"]} rows={DATA.productionLines.map(l=>[<span className="font-semibold text-blue-300">{l.name}</span>,l.dept,l.supervisor,l.workers,l.target.toLocaleString(),l.actual.toLocaleString(),<ProgressBar value={l.eff}/>])}/></GlassCard></div>);}
-
 function ProductsPage({onBack}){return(<div><PageHeader title="Products / Style" subtitle="Data Setup • Products" icon="👕" onBack={onBack} color="blue"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Styles" value={DATA.products.length} icon="👕" color="blue"/><StatCard label="Active" value={DATA.products.filter(p=>p.status==="Active").length} icon="✅" color="green"/><StatCard label="Draft" value={DATA.products.filter(p=>p.status==="Draft").length} icon="📝" color="amber"/></div><GlassCard color="blue"><Table color="blue" cols={["Code","Style Name","Category","Buyer","SMV","Color","Status"]} rows={DATA.products.map(p=>[<span className="font-mono text-blue-300">{p.code}</span>,p.name,<Badge color="blue">{p.category}</Badge>,p.buyer,`${p.smv} min`,p.color,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
-
 function MaterialsPage({onBack}){return(<div><PageHeader title="Materials / BOM" subtitle="Data Setup • Materials" icon="🧵" onBack={onBack} color="blue"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Items" value={DATA.materials.length} icon="🧵" color="blue"/><StatCard label="Low Stock" value={DATA.materials.filter(m=>m.stock<m.reorder).length} icon="⚠️" color="rose"/><StatCard label="OK Stock" value={DATA.materials.filter(m=>m.stock>=m.reorder).length} icon="✅" color="green"/></div><GlassCard color="blue"><Table color="blue" cols={["Code","Material","Unit","Stock","Reorder","Cost/Unit","Supplier","Status"]} rows={DATA.materials.map(m=>[<span className="font-mono text-blue-300">{m.code}</span>,m.name,m.unit,m.stock.toLocaleString(),m.reorder.toLocaleString(),`$${m.cost}`,m.supplier,m.stock<m.reorder?<Badge color="rose">Low Stock</Badge>:<Badge color="green">OK</Badge>])}/></GlassCard></div>);}
-
 function ShiftsPage({onBack}){return(<div><PageHeader title="Shift Management" subtitle="Data Setup • Factory Structure" icon="🕐" onBack={onBack} color="blue"/><div className="grid grid-cols-1 md:grid-cols-3 gap-4">{DATA.shifts.map((s,i)=>(<GlassCard key={i} color="blue"><div className="text-2xl mb-2">🕐</div><h3 className="font-bold text-white/90 text-sm mb-1">{s.name}</h3><p className="text-xs text-white/40 mb-3">{s.start} – {s.end}</p><div className="space-y-2"><div className="flex justify-between text-xs"><span className="text-white/40">Days</span><span className="text-blue-300">{s.days}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">Supervisor</span><span className="text-white/75">{s.supervisor}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">Workers</span><span className="text-white/75">{s.workers}</span></div></div></GlassCard>))}</div></div>);}
-
 function StandardsPage({onBack}){return(<div><PageHeader title="Operation Standards (SMV)" subtitle="Data Setup • Standards" icon="📐" onBack={onBack} color="blue"/><GlassCard color="blue"><Table color="blue" cols={["#","Product","Operation","SMV (min)","Machine","Skill Level"]} rows={DATA.standards.map((s,i)=>[i+1,s.product,s.operation,<span className="font-semibold text-blue-300">{s.smv}</span>,s.machine,<StatusBadge status={s.skill}/>])}/></GlassCard></div>);}
-
-function WorkOrdersPage({onBack}){return(<div><PageHeader title="Work Orders" subtitle="Production • Planning" icon="📋" onBack={onBack} color="green"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="In Progress" value={DATA.workOrders.filter(w=>w.status==="In Progress").length} icon="⚙️" color="green"/><StatCard label="Pending" value={DATA.workOrders.filter(w=>w.status==="Pending").length} icon="⏳" color="amber"/><StatCard label="Delayed" value={DATA.workOrders.filter(w=>w.status==="Delayed").length} icon="⚠️" color="rose"/><StatCard label="Total Qty" value={DATA.workOrders.reduce((s,w)=>s+w.qty,0).toLocaleString()} icon="👕" color="blue"/></div><GlassCard color="green"><Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Priority","Status"]} rows={DATA.workOrders.map(w=>[<span className="font-mono text-green-300 text-[10px]">{w.id}</span>,w.product,w.buyer,w.qty.toLocaleString(),w.done.toLocaleString(),<ProgressBar value={w.qty>0?Math.round(w.done/w.qty*100):0}/>,w.line,w.due,<StatusBadge status={w.priority}/>,<StatusBadge status={w.status}/>])}/></GlassCard></div>);}
-
-function SchedulePage({onBack}){const days=["Mon 03","Tue 04","Wed 05","Thu 06","Fri 07","Sat 08"];return(<div><PageHeader title="Production Schedule" subtitle="Production • Planning" icon="📅" onBack={onBack} color="green"/><GlassCard color="green"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-4">Week of Mar 3–8, 2026</p><div className="overflow-x-auto"><table className="w-full text-xs"><thead><tr><th className="text-left px-2 py-2 text-white/40 font-semibold w-24">Line</th>{days.map(d=><th key={d} className="px-2 py-2 text-center text-white/40 font-semibold">{d}</th>)}</tr></thead><tbody>{DATA.productionLines.map((l,i)=>(<tr key={i} className="border-t border-white/5"><td className="px-2 py-2 text-green-300 font-medium">{l.name}</td>{days.map((d,j)=>(<td key={j} className="px-2 py-2 text-center"><div className="mx-auto w-12 h-6 rounded flex items-center justify-center text-[9px]" style={{background:j===2?"rgba(52,211,153,0.2)":j<2?"rgba(255,255,255,0.08)":"rgba(255,255,255,0.04)",border:j===2?"1px solid rgba(52,211,153,0.35)":"1px solid rgba(255,255,255,0.08)",color:j===2?"#34d399":j<2?"rgba(255,255,255,0.5)":"rgba(255,255,255,0.25)"}}>{j===2?"Today":j<2?"Done":"Plan"}</div></td>))}</tr>))}</tbody></table></div></GlassCard></div>);}
-
-function RealtimePage({onBack}){return(<div><PageHeader title="Real-time Monitor" subtitle="Production • Monitoring" icon="📡" onBack={onBack} color="green"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Active Lines" value={STATS.activeLines} icon="⚡" color="green"/><StatCard label="Today Output" value={STATS.todayOutput.toLocaleString()} icon="👕" color="blue"/><StatCard label="Avg Efficiency" value={`${STATS.efficiency}%`} icon="📈" color="amber"/><StatCard label="Open Defects" value={STATS.openDefects} icon="⚠️" color="rose"/></div><GlassCard color="green"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Live Line Performance</p><div className="space-y-3">{DATA.productionLines.map((l,i)=>(<div key={i} className="flex items-center gap-3"><span className="w-16 text-xs text-white/60 shrink-0">{l.name}</span><div className="flex-1"><ProgressBar value={l.eff}/></div><span className="text-xs text-white/50 shrink-0 w-24 text-right">{l.actual}/{l.target} pcs</span><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{background:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fb7185"}}/></div>))}</div></GlassCard></div>);}
-
+function RealtimePage({onBack}){return(<div><PageHeader title="Real-time Monitor" subtitle="Production • Monitoring" icon="📡" onBack={onBack} color="green"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Active Lines" value={STATS.activeLines} icon="⚡" color="green"/><StatCard label="Today Output" value={STATS.todayOutput.toLocaleString()} icon="👕" color="blue"/><StatCard label="Avg Efficiency" value={`${STATS.efficiency}%`} icon="📈" color="amber"/><StatCard label="Open Defects" value={STATS.openDefects} icon="⚠️" color="rose"/></div><GlassCard color="green"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Live Line Performance</p><div className="space-y-3">{DATA.productionLines.map((l,i)=>(<div key={i} className="flex items-center gap-3"><span className="w-16 text-xs text-white/60 shrink-0">{l.name}</span><div className="flex-1"><ProgressBar value={l.eff}/></div><span className="text-xs text-white/50 shrink-0 w-24 text-right">{l.actual}/{l.target} pcs</span><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fb7185" }}/></div>))}</div></GlassCard></div>);}
 function TVDisplayPage({onBack}){return(<div><PageHeader title="TV Displays" subtitle="Production • Monitoring" icon="📺" onBack={onBack} color="green"/><div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">{DATA.tvDisplays.map((tv,i)=>(<GlassCard key={i} color={tv.status==="Online"?"green":"rose"}><div className="flex items-start justify-between mb-3"><span className="text-2xl">📺</span><StatusBadge status={tv.status}/></div><h3 className="font-bold text-white/90 text-sm mb-1">{tv.name}</h3><p className="text-xs text-white/40 mb-3">{tv.location}</p><div className="space-y-2"><div className="flex justify-between text-xs"><span className="text-white/40">Lines</span><span className="text-white/70">{tv.line}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">IP</span><span className="font-mono text-green-300 text-[11px]">{tv.ip}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">Last Ping</span><span className="text-white/50 text-[10px]">{tv.lastPing}</span></div></div></GlassCard>))}</div></div>);}
-
 function MachinesPage({onBack}){return(<div><PageHeader title="Machine Management" subtitle="Maintenance • Assets" icon="⚙️" onBack={onBack} color="orange"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.machines.length} icon="🔧" color="orange"/><StatCard label="Running" value={DATA.machines.filter(m=>m.status==="Running").length} icon="✅" color="green"/><StatCard label="Maintenance" value={DATA.machines.filter(m=>m.status==="Maintenance").length} icon="🔧" color="amber"/><StatCard label="Idle" value={DATA.machines.filter(m=>m.status==="Idle").length} icon="💤" color="gray"/></div><GlassCard color="orange"><Table color="orange" cols={["ID","Machine","Type","Dept","Line","Last Service","Next Service","Status"]} rows={DATA.machines.map(m=>[<span className="font-mono text-orange-300 text-[10px]">{m.id}</span>,m.name,m.type,m.dept,m.line,m.lastService,m.nextService,<StatusBadge status={m.status}/>])}/></GlassCard></div>);}
-
 function DefectsPage({onBack}){return(<div><PageHeader title="Defect Reports" subtitle="Quality • Control" icon="🔍" onBack={onBack} color="rose"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Open" value={DATA.defects.filter(d=>d.status==="Open").length} icon="🚨" color="rose"/><StatCard label="Rework" value={DATA.defects.filter(d=>d.status==="Rework").length} icon="🔄" color="amber"/><StatCard label="Resolved" value={DATA.defects.filter(d=>d.status==="Resolved").length} icon="✅" color="green"/></div><GlassCard color="rose"><Table color="rose" cols={["#","Line","Product","Defect Type","Qty","Severity","Inspector","Date","Status"]} rows={DATA.defects.map(d=>[d.id,d.line,d.product,d.type,d.qty,<StatusBadge status={d.severity}/>,d.inspector,d.date,<StatusBadge status={d.status}/>])}/></GlassCard></div>);}
-
 function InspectionsPage({onBack}){return(<div><PageHeader title="Quality Inspections" subtitle="Quality • Inspection" icon="🔬" onBack={onBack} color="rose"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.inspections.length} icon="🔬" color="rose"/><StatCard label="Pass" value={DATA.inspections.filter(i=>i.result==="Pass").length} icon="✅" color="green"/><StatCard label="Fail" value={DATA.inspections.filter(i=>i.result==="Fail").length} icon="❌" color="rose"/><StatCard label="Avg Pass Rate" value={`${Math.round(DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length)}%`} icon="📊" color="amber"/></div><GlassCard color="rose"><Table color="rose" cols={["Work Order","Stage","Inspector","Date","Checked","Passed","Failed","Result"]} rows={DATA.inspections.map(i=>[<span className="font-mono text-rose-300 text-[10px]">{i.wo}</span>,<Badge color="blue">{i.stage}</Badge>,i.inspector,i.date,i.checked,i.passed,<span className="text-rose-300">{i.failed}</span>,<StatusBadge status={i.result}/>])}/></GlassCard></div>);}
-
 function DashboardPage({onBack}){const totalTarget=DATA.productionLines.reduce((s,l)=>s+l.target,0);const totalActual=DATA.productionLines.reduce((s,l)=>s+l.actual,0);return(<div><PageHeader title="Analytics Dashboard" subtitle="Reports • Analytics" icon="📊" onBack={onBack} color="rose"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Today Output" value={STATS.todayOutput.toLocaleString()} icon="👕" color="green"/><StatCard label="Total Target" value={totalTarget.toLocaleString()} icon="🎯" color="blue"/><StatCard label="Overall Eff." value={`${Math.round(totalActual/totalTarget*100)}%`} icon="📈" color="amber"/><StatCard label="Open Defects" value={STATS.openDefects} icon="⚠️" color="rose"/></div><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><GlassCard color="rose"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Line Efficiency</p>{DATA.productionLines.map((l,i)=>(<div key={i} className="mb-2"><div className="flex justify-between text-[11px] text-white/50 mb-1"><span>{l.name}</span><span>{l.dept}</span></div><ProgressBar value={l.eff}/></div>))}</GlassCard><GlassCard color="rose"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Order Status</p>{["In Progress","Pending","Delayed"].map(s=>{const count=DATA.workOrders.filter(w=>w.status===s).length;return(<div key={s} className="mb-3"><div className="flex justify-between text-[11px] text-white/50 mb-1"><span>{s}</span><span>{count} orders</span></div><ProgressBar value={Math.round(count/DATA.workOrders.length*100)}/></div>);})}</GlassCard></div></div>);}
-
 function CostingPage({onBack}){return(<div><PageHeader title="Cost Sheet / Costing" subtitle="Finance • Costing" icon="💰" onBack={onBack} color="violet"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Avg FOB" value={`$${(DATA.costings.reduce((s,c)=>s+c.fob,0)/DATA.costings.length).toFixed(2)}`} icon="💵" color="violet"/><StatCard label="Avg Margin" value={`${(DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1)}%`} icon="📈" color="green"/><StatCard label="Styles Costed" value={DATA.costings.length} icon="📋" color="blue"/></div><GlassCard color="violet"><Table color="violet" cols={["Product","Fabric $","Trim $","Labor $","Overhead $","Total Cost","FOB $","Margin %"]} rows={DATA.costings.map(c=>[c.product,`$${c.fabric}`,`$${c.trim}`,`$${c.labor}`,`$${c.overhead}`,<span className="font-semibold text-white/90">${c.total}</span>,<span className="font-semibold text-violet-300">${c.fob}</span>,<span className="font-semibold text-green-400">{c.margin}%</span>])}/></GlassCard></div>);}
-
 function BuyersPage({onBack}){return(<div><PageHeader title="Buyers / Customers" subtitle="Sales • Buyers" icon="🤝" onBack={onBack} color="cyan"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Buyers" value={DATA.buyers.length} icon="🤝" color="cyan"/><StatCard label="Active Orders" value={DATA.workOrders.length} icon="📋" color="green"/><StatCard label="Total Pcs" value={DATA.buyers.reduce((s,b)=>s+b.totalPcs,0).toLocaleString()} icon="👕" color="blue"/></div><GlassCard color="cyan"><Table color="cyan" cols={["#","Buyer","Country","Contact","Email","Active Orders","Total Pcs","Status"]} rows={DATA.buyers.map(b=>[b.id,<span className="font-semibold text-cyan-300">{b.name}</span>,b.country,b.contact,<span className="text-white/50 text-[10px]">{b.email}</span>,b.activeOrders,b.totalPcs.toLocaleString(),<StatusBadge status={b.status}/>])}/></GlassCard></div>);}
-
 function SuppliersPage({onBack}){return(<div><PageHeader title="Suppliers" subtitle="Procurement • Suppliers" icon="🏭" onBack={onBack} color="teal"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total" value={DATA.suppliers.length} icon="🏭" color="teal"/><StatCard label="Active" value={DATA.suppliers.filter(s=>s.status==="Active").length} icon="✅" color="green"/><StatCard label="Avg Lead" value="13 days" icon="📦" color="amber"/></div><GlassCard color="teal"><Table color="teal" cols={["#","Supplier","Country","Contact","Material","Rating","Lead Days","Status"]} rows={DATA.suppliers.map(s=>[s.id,<span className="font-semibold text-teal-300">{s.name}</span>,s.country,s.contact,s.material,<Stars rating={s.rating}/>,`${s.leadDays}d`,<StatusBadge status={s.status}/>])}/></GlassCard></div>);}
-
 function PurchaseOrdersPage({onBack}){return(<div><PageHeader title="Purchase Orders" subtitle="Procurement • Orders" icon="📦" onBack={onBack} color="teal"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.purchaseOrders.length} icon="📦" color="teal"/><StatCard label="In Transit" value={DATA.purchaseOrders.filter(p=>p.status==="In Transit").length} icon="🚢" color="blue"/><StatCard label="Delivered" value={DATA.purchaseOrders.filter(p=>p.status==="Delivered").length} icon="✅" color="green"/><StatCard label="Pending" value={DATA.purchaseOrders.filter(p=>p.status==="Pending"||p.status==="Confirmed").length} icon="⏳" color="amber"/></div><GlassCard color="teal"><Table color="teal" cols={["PO ID","Supplier","Material","Qty","Amount","Order Date","Delivery","Status"]} rows={DATA.purchaseOrders.map(p=>[<span className="font-mono text-teal-300 text-[10px]">{p.id}</span>,p.supplier,p.material,p.qty,<span className="font-semibold text-white/90">${p.amount.toLocaleString()}</span>,p.date,p.delivery,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
-
 function ShipmentsPage({onBack}){return(<div><PageHeader title="Shipments / Export" subtitle="Logistics • Shipments" icon="🚢" onBack={onBack} color="cyan"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total" value={DATA.shipments.length} icon="🚢" color="cyan"/><StatCard label="Confirmed" value={DATA.shipments.filter(s=>s.status==="Confirmed").length} icon="✅" color="green"/><StatCard label="Scheduled" value={DATA.shipments.filter(s=>s.status==="Scheduled").length} icon="📅" color="blue"/></div><GlassCard color="cyan"><Table color="cyan" cols={["SH ID","Buyer","Work Order","Qty","Method","Vessel/Flight","ETD","ETA","Status"]} rows={DATA.shipments.map(s=>[<span className="font-mono text-cyan-300 text-[10px]">{s.id}</span>,s.buyer,<span className="font-mono text-[10px] text-white/60">{s.wo}</span>,s.qty.toLocaleString(),<Badge color="blue">{s.method}</Badge>,s.vessel,s.etd,s.eta,<StatusBadge status={s.status}/>])}/></GlassCard></div>);}
-
 function EmployeesPage({onBack}){return(<div><PageHeader title="Employees" subtitle="HR • Employee Management" icon="👷" onBack={onBack} color="violet"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.employees.length} icon="👷" color="violet"/><StatCard label="Active" value={DATA.employees.filter(e=>e.status==="Active").length} icon="✅" color="green"/><StatCard label="Permanent" value={DATA.employees.filter(e=>e.type==="Permanent").length} icon="🏅" color="blue"/><StatCard label="Contract" value={DATA.employees.filter(e=>e.type==="Contract").length} icon="📄" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["ID","Name","Dept","Position","Hire Date","Salary $","Type","Status"]} rows={DATA.employees.map(e=>[<span className="font-mono text-violet-300 text-[10px]">{e.id}</span>,<span className="font-medium text-white/90">{e.name}</span>,e.dept,e.position,e.hire,<span className="font-semibold text-green-400">${e.salary}</span>,<StatusBadge status={e.type}/>,<StatusBadge status={e.status}/>])}/></GlassCard></div>);}
-
 function AttendancePage({onBack}){return(<div><PageHeader title="Attendance" subtitle="HR • Attendance" icon="🕐" onBack={onBack} color="violet"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Present" value={DATA.attendance.filter(a=>a.status==="Present"||a.status==="OT").length} icon="✅" color="green"/><StatCard label="Absent" value={DATA.attendance.filter(a=>a.status==="Absent").length} icon="❌" color="rose"/><StatCard label="OT" value={DATA.attendance.filter(a=>a.status==="OT").length} icon="⏰" color="amber"/><StatCard label="Date" value="Mar 5" icon="📅" color="blue"/></div><GlassCard color="violet"><Table color="violet" cols={["#","Employee","Dept","Date","Time In","Time Out","OT Hrs","Status"]} rows={DATA.attendance.map((a,i)=>[i+1,a.employee,a.dept,a.date,a.in,a.out,a.ot?<span className="text-amber-400">{a.ot}h</span>:"–",<StatusBadge status={a.status}/>])}/></GlassCard></div>);}
-
 function LeavePage({onBack}){return(<div><PageHeader title="Leave Management" subtitle="HR • Leave" icon="🌴" onBack={onBack} color="violet"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Requests" value={DATA.leaves.length} icon="📋" color="violet"/><StatCard label="Approved" value={DATA.leaves.filter(l=>l.status==="Approved").length} icon="✅" color="green"/><StatCard label="Pending" value={DATA.leaves.filter(l=>l.status==="Pending").length} icon="⏳" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["#","Employee","Leave Type","From","To","Days","Approver","Status"]} rows={DATA.leaves.map((l,i)=>[i+1,l.employee,<Badge color="violet">{l.type}</Badge>,l.from,l.to,l.days,l.approver,<StatusBadge status={l.status}/>])}/></GlassCard></div>);}
-
 function PayrollPage({onBack}){return(<div><PageHeader title="Payroll" subtitle="HR • Finance" icon="💵" onBack={onBack} color="violet"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total Payroll" value={`$${DATA.payroll.reduce((s,p)=>s+p.net,0).toLocaleString()}`} icon="💵" color="violet"/><StatCard label="Employees" value={DATA.payroll.length} icon="👷" color="blue"/><StatCard label="Paid" value={DATA.payroll.filter(p=>p.status==="Paid").length} icon="✅" color="green"/><StatCard label="Processing" value={DATA.payroll.filter(p=>p.status==="Processing").length} icon="⏳" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["Employee","Dept","Base $","OT $","Bonus $","Deduct $","Net $","Month","Status"]} rows={DATA.payroll.map(p=>[<span className="font-medium text-white/90">{p.employee}</span>,p.dept,`$${p.base}`,<span className="text-amber-400">${p.ot}</span>,<span className="text-green-400">${p.bonus}</span>,<span className="text-rose-400">-${p.deduction}</span>,<span className="font-bold text-violet-300">${p.net}</span>,p.month,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
-
 function ReportsPage({onBack}){const reports=[{icon:"📊",title:"Daily Production Report",desc:"Output by line, efficiency, target vs actual",color:"green",freq:"Daily"},{icon:"🔍",title:"Quality Summary",desc:"Defect rate, inspection results, AQL",color:"rose",freq:"Daily"},{icon:"👷",title:"Attendance Summary",desc:"Present, absent, OT hours by dept",color:"violet",freq:"Daily"},{icon:"📦",title:"Inventory Status",desc:"Stock levels, low stock alerts, reorder list",color:"teal",freq:"Weekly"},{icon:"💰",title:"Cost Analysis",desc:"Actual vs standard cost per style",color:"violet",freq:"Monthly"},{icon:"🚢",title:"Shipment Status",desc:"On-time delivery rate, pending shipments",color:"cyan",freq:"Weekly"},{icon:"🏭",title:"Machine Utilization",desc:"Running vs idle vs maintenance breakdown",color:"orange",freq:"Weekly"},{icon:"📈",title:"KPI Dashboard",desc:"All factory KPIs in one view",color:"amber",freq:"Real-time"}];return(<div><PageHeader title="Reports" subtitle="Reports • Analytics" icon="📈" onBack={onBack} color="rose"/><div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">{reports.map((r,i)=>(<GlassCard key={i} color={r.color}><div className="text-2xl mb-2">{r.icon}</div><h3 className="font-semibold text-white/90 text-sm mb-1">{r.title}</h3><p className="text-[11px] text-white/40 mb-3">{r.desc}</p><div className="flex items-center justify-between"><Badge color={r.color}>{r.freq}</Badge><button className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Generate →</button></div></GlassCard>))}</div></div>);}
 
-
 // ═══════════════════════════════════════════════════════════════
-// MENU BUTTON + SECTION + GROUP
+// ── MENU COMPONENTS ──────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
-function MenuButton({title,iconPath,onClick,badge}){
-  const [pressed,setPressed]=useState(false);
-  return(
-      <button onClick={()=>{setPressed(true);setTimeout(()=>setPressed(false),150);onClick?.();}}
-              className={`relative flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-2xl cursor-pointer select-none overflow-hidden border border-white/20 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_4px_20px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-200 hover:bg-white/18 hover:border-amber-400/40 hover:-translate-y-0.5 active:scale-95 ${pressed?"scale-95":"scale-100"}`}>
+function MenuButton({ title, iconPath, onClick, badge, color="white" }) {
+  return (
+      <button onClick={onClick}
+              className="relative flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-2xl cursor-pointer select-none overflow-hidden border border-white/20 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_4px_20px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-150 hover:bg-white/18 hover:border-amber-400/40 hover:-translate-y-1 active:scale-95">
         <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"/>
         <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/12 via-transparent to-transparent"/>
-        {badge&&<span className="absolute -top-1 -right-1 z-20 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-400 text-[9px] font-bold text-gray-900 flex items-center justify-center shadow">{badge}</span>}
-        <img src={iconPath} alt={title} className="relative w-8 h-8 object-contain drop-shadow-md flex-shrink-0" onError={e=>{e.target.src="https://api.iconify.design/mdi:dots-grid.svg?color=white";}}/>
+        {badge && <span className="absolute -top-1 -right-1 z-20 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-400 text-[9px] font-bold text-gray-900 flex items-center justify-center shadow">{badge}</span>}
+        <img src={iconPath} alt={title} className="relative w-8 h-8 object-contain drop-shadow-md flex-shrink-0"
+             onError={e=>{ e.target.src="https://api.iconify.design/mdi:dots-grid.svg?color=white"; }}/>
         <span className="relative text-[10px] font-light tracking-wide text-white/85 text-center leading-tight px-1 drop-shadow">{title}</span>
       </button>
   );
 }
 
-function Section({title,icon,color="amber",children}){
-  const a=ACCENT[color];
-  return(
+function Section({ title, icon, color="amber", children }) {
+  const a = ACCENT[color];
+  return (
       <div className="relative rounded-3xl overflow-hidden p-5"
-           style={{background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)",backdropFilter:"blur(20px)",border:`1px solid ${a.border}`,boxShadow:`inset 0 1px 0 rgba(255,255,255,0.12),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}`}}>
+           style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.03) 100%)", backdropFilter:"blur(20px)", border:`1px solid ${a.border}`, boxShadow:`inset 0 1px 0 rgba(255,255,255,0.12),0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
         <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${a.bar} rounded-b-full`}/>
         <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/5 to-transparent pointer-events-none rounded-3xl"/>
         <div className="flex items-center gap-2 mb-4">
           <span className="text-lg">{icon}</span>
-          <span className="text-sm font-semibold tracking-widest uppercase" style={{color:a.text}}>{title}</span>
+          <span className="text-sm font-semibold tracking-widest uppercase" style={{ color:a.text }}>{title}</span>
         </div>
         {children}
       </div>
   );
 }
 
-function Group({label,color="amber",children}){
-  const c={amber:"text-amber-300/60 border-amber-400/20",blue:"text-blue-300/60 border-blue-400/20",green:"text-emerald-300/60 border-emerald-400/20",rose:"text-rose-300/60 border-rose-400/20",violet:"text-violet-300/60 border-violet-400/20",cyan:"text-cyan-300/60 border-cyan-400/20",orange:"text-orange-300/60 border-orange-400/20",teal:"text-teal-300/60 border-teal-400/20"}[color];
-  return(
+function Group({ label, color="amber", children }) {
+  const c = { amber:"text-amber-300/60 border-amber-400/20", blue:"text-blue-300/60 border-blue-400/20", green:"text-emerald-300/60 border-emerald-400/20", rose:"text-rose-300/60 border-rose-400/20", violet:"text-violet-300/60 border-violet-400/20", cyan:"text-cyan-300/60 border-cyan-400/20", orange:"text-orange-300/60 border-orange-400/20", teal:"text-teal-300/60 border-teal-400/20" }[color];
+  return (
       <div className="mb-4 last:mb-0">
         <p className={`text-[9px] font-semibold tracking-[0.18em] uppercase mb-3 pb-1 border-b ${c}`}>{label}</p>
         <div className="flex flex-wrap gap-3">{children}</div>
@@ -739,86 +1257,171 @@ function Group({label,color="amber",children}){
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ROOT COMPONENT
+// ── DASHBOARD HOME QUICK ACTIONS ─────────────────────────────
 // ═══════════════════════════════════════════════════════════════
-export default function MenuTesting(){
-  const [page,setPage]=useState(null);
-  const [permBadge,setPermBadge]=useState(2); // pending count
-  const nav=(p)=>setPage(p);
-  const back=()=>setPage(null);
+function QuickAlerts({ onNav }) {
+  const alerts = [
+    { icon:"⚠️", text:"WO-2026-004 Sports Jersey is delayed", color:"rose", page:"work-orders" },
+    { icon:"📦", text:"Elastic Band 2cm stock below reorder point", color:"amber", page:"materials" },
+    { icon:"🔴", text:"2 Critical defects open on Line B2", color:"rose", page:"defects" },
+    { icon:"⏳", text:"2 permission requests pending review", color:"amber", page:"permissions" },
+  ];
+  return (
+      <GlassCard color="rose">
+        <p className="text-[10px] text-white/40 uppercase tracking-widest mb-3 font-semibold">⚡ Alerts & Actions</p>
+        <div className="space-y-2">
+          {alerts.map((a,i)=>(
+              <button key={i} onClick={()=>onNav(a.page)} className="w-full flex items-center gap-3 p-2.5 rounded-xl text-left transition-all hover:bg-white/8 group" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)" }}>
+                <span className="text-sm shrink-0">{a.icon}</span>
+                <span className="text-[11px] text-white/60 flex-1 group-hover:text-white/80 transition-colors">{a.text}</span>
+                <span className="text-[10px] text-white/25 group-hover:text-white/50 shrink-0">→</span>
+              </button>
+          ))}
+        </div>
+      </GlassCard>
+  );
+}
 
-  const PAGES={
-    users:<UsersPage onBack={back}/>, roles:<RolesPage onBack={back}/>, "audit-log":<AuditLogPage onBack={back}/>, settings:<SettingsPage onBack={back}/>,
-    departments:<DepartmentsPage onBack={back}/>, "production-lines":<ProductionLinesPage onBack={back}/>, products:<ProductsPage onBack={back}/>,
-    materials:<MaterialsPage onBack={back}/>, shifts:<ShiftsPage onBack={back}/>, standards:<StandardsPage onBack={back}/>,
-    "work-orders":<WorkOrdersPage onBack={back}/>, schedule:<SchedulePage onBack={back}/>, realtime:<RealtimePage onBack={back}/>, tv:<TVDisplayPage onBack={back}/>,
-    machines:<MachinesPage onBack={back}/>, defects:<DefectsPage onBack={back}/>, inspections:<InspectionsPage onBack={back}/>,
-    dashboard:<DashboardPage onBack={back}/>, costing:<CostingPage onBack={back}/>, buyers:<BuyersPage onBack={back}/>,
-    suppliers:<SuppliersPage onBack={back}/>, "purchase-orders":<PurchaseOrdersPage onBack={back}/>, shipments:<ShipmentsPage onBack={back}/>,
-    employees:<EmployeesPage onBack={back}/>, attendance:<AttendancePage onBack={back}/>, leave:<LeavePage onBack={back}/>,
-    payroll:<PayrollPage onBack={back}/>, reports:<ReportsPage onBack={back}/>,
-    permissions:<PermissionsPage onBack={back}/>,
+// ═══════════════════════════════════════════════════════════════
+// ── ROOT COMPONENT ───────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+export default function SECFactory() {
+  const [page, setPage] = useState(null);
+  const [permBadge] = useState(2);
+  const nav = (p) => setPage(p);
+  const back = () => setPage(null);
+
+  const PAGES = {
+    users: <UsersPage onBack={back}/>,
+    roles: <RolesPage onBack={back}/>,
+    "audit-log": <AuditLogPage onBack={back}/>,
+    settings: <SettingsPage onBack={back}/>,
+    departments: <DepartmentsPage onBack={back}/>,
+    "production-lines": <ProductionLinesPage onBack={back}/>,
+    products: <ProductsPage onBack={back}/>,
+    materials: <MaterialsPage onBack={back}/>,
+    shifts: <ShiftsPage onBack={back}/>,
+    standards: <StandardsPage onBack={back}/>,
+    "work-orders": <WorkOrdersPage onBack={back}/>,
+    schedule: <SchedulePage onBack={back}/>,
+    realtime: <RealtimePage onBack={back}/>,
+    tv: <TVDisplayPage onBack={back}/>,
+    machines: <MachinesPage onBack={back}/>,
+    defects: <DefectsPage onBack={back}/>,
+    inspections: <InspectionsPage onBack={back}/>,
+    dashboard: <DashboardPage onBack={back}/>,
+    costing: <CostingPage onBack={back}/>,
+    buyers: <BuyersPage onBack={back}/>,
+    suppliers: <SuppliersPage onBack={back}/>,
+    "purchase-orders": <PurchaseOrdersPage onBack={back}/>,
+    shipments: <ShipmentsPage onBack={back}/>,
+    employees: <EmployeesPage onBack={back}/>,
+    attendance: <AttendancePage onBack={back}/>,
+    leave: <LeavePage onBack={back}/>,
+    payroll: <PayrollPage onBack={back}/>,
+    reports: <ReportsPage onBack={back}/>,
+    permissions: <PermissionsPage onBack={back}/>,
   };
 
-  const I=(name,color="white")=>`https://api.iconify.design/mdi:${name}.svg?color=${color}`;
+  const I = (name) => `https://api.iconify.design/mdi:${name}.svg?color=white`;
 
-  return(
+  return (
       <>
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
-        .admin-root{font-family:'Sora',sans-serif;}
-        @keyframes fadein{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-        .fadein{animation:fadein 0.45s cubic-bezier(.22,1,.36,1) both;}
-        input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(0.5);}
+        .sec-root { font-family: 'Sora', sans-serif; }
+        @keyframes fadein { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .fadein { animation: fadein 0.4s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes slideup { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .stagger > * { animation: slideup 0.4s cubic-bezier(.22,1,.36,1) both; }
+        .stagger > *:nth-child(1){animation-delay:0ms}
+        .stagger > *:nth-child(2){animation-delay:40ms}
+        .stagger > *:nth-child(3){animation-delay:80ms}
+        .stagger > *:nth-child(4){animation-delay:120ms}
+        .stagger > *:nth-child(5){animation-delay:160ms}
+        .stagger > *:nth-child(6){animation-delay:200ms}
+        .stagger > *:nth-child(7){animation-delay:240ms}
+        .stagger > *:nth-child(8){animation-delay:280ms}
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+        ::-webkit-scrollbar { width:4px; height:4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius:4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
       `}</style>
 
-        <div className="admin-root min-h-screen p-5 lg:p-8"
-             style={{background:"radial-gradient(ellipse at 10% 10%,#1c2d1a 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,#1a1f2e 0%,transparent 50%),radial-gradient(ellipse at 55% 45%,#1e1a10 0%,transparent 60%),#0c0e0b"}}>
+        <div className="sec-root min-h-screen"
+             style={{ background:"radial-gradient(ellipse at 10% 10%,#1c2d1a 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,#1a1f2e 0%,transparent 50%),radial-gradient(ellipse at 55% 45%,#1e1a10 0%,transparent 60%),#0c0e0b" }}>
 
-          <div className="fixed inset-0 pointer-events-none opacity-40" style={{backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)",backgroundSize:"28px 28px"}}/>
-          <div className="fixed w-96 h-96 rounded-full opacity-10 blur-[100px] pointer-events-none -top-24 -left-24 animate-pulse" style={{background:"#854d0e"}}/>
-          <div className="fixed w-72 h-72 rounded-full opacity-10 blur-[80px] pointer-events-none bottom-0 right-0 animate-pulse" style={{background:"#1d4ed8",animationDelay:"2s"}}/>
+          {/* Background effects */}
+          <div className="fixed inset-0 pointer-events-none opacity-30" style={{ backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)", backgroundSize:"28px 28px" }}/>
+          <div className="fixed w-96 h-96 rounded-full opacity-[0.08] blur-[100px] pointer-events-none -top-24 -left-24 animate-pulse" style={{ background:"#854d0e" }}/>
+          <div className="fixed w-72 h-72 rounded-full opacity-[0.08] blur-[80px] pointer-events-none bottom-0 right-0 animate-pulse" style={{ background:"#1d4ed8", animationDelay:"2s" }}/>
 
-          {/* Header */}
-          <div className="relative z-10 mb-7 fadein flex items-center gap-4">
-            {page&&<button onClick={back} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-colors border border-white/10 hover:border-white/20 bg-white/5 shrink-0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Menu</button>}
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{background:"rgba(251,191,36,0.15)",border:"1px solid rgba(251,191,36,0.3)"}}>🏭</div>
-            <div>
-              <h1 className="text-lg font-bold text-white/90 tracking-tight">SEC Mega Factory</h1>
-              <p className="text-[10px] text-white/30 tracking-widest uppercase font-light">Garment ERP System</p>
-            </div>
-            <div className="ml-auto flex items-center gap-2">
-              {/* Quick permission request button in header */}
-              {!page && (
-                  <button onClick={() => nav("permissions")}
-                          className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all border"
-                          style={{ background:"rgba(251,191,36,0.12)", border:"1px solid rgba(251,191,36,0.3)", color:"#fbbf24" }}>
-                    🔐 Permissions
-                    {permBadge > 0 && <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 text-[8px] font-bold text-gray-900 flex items-center justify-center">{permBadge}</span>}
+          {/* ── TOPBAR ── */}
+          <div className="sticky top-0 z-30 backdrop-blur-xl border-b border-white/[0.06]" style={{ background:"rgba(12,14,11,0.85)" }}>
+            <div className="px-5 lg:px-8 py-3 flex items-center gap-4">
+              {page && (
+                  <button onClick={back} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-white/50 hover:text-white/80 transition-all border border-white/10 hover:border-white/20 bg-white/5 shrink-0 hover:-translate-y-px active:translate-y-0">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>Menu
                   </button>
               )}
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full" style={{background:"rgba(52,211,153,0.12)",border:"1px solid rgba(52,211,153,0.25)"}}>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"/>
-                <span className="text-[10px] text-emerald-400 font-medium tracking-wider uppercase">Live</span>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background:"rgba(251,191,36,0.15)", border:"1px solid rgba(251,191,36,0.3)" }}>🏭</div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-sm font-bold text-white/90 tracking-tight leading-tight">SEC Mega Factory</h1>
+                <p className="text-[9px] text-white/30 tracking-widest uppercase hidden sm:block">Garment ERP System · Phnom Penh</p>
+              </div>
+
+              <div className="flex items-center gap-2 ml-auto">
+                {!page && (
+                    <button onClick={()=>nav("permissions")}
+                            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all border hover:-translate-y-px"
+                            style={{ background:"rgba(251,191,36,0.12)", border:"1px solid rgba(251,191,36,0.3)", color:"#fbbf24" }}>
+                      🔐 Permissions
+                      {permBadge > 0 && <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 text-[8px] font-bold text-gray-900 flex items-center justify-center">{permBadge}</span>}
+                    </button>
+                )}
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background:"rgba(52,211,153,0.12)", border:"1px solid rgba(52,211,153,0.25)" }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"/>
+                  <span className="text-[10px] text-emerald-400 font-medium tracking-wider uppercase hidden sm:inline">Live</span>
+                </div>
+                <div className="hidden md:flex items-center gap-2 pl-2 border-l border-white/10">
+                  <div className="w-7 h-7 rounded-lg bg-amber-400/15 border border-amber-400/25 flex items-center justify-center text-xs font-bold text-amber-300">SK</div>
+                  <div className="hidden lg:block">
+                    <p className="text-[11px] text-white/70 font-medium leading-none">Sophea Keo</p>
+                    <p className="text-[9px] text-white/30 mt-0.5">Admin</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="relative z-10 fadein" key={page}>
-            {page&&PAGES[page]?PAGES[page]:(
-                <>
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3 mb-6">
-                    {[{l:"Active Lines",v:"12",i:"⚡",c:"amber"},{l:"Today Output",v:"4,820",i:"👕",c:"green"},{l:"Efficiency",v:"91%",i:"📈",c:"blue"},{l:"Open Defects",v:"7",i:"⚠️",c:"rose"},{l:"Work Orders",v:"5",i:"📋",c:"violet"},{l:"Workers",v:"476",i:"👷",c:"cyan"}].map(s=>
-                        <StatCard key={s.l} label={s.l} value={s.v} icon={s.i} color={s.c}/>
-                    )}
+          {/* ── CONTENT ── */}
+          <div className="relative z-10 px-5 lg:px-8 py-6" key={page}>
+            {page && PAGES[page] ? (
+                <div className="fadein max-w-7xl mx-auto">{PAGES[page]}</div>
+            ) : (
+                <div className="max-w-7xl mx-auto">
+                  {/* KPI Strip */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6 fadein">
+                    {[
+                      {l:"Active Lines",v:"12",i:"⚡",c:"amber"},
+                      {l:"Today Output",v:"4,820",i:"👕",c:"green"},
+                      {l:"Efficiency",v:"91%",i:"📈",c:"blue"},
+                      {l:"Open Defects",v:"7",i:"⚠️",c:"rose"},
+                      {l:"Work Orders",v:"5",i:"📋",c:"violet"},
+                      {l:"Workers",v:"476",i:"👷",c:"cyan"},
+                    ].map(s=><StatCard key={s.l} label={s.l} value={s.v} icon={s.i} color={s.c}/>)}
                   </div>
 
-                  {/* Menu Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+                  {/* Quick Alerts */}
+                  <div className="mb-6 fadein" style={{ animationDelay:"60ms" }}>
+                    <QuickAlerts onNav={nav}/>
+                  </div>
 
-                    {/* 1 – Administration */}
+                  {/* Menu grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 stagger">
+
+                    {/* Administration */}
                     <Section title="Administration" icon="🛡️" color="amber">
                       <Group label="Access Control" color="amber">
                         <MenuButton title="Users" iconPath={I("account-group")} onClick={()=>nav("users")}/>
@@ -831,7 +1434,7 @@ export default function MenuTesting(){
                       </Group>
                     </Section>
 
-                    {/* 2 – Data Setup */}
+                    {/* Data Setup */}
                     <Section title="Data Setup" icon="⚙️" color="blue">
                       <Group label="Factory" color="blue">
                         <MenuButton title="Departments" iconPath={I("domain")} onClick={()=>nav("departments")}/>
@@ -845,7 +1448,7 @@ export default function MenuTesting(){
                       </Group>
                     </Section>
 
-                    {/* 3 – Production */}
+                    {/* Production */}
                     <Section title="Production" icon="🏗️" color="green">
                       <Group label="Planning" color="green">
                         <MenuButton title="Work Orders" iconPath={I("clipboard-list")} onClick={()=>nav("work-orders")} badge="3"/>
@@ -857,7 +1460,7 @@ export default function MenuTesting(){
                       </Group>
                     </Section>
 
-                    {/* 4 – Quality */}
+                    {/* Quality */}
                     <Section title="Quality Control" icon="🔬" color="rose">
                       <Group label="Inspection" color="rose">
                         <MenuButton title="Inspections" iconPath={I("magnify-scan")} onClick={()=>nav("inspections")}/>
@@ -869,7 +1472,7 @@ export default function MenuTesting(){
                       </Group>
                     </Section>
 
-                    {/* 5 – HR */}
+                    {/* HR */}
                     <Section title="Human Resources" icon="👷" color="violet">
                       <Group label="Workforce" color="violet">
                         <MenuButton title="Employees" iconPath={I("account-hard-hat")} onClick={()=>nav("employees")}/>
@@ -881,7 +1484,7 @@ export default function MenuTesting(){
                       </Group>
                     </Section>
 
-                    {/* 6 – Procurement */}
+                    {/* Procurement */}
                     <Section title="Procurement" icon="📦" color="teal">
                       <Group label="Partners" color="teal">
                         <MenuButton title="Suppliers" iconPath={I("factory")} onClick={()=>nav("suppliers")}/>
@@ -893,14 +1496,14 @@ export default function MenuTesting(){
                       </Group>
                     </Section>
 
-                    {/* 7 – Finance */}
+                    {/* Finance */}
                     <Section title="Finance" icon="💰" color="violet">
                       <Group label="Costing" color="violet">
                         <MenuButton title="Cost Sheet" iconPath={I("calculator")} onClick={()=>nav("costing")}/>
                       </Group>
                     </Section>
 
-                    {/* 8 – Maintenance */}
+                    {/* Maintenance */}
                     <Section title="Maintenance" icon="🔧" color="orange">
                       <Group label="Assets" color="orange">
                         <MenuButton title="Machines" iconPath={I("tools")} onClick={()=>nav("machines")}/>
@@ -908,7 +1511,7 @@ export default function MenuTesting(){
                     </Section>
 
                   </div>
-                </>
+                </div>
             )}
           </div>
         </div>

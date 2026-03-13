@@ -11,6 +11,11 @@
   "hrMonitor": "HR Monitor",
   "qualityControl": "Kontrol ng Kalidad",
   "inputData": "Magpasok ng Data",
+  "code": "Code",
+  "styleName": "Pangalan ng Estilo",
+  "category": "Kategorya",
+  "color": "Kulay",
+  "size": "Laki",
   "validation": {
     "required": "Kinakailangan",
     "minLength": "Minimum na haba ay {{min}} characters",
@@ -86,7 +91,9 @@
     "productionLine": "Production Line",
     "confirmPassword": "Kumpirmahin ang Password",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "description": "Paglalarawan",
+    "users": "Mga User"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

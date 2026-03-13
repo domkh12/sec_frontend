@@ -16,6 +16,8 @@ import {useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSli
 import {setAlertProfile, setIsOpenSnackbarProfile} from "../../redux/feature/auth/authSlice.js";
 import {setAlertDept} from "../../redux/feature/department/departmentSlice.js";
 import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
+import useFileUpload from "../../hook/useFileUpload.jsx";
+import {useEffect} from "react";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
@@ -52,8 +54,7 @@ function Profile() {
     const isOpenSnackbar = useSelector((state) => state.auth.isOpenSnackbarProfile);
     const alertProfile = useSelector((state) => state.auth.alert);
     const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
-    const [uploadFile, { isLoading: isLoadingUpload }] = useUploadFileMutation();
-
+    const {upload, isLoading: isLoadingUpload} = useFileUpload();
     const initialValues = {
         firstName: user.firstName   ?? "",
         lastName:  user.lastName    ?? "",
@@ -78,15 +79,19 @@ function Profile() {
         }
     };
 
-    const handleUploadImage = async (even) => {
-        console.log("Uploading file:", even.target.files[0]);
-        if (!even.target.files[0]) return;
+    const handleUploadImage = async (event) => {
+        console.log("Uploading file:", event.target.files[0]);
         try {
-            const formData = new FormData();
-            formData.append("file", even.target.files[0]);
-            const response = await uploadFile(formData).unwrap();
-            console.log("Upload response:", response.uri);
-            await updateProfile({ avatar: response.uri }).unwrap();
+            await upload(event, (onError) => {
+                console.error("Error uploading file:", onError);
+                dispatch(setAlertProfile({type: "error", message: onError}));
+                dispatch(setIsOpenSnackbarProfile(true));
+            }, async (onSuccess) =>{
+                await updateProfile({ avatar: onSuccess.uri }).unwrap();
+                dispatch(setAlertProfile({type: "success", message: "Update successfully"}));
+                dispatch(setIsOpenSnackbarProfile(true));
+            })
+
         }catch (err) {
             console.error("Error uploading file:", err);
         }
@@ -95,6 +100,8 @@ function Profile() {
     const handleRemoveImage = async () => {
         try {
             await updateProfile({ avatar: "" }).unwrap();
+            dispatch(setAlertProfile({type: "success", message: "Update successfully"}));
+            dispatch(setIsOpenSnackbarProfile(true));
         }catch (err) {
             console.error("Error removing image:", err);
         }

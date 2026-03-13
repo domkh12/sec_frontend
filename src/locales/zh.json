@@ -11,6 +11,11 @@
   "hrMonitor": "人力资源监控",
   "qualityControl": "质量控制",
   "inputData": "输入数据",
+  "code": "代码",
+  "styleName": "款式名称",
+  "category": "类别",
+  "color": "颜色",
+  "size": "尺寸",
   "validation": {
     "required": "必填",
     "minLength": "最小长度为 {{min}} 个字符",
@@ -86,7 +91,9 @@
     "productionLine": "生产线",
     "confirmPassword": "确认密码",
     "username": "用户名",
-    "password": "密码"
+    "password": "密码",
+    "description": "描述",
+    "users": "用户"
   },
   "factory": {
     "structure": "工厂结构"

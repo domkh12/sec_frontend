@@ -11,6 +11,11 @@
   "hrMonitor": "HR Monitor",
   "qualityControl": "Quality Control",
   "inputData": "Input Data",
+  "code": "Code",
+  "styleName": "Style Name",
+  "category": "Category",
+  "color": "Color",
+  "size": "Size",
   "validation": {
     "required": "Required",
     "minLength": "Minimum length is {{min}} characters",
@@ -86,7 +91,9 @@
     "productionLine": "Production Line",
     "confirmPassword": "Confirm Password",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "description": "Description",
+    "users": "Users"
   },
   "factory": {
     "structure": "Factory Structure"

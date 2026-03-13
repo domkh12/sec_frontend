@@ -9,15 +9,20 @@ import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
-import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
+import { useDeleteProductionLineMutation, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
 import { setAlertDept, setIsOpenDeleteDeptDialog, setIsOpenDialogAddOrEditProductionLine, setIsOpenSnackbarProductionLine, setPageNoProductionLine, setPageSizeProductionLine, setProductionLineDataForUpdate } from "../../redux/feature/productionLine/productionLineSlice.js";
 import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
-import {useGetProductQuery} from "../../redux/feature/product/productApiSlice.js";
+import {
+    useCreateProductMutation, useDeleteProductMutation,
+    useGetProductQuery,
+    useUpdateProductMutation
+} from "../../redux/feature/product/productApiSlice.js";
 import {
     setIsOpenDeleteProductDialog,
     setIsOpenDialogAddOrEditProduct,
     setIsOpenSnackbarProduct, setProductDataForUpdate
 } from "../../redux/feature/product/productSlice.js";
+import {SIZES} from "../../config/size.js";
 
 
 function ProductList() {
@@ -32,16 +37,12 @@ function ProductList() {
     const isOpenSnackbar = useSelector((state) => state.product.isOpenSnackbarProduct);
     const alertProduct = useSelector((state) => state.product.alertProduct);
     const isOpenDeleteDialog = useSelector((state) => state.product.isOpenDeleteProductDialog);
-    const[createDept] = useCreateProductionLineMutation();
-    const [updateDept] = useUpdateProductionLineMutation();
-    const [deleteDept] = useDeleteProductionLineMutation();
+    const[createProduct] = useCreateProductMutation();
+    const [updateProduct] = useUpdateProductMutation();
+    const [deleteProduct] = useDeleteProductMutation();
     const {data: prodData, isLoading, isSuccess} = useGetProductQuery({
         pageNo: pageNo,
         pageSize: pageSize
-    });
-    const {data: deptData} = useGetDepartmentQuery({
-        pageNo: 1,
-        pageSize: 999
     });
     
     const handleChangePage = (event, newPage) => {
@@ -59,24 +60,33 @@ function ProductList() {
     }
 
     const validationSchema = Yup.object().shape({
-        line: Yup.string().required(t("validation.required")),
-        deptId: Yup.number().required(t("validation.required")),
+        code:      Yup.string().required(t("validation.required")),
+        styleName: Yup.string().required(t("validation.required")),
+        category:  Yup.string().required(t("validation.required")),
+        color:     Yup.string().required(t("validation.required")),
+        size:      Yup.string().required(t("validation.required")),
     });
 
     const handleSubmit = async (values, {resetForm}) => {
         try {
             if (productDataForUpdate) {
-                 await updateDept({
-                    id: productDataForUpdate.id,
-                    line: values.line,
-                    deptId: values.deptId,
+                 await updateProduct({
+                     id: productDataForUpdate.id,
+                     code:      values.code,
+                     styleName: values.styleName,
+                     category:  values.category,
+                     color:     values.color,
+                     size:      values.size,
                 }).unwrap();
                 dispatch(setAlertDept({type: "success", message: "Update successfully"}));
                 dispatch(setProductionLineDataForUpdate(null));
             }else {
-                await createDept({
-                    line: values.line,
-                    deptId: values.deptId
+                await createProduct({
+                    code:      values.code,
+                    styleName: values.styleName,
+                    category:  values.category,
+                    color:     values.color,
+                    size:      values.size,
                 }).unwrap();
                 dispatch(setAlertDept({type: "success", message: "Create successfully"}));
             }
@@ -88,19 +98,33 @@ function ProductList() {
             dispatch(setIsOpenSnackbarProductionLine(true));
         }
     };
-
+    console.log(SIZES)
     const fields = [
         { name: "code",     label: "code",     type: "text" },
         { name: "styleName",     label: "styleName",     type: "text" },
         { name: "category",     label: "category",     type: "text" },
         { name: "color",     label: "color",     type: "text" },
-        { name: "size", label: "size", type: "text" },
+        {
+            name: "size",
+            label: "size",
+            type: "autocomplete",
+            minWidth: 130,
+            fetchOptions: async () => {
+                return Object.values(SIZES.map((size) => ({
+                    value: size?.id,
+                    label: size?.label,
+                })))
+            }
+        },
     ];
 
-    const initialValues ={
-        line: "",
-        deptId: "",
-    }
+    const initialValues = {
+        code:      "",
+        styleName: "",
+        category:  "",
+        color:     "",
+        size:      "",
+    };
 
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditProductionLine(true));
