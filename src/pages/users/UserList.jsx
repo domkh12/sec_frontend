@@ -4,7 +4,8 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    useCreateUserMutation, useDeleteUserMutation,
+    useCreateUserMutation, useDeleteUserMutation, useGetUserStatsQuery, useSetBlockUserMutation,
+    useSetUnblockUserMutation,
     useUpdateUserMutation
 } from "../../redux/feature/user/userApiSlice.js";
 import * as Yup from "yup";
@@ -15,28 +16,40 @@ import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useGetUserQuery} from "../../redux/feature/user/userApiSlice.js";
 import {
-    setAlertUser, setIsOpenDeleteUserDialog,
+    setAlertUser, setFilterUser, setIdBlockUser, setIsOpenBlockUserDialog, setIsOpenDeleteUserDialog,
     setIsOpenDialogAddOrEditUser, setIsOpenSnackbarUser,
-    setPageNoUser,
-    setPageSizeUser,
     setUserDataForUpdate
 } from "../../redux/feature/user/userSlice.js";
 import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
 import {useGetProductionLineQuery} from "../../redux/feature/productionLine/productionLineApiSlice.js";
+import useDebounce from "../../hook/useDebounce.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
+import {useGetDepartmentQuery} from "../../redux/feature/department/departmentApiSlice.js";
+import StatCards from "../../components/card/StatCards.jsx";
+import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
+import WifiRoundedIcon from '@mui/icons-material/WifiRounded';
+import WifiOffRoundedIcon from '@mui/icons-material/WifiOffRounded';
+import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
+import DialogConfirmBlock from "../../components/dialog/DialogConfirmBlock.jsx";
 
 function UserList(){
     const {t} = useTranslation();
-    const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const pageNo = useSelector((state) => state.user.pageNo);
-    const pageSize = useSelector((state) => state.user.pageSize);
+    const [id, setId] = useState(null);
     const userDataForUpdate = useSelector((state) => state.user.userDataForUpdate);
     const isOpen = useSelector((state) => state.user.isOpenDialogAddOrEditUser);
     const isOpenSnackbar = useSelector((state) => state.user.isOpenSnackbarUser);
     const alertUser = useSelector((state) => state.user.alertUser);
     const isOpenDeleteDialog = useSelector((state) => state.user.isOpenDeleteUserDialog);
-
+    const isOpenBlockDialog = useSelector((state) => state.user.isOpenBlockUserDialog);
+    const idBlockUser = useSelector((state) => state.user.idBlockUser);
+    const filterValue = useSelector((state) => state.user.filter);
+    const searchValue = useSelector((state) => state.user.filter.search);
+    const debounceSearch = useDebounce(searchValue, 500);
+    const [blockUser] = useSetBlockUserMutation();
+    const [unblockUser] = useSetUnblockUserMutation();
+    const {data: userState} = useGetUserStatsQuery();
     const[createUser] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser] = useDeleteUserMutation();
@@ -44,22 +57,49 @@ function UserList(){
         pageNo: 1,
         pageSize: 999
     });
-    const {data: userData, isLoading, isSuccess} = useGetUserQuery({
-        pageNo: pageNo,
-        pageSize: pageSize
+    console.log(userState)
+    const {data: deptData} = useGetDepartmentQuery({
+        pageNo: 1,
+        pageSize: 999
+    })
+    const {data: userData, isLoading, isSuccess, isFetching} = useGetUserQuery({
+        ...filterValue,
+        search: debounceSearch,
+        roleId: filterValue.role,
+        departmentId: filterValue.department,
+        status: filterValue.status
     });
     const {data: roleData} = useGetRoleQuery({
         pageNo: 1,
         pageSize: 999
     });
+    const handleFilterChange = (key, value) => {
+        if (value === "all") {
+            return dispatch(setFilterUser({
+                ...filterValue,
+                [key]: "",
+            }));
+        }
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterUser(newFilter));
+    }
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoUser(newPage + 1));
+        dispatch(setFilterUser({
+            ...filterValue,
+            pageNo: newPage + 1
+        }));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeUser(event.target.value));
-        dispatch(setPageNoUser(1));
+        dispatch(setFilterUser({
+            ...filterValue,
+            pageSize: parseInt(event.target.value, 10),
+            pageNo: 1
+        }));
     };
 
     const handleClose = () => {
@@ -153,7 +193,7 @@ function UserList(){
     };
 
     const fields = [
-        { name: "employeeId", label: "table.employeeId", type: "text" },
+        { name: "employeeId", label: "table.employeeId", type: "text"},
         { name: "firstName",     label: "table.firstName",     type: "text" },
         { name: "lastName",     label: "table.lastName",     type: "text" },
         { name: "email",     label: "table.email",     type: "email" },
@@ -186,6 +226,56 @@ function UserList(){
             },
         }
     ];
+
+    // Add this after your columns definition or in a separate constant
+    const filterConfig = [
+        {
+            id: 'role',
+            label: t("table.role"),
+            width: 150,
+            options: [
+                { value: 'all', label: t('filter.all') },
+                // You can dynamically generate these from roleData
+                ...(roleData?.ids?.map(id => ({
+                    value: roleData.entities[id].id,
+                    label: roleData.entities[id].name
+                })) || [])
+            ]
+        },
+        {
+            id: 'status',
+            label: t("table.status"),
+            width: 150,
+            options: [
+                { value: 'all', label: t('filter.all') },
+                { value: 'Active', label: t('Active') },
+                { value: 'Inactive', label: t('Inactive') },
+                { value: 'Blocked', label: t('Blocked') }
+            ]
+        },
+        {
+            id: 'department',
+            label: t("table.department"),
+            width: 150,
+            options: [
+                { value: 'all', label: t('filter.all') },
+                ...(deptData?.ids?.map(id => ({
+                    value: deptData.entities[id].id,
+                    label: deptData.entities[id].department
+                })) || [])
+            ]
+        }
+    ];
+
+    const handleClearAllFilters = () => {
+        dispatch(setFilterUser({
+            ...filterValue,
+            role: "",
+            status: "",
+            department: "",
+            search: "",
+        }));
+    };
 
     const initialValues = {
         employeeId: "",
@@ -236,10 +326,21 @@ function UserList(){
         }
     }
 
+    const handleBlock = async () => {
+        await blockUser(idBlockUser).unwrap();
+        dispatch(setIsOpenBlockUserDialog(false));
+        dispatch(setAlertUser({type: "success", message: "Block successfully"}));
+        dispatch(setIsOpenSnackbarUser(true));
+    };
+
+    const handleUnblock = async (user) => {
+       await unblockUser(user.id).unwrap();
+    };
+
     const columns = [
         {
-            id: "id",
-            label: "#",
+            id: "employeeId",
+            label: "employeeId",
             minWidth: 50,
             align: "left",
         },
@@ -256,8 +357,8 @@ function UserList(){
             align: "left",
         },
         {
-            id: "email",
-            label: t("table.email"),
+            id: "phoneNumber",
+            label: t("table.phoneNumber"),
             minWidth: 130,
             align: "left",
         },
@@ -295,7 +396,7 @@ function UserList(){
 
     let content;
 
-    if (isLoading) content = (<Backdrop open={isLoading}/>);
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess){
         content = (
@@ -314,7 +415,33 @@ function UserList(){
                         <BackButton onClick={() => navigate("/admin")}/>
                         <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditUser(true))}/>
                     </div>
-                    <TableCus columns={columns} data={userData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
+                    <div>
+                        <StatCards cards={[
+                            { label: "Total Users",  value: userState.totalUsers,  color: "violet", icon: <PeopleAltRoundedIcon fontSize="small"/> },
+                            { label: "Active",      value: userState.activeUsers,   color: "emerald", icon: <WifiRoundedIcon fontSize="small"/>},
+                            { label: "Inactive",  value: userState.inactiveUsers,   color: "amber", icon: <WifiOffRoundedIcon fontSize="small"/> },
+                            { label: "Blocked",      value: userState.blockedUsers,   color: "red", icon: <BlockRoundedIcon fontSize="small"/> },
+                        ]} />
+                    </div>
+                    <TableCus
+                        columns={columns}
+                        data={userData}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        onEdit={handleEdit}
+                        onBlock={(user) => {
+                            dispatch(setIdBlockUser(user.id));
+                            dispatch(setIsOpenBlockUserDialog(true));
+                        }}
+                        onUnblock={handleUnblock}
+                        onDelete={handleDeleteOpen}
+                        isFilterActive={true}
+                        searchPlaceholderText={`${t('table.firstName')}/${t('table.lastName')}/${t('table.phoneNumber')}`}
+                        filterValue={filterValue} handleFilterChange={handleFilterChange}
+                        isFetching={isFetching}
+                        filterConfig={filterConfig}
+                        onClearAllFilters={handleClearAllFilters}
+                    />
                 </div>
                 <DialogAddEditCus
                     fields={fields}
@@ -341,6 +468,7 @@ function UserList(){
                     </Alert>
                 </Snackbar>
                 <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteUserDialog(false))} handleDelete={handleDelete}/>
+                <DialogConfirmBlock isOpen={isOpenBlockDialog} onClose={() => dispatch(setIsOpenBlockUserDialog(false))} handleBlock={handleBlock}/>
             </div>
         )
     }

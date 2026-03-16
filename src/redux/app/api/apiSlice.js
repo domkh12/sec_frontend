@@ -65,7 +65,9 @@ export const apiSlice = createApi({
     "ProductionLine",
     "Product",
     "User",
-    "Role"
+    "Role",
+    "Category",
+    "UserStats"
   ],
   endpoints: (builder) => ({}),
 });

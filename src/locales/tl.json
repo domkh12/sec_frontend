@@ -30,12 +30,20 @@
     "title": "User",
     "management": "Pamamahala ng User",
     "profile": "Profile ng User",
-    "settings": "Mga Setting ng User"
+    "settings": "Mga Setting ng User",
+    "block.description": "Ang user na ito ay hindi makakapag-access sa system.",
+    "unblock.description": "Ang user na ito ay makakapag-access muli sa system.",
+    "block.confirm": "Oo, I-block",
+    "unblock.confirm": "Oo, I-unblock",
+    "block": "I-block"
   },
   "status": {
     "soon": "Malapit Na",
     "available": "Available",
-    "unavailable": "Hindi Available"
+    "unavailable": "Hindi Available",
+    "active": "Aktibo",
+    "inactive": "Hindi Aktibo",
+    "blocked": "Naka-block"
   },
   "profile": {
     "title": "Profile",
@@ -59,7 +67,8 @@
     "addNew": "Magdagdag ng Bago",
     "create": "Lumikha",
     "cancel": "Kanselahin",
-    "update": "I-update"
+    "update": "I-update",
+    "back": "Bumalik"
   },
   "department": {
     "create": "Lumikha ng Departamento",
@@ -93,9 +102,14 @@
     "username": "Username",
     "password": "Password",
     "description": "Paglalarawan",
-    "users": "Mga User"
+    "users": "Mga User",
+    "block": "I-block",
+    "unblock": "I-unblock"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
+  },
+  "filter": {
+    "all": "Lahat"
   }
 }

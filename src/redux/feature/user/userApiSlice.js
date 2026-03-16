@@ -8,8 +8,8 @@ const initialState = userAdapter.getInitialState();
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getUser: builder.query({
-            query: ({ pageNo = 1, pageSize = 5 }) => ({
-                url: `/users?pageNo=${pageNo}&pageSize=${pageSize}`,
+            query: ({ pageNo = 1, pageSize = 5, search, roleId, departmentId, status }) => ({
+                url: `/users?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&roleId=${roleId}&departmentId=${departmentId}&status=${status}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -37,6 +37,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
+        getUserStats: builder.query({
+            query: () => ({
+                url: `/users/stats`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "UserStats", id: "LIST" }],
+        }),
+
         createUser: builder.mutation({
             query: (initialState) => ({
                 url: "/users",
@@ -45,7 +55,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "User", id: "LIST" }],
+            invalidatesTags: [{ type: "User", id: "LIST" },{ type: "UserStats", id: "LIST" },],
         }),
 
         updateUser: builder.mutation({
@@ -56,7 +66,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     ...initialUserData,
                 },
             }),
-            invalidatesTags: [{type: "User", id: "LIST"}],
+            invalidatesTags: [{type: "User", id: "LIST"},{ type: "UserStats", id: "LIST" },],
         }),
 
         deleteUser: builder.mutation({
@@ -67,7 +77,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     id,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "User", id: "LIST" }],
+            invalidatesTags: (result, error, arg) => [{ type: "User", id: "LIST" }, { type: "UserStats", id: "LIST" },],
         }),
 
         setActive: builder.mutation({
@@ -84,10 +94,27 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
+        setBlockUser: builder.mutation({
+            query: (id) => ({
+                url: `/users/${id}/block`,
+                method: "POST",
+            }),
+        }),
+
+        setUnblockUser: builder.mutation({
+            query: (id) => ({
+                url: `/users/${id}/unblock`,
+                method: "POST",
+            }),
+        })
+
     }),
 });
 
 export const {
+    useSetUnblockUserMutation,
+    useSetBlockUserMutation,
+    useGetUserStatsQuery,
     useSetInactiveMutation,
     useSetActiveMutation,
     useUpdateUserMutation,

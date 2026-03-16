@@ -9,6 +9,7 @@ import productionReducer from "../feature/productionLine/productionLineSlice.js"
 import productReducer from "../feature/product/productSlice.js"
 import userReducer from "../feature/user/userSlice.js"
 import roleReducer from "../feature/role/roleSlice.js"
+import categoryReducer from "../feature/category/categorySlice.js"
 
 const store = configureStore({
   reducer: {
@@ -20,7 +21,8 @@ const store = configureStore({
     productionLine: productionReducer,
     product: productReducer,
     user: userReducer,
-    role: roleReducer
+    role: roleReducer,
+    category: categoryReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

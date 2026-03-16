@@ -9,10 +9,17 @@ const roleSlice = createSlice({
         roleDataForUpdate: null,
         isOpenSnackbarRole: false,
         isOpenDeleteRoleDialog: false,
-        alertRole: {type: "success", message: ""}
-
+        alertRole: {type: "success", message: ""},
+        filter:{
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+        }
     },
     reducers: {
+        setFilterRole: (state, action) => {
+            state.filter = action.payload;
+        },
         setIsOpenDeleteRoleDialog: (state, action) => {
             state.isOpenDeleteRoleDialog = action.payload;
         },
@@ -38,6 +45,7 @@ const roleSlice = createSlice({
 });
 
 export const {
+    setFilterRole,
     setIsOpenDeleteRoleDialog,
     setAlertRole,
     setIsOpenSnackbarRole,

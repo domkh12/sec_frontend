@@ -30,12 +30,20 @@
     "title": "User",
     "management": "User Management",
     "profile": "User Profile",
-    "settings": "User Settings"
+    "settings": "User Settings",
+    "block.description": "This user will not be able to access the system.",
+    "unblock.description": "This user will be able to access the system again.",
+    "block.confirm": "Yes, Block",
+    "unblock.confirm": "Yes, Unblock",
+    "block": "Block"
   },
   "status": {
     "soon": "Coming Soon",
     "available": "Available",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable","active": "Active",
+    "inactive": "Inactive",
+    "blocked": "Blocked"
+
   },
   "profile": {
     "title": "Profile",
@@ -59,7 +67,8 @@
     "addNew": "Add New",
     "create": "Create",
     "cancel": "Cancel",
-    "update": "Update"
+    "update": "Update",
+    "back": "Back"
   },
   "department": {
     "create": "Create Department",
@@ -93,9 +102,14 @@
     "username": "Username",
     "password": "Password",
     "description": "Description",
-    "users": "Users"
+    "users": "Users",
+    "block": "Block",
+    "unblock": "Unblock"
   },
   "factory": {
     "structure": "Factory Structure"
+  },
+  "filter": {
+    "all": "All"
   }
 }

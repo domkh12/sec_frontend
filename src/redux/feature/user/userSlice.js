@@ -3,16 +3,33 @@ import {createSlice} from "@reduxjs/toolkit";
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        pageNo: 1,
-        pageSize: 20,
         isOpenDialogAddOrEditUser: false,
         userDataForUpdate: null,
         isOpenSnackbarUser: false,
         isOpenDeleteUserDialog: false,
-        alertUser: {type: "success", message: ""}
+        isOpenBlockUserDialog: false,
+        idBlockUser: null,
+        alertUser: {type: "success", message: ""},
+        filter: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+            role: "",
+            status: "",
+            department: "",
+        }
 
     },
     reducers: {
+        setIdBlockUser: (state, action) => {
+            state.idBlockUser = action.payload;
+        },
+        setIsOpenBlockUserDialog: (state, action) => {
+            state.isOpenBlockUserDialog = action.payload;
+        },
+        setFilterUser: (state, action) => {
+            state.filter = action.payload;
+        },
         setIsOpenDeleteUserDialog: (state, action) => {
             state.isOpenDeleteUserDialog = action.payload;
         },
@@ -38,6 +55,9 @@ const userSlice = createSlice({
 });
 
 export const {
+    setIdBlockUser,
+    setIsOpenBlockUserDialog,
+    setFilterUser,
     setIsOpenDeleteUserDialog,
     setAlertUser,
     setIsOpenSnackbarUser,

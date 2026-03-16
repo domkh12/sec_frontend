@@ -410,6 +410,9 @@ function FilterPills({ options, value, onChange }) {
 // ═══════════════════════════════════════════════════════════════
 // ── USERS PAGE ──────────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
+// All departments including non-factory ones (IT, Production mgmt, etc.)
+const ALL_DEPTS = ["IT", "Production", ...DATA.departments.map(d => d.name)];
+
 function EditUserModal({ user, onClose, onSave }) {
   const [form, setForm] = useState({ ...user });
   const [saved, setSaved] = useState(false);
@@ -428,7 +431,7 @@ function EditUserModal({ user, onClose, onSave }) {
                   <div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
                 </FormField>
                 <FormField label="Department">
-                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}>{DATA.departments.map(d=><option key={d.id} value={d.name}>{d.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}>{ALL_DEPTS.map(d=><option key={d} value={d}>{d}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
                 </FormField>
               </div>
               <FormField label="Status">
@@ -470,7 +473,7 @@ function AddUserModal({ onClose, onSave }) {
                   <div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}><option value="">Select role…</option>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
                 </FormField>
                 <FormField label="Department" required>
-                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}><option value="">Select dept…</option>{DATA.departments.map(d=><option key={d.id} value={d.name}>{d.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
+                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}><option value="">Select dept…</option>{ALL_DEPTS.map(d=><option key={d} value={d}>{d}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
                 </FormField>
               </div>
               <FormField label="Status">
@@ -504,8 +507,8 @@ function UsersPage({ onBack }) {
   const [deleteUser, setDeleteUser] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
 
-  const allRoles = Array.from(new Set(DATA.users.map(u=>u.role)));
-  const allDepts = Array.from(new Set(DATA.users.map(u=>u.dept)));
+  const allRoles = DATA.roles.map(r => r.name);
+  const allDepts = ALL_DEPTS;
 
   const filtered = users.filter(u => {
     const q = search.toLowerCase();
@@ -1211,7 +1214,834 @@ function EmployeesPage({onBack}){return(<div><PageHeader title="Employees" subti
 function AttendancePage({onBack}){return(<div><PageHeader title="Attendance" subtitle="HR • Attendance" icon="🕐" onBack={onBack} color="violet"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Present" value={DATA.attendance.filter(a=>a.status==="Present"||a.status==="OT").length} icon="✅" color="green"/><StatCard label="Absent" value={DATA.attendance.filter(a=>a.status==="Absent").length} icon="❌" color="rose"/><StatCard label="OT" value={DATA.attendance.filter(a=>a.status==="OT").length} icon="⏰" color="amber"/><StatCard label="Date" value="Mar 5" icon="📅" color="blue"/></div><GlassCard color="violet"><Table color="violet" cols={["#","Employee","Dept","Date","Time In","Time Out","OT Hrs","Status"]} rows={DATA.attendance.map((a,i)=>[i+1,a.employee,a.dept,a.date,a.in,a.out,a.ot?<span className="text-amber-400">{a.ot}h</span>:"–",<StatusBadge status={a.status}/>])}/></GlassCard></div>);}
 function LeavePage({onBack}){return(<div><PageHeader title="Leave Management" subtitle="HR • Leave" icon="🌴" onBack={onBack} color="violet"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Requests" value={DATA.leaves.length} icon="📋" color="violet"/><StatCard label="Approved" value={DATA.leaves.filter(l=>l.status==="Approved").length} icon="✅" color="green"/><StatCard label="Pending" value={DATA.leaves.filter(l=>l.status==="Pending").length} icon="⏳" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["#","Employee","Leave Type","From","To","Days","Approver","Status"]} rows={DATA.leaves.map((l,i)=>[i+1,l.employee,<Badge color="violet">{l.type}</Badge>,l.from,l.to,l.days,l.approver,<StatusBadge status={l.status}/>])}/></GlassCard></div>);}
 function PayrollPage({onBack}){return(<div><PageHeader title="Payroll" subtitle="HR • Finance" icon="💵" onBack={onBack} color="violet"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total Payroll" value={`$${DATA.payroll.reduce((s,p)=>s+p.net,0).toLocaleString()}`} icon="💵" color="violet"/><StatCard label="Employees" value={DATA.payroll.length} icon="👷" color="blue"/><StatCard label="Paid" value={DATA.payroll.filter(p=>p.status==="Paid").length} icon="✅" color="green"/><StatCard label="Processing" value={DATA.payroll.filter(p=>p.status==="Processing").length} icon="⏳" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["Employee","Dept","Base $","OT $","Bonus $","Deduct $","Net $","Month","Status"]} rows={DATA.payroll.map(p=>[<span className="font-medium text-white/90">{p.employee}</span>,p.dept,`$${p.base}`,<span className="text-amber-400">${p.ot}</span>,<span className="text-green-400">${p.bonus}</span>,<span className="text-rose-400">-${p.deduction}</span>,<span className="font-bold text-violet-300">${p.net}</span>,p.month,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
-function ReportsPage({onBack}){const reports=[{icon:"📊",title:"Daily Production Report",desc:"Output by line, efficiency, target vs actual",color:"green",freq:"Daily"},{icon:"🔍",title:"Quality Summary",desc:"Defect rate, inspection results, AQL",color:"rose",freq:"Daily"},{icon:"👷",title:"Attendance Summary",desc:"Present, absent, OT hours by dept",color:"violet",freq:"Daily"},{icon:"📦",title:"Inventory Status",desc:"Stock levels, low stock alerts, reorder list",color:"teal",freq:"Weekly"},{icon:"💰",title:"Cost Analysis",desc:"Actual vs standard cost per style",color:"violet",freq:"Monthly"},{icon:"🚢",title:"Shipment Status",desc:"On-time delivery rate, pending shipments",color:"cyan",freq:"Weekly"},{icon:"🏭",title:"Machine Utilization",desc:"Running vs idle vs maintenance breakdown",color:"orange",freq:"Weekly"},{icon:"📈",title:"KPI Dashboard",desc:"All factory KPIs in one view",color:"amber",freq:"Real-time"}];return(<div><PageHeader title="Reports" subtitle="Reports • Analytics" icon="📈" onBack={onBack} color="rose"/><div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">{reports.map((r,i)=>(<GlassCard key={i} color={r.color}><div className="text-2xl mb-2">{r.icon}</div><h3 className="font-semibold text-white/90 text-sm mb-1">{r.title}</h3><p className="text-[11px] text-white/40 mb-3">{r.desc}</p><div className="flex items-center justify-between"><Badge color={r.color}>{r.freq}</Badge><button className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Generate →</button></div></GlassCard>))}</div></div>);}
+// ═══════════════════════════════════════════════════════════════
+// SHARED REPORT HELPERS
+// ═══════════════════════════════════════════════════════════════
+function ReportMeta({ generated="2026-03-05 09:30", period="March 2026", preparedBy="Sophea Keo" }) {
+  return (
+      <div className="flex flex-wrap items-center gap-4 mb-5 px-4 py-2.5 rounded-xl text-[10px] text-white/30" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)" }}>
+        <span>📅 Period: <span className="text-white/55">{period}</span></span>
+        <span>🕐 Generated: <span className="text-white/55">{generated}</span></span>
+        <span>👤 Prepared by: <span className="text-white/55">{preparedBy}</span></span>
+        <button className="ml-auto px-3 py-1 rounded-lg text-[10px] font-medium border transition-all hover:-translate-y-px" style={{ background:"rgba(251,191,36,0.1)", border:"1px solid rgba(251,191,36,0.25)", color:"#fbbf24" }}>⬇ Export PDF</button>
+        <button className="px-3 py-1 rounded-lg text-[10px] font-medium border transition-all hover:-translate-y-px" style={{ background:"rgba(52,211,153,0.1)", border:"1px solid rgba(52,211,153,0.25)", color:"#34d399" }}>⬇ Export CSV</button>
+      </div>
+  );
+}
+
+function ReportSection({ title, color="amber", children }) {
+  const a = ACCENT[color];
+  return (
+      <div className="mb-5">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="h-px flex-1" style={{ background:`linear-gradient(to right, ${a.border}, transparent)` }}/>
+          <span className="text-[10px] font-semibold uppercase tracking-widest px-2" style={{ color:a.text }}>{title}</span>
+          <div className="h-px flex-1" style={{ background:`linear-gradient(to left, ${a.border}, transparent)` }}/>
+        </div>
+        {children}
+      </div>
+  );
+}
+
+function MiniBar({ label, value, max, color="green" }) {
+  const pct = max > 0 ? Math.round(value / max * 100) : 0;
+  const col = ACCENT[color]?.text || "#34d399";
+  return (
+      <div className="flex items-center gap-3 py-1.5">
+        <span className="text-[11px] text-white/50 w-24 shrink-0 truncate">{label}</span>
+        <div className="flex-1 h-2 rounded-full bg-white/8">
+          <div className="h-full rounded-full transition-all" style={{ width:`${pct}%`, background:col }}/>
+        </div>
+        <span className="text-[11px] font-semibold w-16 text-right" style={{ color:col }}>{value.toLocaleString()}</span>
+        <span className="text-[9px] text-white/25 w-8 text-right">{pct}%</span>
+      </div>
+  );
+}
+
+function DonutChart({ segments, size=80 }) {
+  // segments: [{value, color, label}]
+  const total = segments.reduce((s,x)=>s+x.value,0);
+  let offset = 0;
+  const r = 28, cx = 40, cy = 40, circ = 2*Math.PI*r;
+  return (
+      <svg width={size} height={size} viewBox="0 0 80 80">
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10"/>
+        {segments.map((seg,i) => {
+          const pct = total > 0 ? seg.value / total : 0;
+          const dash = pct * circ;
+          const gap = circ - dash;
+          const el = (
+              <circle key={i} cx={cx} cy={cy} r={r} fill="none"
+                      stroke={seg.color} strokeWidth="10"
+                      strokeDasharray={`${dash} ${gap}`}
+                      strokeDashoffset={-offset * circ}
+                      strokeLinecap="butt"
+                      style={{ transform:"rotate(-90deg)", transformOrigin:"40px 40px" }}/>
+          );
+          offset += pct;
+          return el;
+        })}
+      </svg>
+  );
+}
+
+function SummaryRow({ label, value, sub, highlight }) {
+  return (
+      <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+        <span className="text-[11px] text-white/50">{label}</span>
+        <div className="text-right">
+          <span className={`text-xs font-semibold ${highlight||"text-white/80"}`}>{value}</span>
+          {sub && <span className="text-[9px] text-white/30 ml-2">{sub}</span>}
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 1. PRODUCTION REPORT
+// ═══════════════════════════════════════════════════════════════
+function ProductionReportPage({ onBack }) {
+  const totalTarget = DATA.productionLines.reduce((s,l)=>s+l.target,0);
+  const totalActual = DATA.productionLines.reduce((s,l)=>s+l.actual,0);
+  const overallEff = Math.round(totalActual/totalTarget*100);
+  const topLine = [...DATA.productionLines].sort((a,b)=>b.eff-a.eff)[0];
+  const lowLine = [...DATA.productionLines].sort((a,b)=>a.eff-b.eff)[0];
+  const woByStatus = ["In Progress","Pending","Delayed"].map(s=>({ label:s, count:DATA.workOrders.filter(w=>w.status===s).length }));
+
+  return (
+      <div>
+        <PageHeader title="Production Report" subtitle="Reports • Production" icon="📊" onBack={onBack} color="green"/>
+        <ReportMeta period="March 2026 — Week 10" preparedBy="Dara Pich"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Output" value={totalActual.toLocaleString()} icon="👕" color="green" sub="pcs today"/>
+          <StatCard label="Overall Efficiency" value={`${overallEff}%`} icon="📈" color={overallEff>=90?"green":overallEff>=75?"blue":"amber"}/>
+          <StatCard label="Active Lines" value={DATA.productionLines.length} icon="⚡" color="blue"/>
+          <StatCard label="Total Target" value={totalTarget.toLocaleString()} icon="🎯" color="amber" sub="pcs"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          {/* Line efficiency breakdown */}
+          <div className="md:col-span-2">
+            <GlassCard color="green">
+              <ReportSection title="Line Efficiency Breakdown" color="green">
+                {DATA.productionLines.map((l,i)=>(
+                    <MiniBar key={i} label={l.name} value={l.actual} max={l.target} color={l.eff>=90?"green":l.eff>=75?"blue":"amber"}/>
+                ))}
+              </ReportSection>
+            </GlassCard>
+          </div>
+          {/* KPI summary */}
+          <GlassCard color="green">
+            <ReportSection title="KPI Summary" color="green">
+              <SummaryRow label="Best Line" value={topLine.name} sub={`${topLine.eff}%`} highlight="text-green-400"/>
+              <SummaryRow label="Lowest Line" value={lowLine.name} sub={`${lowLine.eff}%`} highlight="text-rose-400"/>
+              <SummaryRow label="Gap to Target" value={`${(totalTarget-totalActual).toLocaleString()} pcs`} highlight="text-amber-400"/>
+              <SummaryRow label="Shortfall %" value={`${(100-overallEff)}%`}/>
+              <SummaryRow label="Total Workers" value={DATA.productionLines.reduce((s,l)=>s+l.workers,0)} sub="across all lines"/>
+            </ReportSection>
+            <ReportSection title="Work Order Status" color="green">
+              {woByStatus.map(w=>(
+                  <SummaryRow key={w.label} label={w.label} value={`${w.count} orders`} highlight={w.label==="Delayed"?"text-rose-400":w.label==="In Progress"?"text-blue-400":"text-amber-400"}/>
+              ))}
+            </ReportSection>
+          </GlassCard>
+        </div>
+
+        {/* Work order progress table */}
+        <GlassCard color="green">
+          <ReportSection title="Work Order Progress" color="green">
+            <Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Status"]}
+                   rows={DATA.workOrders.map(wo=>[
+                     <span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,
+                     wo.product, wo.buyer,
+                     wo.qty.toLocaleString(), wo.done.toLocaleString(),
+                     <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,
+                     wo.line, wo.due, <StatusBadge status={wo.status}/>
+                   ])}/>
+          </ReportSection>
+        </GlassCard>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 2. QUALITY REPORT
+// ═══════════════════════════════════════════════════════════════
+function QualityReportPage({ onBack }) {
+  const totalChecked = DATA.inspections.reduce((s,i)=>s+i.checked,0);
+  const totalPassed = DATA.inspections.reduce((s,i)=>s+i.passed,0);
+  const totalFailed = DATA.inspections.reduce((s,i)=>s+i.failed,0);
+  const passRate = Math.round(totalPassed/totalChecked*100);
+  const openDefects = DATA.defects.filter(d=>d.status==="Open");
+  const totalDefectQty = DATA.defects.reduce((s,d)=>s+d.qty,0);
+  const bySeverity = ["Critical","Major","Minor"].map(s=>({ label:s, count:DATA.defects.filter(d=>d.severity===s).length, qty:DATA.defects.filter(d=>d.severity===s).reduce((t,d)=>t+d.qty,0) }));
+  const byLine = [...new Set(DATA.defects.map(d=>d.line))].map(l=>({ line:l, count:DATA.defects.filter(d=>d.line===l).length }));
+
+  return (
+      <div>
+        <PageHeader title="Quality Report" subtitle="Reports • Quality Control" icon="🔍" onBack={onBack} color="rose"/>
+        <ReportMeta period="March 2026" preparedBy="Sreymom Chan"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Pass Rate" value={`${passRate}%`} icon="✅" color={passRate>=95?"green":passRate>=85?"amber":"rose"}/>
+          <StatCard label="Total Checked" value={totalChecked} icon="🔬" color="blue"/>
+          <StatCard label="Total Failed" value={totalFailed} icon="❌" color="rose"/>
+          <StatCard label="Open Defects" value={openDefects.length} icon="🚨" color="rose"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="md:col-span-2">
+            <GlassCard color="rose">
+              <ReportSection title="Inspection Results by Work Order" color="rose">
+                <Table color="rose" cols={["Work Order","Stage","Inspector","Checked","Passed","Failed","Pass Rate","Result"]}
+                       rows={DATA.inspections.map(i=>[
+                         <span className="font-mono text-rose-300 text-[10px]">{i.wo}</span>,
+                         <Badge color="blue">{i.stage}</Badge>,
+                         i.inspector, i.checked, i.passed,
+                         <span className="text-rose-300 font-semibold">{i.failed}</span>,
+                         <ProgressBar value={Math.round(i.passed/i.checked*100)}/>,
+                         <StatusBadge status={i.result}/>
+                       ])}/>
+              </ReportSection>
+            </GlassCard>
+          </div>
+          <GlassCard color="rose">
+            <ReportSection title="Defect Severity" color="rose">
+              <div className="flex items-center gap-4 mb-3">
+                <DonutChart segments={[
+                  { value:bySeverity[0].count, color:"#fb7185" },
+                  { value:bySeverity[1].count, color:"#fbbf24" },
+                  { value:bySeverity[2].count, color:"#60a5fa" },
+                ]}/>
+                <div className="space-y-1.5">
+                  {bySeverity.map((s,i)=>(
+                      <div key={i} className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full" style={{ background:i===0?"#fb7185":i===1?"#fbbf24":"#60a5fa" }}/>
+                        <span className="text-[10px] text-white/50">{s.label}</span>
+                        <span className="text-[10px] font-semibold text-white/80 ml-auto">{s.count}</span>
+                      </div>
+                  ))}
+                </div>
+              </div>
+              <SummaryRow label="Total Defect Qty" value={totalDefectQty} highlight="text-rose-400"/>
+              <SummaryRow label="Defect Rate" value={`${((totalFailed/totalChecked)*100).toFixed(2)}%`}/>
+            </ReportSection>
+            <ReportSection title="Defects by Line" color="rose">
+              {byLine.map((b,i)=><SummaryRow key={i} label={b.line} value={`${b.count} reports`}/>)}
+            </ReportSection>
+          </GlassCard>
+        </div>
+
+        <GlassCard color="rose">
+          <ReportSection title="Open Defect Details" color="rose">
+            <Table color="rose" cols={["#","Line","Product","Type","Qty","Severity","Inspector","Date","Status"]}
+                   rows={DATA.defects.map(d=>[
+                     d.id, d.line, d.product, d.type,
+                     <span className="font-semibold text-rose-300">{d.qty}</span>,
+                     <StatusBadge status={d.severity}/>, d.inspector, d.date, <StatusBadge status={d.status}/>
+                   ])}/>
+          </ReportSection>
+        </GlassCard>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 3. HR REPORT
+// ═══════════════════════════════════════════════════════════════
+function HRReportPage({ onBack }) {
+  const presentCount = DATA.attendance.filter(a=>a.status==="Present"||a.status==="OT").length;
+  const absentCount = DATA.attendance.filter(a=>a.status==="Absent").length;
+  const otCount = DATA.attendance.filter(a=>a.status==="OT").length;
+  const totalOTHrs = DATA.attendance.reduce((s,a)=>s+a.ot,0);
+  const totalPayroll = DATA.payroll.reduce((s,p)=>s+p.net,0);
+  const totalBonus = DATA.payroll.reduce((s,p)=>s+p.bonus,0);
+  const totalOTPay = DATA.payroll.reduce((s,p)=>s+p.ot,0);
+  const pendingLeaves = DATA.leaves.filter(l=>l.status==="Pending").length;
+  const byDept = [...new Set(DATA.employees.map(e=>e.dept))].map(d=>({
+    dept:d, count:DATA.employees.filter(e=>e.dept===d).length, active:DATA.employees.filter(e=>e.dept===d&&e.status==="Active").length
+  }));
+
+  return (
+      <div>
+        <PageHeader title="HR Report" subtitle="Reports • Human Resources" icon="👷" onBack={onBack} color="violet"/>
+        <ReportMeta period="March 2026" preparedBy="Sophea Keo"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Present Today" value={`${presentCount}/${DATA.attendance.length}`} icon="✅" color="green"/>
+          <StatCard label="Absent" value={absentCount} icon="❌" color="rose"/>
+          <StatCard label="OT Hours" value={`${totalOTHrs}h`} icon="⏰" color="amber"/>
+          <StatCard label="Leave Pending" value={pendingLeaves} icon="🌴" color="violet"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="md:col-span-2 space-y-4">
+            <GlassCard color="violet">
+              <ReportSection title="Attendance Summary — Mar 5, 2026" color="violet">
+                <Table color="violet" cols={["Employee","Dept","In","Out","OT","Status"]}
+                       rows={DATA.attendance.map(a=>[
+                         a.employee, a.dept, a.in, a.out,
+                         a.ot?<span className="text-amber-400 font-semibold">{a.ot}h</span>:"–",
+                         <StatusBadge status={a.status}/>
+                       ])}/>
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="violet">
+              <ReportSection title="Payroll Summary — Feb 2026" color="violet">
+                <Table color="violet" cols={["Employee","Dept","Base","OT Pay","Bonus","Deduction","Net Pay","Status"]}
+                       rows={DATA.payroll.map(p=>[
+                         p.employee, p.dept,
+                         `$${p.base}`,
+                         <span className="text-amber-400">${p.ot}</span>,
+                         <span className="text-green-400">${p.bonus}</span>,
+                         <span className="text-rose-400">-${p.deduction}</span>,
+                         <span className="font-bold text-violet-300">${p.net}</span>,
+                         <StatusBadge status={p.status}/>
+                       ])}/>
+              </ReportSection>
+            </GlassCard>
+          </div>
+          <div className="space-y-4">
+            <GlassCard color="violet">
+              <ReportSection title="Payroll KPIs" color="violet">
+                <SummaryRow label="Total Payroll" value={`$${totalPayroll.toLocaleString()}`} highlight="text-violet-300"/>
+                <SummaryRow label="Total OT Pay" value={`$${totalOTPay}`} highlight="text-amber-400"/>
+                <SummaryRow label="Total Bonus" value={`$${totalBonus}`} highlight="text-green-400"/>
+              </ReportSection>
+              <ReportSection title="Workforce Breakdown" color="violet">
+                <SummaryRow label="Total Employees" value={DATA.employees.length}/>
+                <SummaryRow label="Permanent" value={DATA.employees.filter(e=>e.type==="Permanent").length}/>
+                <SummaryRow label="Contract" value={DATA.employees.filter(e=>e.type==="Contract").length}/>
+                <SummaryRow label="Active" value={DATA.employees.filter(e=>e.status==="Active").length} highlight="text-green-400"/>
+                <SummaryRow label="Inactive" value={DATA.employees.filter(e=>e.status==="Inactive").length} highlight="text-rose-400"/>
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="violet">
+              <ReportSection title="Staff by Department" color="violet">
+                {byDept.map((d,i)=>(<MiniBar key={i} label={d.dept} value={d.active} max={d.count} color="violet"/>))}
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="violet">
+              <ReportSection title="Leave Requests" color="violet">
+                <Table color="violet" cols={["Employee","Type","Days","Status"]}
+                       rows={DATA.leaves.map(l=>[l.employee,<Badge color="violet">{l.type}</Badge>,l.days,<StatusBadge status={l.status}/>])}/>
+              </ReportSection>
+            </GlassCard>
+          </div>
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 4. INVENTORY / MATERIALS REPORT
+// ═══════════════════════════════════════════════════════════════
+function InventoryReportPage({ onBack }) {
+  const lowStock = DATA.materials.filter(m=>m.stock<m.reorder);
+  const okStock = DATA.materials.filter(m=>m.stock>=m.reorder);
+  const totalValue = DATA.materials.reduce((s,m)=>s+(m.stock*m.cost),0);
+  const lowValue = lowStock.reduce((s,m)=>s+(m.stock*m.cost),0);
+
+  return (
+      <div>
+        <PageHeader title="Inventory Report" subtitle="Reports • Materials & Stock" icon="📦" onBack={onBack} color="teal"/>
+        <ReportMeta period="March 2026" preparedBy="Sophea Keo"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Items" value={DATA.materials.length} icon="🧵" color="teal"/>
+          <StatCard label="Low Stock" value={lowStock.length} icon="⚠️" color="rose"/>
+          <StatCard label="Stock OK" value={okStock.length} icon="✅" color="green"/>
+          <StatCard label="Total Value" value={`$${totalValue.toLocaleString()}`} icon="💰" color="amber"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="md:col-span-2">
+            <GlassCard color="teal">
+              <ReportSection title="Stock Level Analysis" color="teal">
+                {DATA.materials.map((m,i)=>{
+                  const pct = Math.min(Math.round(m.stock/Math.max(m.reorder*2,m.stock)*100),100);
+                  return <MiniBar key={i} label={m.name.split(" ").slice(0,2).join(" ")} value={m.stock} max={Math.max(m.reorder*2,m.stock)} color={m.stock<m.reorder?"rose":m.stock<m.reorder*1.5?"amber":"teal"}/>;
+                })}
+              </ReportSection>
+            </GlassCard>
+          </div>
+          <div className="space-y-4">
+            <GlassCard color="rose">
+              <ReportSection title="⚠ Low Stock Alerts" color="rose">
+                {lowStock.length===0 ? <p className="text-[11px] text-white/30 text-center py-3">All items OK</p> :
+                    lowStock.map((m,i)=>(
+                        <div key={i} className="py-2 border-b border-white/5 last:border-0">
+                          <p className="text-[11px] text-white/75 font-medium">{m.name}</p>
+                          <div className="flex justify-between text-[10px] text-white/40 mt-0.5">
+                            <span>Stock: <span className="text-rose-400 font-semibold">{m.stock.toLocaleString()} {m.unit}</span></span>
+                            <span>Reorder: {m.reorder.toLocaleString()}</span>
+                          </div>
+                        </div>
+                    ))}
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="teal">
+              <ReportSection title="Value Summary" color="teal">
+                <SummaryRow label="Total Inventory Value" value={`$${totalValue.toLocaleString()}`} highlight="text-teal-300"/>
+                <SummaryRow label="Low Stock Value" value={`$${lowValue.toLocaleString()}`} highlight="text-rose-400"/>
+                <SummaryRow label="Healthy Stock Value" value={`$${(totalValue-lowValue).toLocaleString()}`} highlight="text-green-400"/>
+              </ReportSection>
+            </GlassCard>
+          </div>
+        </div>
+
+        <GlassCard color="teal">
+          <ReportSection title="Full Stock Listing" color="teal">
+            <Table color="teal" cols={["Code","Material","Unit","Current Stock","Reorder Point","Cost/Unit","Total Value","Supplier","Status"]}
+                   rows={DATA.materials.map(m=>[
+                     <span className="font-mono text-teal-300 text-[10px]">{m.code}</span>,
+                     m.name, m.unit,
+                     <span className={m.stock<m.reorder?"text-rose-300 font-bold":"text-white/80"}>{m.stock.toLocaleString()}</span>,
+                     m.reorder.toLocaleString(),
+                     `$${m.cost}`,
+                     <span className="text-teal-300">${(m.stock*m.cost).toLocaleString()}</span>,
+                     m.supplier,
+                     m.stock<m.reorder?<Badge color="rose">Low Stock</Badge>:<Badge color="green">OK</Badge>
+                   ])}/>
+          </ReportSection>
+        </GlassCard>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 5. PROCUREMENT REPORT
+// ═══════════════════════════════════════════════════════════════
+function ProcurementReportPage({ onBack }) {
+  const totalPOValue = DATA.purchaseOrders.reduce((s,p)=>s+p.amount,0);
+  const delivered = DATA.purchaseOrders.filter(p=>p.status==="Delivered");
+  const inTransit = DATA.purchaseOrders.filter(p=>p.status==="In Transit");
+  const pending = DATA.purchaseOrders.filter(p=>p.status==="Pending"||p.status==="Confirmed");
+  const avgRating = (DATA.suppliers.reduce((s,x)=>s+x.rating,0)/DATA.suppliers.length).toFixed(1);
+  const totalBuyerPcs = DATA.buyers.reduce((s,b)=>s+b.totalPcs,0);
+
+  return (
+      <div>
+        <PageHeader title="Procurement Report" subtitle="Reports • Procurement & Logistics" icon="📦" onBack={onBack} color="teal"/>
+        <ReportMeta period="March 2026" preparedBy="Kosal Vong"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total PO Value" value={`$${totalPOValue.toLocaleString()}`} icon="💵" color="teal"/>
+          <StatCard label="Delivered" value={delivered.length} icon="✅" color="green"/>
+          <StatCard label="In Transit" value={inTransit.length} icon="🚢" color="blue"/>
+          <StatCard label="Pending/Confirmed" value={pending.length} icon="⏳" color="amber"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <GlassCard color="teal">
+            <ReportSection title="Purchase Orders Summary" color="teal">
+              <Table color="teal" cols={["PO ID","Supplier","Material","Amount","Delivery","Status"]}
+                     rows={DATA.purchaseOrders.map(p=>[
+                       <span className="font-mono text-teal-300 text-[10px]">{p.id}</span>,
+                       p.supplier, p.material,
+                       <span className="font-semibold text-white/90">${p.amount.toLocaleString()}</span>,
+                       p.delivery, <StatusBadge status={p.status}/>
+                     ])}/>
+            </ReportSection>
+          </GlassCard>
+          <GlassCard color="teal">
+            <ReportSection title="Supplier Performance" color="teal">
+              <Table color="teal" cols={["Supplier","Material","Rating","Lead Days","Status"]}
+                     rows={DATA.suppliers.map(s=>[
+                       <span className="font-semibold text-teal-300">{s.name}</span>,
+                       s.material,
+                       <Stars rating={s.rating}/>,
+                       `${s.leadDays}d`, <StatusBadge status={s.status}/>
+                     ])}/>
+              <div className="mt-3 pt-3 border-t border-white/8">
+                <SummaryRow label="Avg Supplier Rating" value={`${avgRating} / 5.0`} highlight="text-amber-400"/>
+                <SummaryRow label="Best Supplier" value="YKK Cambodia" sub="5.0 ★" highlight="text-green-400"/>
+              </div>
+            </ReportSection>
+          </GlassCard>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <GlassCard color="cyan">
+            <ReportSection title="Shipments Status" color="cyan">
+              <Table color="cyan" cols={["SH ID","Buyer","Qty","Method","ETD","ETA","Status"]}
+                     rows={DATA.shipments.map(s=>[
+                       <span className="font-mono text-cyan-300 text-[10px]">{s.id}</span>,
+                       s.buyer, s.qty.toLocaleString(),
+                       <Badge color="blue">{s.method}</Badge>,
+                       s.etd, s.eta, <StatusBadge status={s.status}/>
+                     ])}/>
+            </ReportSection>
+          </GlassCard>
+          <GlassCard color="cyan">
+            <ReportSection title="Buyer Order Summary" color="cyan">
+              <Table color="cyan" cols={["Buyer","Country","Orders","Total Pcs","Status"]}
+                     rows={DATA.buyers.map(b=>[
+                       <span className="font-semibold text-cyan-300">{b.name}</span>,
+                       b.country, b.activeOrders,
+                       <span className="font-semibold text-white/80">{b.totalPcs.toLocaleString()}</span>,
+                       <StatusBadge status={b.status}/>
+                     ])}/>
+              <div className="mt-3 pt-3 border-t border-white/8">
+                <SummaryRow label="Total Buyers" value={DATA.buyers.length}/>
+                <SummaryRow label="Total Ordered Pcs" value={totalBuyerPcs.toLocaleString()} highlight="text-cyan-300"/>
+              </div>
+            </ReportSection>
+          </GlassCard>
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 6. FINANCE / COSTING REPORT
+// ═══════════════════════════════════════════════════════════════
+function FinanceReportPage({ onBack }) {
+  const avgMargin = (DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1);
+  const avgFOB = (DATA.costings.reduce((s,c)=>s+c.fob,0)/DATA.costings.length).toFixed(2);
+  const totalRevenue = DATA.costings.reduce((s,c)=>s+c.fob*1000,0);
+  const totalCost = DATA.costings.reduce((s,c)=>s+c.total*1000,0);
+  const totalPayroll = DATA.payroll.reduce((s,p)=>s+p.net,0);
+  const highMargin = [...DATA.costings].sort((a,b)=>b.margin-a.margin)[0];
+  const lowMargin = [...DATA.costings].sort((a,b)=>a.margin-b.margin)[0];
+
+  return (
+      <div>
+        <PageHeader title="Finance Report" subtitle="Reports • Finance & Costing" icon="💰" onBack={onBack} color="violet"/>
+        <ReportMeta period="March 2026" preparedBy="Sophea Keo"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Avg Margin" value={`${avgMargin}%`} icon="📈" color="green"/>
+          <StatCard label="Avg FOB" value={`$${avgFOB}`} icon="💵" color="violet"/>
+          <StatCard label="Total Payroll" value={`$${totalPayroll.toLocaleString()}`} icon="👷" color="blue"/>
+          <StatCard label="Styles Costed" value={DATA.costings.length} icon="👕" color="amber"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="md:col-span-2">
+            <GlassCard color="violet">
+              <ReportSection title="Cost Sheet Breakdown" color="violet">
+                <Table color="violet" cols={["Product","Fabric","Trim","Labor","Overhead","Total Cost","FOB","Margin","Profit/pc"]}
+                       rows={DATA.costings.map(c=>[
+                         c.product,
+                         `$${c.fabric}`, `$${c.trim}`, `$${c.labor}`, `$${c.overhead}`,
+                         <span className="font-semibold text-white/90">${c.total}</span>,
+                         <span className="font-semibold text-violet-300">${c.fob}</span>,
+                         <span className={`font-bold ${c.margin>=30?"text-green-400":"text-amber-400"}`}>{c.margin}%</span>,
+                         <span className="text-green-400">${(c.fob-c.total).toFixed(2)}</span>
+                       ])}/>
+              </ReportSection>
+              <ReportSection title="Cost Structure per Style (avg)" color="violet">
+                {[{label:"Fabric",value:DATA.costings.reduce((s,c)=>s+c.fabric,0)/DATA.costings.length,color:"teal"},
+                  {label:"Trim",value:DATA.costings.reduce((s,c)=>s+c.trim,0)/DATA.costings.length,color:"blue"},
+                  {label:"Labor",value:DATA.costings.reduce((s,c)=>s+c.labor,0)/DATA.costings.length,color:"amber"},
+                  {label:"Overhead",value:DATA.costings.reduce((s,c)=>s+c.overhead,0)/DATA.costings.length,color:"orange"}
+                ].map((x,i)=><MiniBar key={i} label={x.label} value={parseFloat(x.value.toFixed(2))} max={10} color={x.color}/>)}
+              </ReportSection>
+            </GlassCard>
+          </div>
+          <div className="space-y-4">
+            <GlassCard color="violet">
+              <ReportSection title="Margin Analysis" color="violet">
+                <SummaryRow label="Highest Margin" value={highMargin.product.split(" ").slice(0,2).join(" ")} sub={`${highMargin.margin}%`} highlight="text-green-400"/>
+                <SummaryRow label="Lowest Margin" value={lowMargin.product.split(" ").slice(0,2).join(" ")} sub={`${lowMargin.margin}%`} highlight="text-rose-400"/>
+                <SummaryRow label="Avg Margin" value={`${avgMargin}%`} highlight="text-violet-300"/>
+                <SummaryRow label="Avg FOB" value={`$${avgFOB}`}/>
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="violet">
+              <ReportSection title="Payroll by Dept" color="violet">
+                {DATA.payroll.map((p,i)=>(
+                    <SummaryRow key={i} label={p.employee.split(" ")[0]} value={`$${p.net}`} sub={p.dept} highlight="text-violet-300"/>
+                ))}
+                <div className="mt-2 pt-2 border-t border-white/8">
+                  <SummaryRow label="Total" value={`$${totalPayroll.toLocaleString()}`} highlight="text-green-400"/>
+                </div>
+              </ReportSection>
+            </GlassCard>
+          </div>
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 7. MAINTENANCE REPORT
+// ═══════════════════════════════════════════════════════════════
+function MaintenanceReportPage({ onBack }) {
+  const running = DATA.machines.filter(m=>m.status==="Running");
+  const maintenance = DATA.machines.filter(m=>m.status==="Maintenance");
+  const idle = DATA.machines.filter(m=>m.status==="Idle");
+  const utilRate = Math.round(running.length/DATA.machines.length*100);
+  const byDept = [...new Set(DATA.machines.map(m=>m.dept))].map(d=>({
+    dept:d, total:DATA.machines.filter(m=>m.dept===d).length,
+    running:DATA.machines.filter(m=>m.dept===d&&m.status==="Running").length
+  }));
+
+  return (
+      <div>
+        <PageHeader title="Maintenance Report" subtitle="Reports • Machines & Assets" icon="🔧" onBack={onBack} color="orange"/>
+        <ReportMeta period="March 2026" preparedBy="Panha Rin"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Utilization" value={`${utilRate}%`} icon="⚙️" color={utilRate>=80?"green":"amber"}/>
+          <StatCard label="Running" value={running.length} icon="✅" color="green"/>
+          <StatCard label="In Maintenance" value={maintenance.length} icon="🔧" color="amber"/>
+          <StatCard label="Idle" value={idle.length} icon="💤" color="rose"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="md:col-span-2">
+            <GlassCard color="orange">
+              <ReportSection title="Machine Status Register" color="orange">
+                <Table color="orange" cols={["ID","Machine","Type","Dept","Line","Last Service","Next Service","Status"]}
+                       rows={DATA.machines.map(m=>[
+                         <span className="font-mono text-orange-300 text-[10px]">{m.id}</span>,
+                         m.name, m.type, m.dept, m.line,
+                         m.lastService, m.nextService,
+                         <StatusBadge status={m.status}/>
+                       ])}/>
+              </ReportSection>
+            </GlassCard>
+          </div>
+          <div className="space-y-4">
+            <GlassCard color="orange">
+              <ReportSection title="Utilization by Dept" color="orange">
+                {byDept.map((d,i)=><MiniBar key={i} label={d.dept} value={d.running} max={d.total} color="orange"/>)}
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="orange">
+              <ReportSection title="Status Summary" color="orange">
+                <div className="flex items-center gap-4 justify-center py-2">
+                  <DonutChart size={90} segments={[
+                    { value:running.length, color:"#34d399" },
+                    { value:maintenance.length, color:"#fbbf24" },
+                    { value:idle.length, color:"#fb7185" },
+                  ]}/>
+                  <div className="space-y-2">
+                    {[{label:"Running",count:running.length,color:"#34d399"},{label:"Maintenance",count:maintenance.length,color:"#fbbf24"},{label:"Idle",count:idle.length,color:"#fb7185"}].map((s,i)=>(
+                        <div key={i} className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full" style={{ background:s.color }}/>
+                          <span className="text-[10px] text-white/50">{s.label}</span>
+                          <span className="text-[10px] font-semibold text-white/80 ml-2">{s.count}</span>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+                <SummaryRow label="Total Machines" value={DATA.machines.length}/>
+                <SummaryRow label="Utilization Rate" value={`${utilRate}%`} highlight={utilRate>=80?"text-green-400":"text-amber-400"}/>
+              </ReportSection>
+            </GlassCard>
+          </div>
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 8. KPI / EXECUTIVE SUMMARY REPORT
+// ═══════════════════════════════════════════════════════════════
+function KPIReportPage({ onBack }) {
+  const totalTarget = DATA.productionLines.reduce((s,l)=>s+l.target,0);
+  const totalActual = DATA.productionLines.reduce((s,l)=>s+l.actual,0);
+  const overallEff = Math.round(totalActual/totalTarget*100);
+  const passRate = Math.round(DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length);
+  const utilRate = Math.round(DATA.machines.filter(m=>m.status==="Running").length/DATA.machines.length*100);
+  const attendRate = Math.round((DATA.attendance.filter(a=>a.status!=="Absent").length/DATA.attendance.length)*100);
+  const totalPayroll = DATA.payroll.reduce((s,p)=>s+p.net,0);
+  const avgMargin = (DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1);
+
+  const kpis = [
+    { label:"Production Efficiency", value:`${overallEff}%`, target:"≥ 90%", status:overallEff>=90?"✅":"⚠️", color:overallEff>=90?"green":"amber" },
+    { label:"Quality Pass Rate", value:`${passRate}%`, target:"≥ 95%", status:passRate>=95?"✅":"⚠️", color:passRate>=95?"green":"amber" },
+    { label:"Machine Utilization", value:`${utilRate}%`, target:"≥ 85%", status:utilRate>=85?"✅":"⚠️", color:utilRate>=85?"green":"amber" },
+    { label:"Attendance Rate", value:`${attendRate}%`, target:"≥ 95%", status:attendRate>=95?"✅":"⚠️", color:attendRate>=95?"green":"amber" },
+    { label:"Avg Product Margin", value:`${avgMargin}%`, target:"≥ 28%", status:parseFloat(avgMargin)>=28?"✅":"⚠️", color:parseFloat(avgMargin)>=28?"green":"amber" },
+    { label:"Open Defects", value:DATA.defects.filter(d=>d.status==="Open").length, target:"≤ 5", status:DATA.defects.filter(d=>d.status==="Open").length<=5?"✅":"❌", color:DATA.defects.filter(d=>d.status==="Open").length<=5?"green":"rose" },
+    { label:"Delayed Orders", value:DATA.workOrders.filter(w=>w.status==="Delayed").length, target:"0", status:DATA.workOrders.filter(w=>w.status==="Delayed").length===0?"✅":"❌", color:DATA.workOrders.filter(w=>w.status==="Delayed").length===0?"green":"rose" },
+    { label:"Low Stock Items", value:DATA.materials.filter(m=>m.stock<m.reorder).length, target:"0", status:DATA.materials.filter(m=>m.stock<m.reorder).length===0?"✅":"⚠️", color:DATA.materials.filter(m=>m.stock<m.reorder).length===0?"green":"amber" },
+  ];
+
+  return (
+      <div>
+        <PageHeader title="KPI Executive Summary" subtitle="Reports • Factory Performance" icon="📈" onBack={onBack} color="amber"/>
+        <ReportMeta period="March 2026 — Week 10" preparedBy="Sophea Keo"/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Production Eff." value={`${overallEff}%`} icon="⚙️" color={overallEff>=90?"green":"amber"}/>
+          <StatCard label="Quality Pass" value={`${passRate}%`} icon="✅" color={passRate>=95?"green":"amber"}/>
+          <StatCard label="Machine Util." value={`${utilRate}%`} icon="🔧" color={utilRate>=85?"green":"amber"}/>
+          <StatCard label="Avg Margin" value={`${avgMargin}%`} icon="💰" color="violet"/>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="md:col-span-2">
+            <GlassCard color="amber">
+              <ReportSection title="Factory KPI Scorecard" color="amber">
+                <div className="space-y-2">
+                  {kpis.map((kpi,i)=>{
+                    const a = ACCENT[kpi.color];
+                    return (
+                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl" style={{ background:"rgba(255,255,255,0.03)", border:`1px solid ${a.border}` }}>
+                          <span className="text-base w-6 shrink-0">{kpi.status}</span>
+                          <span className="text-xs text-white/70 flex-1">{kpi.label}</span>
+                          <span className="text-[10px] text-white/30 hidden md:block">Target: {kpi.target}</span>
+                          <span className="text-sm font-bold" style={{ color:a.text }}>{kpi.value}</span>
+                        </div>
+                    );
+                  })}
+                </div>
+              </ReportSection>
+            </GlassCard>
+          </div>
+          <div className="space-y-4">
+            <GlassCard color="amber">
+              <ReportSection title="Overall Health" color="amber">
+                <div className="text-center py-3">
+                  <div className="text-4xl font-bold mb-1" style={{ color: kpis.filter(k=>k.status==="✅").length>=6?"#34d399":"#fbbf24" }}>
+                    {kpis.filter(k=>k.status==="✅").length}/{kpis.length}
+                  </div>
+                  <p className="text-[11px] text-white/40">KPIs on target</p>
+                  <div className="mt-3 w-full h-2.5 rounded-full bg-white/10">
+                    <div className="h-full rounded-full" style={{ width:`${Math.round(kpis.filter(k=>k.status==="✅").length/kpis.length*100)}%`, background: kpis.filter(k=>k.status==="✅").length>=6?"#34d399":"#fbbf24" }}/>
+                  </div>
+                </div>
+              </ReportSection>
+            </GlassCard>
+            <GlassCard color="amber">
+              <ReportSection title="Action Items" color="amber">
+                {kpis.filter(k=>k.status!=="✅").map((kpi,i)=>(
+                    <div key={i} className="flex items-start gap-2 py-1.5 border-b border-white/5 last:border-0">
+                      <span className="text-xs mt-0.5">{kpi.status}</span>
+                      <div>
+                        <p className="text-[11px] text-white/70">{kpi.label}</p>
+                        <p className="text-[10px] text-white/35">Current: {kpi.value} · Target: {kpi.target}</p>
+                      </div>
+                    </div>
+                ))}
+                {kpis.filter(k=>k.status!=="✅").length===0 && <p className="text-[11px] text-green-400 text-center py-2">All KPIs on target! 🎉</p>}
+              </ReportSection>
+            </GlassCard>
+          </div>
+        </div>
+
+        {/* Factory-wide summary bars */}
+        <GlassCard color="amber">
+          <ReportSection title="Line Performance Summary" color="amber">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+              {DATA.productionLines.map((l,i)=>(
+                  <div key={i} className="flex items-center gap-3 py-1.5">
+                    <span className="text-[11px] text-white/50 w-16 shrink-0">{l.name}</span>
+                    <div className="flex-1 h-2 rounded-full bg-white/8">
+                      <div className="h-full rounded-full" style={{ width:`${l.eff}%`, background:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fbbf24" }}/>
+                    </div>
+                    <span className="text-[11px] font-semibold w-10 text-right" style={{ color:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fbbf24" }}>{l.eff}%</span>
+                    <span className="text-[10px] text-white/25 w-20 text-right">{l.actual}/{l.target}</span>
+                  </div>
+              ))}
+            </div>
+          </ReportSection>
+        </GlassCard>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REPORTS HUB PAGE
+// ═══════════════════════════════════════════════════════════════
+function ReportsPage({ onBack }) {
+  const [activeReport, setActiveReport] = useState(null);
+
+  const REPORT_PAGES = {
+    production: <ProductionReportPage onBack={()=>setActiveReport(null)}/>,
+    quality:    <QualityReportPage    onBack={()=>setActiveReport(null)}/>,
+    hr:         <HRReportPage         onBack={()=>setActiveReport(null)}/>,
+    inventory:  <InventoryReportPage  onBack={()=>setActiveReport(null)}/>,
+    procurement:<ProcurementReportPage onBack={()=>setActiveReport(null)}/>,
+    finance:    <FinanceReportPage    onBack={()=>setActiveReport(null)}/>,
+    maintenance:<MaintenanceReportPage onBack={()=>setActiveReport(null)}/>,
+    kpi:        <KPIReportPage        onBack={()=>setActiveReport(null)}/>,
+  };
+
+  if (activeReport && REPORT_PAGES[activeReport]) return REPORT_PAGES[activeReport];
+
+  const reports = [
+    { id:"kpi",         icon:"📈", title:"KPI Executive Summary",    desc:"Factory-wide KPI scorecard, action items, health overview",   color:"amber", freq:"Real-time", badge:"New" },
+    { id:"production",  icon:"🏗️", title:"Production Report",        desc:"Line efficiency, output vs target, work order progress",       color:"green",  freq:"Daily" },
+    { id:"quality",     icon:"🔍", title:"Quality Report",           desc:"Inspection results, defect severity, pass rate by WO",         color:"rose",   freq:"Daily" },
+    { id:"hr",          icon:"👷", title:"HR Report",                desc:"Attendance, payroll summary, leave requests, headcount",       color:"violet", freq:"Daily" },
+    { id:"inventory",   icon:"🧵", title:"Inventory Report",         desc:"Stock levels, low stock alerts, total inventory value",        color:"teal",   freq:"Weekly" },
+    { id:"procurement", icon:"📦", title:"Procurement Report",       desc:"Purchase orders, supplier ratings, shipment tracking",         color:"teal",   freq:"Weekly" },
+    { id:"finance",     icon:"💰", title:"Finance / Costing Report", desc:"Cost sheet, margins, FOB prices, payroll breakdown",           color:"violet", freq:"Monthly" },
+    { id:"maintenance", icon:"🔧", title:"Maintenance Report",       desc:"Machine status, utilization rate, service schedules",          color:"orange", freq:"Weekly" },
+  ];
+
+  const statusCounts = {
+    production: `${Math.round(DATA.productionLines.reduce((s,l)=>s+l.actual,0)/DATA.productionLines.reduce((s,l)=>s+l.target,0)*100)}% eff`,
+    quality: `${Math.round(DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length)}% pass`,
+    hr: `${DATA.attendance.filter(a=>a.status!=="Absent").length}/${DATA.attendance.length} present`,
+    inventory: `${DATA.materials.filter(m=>m.stock<m.reorder).length} low stock`,
+    procurement: `${DATA.purchaseOrders.filter(p=>p.status==="In Transit").length} in transit`,
+    finance: `${(DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1)}% avg margin`,
+    maintenance: `${DATA.machines.filter(m=>m.status==="Running").length}/${DATA.machines.length} running`,
+    kpi: `${[
+      DATA.productionLines.reduce((s,l)=>s+l.actual,0)/DATA.productionLines.reduce((s,l)=>s+l.target,0)>=0.9,
+      DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length>=95,
+      DATA.machines.filter(m=>m.status==="Running").length/DATA.machines.length>=0.85,
+    ].filter(Boolean).length}/8 KPIs met`,
+  };
+
+  return (
+      <div>
+        <PageHeader title="Reports Center" subtitle="Analytics & Reporting Hub" icon="📊" onBack={onBack} color="amber"/>
+
+        {/* Quick summary strip */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <StatCard label="Report Types" value={reports.length} icon="📋" color="amber"/>
+          <StatCard label="Daily Reports" value={reports.filter(r=>r.freq==="Daily").length} icon="📅" color="green"/>
+          <StatCard label="Weekly Reports" value={reports.filter(r=>r.freq==="Weekly").length} icon="📆" color="blue"/>
+          <StatCard label="Live Reports" value={reports.filter(r=>r.freq==="Real-time").length} icon="⚡" color="rose"/>
+        </div>
+
+        {/* Report cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {reports.map((r) => {
+            const a = ACCENT[r.color];
+            return (
+                <button key={r.id} onClick={()=>setActiveReport(r.id)}
+                        className="relative text-left rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:scale-[1.01] group active:scale-95"
+                        style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03))", border:`1px solid ${a.border}`, boxShadow:`0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
+                  <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.bar}`}/>
+                  <div className="p-5">
+                    {/* Icon + badge */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl" style={{ background:a.bg, border:`1px solid ${a.border}` }}>
+                        {r.icon}
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge color={r.color}>{r.freq}</Badge>
+                        {r.badge && <Badge color="rose">{r.badge}</Badge>}
+                      </div>
+                    </div>
+                    {/* Title + desc */}
+                    <h3 className="text-sm font-bold text-white/90 mb-1 leading-snug">{r.title}</h3>
+                    <p className="text-[11px] text-white/40 leading-relaxed mb-3">{r.desc}</p>
+                    {/* Live stat */}
+                    <div className="flex items-center justify-between pt-3 border-t border-white/8">
+                      <span className="text-[10px] font-semibold" style={{ color:a.text }}>{statusCounts[r.id]}</span>
+                      <span className="text-[10px] text-white/30 group-hover:text-white/60 transition-colors flex items-center gap-1">
+                    View Report <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span>
+                  </span>
+                    </div>
+                  </div>
+                </button>
+            );
+          })}
+        </div>
+      </div>
+  );
+}
 
 // ═══════════════════════════════════════════════════════════════
 // ── MENU COMPONENTS ──────────────────────────────────────────
@@ -1265,6 +2095,7 @@ function QuickAlerts({ onNav }) {
     { icon:"📦", text:"Elastic Band 2cm stock below reorder point", color:"amber", page:"materials" },
     { icon:"🔴", text:"2 Critical defects open on Line B2", color:"rose", page:"defects" },
     { icon:"⏳", text:"2 permission requests pending review", color:"amber", page:"permissions" },
+    { icon:"📈", text:"View full KPI executive summary report", color:"green", page:"report-kpi" },
   ];
   return (
       <GlassCard color="rose">
@@ -1320,6 +2151,14 @@ export default function SECFactory() {
     leave: <LeavePage onBack={back}/>,
     payroll: <PayrollPage onBack={back}/>,
     reports: <ReportsPage onBack={back}/>,
+    "report-production":  <ProductionReportPage  onBack={back}/>,
+    "report-quality":     <QualityReportPage     onBack={back}/>,
+    "report-hr":          <HRReportPage          onBack={back}/>,
+    "report-inventory":   <InventoryReportPage   onBack={back}/>,
+    "report-procurement": <ProcurementReportPage onBack={back}/>,
+    "report-finance":     <FinanceReportPage     onBack={back}/>,
+    "report-maintenance": <MaintenanceReportPage onBack={back}/>,
+    "report-kpi":         <KPIReportPage         onBack={back}/>,
     permissions: <PermissionsPage onBack={back}/>,
   };
 
@@ -1458,6 +2297,9 @@ export default function SECFactory() {
                         <MenuButton title="Real-time" iconPath={I("monitor-eye")} onClick={()=>nav("realtime")}/>
                         <MenuButton title="TV Display" iconPath={I("television-play")} onClick={()=>nav("tv")}/>
                       </Group>
+                      <Group label="Reports" color="green">
+                        <MenuButton title="Prod. Report" iconPath={I("chart-bar")} onClick={()=>nav("report-production")}/>
+                      </Group>
                     </Section>
 
                     {/* Quality */}
@@ -1468,7 +2310,8 @@ export default function SECFactory() {
                       </Group>
                       <Group label="Reports" color="rose">
                         <MenuButton title="Dashboard" iconPath={I("view-dashboard")} onClick={()=>nav("dashboard")}/>
-                        <MenuButton title="Reports" iconPath={I("chart-bar")} onClick={()=>nav("reports")}/>
+                        <MenuButton title="Quality Rpt" iconPath={I("chart-bar")} onClick={()=>nav("report-quality")}/>
+                        <MenuButton title="All Reports" iconPath={I("file-chart")} onClick={()=>nav("reports")}/>
                       </Group>
                     </Section>
 
@@ -1482,6 +2325,9 @@ export default function SECFactory() {
                         <MenuButton title="Leave" iconPath={I("beach")} onClick={()=>nav("leave")}/>
                         <MenuButton title="Payroll" iconPath={I("cash-multiple")} onClick={()=>nav("payroll")}/>
                       </Group>
+                      <Group label="Reports" color="violet">
+                        <MenuButton title="HR Report" iconPath={I("chart-bar")} onClick={()=>nav("report-hr")}/>
+                      </Group>
                     </Section>
 
                     {/* Procurement */}
@@ -1494,6 +2340,10 @@ export default function SECFactory() {
                         <MenuButton title="Purchase PO" iconPath={I("package-variant")} onClick={()=>nav("purchase-orders")}/>
                         <MenuButton title="Shipments" iconPath={I("ferry")} onClick={()=>nav("shipments")}/>
                       </Group>
+                      <Group label="Reports" color="teal">
+                        <MenuButton title="Inventory Rpt" iconPath={I("chart-bar")} onClick={()=>nav("report-inventory")}/>
+                        <MenuButton title="Procure Rpt" iconPath={I("chart-bar")} onClick={()=>nav("report-procurement")}/>
+                      </Group>
                     </Section>
 
                     {/* Finance */}
@@ -1501,12 +2351,19 @@ export default function SECFactory() {
                       <Group label="Costing" color="violet">
                         <MenuButton title="Cost Sheet" iconPath={I("calculator")} onClick={()=>nav("costing")}/>
                       </Group>
+                      <Group label="Reports" color="violet">
+                        <MenuButton title="Finance Rpt" iconPath={I("chart-bar")} onClick={()=>nav("report-finance")}/>
+                        <MenuButton title="KPI Report" iconPath={I("finance")} onClick={()=>nav("report-kpi")}/>
+                      </Group>
                     </Section>
 
                     {/* Maintenance */}
                     <Section title="Maintenance" icon="🔧" color="orange">
                       <Group label="Assets" color="orange">
                         <MenuButton title="Machines" iconPath={I("tools")} onClick={()=>nav("machines")}/>
+                      </Group>
+                      <Group label="Reports" color="orange">
+                        <MenuButton title="Maint. Rpt" iconPath={I("chart-bar")} onClick={()=>nav("report-maintenance")}/>
                       </Group>
                     </Section>
 

@@ -1,8 +1,9 @@
 import { useState } from "react";
+import {useTranslation} from "react-i18next";
 
 function ButtonAddNew({onClick}) {
     const [pressed, setPressed] = useState(false);
-    
+    const {t} = useTranslation();
     const handleClick = () => {
         setPressed(true);
         setTimeout(() => setPressed(false), 150);
@@ -48,7 +49,7 @@ function ButtonAddNew({onClick}) {
 
         {/* Label */}
         <span className="relative text-sm font-light tracking-wide text-white/90 drop-shadow">
-            Add New
+            {t('buttons.addNew')}
         </span>
         </button>
     )

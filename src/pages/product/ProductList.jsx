@@ -9,21 +9,20 @@ import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
-import { useDeleteProductionLineMutation, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
-import { setAlertDept, setIsOpenDeleteDeptDialog, setIsOpenDialogAddOrEditProductionLine, setIsOpenSnackbarProductionLine, setPageNoProductionLine, setPageSizeProductionLine, setProductionLineDataForUpdate } from "../../redux/feature/productionLine/productionLineSlice.js";
-import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
+import { setPageNoProductionLine, setPageSizeProductionLine } from "../../redux/feature/productionLine/productionLineSlice.js";
 import {
     useCreateProductMutation, useDeleteProductMutation,
     useGetProductQuery,
     useUpdateProductMutation
 } from "../../redux/feature/product/productApiSlice.js";
 import {
+    setAlertProduct,
     setIsOpenDeleteProductDialog,
     setIsOpenDialogAddOrEditProduct,
     setIsOpenSnackbarProduct, setProductDataForUpdate
 } from "../../redux/feature/product/productSlice.js";
 import {SIZES} from "../../config/size.js";
-
+import {useCreateCategoryMutation, useGetCategoryQuery} from "../../redux/feature/category/categoryApiSlice.js";
 
 function ProductList() {
     const {t} = useTranslation();
@@ -40,10 +39,17 @@ function ProductList() {
     const[createProduct] = useCreateProductMutation();
     const [updateProduct] = useUpdateProductMutation();
     const [deleteProduct] = useDeleteProductMutation();
+    const [createCategory] = useCreateCategoryMutation();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const {data: prodData, isLoading, isSuccess} = useGetProductQuery({
         pageNo: pageNo,
         pageSize: pageSize
     });
+    const {data: cateData, isLoading: isLoadingGetCate, isSuccess: isSuccessGetCate} = useGetCategoryQuery({
+        pageNo: 1,
+        pageSize: 999
+    })
     
     const handleChangePage = (event, newPage) => {
         dispatch(setPageNoProductionLine(newPage + 1));
@@ -67,42 +73,77 @@ function ProductList() {
         size:      Yup.string().required(t("validation.required")),
     });
 
+    const categorySchema = Yup.object().shape({
+        name:      Yup.string().required(t("validation.required"))
+    })
+
     const handleSubmit = async (values, {resetForm}) => {
+        setIsSubmitting(true);
         try {
             if (productDataForUpdate) {
+
                  await updateProduct({
                      id: productDataForUpdate.id,
                      code:      values.code,
                      styleName: values.styleName,
-                     category:  values.category,
+                     cateId:  values.category,
                      color:     values.color,
                      size:      values.size,
                 }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Update successfully"}));
-                dispatch(setProductionLineDataForUpdate(null));
+                dispatch(setAlertProduct({type: "success", message: "Update successfully"}));
+                dispatch(setProductDataForUpdate(null));
             }else {
                 await createProduct({
                     code:      values.code,
                     styleName: values.styleName,
-                    category:  values.category,
+                    cateId:  values.category,
                     color:     values.color,
                     size:      values.size,
                 }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Create successfully"}));
+                dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
             }
-            dispatch(setIsOpenSnackbarProductionLine(true));
-            dispatch(setIsOpenDialogAddOrEditProductionLine(false));
+            dispatch(setIsOpenSnackbarProduct(true));
+            dispatch(setIsOpenDialogAddOrEditProduct(false));
             resetForm();
         } catch (error) {
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
+            console.log(error);
+            dispatch(setAlertProduct({type: "error", message: error?.data?.error?.description[0] ? error?.data?.error?.description[0]?.reason : error?.data?.error?.description}));
+            dispatch(setIsOpenSnackbarProduct(true));
+        }finally {
+            setIsSubmitting(false);
         }
     };
-    console.log(SIZES)
     const fields = [
         { name: "code",     label: "code",     type: "text" },
         { name: "styleName",     label: "styleName",     type: "text" },
-        { name: "category",     label: "category",     type: "text" },
+        {
+            name: "category",
+            label: "category",
+            type: "autocomplete",
+            fetchOptions: async () => {
+                return Object.values(cateData?.entities ?? {}).map((cate) => ({
+                    value: cate.id,
+                    label: cate.name,
+                }));
+            },
+            addNew: {
+                label: "Add new category",   // text shown below the field
+                title: "New Category",         // nested dialog title
+                fields: [
+                    { name: "name",  label: "name",  type: "text" },
+                ],
+                initialValues: { name: "" },
+                validationSchema: categorySchema,
+                onSubmit: async (values, helpers) => {
+                    await createCategory({
+                        name: values.name
+                    }).unwrap();
+                    dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
+                    dispatch(setIsOpenSnackbarProduct(true));
+                },
+
+            },
+        },
         { name: "color",     label: "color",     type: "text" },
         {
             name: "size",
@@ -127,12 +168,15 @@ function ProductList() {
     };
 
     const handleEdit = (row) => {
-        dispatch(setIsOpenDialogAddOrEditProductionLine(true));
+        dispatch(setIsOpenDialogAddOrEditProduct(true));
         dispatch(setProductDataForUpdate({
-        id: row.id,
-        line: row.line,
-        deptId: row.deptId,
-    }));
+            id: row.id,
+            code: row.code,
+            styleName: row.styleName,
+            category: row.cateId,
+            color: row.color,
+            size: row.size,
+        }));
     };
 
     const handleDeleteOpen = (row) => {
@@ -141,18 +185,20 @@ function ProductList() {
     };
 
     const handleDelete = async () => {
-        console.log(id);
+        setIsDeleting(true);
         try {
-            await deleteDept({id: id}).unwrap();
-            dispatch(setIsOpenDeleteDeptDialog(false));
-            dispatch(setAlertDept({type: "success", message: "Delete successfully"}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
-        }catch (error) {
-            dispatch(setIsOpenDeleteDeptDialog(false));
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
+            await deleteProduct({ id }).unwrap();
+            dispatch(setIsOpenDeleteProductDialog(false));
+            dispatch(setAlertProduct({ type: "success", message: "Delete successfully" }));
+            dispatch(setIsOpenSnackbarProduct(true));
+        } catch (error) {
+            dispatch(setIsOpenDeleteProductDialog(false));
+            dispatch(setAlertProduct({ type: "error", message: error.data.error.description }));
+            dispatch(setIsOpenSnackbarProduct(true));
+        } finally {
+            setIsDeleting(false);
         }
-    }
+    };
 
     const columns = [
         {
@@ -162,7 +208,7 @@ function ProductList() {
             align: "left",
         },
         {
-            id: "name",
+            id: "styleName",
             label: t("styleName"),
             minWidth: 130,
             align: "left",
@@ -235,7 +281,10 @@ function ProductList() {
                 isUpdate={!!productDataForUpdate}
                 validationSchema={validationSchema}
                 handleSubmit={handleSubmit}
-                initialValues={productDataForUpdate ? productDataForUpdate : initialValues}/>
+                initialValues={productDataForUpdate ? productDataForUpdate : initialValues}
+                isSubmitting={isSubmitting}
+            />
+
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
@@ -251,7 +300,7 @@ function ProductList() {
                     {alertProduct.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteProductDialog(false))} handleDelete={handleDelete}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteProductDialog(false))} handleDelete={handleDelete} isSubmitting={isDeleting}/>
         </div>
     )
 

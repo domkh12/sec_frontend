@@ -3,31 +3,48 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
 import {
+    setFilterRole,
     setPageNoRole,
     setPageSizeRole,
 } from "../../redux/feature/role/roleSlice.js";
 import {Alert, Backdrop, Snackbar} from "@mui/material";
 import BackButton from "../../components/ui/BackButton.jsx";
 import TableCus from "../../components/table/TableCus.jsx";
+import useDebounce from "../../hook/useDebounce.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 function RoleList(){
     const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const pageNo = useSelector((state) => state.role.pageNo);
-    const pageSize = useSelector((state) => state.role.pageSize);
-    const {data: roleData, isLoading, isSuccess} = useGetRoleQuery({
-        pageNo: pageNo,
-        pageSize: pageSize
+    const filterValue = useSelector((state) => state.role.filter);
+    const searchValue = useSelector((state) => state.role.filter.search);
+    const debounceSearch = useDebounce(searchValue, 500);
+    const {data: roleData, isLoading, isSuccess, isFetching} = useGetRoleQuery({
+        ...filterValue,
+        search: debounceSearch,
     });
+    console.log({isFetching});
+    const handleFilterChange = (key, value) => {
+        dispatch(setFilterRole({
+            ...filterValue,
+            [key]: value,
+        }));
+    }
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoRole(newPage + 1));
+        dispatch(setFilterRole({
+            ...filterValue,
+            pageNo: newPage + 1,
+        }));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeRole(event.target.value));
-        dispatch(setPageNoRole(1));
+        dispatch(setFilterRole({
+            ...filterValue,
+            pageSize: event.target.value,
+            pageNo: 1
+        }));
     };
 
     const columns = [
@@ -59,7 +76,7 @@ function RoleList(){
 
     let content;
 
-    if (isLoading) content = (<Backdrop open={isLoading}/>);
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess){
         content = (
@@ -77,7 +94,7 @@ function RoleList(){
                     <div className="flex justify-between items-center">
                         <BackButton onClick={() => navigate("/admin")}/>
                     </div>
-                    <TableCus columns={columns} data={roleData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage}/>
+                    <TableCus columns={columns} data={roleData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} searchPlaceholderText={`${t('table.role')}/${t('table.description')}`}  isFilterActive={true} handleFilterChange={handleFilterChange} filterValue={filterValue} isFetching={isFetching}/>
                 </div>
             </div>
         )

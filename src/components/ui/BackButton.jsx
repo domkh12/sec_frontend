@@ -1,7 +1,9 @@
 import { useState } from "react";
+import {useTranslation} from "react-i18next";
 
 function BackButton({onClick}){
   const [pressed, setPressed] = useState(false);
+  const {t} = useTranslation();
   const handleClick = () => {
     setPressed(true);
     setTimeout(() => setPressed(false), 150);
@@ -48,7 +50,7 @@ function BackButton({onClick}){
 
       {/* Label */}
       <span className="relative text-sm font-light tracking-wide text-white/90 drop-shadow">
-        Back
+        {t('buttons.back')}
       </span>
     </button>
   );

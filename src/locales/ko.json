@@ -30,12 +30,20 @@
     "title": "사용자",
     "management": "사용자 관리",
     "profile": "사용자 프로필",
-    "settings": "사용자 설정"
+    "settings": "사용자 설정",
+    "block.description": "이 사용자는 시스템에 접근할 수 없습니다.",
+    "unblock.description": "이 사용자는 다시 시스템에 접근할 수 있습니다.",
+    "block.confirm": "예, 차단",
+    "unblock.confirm": "예, 차단 해제",
+    "block": "차단"
   },
   "status": {
     "soon": "출시 예정",
     "available": "사용 가능",
-    "unavailable": "사용 불가"
+    "unavailable": "사용 불가",
+    "active": "활성",
+    "inactive": "비활성",
+    "blocked": "차단됨"
   },
   "profile": {
     "title": "프로필",
@@ -59,7 +67,8 @@
     "addNew": "새로 추가",
     "create": "생성",
     "cancel": "취소",
-    "update": "수정"
+    "update": "수정",
+    "back": "뒤로"
   },
   "department": {
     "create": "부서 생성",
@@ -93,9 +102,14 @@
     "username": "사용자명",
     "password": "비밀번호",
     "description": "설명",
-    "users": "사용자"
+    "users": "사용자",
+    "block": "차단",
+    "unblock": "차단 해제"
   },
   "factory": {
     "structure": "공장 구조"
+  },
+  "filter": {
+    "all": "전체"
   }
 }

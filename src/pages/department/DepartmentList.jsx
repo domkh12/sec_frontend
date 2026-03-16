@@ -131,8 +131,26 @@ function DepartmentList(){
             align: "left",
         },
         {
-            id: "updatedAt",
-            label: t("table.updatedAt"),
+            id: "head",
+            label: t('head'),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "line",
+            label: t('line'),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "worker",
+            label: t("worker"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "status",
+            label: t("table.status"),
             minWidth: 130,
             align: "left",
         },
@@ -143,6 +161,10 @@ function DepartmentList(){
             align: "left",
         },
     ]
+
+    const filterConfig = {
+
+    }
 
     let content;
 
@@ -164,7 +186,16 @@ function DepartmentList(){
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditDepartment(true))}/>
                 </div>
-                <TableCus columns={columns} data={deptData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
+                <TableCus
+                    columns={columns}
+                    data={deptData}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteOpen}
+                    isFilterActive={true}
+                    searchPlaceholderText={`${t('table.department')}/${t('table.head')}`}
+                />
             </div>
             <DialogAddEditCus
                 fields={fields}

@@ -7,8 +7,18 @@ import {
     Button,
     CircularProgress,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
-function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isSubmitting = false }) {
+function DialogConfirmBlock({
+                                isOpen = false,
+                                onClose,
+                                title,
+                                handleBlock,
+                                isSubmitting = false,
+                                isBlocked = false  // To determine if we're blocking or unblocking
+                            }) {
+    const { t } = useTranslation();
+
     return (
         <Dialog
             open={isOpen}
@@ -50,7 +60,7 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                 },
             }}
         >
-            {/* Red warning icon */}
+            {/* Icon - changes based on block/unblock */}
             <div style={{
                 display: "flex",
                 justifyContent: "center",
@@ -61,28 +71,58 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                     width: "52px",
                     height: "52px",
                     borderRadius: "50%",
-                    background: "rgba(239,68,68,0.15)",
-                    border: "1px solid rgba(239,68,68,0.3)",
-                    boxShadow: "0 0 20px rgba(239,68,68,0.15), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    background: isBlocked
+                        ? "rgba(34,197,94,0.15)"  // Green for unblock
+                        : "rgba(251,191,36,0.15)", // Amber for block
+                    border: isBlocked
+                        ? "1px solid rgba(34,197,94,0.3)"
+                        : "1px solid rgba(251,191,36,0.3)",
+                    boxShadow: isBlocked
+                        ? "0 0 20px rgba(34,197,94,0.15), inset 0 1px 0 rgba(255,255,255,0.1)"
+                        : "0 0 20px rgba(251,191,36,0.15), inset 0 1px 0 rgba(255,255,255,0.1)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                 }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"
-                            stroke="rgba(252,165,165,0.9)"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                        <path
-                            d="M10 11v4M14 11v4"
-                            stroke="rgba(252,165,165,0.9)"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                        />
-                    </svg>
+                    {isBlocked ? (
+                        // Checkmark icon for unblock
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M9 12l2 2 4-4"
+                                stroke="rgba(134,239,172,0.9)"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="9"
+                                stroke="rgba(134,239,172,0.9)"
+                                strokeWidth="1.8"
+                            />
+                        </svg>
+                    ) : (
+                        // Lock icon for block
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <rect
+                                x="3"
+                                y="11"
+                                width="18"
+                                height="11"
+                                rx="2"
+                                ry="2"
+                                stroke="rgba(251,191,36,0.9)"
+                                strokeWidth="1.8"
+                            />
+                            <path
+                                d="M7 11V7a5 5 0 0 1 10 0v4"
+                                stroke="rgba(251,191,36,0.9)"
+                                strokeWidth="1.8"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                    )}
                 </div>
             </div>
 
@@ -97,7 +137,7 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                     letterSpacing: "0.01em",
                 }}
             >
-                Delete {title}?
+                {isBlocked ? t("user.unblock") : t("user.block")} {title}?
             </DialogTitle>
 
             <DialogContent sx={{ pb: 1, pt: 0.5 }}>
@@ -109,7 +149,10 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                         lineHeight: 1.6,
                     }}
                 >
-                    Once deleted, you cannot get it back.
+                    {isBlocked
+                        ? t("user.unblock.description") || "This user will be able to access the system again."
+                        : t("user.block.description") || "This user will not be able to access the system."
+                    }
                 </DialogContentText>
             </DialogContent>
 
@@ -141,31 +184,43 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                         },
                     }}
                 >
-                    No, Keep It
+                    {t("buttons.cancel")}
                 </Button>
                 <Button
-                    onClick={handleDelete}
+                    onClick={handleBlock}
                     disabled={isSubmitting}
                     variant="contained"
                     size="small"
                     sx={{
                         flex: 1,
                         borderRadius: "9px",
-                        background: "linear-gradient(135deg, rgba(239,68,68,0.8) 0%, rgba(220,38,38,0.75) 100%)",
+                        background: isBlocked
+                            ? "linear-gradient(135deg, rgba(34,197,94,0.8) 0%, rgba(22,163,74,0.75) 100%)"
+                            : "linear-gradient(135deg, rgba(251,191,36,0.8) 0%, rgba(245,158,11,0.75) 100%)",
                         backdropFilter: "blur(8px)",
-                        border: "1px solid rgba(252,165,165,0.25)",
-                        boxShadow: "0 4px 16px rgba(239,68,68,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
+                        border: isBlocked
+                            ? "1px solid rgba(134,239,172,0.25)"
+                            : "1px solid rgba(251,191,36,0.25)",
+                        boxShadow: isBlocked
+                            ? "0 4px 16px rgba(34,197,94,0.3), inset 0 1px 0 rgba(255,255,255,0.15)"
+                            : "0 4px 16px rgba(251,191,36,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
                         color: "rgba(255,255,255,0.95)",
                         fontSize: "0.8rem",
                         fontWeight: 600,
                         textTransform: "none",
                         "&:hover": {
-                            background: "linear-gradient(135deg, rgba(239,68,68,0.95) 0%, rgba(220,38,38,0.9) 100%)",
-                            boxShadow: "0 6px 20px rgba(239,68,68,0.45), inset 0 1px 0 rgba(255,255,255,0.2)",
+                            background: isBlocked
+                                ? "linear-gradient(135deg, rgba(34,197,94,0.95) 0%, rgba(22,163,74,0.9) 100%)"
+                                : "linear-gradient(135deg, rgba(251,191,36,0.95) 0%, rgba(245,158,11,0.9) 100%)",
+                            boxShadow: isBlocked
+                                ? "0 6px 20px rgba(34,197,94,0.45), inset 0 1px 0 rgba(255,255,255,0.2)"
+                                : "0 6px 20px rgba(251,191,36,0.45), inset 0 1px 0 rgba(255,255,255,0.2)",
                             transform: "translateY(-1px)",
                         },
                         "&.Mui-disabled": {
-                            background: "linear-gradient(135deg, rgba(239,68,68,0.4) 0%, rgba(220,38,38,0.35) 100%)",
+                            background: isBlocked
+                                ? "linear-gradient(135deg, rgba(34,197,94,0.4) 0%, rgba(22,163,74,0.35) 100%)"
+                                : "linear-gradient(135deg, rgba(251,191,36,0.4) 0%, rgba(245,158,11,0.35) 100%)",
                             color: "rgba(255,255,255,0.45)",
                         },
                         transition: "all 0.18s ease",
@@ -173,7 +228,10 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                 >
                     <span style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <span style={{ visibility: isSubmitting ? "hidden" : "visible" }}>
-                            Yes, Delete
+                            {isBlocked
+                                ? `✓ ${t("user.unblock.confirm") || "Yes, Unblock"}`
+                                : `🔒 ${t("user.block.confirm") || "Yes, Block"}`
+                            }
                         </span>
                         {isSubmitting && (
                             <CircularProgress
@@ -191,4 +249,4 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
     );
 }
 
-export default DialogConfirmDelete;
+export default DialogConfirmBlock;

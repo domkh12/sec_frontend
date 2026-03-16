@@ -30,12 +30,20 @@
     "title": "用户",
     "management": "用户管理",
     "profile": "用户资料",
-    "settings": "用户设置"
+    "settings": "用户设置",
+    "block.description": "此用户将无法访问系统。",
+    "unblock.description": "此用户将能够再次访问系统。",
+    "block.confirm": "是的，封锁",
+    "unblock.confirm": "是的，解锁",
+    "block": "封锁"
   },
   "status": {
     "soon": "即将推出",
     "available": "可用",
-    "unavailable": "不可用"
+    "unavailable": "不可用",
+    "active": "激活",
+    "inactive": "未激活",
+    "blocked": "已屏蔽"
   },
   "profile": {
     "title": "个人资料",
@@ -59,7 +67,8 @@
     "addNew": "添加新项",
     "create": "创建",
     "cancel": "取消",
-    "update": "更新"
+    "update": "更新",
+    "back": "返回"
   },
   "department": {
     "create": "创建部门",
@@ -93,9 +102,14 @@
     "username": "用户名",
     "password": "密码",
     "description": "描述",
-    "users": "用户"
+    "users": "用户",
+    "block": "封锁",
+    "unblock": "解锁"
   },
   "factory": {
     "structure": "工厂结构"
+  },
+  "filter": {
+    "all": "全部"
   }
 }

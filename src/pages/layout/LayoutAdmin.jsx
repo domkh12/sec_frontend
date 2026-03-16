@@ -33,6 +33,7 @@ function LayoutAdmin(){
     useEffect(() => {
         if (!messages) return;
         dispatch(userApiSlice.util.invalidateTags([{ type: "User", id: "LIST" }]));
+        dispatch(userApiSlice.util.invalidateTags([{ type: "UserStats", id: "LIST" }]));
     }, [dispatch, messages]);
 
     // handle tab/browser close
