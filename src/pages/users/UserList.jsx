@@ -9,7 +9,7 @@ import {
     useUpdateUserMutation
 } from "../../redux/feature/user/userApiSlice.js";
 import * as Yup from "yup";
-import {Alert, Backdrop, Snackbar} from "@mui/material";
+import {Alert, Snackbar} from "@mui/material";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
@@ -21,10 +21,9 @@ import {
     setUserDataForUpdate
 } from "../../redux/feature/user/userSlice.js";
 import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
-import {useGetProductionLineQuery} from "../../redux/feature/productionLine/productionLineApiSlice.js";
 import useDebounce from "../../hook/useDebounce.jsx";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
-import {useGetDepartmentQuery} from "../../redux/feature/department/departmentApiSlice.js";
+import {useGetDepartmentQuery, useGetDeptLookupQuery} from "../../redux/feature/department/departmentApiSlice.js";
 import StatCards from "../../components/card/StatCards.jsx";
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import WifiRoundedIcon from '@mui/icons-material/WifiRounded';
@@ -47,17 +46,13 @@ function UserList(){
     const filterValue = useSelector((state) => state.user.filter);
     const searchValue = useSelector((state) => state.user.filter.search);
     const debounceSearch = useDebounce(searchValue, 500);
-    const [blockUser] = useSetBlockUserMutation();
+    const [blockUser, {isLoading: isLoadingBlockUser}] = useSetBlockUserMutation();
     const [unblockUser] = useSetUnblockUserMutation();
-    const {data: userState} = useGetUserStatsQuery();
-    const[createUser] = useCreateUserMutation();
-    const [updateUser] = useUpdateUserMutation();
-    const [deleteUser] = useDeleteUserMutation();
-    const {data: prodLineData} = useGetProductionLineQuery({
-        pageNo: 1,
-        pageSize: 999
-    });
-    console.log(userState)
+    const {data: userState, isLoading: isLoadingUserStats, isSuccess: isSuccessUserStats} = useGetUserStatsQuery();
+    const[createUser, {isLoading: isLoadingCreateUser}] = useCreateUserMutation();
+    const [updateUser, {isLoading: isLoadingUpdateUser}] = useUpdateUserMutation();
+    const [deleteUser, {isLoading: isLoadingDeleteUser}] = useDeleteUserMutation();
+    const {data: deptLookupData} = useGetDeptLookupQuery();
     const {data: deptData} = useGetDepartmentQuery({
         pageNo: 1,
         pageSize: 999
@@ -73,6 +68,7 @@ function UserList(){
         pageNo: 1,
         pageSize: 999
     });
+
     const handleFilterChange = (key, value) => {
         if (value === "all") {
             return dispatch(setFilterUser({
@@ -165,7 +161,9 @@ function UserList(){
                     username: values.username,
                     password: values.password,
                     roleId: values.role,
-                    lineId: values.productionLine
+                    lineId: values.department.lineId,
+                    departmentId: values.department.deptId,
+                    position: values.position,
                 }).unwrap();
                 dispatch(setAlertUser({type: "success", message: "Update successfully"}));
                 dispatch(setUserDataForUpdate(null));
@@ -179,7 +177,9 @@ function UserList(){
                     username: values.username,
                     password: values.password,
                     roleId: values.role,
-                    lineId: values.productionLine
+                    lineId: values.department.lineId,
+                    departmentId: values.department.deptId,
+                    position: values.position,
                 }).unwrap();
                 dispatch(setAlertUser({type: "success", message: "Create successfully"}));
             }
@@ -201,6 +201,7 @@ function UserList(){
         { name: "username", label: "table.username", type: "text"},
         { name: "password",         label: "table.password",         type: "password", hideOnUpdate: true },
         { name: "confirmPassword",  label: "table.confirmPassword",  type: "password", hideOnUpdate: true },
+        { name: "position", label: "table.position", type: "text" },
         {
             name: "role",
             label: "table.role",
@@ -214,14 +215,15 @@ function UserList(){
             },
         },
         {
-            name: "productionLine",
-            label: "table.productionLine",
-            type: "autocomplete",
+            name: "department",
+            label: "table.department",
+            type: "nestedSelect",
             minWidth: 130,
+            options: deptLookupData,
             fetchOptions: async () => {
-                return Object.values(prodLineData?.entities ?? {}).map((prodLine) => ({
-                    value: prodLine.id,
-                    label: prodLine.line,
+                return Object.values(deptData?.entities ?? {}).map((dept) => ({
+                    value: dept.id,
+                    label: dept.department,
                 }));
             },
         }
@@ -287,11 +289,11 @@ function UserList(){
         password: "",
         confirmPassword: "",
         role: "",
-        productionLine: "",
+        department: {},
+        position: "",
     };
 
     const handleEdit = (row) => {
-        console.log(row)
         dispatch(setIsOpenDialogAddOrEditUser(true));
         dispatch(setUserDataForUpdate({
             id: row.id,
@@ -302,8 +304,11 @@ function UserList(){
             phoneNumber: row.phoneNumber,
             username: row.username,
             role: row.roleId,
-            productionLine: row.lineId
-
+            department: {
+                deptId: row.departmentId,
+                lineId: row.lineId
+            },
+            position: row.position
         }));
     };
 
@@ -363,6 +368,12 @@ function UserList(){
             align: "left",
         },
         {
+            id: "position",
+            label: t('table.position'),
+            minWidth: 130,
+            align: "left",
+        },
+        {
             id: "role",
             label: t("table.role"),
             minWidth: 130,
@@ -396,9 +407,9 @@ function UserList(){
 
     let content;
 
-    if (isLoading) content = (<LoadingComponent/>);
+    if (isLoading || isLoadingUserStats) content = (<LoadingComponent/>);
 
-    if (isSuccess){
+    if (isSuccess && isSuccessUserStats){
         content = (
             <div className="pb-10">
                 <div className={`
@@ -436,8 +447,9 @@ function UserList(){
                         onUnblock={handleUnblock}
                         onDelete={handleDeleteOpen}
                         isFilterActive={true}
-                        searchPlaceholderText={`${t('table.firstName')}/${t('table.lastName')}/${t('table.phoneNumber')}`}
-                        filterValue={filterValue} handleFilterChange={handleFilterChange}
+                        searchPlaceholderText={`${t('table.firstName')}/${t('table.lastName')}/${t('table.phoneNumber')}/${t('table.position')}`}
+                        filterValue={filterValue}
+                        handleFilterChange={handleFilterChange}
                         isFetching={isFetching}
                         filterConfig={filterConfig}
                         onClearAllFilters={handleClearAllFilters}
@@ -451,7 +463,9 @@ function UserList(){
                     isUpdate={!!userDataForUpdate}
                     validationSchema={validationSchema}
                     handleSubmit={handleSubmit}
-                    initialValues={userDataForUpdate ? userDataForUpdate : initialValues}/>
+                    initialValues={userDataForUpdate ? userDataForUpdate : initialValues}
+                    isSubmitting={isLoadingCreateUser || isLoadingUpdateUser}
+                />
                 <Snackbar
                     open={isOpenSnackbar}
                     autoHideDuration={6000}
@@ -467,8 +481,8 @@ function UserList(){
                         {alertUser.message}
                     </Alert>
                 </Snackbar>
-                <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteUserDialog(false))} handleDelete={handleDelete}/>
-                <DialogConfirmBlock isOpen={isOpenBlockDialog} onClose={() => dispatch(setIsOpenBlockUserDialog(false))} handleBlock={handleBlock}/>
+                <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteUserDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteUser}/>
+                <DialogConfirmBlock isOpen={isOpenBlockDialog} onClose={() => dispatch(setIsOpenBlockUserDialog(false))} handleBlock={handleBlock} isSubmitting={isLoadingBlockUser}/>
             </div>
         )
     }

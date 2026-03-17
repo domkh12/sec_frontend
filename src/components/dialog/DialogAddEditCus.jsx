@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useRef, useState, useEffect, useMemo } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import PasswordField from "../ui/PasswordField.jsx";
+import NestedDepartmentSelect from "../util/NestedDepartmentSelect.jsx";
 
 function DialogAddEditCus({
                               title,
@@ -203,7 +204,6 @@ function DialogAddEditCus({
         const resolvedOptions = dynamicOptions[field.name] ?? field.options ?? [];
         const isLoading = loadingFields[field.name] ?? false;
         const isRequired = requiredFields[field.name] ?? false;
-
         const commonProps = {
             label: isRequired ? (
                 <span>
@@ -385,6 +385,14 @@ function DialogAddEditCus({
                                 }}
                             />
                         )}
+                    />
+                );
+            case "nestedSelect":
+                return wrap(
+                    <NestedDepartmentSelect
+                        options={field.options}
+                        value={values[field.name]}
+                        onSelect={(value) => {setFieldValue(field.name, value)}}
                     />
                 );
 
@@ -728,7 +736,7 @@ function DialogAddEditCus({
             </Dialog>
 
             {/* Nested "Add New" dialog — rendered outside the parent Dialog to avoid z-index issues */}
-            {renderNestedDialog()}
+            {addNewDialog.open && renderNestedDialog()}
         </>
     );
 }

@@ -9,10 +9,17 @@ const departmentSlice = createSlice({
         departmentDataForUpdate: null,
         isOpenSnackbarDepartment: false,
         isOpenDeleteDeptDialog: false,
-        alertDept: {type: "success", message: ""}
-
+        alertDept: {type: "success", message: ""},
+        filter: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+        }
     },
     reducers: {
+        setFilterDepartment: (state, action) => {
+            state.filter = action.payload;
+        },
         setIsOpenDeleteDeptDialog: (state, action) => {
             state.isOpenDeleteDeptDialog = action.payload;
         },
@@ -38,6 +45,7 @@ const departmentSlice = createSlice({
 });
 
 export const {
+    setFilterDepartment,
     setIsOpenDeleteDeptDialog,
     setAlertDept,
     setIsOpenSnackbarDepartment,

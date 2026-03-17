@@ -12,7 +12,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {
     setAlertDept,
-    setDepartmentDataForUpdate, setIsOpenDeleteDeptDialog,
+    setDepartmentDataForUpdate, setFilterDepartment, setIsOpenDeleteDeptDialog,
     setIsOpenDialogAddOrEditDepartment, setIsOpenSnackbarDepartment,
     setPageNoDepartment,
     setPageSizeDepartment
@@ -35,12 +35,14 @@ function DepartmentList(){
     const isOpenSnackbar = useSelector((state) => state.department.isOpenSnackbarDepartment);
     const alertDept = useSelector((state) => state.department.alertDept);
     const isOpenDeleteDialog = useSelector((state) => state.department.isOpenDeleteDeptDialog);
-    const[createDept] = useCreateDepartmentMutation();
-    const [updateDept] = useUpdateDepartmentMutation();
-    const [deleteDept] = useDeleteDepartmentMutation();
-    const {data: deptData, isLoading, isSuccess} = useGetDepartmentQuery({
+    const[createDept, {isLoading: isLoadingCreateDept}] = useCreateDepartmentMutation();
+    const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateDepartmentMutation();
+    const filterValue = useSelector((state) => state.department.filter);
+    const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteDepartmentMutation();
+    const {data: deptData, isLoading, isSuccess, isFetching} = useGetDepartmentQuery({
         pageNo: pageNo,
-        pageSize: pageSize
+        pageSize: pageSize,
+        search: filterValue.search,
     });
 
     const handleChangePage = (event, newPage) => {
@@ -103,6 +105,20 @@ function DepartmentList(){
         setId(row.id);
     };
 
+    const handleFilterChange = (key, value) => {
+        if (value === "all") {
+            return dispatch(setFilterDepartment({
+                ...filterValue,
+                [key]: "",
+            }));
+        }
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterDepartment(newFilter));
+    }
+
     const handleDelete = async () => {
         console.log(id);
         try {
@@ -115,6 +131,12 @@ function DepartmentList(){
             dispatch(setAlertDept({type: "error", message: error.data.error.description}));
             dispatch(setIsOpenSnackbarDepartment(true));
         }
+    }
+
+    const handleClearAllFilters = () => {
+        dispatch(setFilterDepartment({
+            search: "",
+        }))
     }
 
     const columns = [
@@ -137,13 +159,13 @@ function DepartmentList(){
             align: "left",
         },
         {
-            id: "line",
-            label: t('line'),
+            id: "lines",
+            label: t('lines'),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "worker",
+            id: "workers",
             label: t("worker"),
             minWidth: 130,
             align: "left",
@@ -194,18 +216,28 @@ function DepartmentList(){
                     onEdit={handleEdit}
                     onDelete={handleDeleteOpen}
                     isFilterActive={true}
+                    filterValue={filterValue}
+                    isFetching={isFetching}
+                    handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('table.department')}/${t('table.head')}`}
+                    onClearAllFilters={handleClearAllFilters}
                 />
             </div>
-            <DialogAddEditCus
-                fields={fields}
-                title={departmentDataForUpdate ? "Update Department" : "Create Department"}
-                isOpen={isOpen}
-                onClose={handleClose}
-                isUpdate={!!departmentDataForUpdate}
-                validationSchema={validationSchema}
-                handleSubmit={handleSubmit}
-                initialValues={departmentDataForUpdate ? departmentDataForUpdate : initialValues}/>
+            {
+                isOpen && (
+                    <DialogAddEditCus
+                        fields={fields}
+                        title={departmentDataForUpdate ? "Update Department" : "Create Department"}
+                        isOpen={isOpen}
+                        onClose={handleClose}
+                        isUpdate={!!departmentDataForUpdate}
+                        validationSchema={validationSchema}
+                        handleSubmit={handleSubmit}
+                        initialValues={departmentDataForUpdate ? departmentDataForUpdate : initialValues}
+                        isSubmitting={isLoadingCreateDept || isLoadingUpdateDept}
+                    />
+                )
+            }
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
@@ -221,7 +253,7 @@ function DepartmentList(){
                     {alertDept.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))} handleDelete={handleDelete}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteDept}/>
         </div>
     )
 

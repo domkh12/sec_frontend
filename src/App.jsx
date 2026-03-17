@@ -42,7 +42,7 @@ function App() {
                   <Route element={<Prefetch/>}>
 
                       {/* Start dash manager */}
-                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_HR_MANAGER]}/>}>
+                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_MANAGER]}/>}>
                           <Route path="/manager" element={<LayoutManager/>}>
                               <Route index element={<MenuManager/>}/>
                               <Route path="users" element={<UserList/>}/>
