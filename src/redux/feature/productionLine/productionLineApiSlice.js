@@ -8,8 +8,8 @@ const initialState = productionlineAdapter.getInitialState();
 export const productionlineApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProductionLine: builder.query({
-            query: ({ pageNo = 1, pageSize = 5 }) => ({
-                url: `/production-lines?pageNo=${pageNo}&pageSize=${pageSize}`,
+            query: ({ pageNo = 1, pageSize = 5, search = "" }) => ({
+                url: `/production-lines?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -45,7 +45,11 @@ export const productionlineApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "ProductionLine", id: "LIST" }],
+            invalidatesTags: [
+                { type: "ProductionLine", id: "LIST" },
+                { type: "DeptLookup", id: "LIST" },
+                { type: "Department", id: "LIST" },
+            ],
         }),
 
         updateProductionLine: builder.mutation({
@@ -56,7 +60,11 @@ export const productionlineApiSlice = apiSlice.injectEndpoints({
                     ...initialProductionLineData,
                 },
             }),
-            invalidatesTags: [{type: "ProductionLine", id: "LIST"}],
+            invalidatesTags: [
+                {type: "ProductionLine", id: "LIST"},
+                { type: "DeptLookup", id: "LIST" },
+                { type: "Department", id: "LIST" },
+            ],
         }),
 
         deleteProductionLine: builder.mutation({
@@ -67,7 +75,11 @@ export const productionlineApiSlice = apiSlice.injectEndpoints({
                     id,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "ProductionLine", id: "LIST" }],
+            invalidatesTags: (result, error, arg) => [
+                { type: "ProductionLine", id: "LIST" },
+                { type: "DeptLookup", id: "LIST" },
+                { type: "Department", id: "LIST" },
+            ],
         }),
 
     }),

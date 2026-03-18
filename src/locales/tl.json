@@ -104,12 +104,21 @@
     "description": "Paglalarawan",
     "users": "Mga User",
     "block": "I-block",
-    "unblock": "I-unblock"
+    "unblock": "I-unblock",
+    "head": "Tagapamahala",
+    "position": "Posisyon",
+    "deptAndLine": "Departamento at Linya"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
   },
   "filter": {
     "all": "Lahat"
+  },
+  "stats": {
+    "total_departments": "Kabuuan ng mga Departamento",
+    "total_lines": "Kabuuan ng mga Linya",
+    "total_workers": "Kabuuan ng mga Manggagawa",
+    "active_status": "Katayuan ng Operasyon"
   }
 }

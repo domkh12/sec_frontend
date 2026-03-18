@@ -9,10 +9,17 @@ const productionlineSlice = createSlice({
         productionlineDataForUpdate: null,
         isOpenSnackbarProductionLine: false,
         isOpenDeleteDeptDialog: false,
-        alertDept: {type: "success", message: ""}
-
+        alertDept: {type: "success", message: ""},
+        filter: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+        }
     },
     reducers: {
+        setFilterProductionLine: (state, action) => {
+            state.filter = action.payload;
+        },
         setIsOpenDeleteDeptDialog: (state, action) => {
             state.isOpenDeleteDeptDialog = action.payload;
         },
@@ -38,6 +45,7 @@ const productionlineSlice = createSlice({
 });
 
 export const {
+    setFilterProductionLine,
     setIsOpenDeleteDeptDialog,
     setAlertDept,
     setIsOpenSnackbarProductionLine,

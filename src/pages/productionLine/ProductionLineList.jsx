@@ -10,27 +10,39 @@ import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
 import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useGetProductionLineQuery, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
-import { setAlertDept, setIsOpenDeleteDeptDialog, setIsOpenDialogAddOrEditProductionLine, setIsOpenSnackbarProductionLine, setPageNoProductionLine, setPageSizeProductionLine, setProductionLineDataForUpdate } from "../../redux/feature/productionLine/productionLineSlice.js";
+import {
+    setAlertDept,
+    setFilterProductionLine,
+    setIsOpenDeleteDeptDialog,
+    setIsOpenDialogAddOrEditProductionLine,
+    setIsOpenSnackbarProductionLine,
+    setPageNoProductionLine,
+    setPageSizeProductionLine,
+    setProductionLineDataForUpdate
+} from "../../redux/feature/productionLine/productionLineSlice.js";
 import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
+import useDebounce from "../../hook/useDebounce.jsx";
 
 function ProductionLineList(){
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const pageNo = useSelector((state) => state.productionLine.pageNo);
-    const pageSize = useSelector((state) => state.productionLine.pageSize);
     const productionlineDataForUpdate = useSelector((state) => state.productionLine.productionlineDataForUpdate);
     const isOpen = useSelector((state) => state.productionLine.isOpenDialogAddOrEditProductionLine);
     const isOpenSnackbar = useSelector((state) => state.productionLine.isOpenSnackbarProductionLine);
     const alertDept = useSelector((state) => state.productionLine.alertDept);
     const isOpenDeleteDialog = useSelector((state) => state.productionLine.isOpenDeleteDeptDialog);
-    const[createDept] = useCreateProductionLineMutation();
-    const [updateDept] = useUpdateProductionLineMutation();
-    const [deleteDept] = useDeleteProductionLineMutation();
-    const {data: prodData, isLoading, isSuccess} = useGetProductionLineQuery({
-        pageNo: pageNo,
-        pageSize: pageSize
+    const[createDept, {isLoading: isLoadingCreateDept}] = useCreateProductionLineMutation();
+    const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateProductionLineMutation();
+    const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteProductionLineMutation();
+    const filterValue = useSelector((state) => state.productionLine.filter);
+    const debounceSearch = useDebounce(filterValue.search, 500);
+    const {data: prodData, isLoading, isSuccess, isFetching} = useGetProductionLineQuery({
+        pageNo: filterValue.pageNo,
+        pageSize: filterValue.pageSize,
+        search: debounceSearch,
     });
     const {data: deptData} = useGetDepartmentQuery({
         pageNo: 1,
@@ -99,6 +111,20 @@ function ProductionLineList(){
             },
         },
     ];
+
+    const handleFilterChange = (key, value) => {
+        if (value === "all") {
+            return dispatch(setFilterProductionLine({
+                ...filterValue,
+                [key]: "",
+            }));
+        }
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterProductionLine(newFilter));
+    }
 
     const initialValues ={
         line: "",
@@ -186,7 +212,7 @@ function ProductionLineList(){
 
     let content;
 
-    if (isLoading) content = <Backdrop open={isLoading}/>;
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">
@@ -204,7 +230,18 @@ function ProductionLineList(){
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProductionLine(true))}/>
                 </div>
-                <TableCus columns={columns} data={prodData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
+                <TableCus
+                    columns={columns}
+                    data={prodData}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    onEdit={handleEdit} onDelete={handleDeleteOpen}
+                    isFilterActive={true}
+                    searchPlaceholderText={`${t("table.productionLine")}`}
+                    filterValue={filterValue}
+                    handleFilterChange={handleFilterChange}
+                    isFetching={isFetching}
+                />
             </div>
             <DialogAddEditCus
                 fields={fields}
@@ -214,6 +251,7 @@ function ProductionLineList(){
                 isUpdate={!!productionlineDataForUpdate}
                 validationSchema={validationSchema}
                 handleSubmit={handleSubmit}
+                isSubmitting={isLoadingCreateDept || isLoadingUpdateDept}
                 initialValues={productionlineDataForUpdate ? productionlineDataForUpdate : initialValues}/>
             <Snackbar
                 open={isOpenSnackbar}
@@ -230,7 +268,12 @@ function ProductionLineList(){
                     {alertDept.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))} handleDelete={handleDelete}/>
+            <DialogConfirmDelete
+                isOpen={isOpenDeleteDialog}
+                onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))}
+                handleDelete={handleDelete}
+                isSubmitting={isLoadingDeleteDept}
+            />
         </div>
     )
 

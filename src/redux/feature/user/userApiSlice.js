@@ -55,7 +55,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "User", id: "LIST" },{ type: "UserStats", id: "LIST" },],
+            invalidatesTags: [
+                { type: "User", id: "LIST" },
+                { type: "UserStats", id: "LIST" },
+                { type: "Department", id: "LIST" },
+                { type: "ProductionLine", id: "LIST" }
+            ],
         }),
 
         updateUser: builder.mutation({
@@ -66,7 +71,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     ...initialUserData,
                 },
             }),
-            invalidatesTags: [{type: "User", id: "LIST"},{ type: "UserStats", id: "LIST" },],
+            invalidatesTags: [
+                {type: "User", id: "LIST"},
+                { type: "UserStats", id: "LIST" },
+                { type: "Department", id: "LIST" },
+                { type: "ProductionLine", id: "LIST" }
+            ],
         }),
 
         deleteUser: builder.mutation({
@@ -77,7 +87,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
                     id,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "User", id: "LIST" }, { type: "UserStats", id: "LIST" },],
+            invalidatesTags: (result, error, arg) => [
+                { type: "User", id: "LIST" },
+                { type: "UserStats", id: "LIST" },
+                { type: "Department", id: "LIST" },
+                { type: "ProductionLine", id: "LIST" }
+            ],
         }),
 
         setActive: builder.mutation({

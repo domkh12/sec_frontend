@@ -37,6 +37,16 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
+        getDeptStats: builder.query({
+            query: () => ({
+                url: `/departments/stats`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "DeptStats", id: "LIST" }],
+        }),
+
         getDeptLookup: builder.query({
             query: () => ({
                 url: `/departments/lookup`,
@@ -93,6 +103,7 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetDeptStatsQuery,
     useGetDeptLookupQuery,
     useUpdateDepartmentMutation,
     useDeleteDepartmentMutation,

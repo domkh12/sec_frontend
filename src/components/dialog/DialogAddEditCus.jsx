@@ -218,7 +218,6 @@ function DialogAddEditCus({
             helperText: errors[field.name] && touched[field.name] ? errors[field.name] : null,
             sx: glassInputSx,
         };
-
         // "+ Add new …" link rendered below the field when addNew config exists
         const addNewLink = field.addNew ? (
             <button
@@ -390,6 +389,7 @@ function DialogAddEditCus({
             case "nestedSelect":
                 return wrap(
                     <NestedDepartmentSelect
+                        label={field.label}
                         options={field.options}
                         value={values[field.name]}
                         onSelect={(value) => {setFieldValue(field.name, value)}}

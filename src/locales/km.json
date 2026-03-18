@@ -104,12 +104,21 @@
     "description": "ការពិពណ៌នា",
     "users": "អ្នកប្រើប្រាស់",
     "block": "ទប់ស្កាត់",
-    "unblock": "ដោះស្រាយ"
+    "unblock": "ដោះស្រាយ",
+    "head": "ប្រធាន",
+    "position": "តំណែង",
+    "deptAndLine": "នាយកដ្ឋាន និង ខ្សែផលិតកម្ម"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"
   },
   "filter": {
     "all": "ទាំងអស់"
+  },
+  "stats": {
+    "total_departments": "ដេប៉ាតឺម៉ង់សរុប",
+    "total_lines": "ខ្សែសង្វាក់ផលិតកម្ម",
+    "total_workers": "កម្លាំងពលកម្មសរុប",
+    "active_status": "ស្ថានភាពប្រតិបត្តិការ"
   }
 }

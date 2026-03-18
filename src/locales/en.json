@@ -104,12 +104,22 @@
     "description": "Description",
     "users": "Users",
     "block": "Block",
-    "unblock": "Unblock"
+    "unblock": "Unblock",
+    "head": "Head",
+    "position": "Position",
+    "deptAndLine": "Department & Line"
   },
   "factory": {
     "structure": "Factory Structure"
   },
   "filter": {
     "all": "All"
+  },
+  "stats": {
+    "total_departments": "Total Departments",
+    "total_lines": "Production Lines",
+    "total_workers": "Total Workers",
+    "active_status": "Active Status"
   }
+
 }

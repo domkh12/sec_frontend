@@ -185,7 +185,7 @@ const skeletonRowSx = {
 };
 
 // ── Active Filter Chips ───────────────────────────────────────────────────────
-const ActiveFilterChips = memo(function ActiveFilterChips({ filterConfig, filterValue, handleFilterChange, onClearAllFilters }) {
+const ActiveFilterChips = memo(function ActiveFilterChips({ filterConfig=[], filterValue, handleFilterChange, onClearAllFilters }) {
     const chips = useMemo(() => {
         if (!filterConfig || !filterValue) return [];
         const result = [];

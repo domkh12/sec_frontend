@@ -45,7 +45,6 @@ function LayoutManager(){
     }, [user?.id]);
     return (
         <main className="bg-main py-26 relative px-10">
-            <ParticlesBackground backgroundColor="transparent" dotCount={50}/>
             <NavBarCus/>
             <Outlet/>
         </main>

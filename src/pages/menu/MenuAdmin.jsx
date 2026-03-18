@@ -42,6 +42,10 @@ function MenuAdmin(){
                         <MenuButton title={`${t("product.title")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
                         <MenuButton title={`${t("materials")}`} iconPath={"/images/material.png"} onClick={() => navigate("products")}/>
                     </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("Other")}</Typography>
+                        <MenuButton title={`${t("Buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("products")}/>
+                    </div>
                 </div>
             </div>
 

@@ -216,7 +216,7 @@ function UserList(){
         },
         {
             name: "department",
-            label: "table.department",
+            label: "table.deptAndLine",
             type: "nestedSelect",
             minWidth: 130,
             options: deptLookupData,
@@ -257,7 +257,7 @@ function UserList(){
         },
         {
             id: 'department',
-            label: t("table.department"),
+            label: t("table.deptAndLine"),
             width: 150,
             options: [
                 { value: 'all', label: t('filter.all') },

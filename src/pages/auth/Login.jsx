@@ -143,7 +143,6 @@ function Login() {
                 position: "relative",
             }}
         >
-            <ParticlesBackground backgroundColor="transparent" dotCount={50}/>
             <Paper
                 elevation={3}
                 sx={{

@@ -1,52 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Menu,
     MenuItem,
-    TextField,
     Box,
     Typography,
-    Paper
+    Button,
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-// Static Data for testing
-const DEPARTMENTS = [
-    {
-        id: 1,
-        name: "Sewing",
-        lines: [{ id: 101, name: "Line 01" }, { id: 102, name: "Line 02" }, { id: 103, name: "Line 03" }]
-    },
-    {
-        id: 2,
-        name: "Cutting",
-        lines: [{ id: 201, name: "Table A" }, { id: 202, name: "Table B" }]
-    },
-    {
-        id: 3,
-        name: "QC",
-        lines: [{ id: 301, name: "Inspection Room 1" }, { id: 302, name: "Inspection Room 2" }]
-    },
-    {
-        id: 4,
-        name: "Packing",
-        lines: [] // Test department with no lines
-    }
-];
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useTranslation } from "react-i18next";
 
 const NestedDepartmentSelect = ({
-                                options = [],
-                                value,
-                                onSelect,
-                                label = "Department & Line",
-                                placeHolder = "Select...",
+                                    options = [],
+                                    value,
+                                    onSelect,
+                                    label = "table.deptAndLine", // Use the i18n key we created
+                                    placeholder = "Select...",
                                 }) => {
-    // UI State
     const [anchorEl, setAnchorEl] = useState(null);
     const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
     const [activeDept, setActiveDept] = useState(null);
     const [selectedText, setSelectedText] = useState("");
+    const { t } = useTranslation();
 
-    // Handlers
     const handleOpenMain = (event) => setAnchorEl(event.currentTarget);
 
     const handleCloseAll = () => {
@@ -56,33 +32,28 @@ const NestedDepartmentSelect = ({
     };
 
     const handleDeptHover = (event, dept) => {
-        if (dept.lines.length > 0) {
+        if (dept.lines?.length > 0) {
             setSubMenuAnchorEl(event.currentTarget);
             setActiveDept(dept);
         } else {
             setSubMenuAnchorEl(null);
-            setActiveDept(null);
         }
     };
 
     useEffect(() => {
-        console.log(value);
-        if (!value || !options.length) return;
+        if (!value || !options.length) {
+            setSelectedText("");
+            return;
+        };
 
         const dept = options.find(d => d.id === value.deptId);
         if (!dept) return;
 
         let displayName = dept.name;
-
         if (value.lineId) {
             const line = dept.lines?.find(l => l.id === value.lineId);
-            if (line) {
-                displayName = `${dept.name} > ${line.name}`;
-            }
+            if (line) displayName = `${dept.name} > ${line.name}`;
         }
-
-
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedText(displayName);
     }, [value, options]);
 
@@ -90,80 +61,58 @@ const NestedDepartmentSelect = ({
         const dept = options.find(d => d.id === deptId);
         if (!dept) return;
 
-        let displayName = dept.name;
-        let selectionData = { deptId: dept.id, lineId: null };
-
-        if (lineId) {
-            const line = dept.lines.find(l => l.id === lineId);
-            if (line) {
-                displayName = `${dept.name} > ${line.name}`;
-                selectionData.lineId = line.id;
-            }
-        }
-
-        setSelectedText(displayName);
-
-        // Return values to parent
-        if (onSelect) {
-            onSelect(selectionData);
-        }
-
+        let selectionData = { deptId: dept.id, lineId: lineId };
+        if (onSelect) onSelect(selectionData);
         handleCloseAll();
     };
 
-    // Shared Glass Styles
+    // --- STYLES ---
     const glassMenuSx = {
-        background: "rgba(15,23,42,0.92)",
-        backdropFilter: "blur(20px) saturate(180%)",
-        border: "1px solid rgba(255,255,255,0.12)",
+        background: "rgba(15,23,42,0.95)",
+        backdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,0.1)",
         borderRadius: "12px",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-        mt: 0.5,
         "& .MuiMenuItem-root": {
-            color: "rgba(255,255,255,0.9)",
-            fontSize: "0.875rem",
+            m: 0.5,
             borderRadius: "8px",
-            transition: "all 0.2s ease",
-            "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.08)",
-                color: "#fff"
-            },
-        },
-        "& .MuiList-root": { padding: "4px" },
-    };
-
-    const glassInputSx = {
-        "& .MuiOutlinedInput-root": {
-            borderRadius: "10px",
-            backgroundColor: "rgba(255,255,255,0.06)",
-            backdropFilter: "blur(8px)",
-            color: "rgba(255,255,255,0.92)",
-            "& fieldset": { borderColor: "rgba(255,255,255,0.18)" },
-            "&:hover fieldset": { borderColor: "rgba(255,255,255,0.38)" },
-            "&.Mui-focused fieldset": { borderColor: "rgba(147,197,253,0.6)" },
-        },
-        "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.5)" }
+            color: "#eee",
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" }
+        }
     };
 
     return (
-        <Box>
-            <TextField
-                size="small"
-                fullWidth
-                label="Department & Line"
-                value={selectedText}
-                onClick={handleOpenMain}
-                placeholder="Hover to see lines..."
-                InputProps={{ readOnly: true }}
-                sx={glassInputSx}
-            />
+        <Box sx={{ width: '100%' }}>
 
-            {/* Main Level: Departments */}
+            <Button
+                fullWidth
+                onClick={handleOpenMain}
+                endIcon={<KeyboardArrowDownIcon sx={{ opacity: 0.5 }} />}
+                sx={{
+                    justifyContent: 'space-between',
+                    textTransform: 'none',
+                    backgroundColor: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    borderRadius: "10px",
+                    padding: "8.5px 14px",
+                    color: selectedText ? "#fff" : "rgba(255,255,255,0.4)",
+                    backdropFilter: "blur(8px)",
+                    "&:hover": {
+                        backgroundColor: "rgba(255,255,255,0.1)",
+                        borderColor: "rgba(255,255,255,0.3)"
+                    }
+                }}
+            >
+                <Typography variant="body2" noWrap>
+                    {selectedText || t(label)}
+                </Typography>
+            </Button>
+
+            {/* Departments Menu */}
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleCloseAll}
-                PaperProps={{ sx: glassMenuSx }}
+                PaperProps={{ sx: { ...glassMenuSx, width: anchorEl ? anchorEl.clientWidth : 'auto' } }}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
@@ -171,45 +120,48 @@ const NestedDepartmentSelect = ({
                     <MenuItem
                         key={dept.id}
                         onMouseEnter={(e) => handleDeptHover(e, dept)}
-                        onClick={() => handleSelect(dept.id)}
-                        sx={{
-                            minWidth: '220px',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            background: activeDept?.id === dept.id ? "rgba(255,255,255,0.05)" : "transparent"
-                        }}
+                        onClick={() => handleSelect(dept.id)} // Selects dept alone if no line chosen
+                        sx={{ justifyContent: 'space-between' }}
                     >
-                        <Typography variant="body2">{dept.name}</Typography>
-                        {dept.lines?.length > 0 && (
-                            <ChevronRightIcon sx={{ fontSize: '1.1rem', opacity: 0.5 }} />
-                        )}
+                        {dept.name}
+                        {dept.lines?.length > 0 && <ChevronRightIcon fontSize="small" />}
                     </MenuItem>
                 ))}
             </Menu>
 
-            {/* Sub Level: Lines (Cascading to the right) */}
+            {/* Lines Sub-Menu */}
             <Menu
                 anchorEl={subMenuAnchorEl}
                 open={Boolean(subMenuAnchorEl)}
                 onClose={() => setSubMenuAnchorEl(null)}
-                PaperProps={{ sx: glassMenuSx }}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                // Keep the menu open when moving from Dept to Line list
-                MenuListProps={{ onMouseLeave: () => setSubMenuAnchorEl(null) }}
-                sx={{ pointerEvents: 'none', ml: 1, mt: -1 }} // Allows mouse to pass through gap
+                PaperProps={{
+                    sx: {
+                        ...glassMenuSx,
+                        minWidth: '200px',
+                        ml: 0.5, // Small gap between menus
+                        // THIS FIXES THE TOP ALIGNMENT:
+                        mt: -0.5,
+                    },
+                    onMouseEnter: () => {},
+                    onMouseLeave: () => setSubMenuAnchorEl(null)
+                }}
+                sx={{
+                    pointerEvents: 'none',
+                    // This ensures the sub-menu top is exactly level with the main menu top
+                    "& .MuiPaper-root": {
+                        marginTop: '-48px', // Adjust this value to match your Main Menu's vertical offset
+                    }
+                }}
             >
                 <Box sx={{ pointerEvents: 'auto' }}>
                     {activeDept?.lines.map((line) => (
                         <MenuItem
                             key={line.id}
                             onClick={() => handleSelect(activeDept.id, line.id)}
-                            sx={{
-                                minWidth: '180px',
-                                "&:hover": { backgroundColor: "rgba(147,197,253,0.15) !important" }
-                            }}
                         >
-                            <Typography variant="body2">{line.name}</Typography>
+                            {line.name}
                         </MenuItem>
                     ))}
                 </Box>

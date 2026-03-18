@@ -104,12 +104,21 @@
     "description": "설명",
     "users": "사용자",
     "block": "차단",
-    "unblock": "차단 해제"
+    "unblock": "차단 해제",
+    "head": "부서장",
+    "position": "직위",
+    "deptAndLine": "부서 및 라인"
   },
   "factory": {
     "structure": "공장 구조"
   },
   "filter": {
     "all": "전체"
+  },
+  "stats": {
+    "total_departments": "총 부서 수",
+    "total_lines": "총 생산 라인",
+    "total_workers": "총 인원수",
+    "active_status": "가동 상태"
   }
 }

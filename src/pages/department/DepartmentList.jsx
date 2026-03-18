@@ -7,7 +7,7 @@ import TableCus from "../../components/table/TableCus.jsx";
 import {
     useCreateDepartmentMutation,
     useDeleteDepartmentMutation,
-    useGetDepartmentQuery, useUpdateDepartmentMutation
+    useGetDepartmentQuery, useGetDeptStatsQuery, useUpdateDepartmentMutation
 } from "../../redux/feature/department/departmentApiSlice.js";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -22,6 +22,16 @@ import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
+import WifiRoundedIcon from "@mui/icons-material/WifiRounded";
+import WifiOffRoundedIcon from "@mui/icons-material/WifiOffRounded";
+import BlockRoundedIcon from "@mui/icons-material/BlockRounded";
+import StatCards from "../../components/card/StatCards.jsx";
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import useDebounce from "../../hook/useDebounce.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 function DepartmentList(){
     const {t} = useTranslation();
@@ -38,11 +48,13 @@ function DepartmentList(){
     const[createDept, {isLoading: isLoadingCreateDept}] = useCreateDepartmentMutation();
     const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateDepartmentMutation();
     const filterValue = useSelector((state) => state.department.filter);
+    const debounceSearch = useDebounce(filterValue.search, 500);
     const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteDepartmentMutation();
+    const {data: deptStats} = useGetDeptStatsQuery();
     const {data: deptData, isLoading, isSuccess, isFetching} = useGetDepartmentQuery({
         pageNo: pageNo,
         pageSize: pageSize,
-        search: filterValue.search,
+        search: debounceSearch,
     });
 
     const handleChangePage = (event, newPage) => {
@@ -184,13 +196,9 @@ function DepartmentList(){
         },
     ]
 
-    const filterConfig = {
-
-    }
-
     let content;
 
-    if (isLoading) content = <Backdrop open={isLoading}/>;
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">
@@ -207,6 +215,37 @@ function DepartmentList(){
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditDepartment(true))}/>
+                </div>
+                <div>
+                    <StatCards cards={[
+                        {
+                            label: t("stats.total_departments"),
+                            value: deptStats?.totalDept || 0,
+                            color: "blue",
+                            icon: <ApartmentIcon/>
+                        },
+                        {
+                            label: t("stats.total_lines"),
+                            // Sums all lines from the current data list
+                            value: deptStats?.totalLine || 0,
+                            color: "violet",
+                            icon: <PrecisionManufacturingIcon fontSize="small"/>
+                        },
+                        {
+                            label: t("stats.total_workers"),
+                            // Sums all workers from the current data list
+                            value: deptStats?.totalWorker || 0,
+                            color: "emerald",
+                            icon: <PeopleAltRoundedIcon fontSize="small"/>
+                        },
+                        {
+                            label: t("stats.active_status"),
+                            // Filter based on status if your data has it
+                            value: deptStats?.totalActive || 0,
+                            color: "amber",
+                            icon: <CheckCircleRoundedIcon fontSize="small"/>
+                        },
+                    ]} />
                 </div>
                 <TableCus
                     columns={columns}

@@ -58,7 +58,6 @@ function LayoutAdmin(){
 
     return (
         <main className="bg-main lg:pt-26 relative lg:px-10 px-0 pt-[68.01px]">
-            <ParticlesBackground backgroundColor="transparent" dotCount={50}/>
             <NavBarCus/>
             <Outlet/>
         </main>
