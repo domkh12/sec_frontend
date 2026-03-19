@@ -25,7 +25,7 @@ import {
     setProductionLineDataForUpdate
 } from "../../redux/feature/productionLine/productionLineSlice.js";
 
-function ProductionLineList(){
+function CategoryList(){
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ function ProductionLineList(){
         pageNo: 1,
         pageSize: 999
     });
-    
+
 
     const handleChangePage = (event, newPage) => {
         dispatch(setPageNoProductionLine(newPage + 1));
@@ -75,7 +75,7 @@ function ProductionLineList(){
     const handleSubmit = async (values, {resetForm}) => {
         try {
             if (productionLineDataForUpdate) {
-                 await updateDept({
+                await updateDept({
                     id: productionLineDataForUpdate.id,
                     line: values.line,
                     deptId: values.deptId,
@@ -138,10 +138,10 @@ function ProductionLineList(){
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditProductionLine(true));
         dispatch(setProductionLineDataForUpdate({
-        id: row.id,
-        line: row.line,
-        deptId: row.deptId,
-    }));
+            id: row.id,
+            line: row.line,
+            deptId: row.deptId,
+        }));
     };
 
     const handleDeleteOpen = (row) => {
@@ -300,4 +300,4 @@ function ProductionLineList(){
     return content;
 }
 
-export default ProductionLineList;
+export default CategoryList;

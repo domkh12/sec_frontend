@@ -56,6 +56,8 @@
   },
   "product": {
     "title": "产品",
+    "category": "类别",
+    "productCategory": "产品类别",
     "realStatus": "产品真实状态",
     "line": "生产线"
   },

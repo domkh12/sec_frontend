@@ -30,12 +30,14 @@ import WifiRoundedIcon from '@mui/icons-material/WifiRounded';
 import WifiOffRoundedIcon from '@mui/icons-material/WifiOffRounded';
 import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
 import DialogConfirmBlock from "../../components/dialog/DialogConfirmBlock.jsx";
+import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 
 function UserList(){
     const {t} = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [id, setId] = useState(null);
+    const {isMd} = useBreakpoints();
     const userDataForUpdate = useSelector((state) => state.user.userDataForUpdate);
     const isOpen = useSelector((state) => state.user.isOpenDialogAddOrEditUser);
     const isOpenSnackbar = useSelector((state) => state.user.isOpenSnackbarUser);
@@ -234,7 +236,7 @@ function UserList(){
         {
             id: 'role',
             label: t("table.role"),
-            width: 150,
+            width: isMd ? 150 : "100%",
             options: [
                 { value: 'all', label: t('filter.all') },
                 // You can dynamically generate these from roleData
@@ -247,7 +249,7 @@ function UserList(){
         {
             id: 'status',
             label: t("table.status"),
-            width: 150,
+            width: isMd ? 150 : "100%",
             options: [
                 { value: 'all', label: t('filter.all') },
                 { value: 'Active', label: t('Active') },
@@ -258,7 +260,7 @@ function UserList(){
         {
             id: 'department',
             label: t("table.deptAndLine"),
-            width: 150,
+            width: isMd ? 150 : "100%",
             options: [
                 { value: 'all', label: t('filter.all') },
                 ...(deptData?.ids?.map(id => ({
@@ -318,7 +320,6 @@ function UserList(){
     };
 
     const handleDelete = async () => {
-        console.log(id);
         try {
             await deleteUser({id: id}).unwrap();
             dispatch(setIsOpenDeleteUserDialog(false));

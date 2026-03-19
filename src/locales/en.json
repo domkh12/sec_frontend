@@ -56,6 +56,8 @@
   },
   "product": {
     "title": "Products",
+    "category": "Category",
+    "productCategory": "Product Category",
     "realStatus": "Product Real Status",
     "line": "Production Line"
   },

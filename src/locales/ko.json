@@ -56,6 +56,8 @@
   },
   "product": {
     "title": "제품",
+    "category": "카테고리",
+    "productCategory": "제품 카테고리",
     "realStatus": "제품 실제 상태",
     "line": "생산 라인"
   },

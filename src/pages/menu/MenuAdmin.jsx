@@ -40,7 +40,7 @@ function MenuAdmin(){
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("product.title")}</Typography>
                         <MenuButton title={`${t("product.title")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
-                        <MenuButton title={`${t("materials")}`} iconPath={"/images/material.png"} onClick={() => navigate("products")}/>
+                        <MenuButton title={`${t("product.productCategory")}`} iconPath={"/images/product-categories.png"} onClick={() => navigate("categories")}/>
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("Other")}</Typography>

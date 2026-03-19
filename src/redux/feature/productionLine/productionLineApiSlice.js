@@ -8,8 +8,8 @@ const initialState = productionlineAdapter.getInitialState();
 export const productionlineApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProductionLine: builder.query({
-            query: ({ pageNo = 1, pageSize = 5, search = "" }) => ({
-                url: `/production-lines?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 5, search = "", departmentId = "" }) => ({
+                url: `/production-lines?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&departmentId=${departmentId}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

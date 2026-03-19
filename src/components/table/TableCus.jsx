@@ -434,7 +434,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
         <div className="rounded-xl overflow-hidden" style={wrapperStyle}>
             {isFilterActive && (
                 <>
-                    <div className="px-4 py-5 flex items-center gap-2">
+                    <div className="px-4 py-5 flex items-center flex-col md:flex-row gap-2">
                         {filterConfig?.map((filter) => (
                             <SelectFilter
                                 key={filter.id}
