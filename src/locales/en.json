@@ -70,7 +70,9 @@
     "create": "Create",
     "cancel": "Cancel",
     "update": "Update",
-    "back": "Back"
+    "back": "Back",
+    "addNewCategory": "Add New Category",
+    "addNewSubCategory": "Add New Sub-Category"
   },
   "department": {
     "create": "Create Department",
@@ -109,7 +111,9 @@
     "unblock": "Unblock",
     "head": "Head",
     "position": "Position",
-    "deptAndLine": "Department & Line"
+    "deptAndLine": "Department & Line",
+    "items": "Items",
+    "subCategory": "Sub Category"
   },
   "factory": {
     "structure": "Factory Structure"

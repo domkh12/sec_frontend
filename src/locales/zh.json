@@ -70,7 +70,11 @@
     "create": "创建",
     "cancel": "取消",
     "update": "更新",
-    "back": "返回"
+    "back": "返回",
+    "addNewCategory": "添加新类别",
+    "addNewSubCategory": "添加新子类别",
+    "items": "项目",
+    "subCategory": "子类别"
   },
   "department": {
     "create": "创建部门",

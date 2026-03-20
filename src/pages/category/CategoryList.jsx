@@ -9,8 +9,6 @@ import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
-import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useGetProductionLineQuery, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
-import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
@@ -18,12 +16,27 @@ import {
     setAlertDept,
     setFilterProductionLine,
     setIsOpenDeleteDeptDialog,
-    setIsOpenDialogAddOrEditProductionLine,
     setIsOpenSnackbarProductionLine,
     setPageNoProductionLine,
     setPageSizeProductionLine,
     setProductionLineDataForUpdate
 } from "../../redux/feature/productionLine/productionLineSlice.js";
+import {
+    useCreateCategoryMutation, useDeleteCategoryMutation,
+    useGetCategoryQuery,
+    useUpdateCategoryMutation
+} from "../../redux/feature/category/categoryApiSlice.js";
+import {
+    setAlertCategory, setCategoryDataForUpdate,
+    setCloseDialogAddOrEditCateAndSubCate, setDeleteCategory,
+    setFilterCategory,
+    setIsOpenDeleteCategoryDialog, setIsOpenDialogAddOrEditCategory, setIsOpenDialogAddOrEditSubCategory,
+    setIsOpenSnackbarCategory
+} from "../../redux/feature/category/categorySlice.js";
+import {
+    useCreateSubCategoryMutation,
+    useDeleteSubCategoryMutation
+} from "../../redux/feature/category/subCategoryApiSlice.js";
 
 function CategoryList(){
     const {t} = useTranslation();
@@ -31,92 +44,116 @@ function CategoryList(){
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {isMd} = useBreakpoints();
-    const productionLineDataForUpdate = useSelector((state) => state.productionLine.productionlineDataForUpdate);
-    const isOpen = useSelector((state) => state.productionLine.isOpenDialogAddOrEditProductionLine);
-    const isOpenSnackbar = useSelector((state) => state.productionLine.isOpenSnackbarProductionLine);
-    const alertDept = useSelector((state) => state.productionLine.alertDept);
-    const isOpenDeleteDialog = useSelector((state) => state.productionLine.isOpenDeleteDeptDialog);
-    const[createDept, {isLoading: isLoadingCreateDept}] = useCreateProductionLineMutation();
-    const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateProductionLineMutation();
-    const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteProductionLineMutation();
-    const filterValue = useSelector((state) => state.productionLine.filter);
+    const deleteCategoryData = useSelector((state) => state.category.deleteCategoryData);
+    console.log(deleteCategoryData);
+    const categoryDataForUpdate = useSelector((state) => state.category.categoryDataForUpdate);
+    const isOpen = useSelector((state) => state.category.isOpenDialogAddOrEditCategory);
+    const isOpenSubCategory = useSelector((state) => state.category.isOpenDialogAddOrEditSubCategory);
+    const isOpenSnackbar = useSelector((state) => state.category.isOpenSnackbarCategory);
+    const alertCategory = useSelector((state) => state.category.alertCategory);
+    const isOpenDeleteDialog = useSelector((state) => state.category.isOpenDeleteCategoryDialog);
+    const[createCate, {isLoading: isLoadingCreateCate}] = useCreateCategoryMutation();
+    const [createSubCate, {isLoading: isLoadingCreateSubCate}] = useCreateSubCategoryMutation();
+    const [updateCate, {isLoading: isLoadingUpdateCate}] = useUpdateCategoryMutation();
+    const [deleteCategory, {isLoading: isLoadingDeleteCategory}] = useDeleteCategoryMutation();
+    const [deleteSubCategory, {isLoading: isLoadingDeleteSubCategory}] = useDeleteSubCategoryMutation();
+    const filterValue = useSelector((state) => state.category.filter);
     const debounceSearch = useDebounce(filterValue.search, 500);
-    const {data: prodData, isLoading, isSuccess, isFetching} = useGetProductionLineQuery({
+
+    const {data: cateData, isLoading, isSuccess, isFetching} = useGetCategoryQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
         search: debounceSearch,
-        departmentId: filterValue.department,
     });
-    const {data: deptData} = useGetDepartmentQuery({
+    const {data: cateDataForSelect} = useGetCategoryQuery({
         pageNo: 1,
-        pageSize: 999
+        pageSize: 999,
     });
-
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoProductionLine(newPage + 1));
+        dispatch(setFilterCategory({
+            ...filterValue,
+            pageNo: newPage + 1,
+        }))
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeProductionLine(event.target.value));
-        dispatch(setPageNoProductionLine(1));
+        dispatch(setFilterCategory({
+            ...filterValue,
+            pageNo: 1,
+            pageSize: event.target.value,
+        }));
     };
 
     const handleClose = () => {
-        dispatch(setIsOpenDialogAddOrEditProductionLine(false));
+        dispatch(setCloseDialogAddOrEditCateAndSubCate(false));
         dispatch(setProductionLineDataForUpdate(null));
     }
 
     const validationSchema = Yup.object().shape({
-        line: Yup.string().required(t("validation.required")),
-        deptId: Yup.number().required(t("validation.required")),
+        name: Yup.string().required(t("validation.required")),
     });
+
+    const validationSchemaSubCate = Yup.object().shape({
+        name: Yup.string().required(t("validation.required")),
+        category: Yup.number().required(t("validation.required")),
+    })
 
     const handleSubmit = async (values, {resetForm}) => {
         try {
-            if (productionLineDataForUpdate) {
-                await updateDept({
-                    id: productionLineDataForUpdate.id,
-                    line: values.line,
-                    deptId: values.deptId,
+            if (isOpenSubCategory && !categoryDataForUpdate) {
+                await createSubCate({
+                    name: values.name,
+                    categoryId: values.category
                 }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Update successfully"}));
-                dispatch(setProductionLineDataForUpdate(null));
-            }else {
-                await createDept({
-                    line: values.line,
-                    deptId: values.deptId
-                }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Create successfully"}));
+                dispatch(setAlertCategory({type: "success", message: "Create successfully"}));
+                dispatch(setIsOpenDialogAddOrEditSubCategory(false));
             }
-            dispatch(setIsOpenSnackbarProductionLine(true));
-            dispatch(setIsOpenDialogAddOrEditProductionLine(false));
+            if (categoryDataForUpdate) {
+                await updateCate({
+                    id: categoryDataForUpdate.id,
+                    name: values.name,
+                }).unwrap();
+                dispatch(setAlertCategory({type: "success", message: "Update successfully"}));
+                dispatch(setCategoryDataForUpdate(null));
+            }
+            if (isOpen && !isOpenSubCategory && !categoryDataForUpdate) {
+                await createCate({
+                    name: values.name
+                }).unwrap();
+                dispatch(setAlertCategory({type: "success", message: "Create successfully"}));
+            }
+            dispatch(setIsOpenSnackbarCategory(true));
+            dispatch(setCloseDialogAddOrEditCateAndSubCate(false));
             resetForm();
         } catch (error) {
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
+            console.log(error?.data?.error?.description);
+            dispatch(setAlertCategory({type: "error", message: error?.data?.error?.description}));
+            dispatch(setIsOpenSnackbarCategory(true));
         }
     };
 
     const fields = [
-        { name: "line",     label: "product.line",     type: "text" },
+        { name: "name",     label: "product.productCategory",     type: "text" },
+    ];
+
+    const fieldsSubCategory = [
+        { name: "name",     label: "table.subCategory",     type: "text" },
         {
-            id: "deptId",
-            name: "deptId",
-            label: t("department.title"),
+            name: "category",
+            label: "Parent Category",
             type: "autocomplete",
             minWidth: 130,
             fetchOptions: async () => {
-                return Object.values(deptData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.department,
+                return Object.values(cateDataForSelect?.entities ?? {}).map((cate) => ({
+                    value: cate.id,
+                    label: cate.name,
                 }));
             },
-        },
-    ];
+        }
+    ]
 
     const handleFilterChange = (key, value) => {
-        console.log(key, value);
         if (value === "all") {
             return dispatch(setFilterProductionLine({
                 ...filterValue,
@@ -131,78 +168,78 @@ function CategoryList(){
     }
 
     const initialValues ={
-        line: "",
-        deptId: "",
+        name: ""
+    }
+
+    const initialValuesSubCategory ={
+        name: "",
+        category: null,
     }
 
     const handleEdit = (row) => {
-        dispatch(setIsOpenDialogAddOrEditProductionLine(true));
-        dispatch(setProductionLineDataForUpdate({
+        dispatch(setIsOpenDialogAddOrEditCategory(true));
+        dispatch(setCategoryDataForUpdate({
             id: row.id,
-            line: row.line,
-            deptId: row.deptId,
+            name: row.name,
         }));
     };
 
     const handleDeleteOpen = (row) => {
-        dispatch(setIsOpenDeleteDeptDialog(true));
-        setId(row.id);
+        if (row.subCategories && row.subCategories.length > 0) {
+            dispatch(setAlertCategory({
+                type: "error",
+                message: `Cannot delete "${row.name}" — remove its ${row.subCategories.length} sub-categories first.`
+            }));
+            dispatch(setIsOpenSnackbarCategory(true));
+            return;
+        }
+        dispatch(setDeleteCategory({ id: row.id, type: "category", name: row.name }));
+        dispatch(setIsOpenDeleteCategoryDialog(true));
     };
 
+    const handleDeleteSubOpen = (row) => {
+        dispatch(setDeleteCategory({ id: row.id, type: "subCategory", name: row.name }));
+        dispatch(setIsOpenDeleteCategoryDialog(true));
+    };
+
+
     const handleDelete = async () => {
-        console.log(id);
         try {
-            await deleteDept({id: id}).unwrap();
-            dispatch(setIsOpenDeleteDeptDialog(false));
-            dispatch(setAlertDept({type: "success", message: "Delete successfully"}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
+            if (deleteCategoryData.type === "subCategory") {
+                console.log("This is SubCategory")
+                await deleteSubCategory({ id: deleteCategoryData.id }).unwrap();
+            } else {
+                console.log("This is Category")
+                await deleteCategory({ id: deleteCategoryData.id }).unwrap();
+            }
+
+            dispatch(setIsOpenDeleteCategoryDialog(false));
+            dispatch(setAlertCategory({type: "success", message: "Delete successfully"}));
+            dispatch(setIsOpenSnackbarCategory(true));
         }catch (error) {
-            dispatch(setIsOpenDeleteDeptDialog(false));
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
+            dispatch(setIsOpenDeleteCategoryDialog(false));
+            dispatch(setAlertCategory({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarCategory(true));
         }
     }
+
 
     const columns = [
         {
             id: "id",
-            label: t("id"),
+            label: t("table.id"),
             minWidth: 50,
             align: "left",
         },
         {
-            id: "line",
-            label: t("product.line"),
+            id: "name",
+            label: t("product.productCategory"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "dept",
-            label: t("department.title"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "workers",
-            label: t("table.workers"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "target",
-            label: t("table.target"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "actual",
-            label: t("table.actual"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "efficiency",
-            label: t("table.efficiency"),
+            id: "items",
+            label: t("table.items"),
             minWidth: 130,
             align: "left",
         },
@@ -213,20 +250,12 @@ function CategoryList(){
             align: "left",
         },
     ]
-
-    const filterConfig = [
-        {
-            id: 'department',
-            label: t("table.deptAndLine"),
-            width: isMd ? 150 : "100%",
-            options: [
-                { value: 'all', label: t('filter.all') },
-                ...(deptData?.ids?.map(id => ({
-                    value: deptData.entities[id].id,
-                    label: deptData.entities[id].department
-                })) || [])
-            ]
-        }
+    const collapseColumns = [
+        { id: "id",       label: t("table.id"),       align: "left" },
+        { id: "name",     label: t("table.subCategory"),      align: "left" },
+        { id: "category",     label: t("category"),      align: "left" },
+        { id: "items",  label: t("table.items"),           align: "left" },
+        { id: "action", label: t("table.action"), align: "left"}
     ];
 
     let content;
@@ -247,52 +276,58 @@ function CategoryList(){
                 `}>
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
-                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProductionLine(true))}/>
+                    <div className="flex gap-2">
+                        <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditSubCategory(true))} title={"buttons.addNewSubCategory"}/>
+                        <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditCategory(true))} title={"buttons.addNewCategory"}/>
+                    </div>
                 </div>
                 <TableCus
                     columns={columns}
-                    data={prodData}
+                    data={cateData}
                     handleChangePage={handleChangePage}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    onEdit={handleEdit} onDelete={handleDeleteOpen}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteOpen}
+                    onDeleteSub={handleDeleteSubOpen}
                     isFilterActive={true}
-                    searchPlaceholderText={`${t("table.productionLine")}`}
+                    searchPlaceholderText={`${t("product.productCategory")}`}
                     filterValue={filterValue}
                     handleFilterChange={handleFilterChange}
                     isFetching={isFetching}
-                    filterConfig={filterConfig}
+                    collapseColumns={collapseColumns}
+                    collapseDataKey="subCategories"
                 />
             </div>
             <DialogAddEditCus
-                fields={fields}
-                title={productionLineDataForUpdate ? "Update ProductionLine" : "Create ProductionLine"}
-                isOpen={isOpen}
+                fields={isOpenSubCategory ? fieldsSubCategory : fields}
+                title={categoryDataForUpdate ? "Update ProductionLine" : "Create ProductionLine"}
+                isOpen={isOpenSubCategory || isOpen}
                 onClose={handleClose}
-                isUpdate={!!productionLineDataForUpdate}
-                validationSchema={validationSchema}
+                isUpdate={!!categoryDataForUpdate}
+                validationSchema={isOpenSubCategory ? validationSchemaSubCate : validationSchema}
                 handleSubmit={handleSubmit}
-                isSubmitting={isLoadingCreateDept || isLoadingUpdateDept}
-                initialValues={productionLineDataForUpdate ? productionLineDataForUpdate : initialValues}/>
+                isSubmitting={isLoadingCreateCate || isLoadingUpdateCate || isLoadingCreateSubCate}
+                initialValues={categoryDataForUpdate ? categoryDataForUpdate : isOpenSubCategory ? initialValuesSubCategory : initialValues}/>
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
-                onClose={() => dispatch(setIsOpenSnackbarProductionLine(false))}
+                onClose={() => dispatch(setIsOpenSnackbarCategory(false))}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert
-                    onClose={() => dispatch(setIsOpenSnackbarProductionLine(false))}
-                    severity={alertDept.type}
+                    onClose={() => dispatch(setIsOpenSnackbarCategory(false))}
+                    severity={alertCategory.type}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {alertDept.message}
+                    {alertCategory.message}
                 </Alert>
             </Snackbar>
             <DialogConfirmDelete
                 isOpen={isOpenDeleteDialog}
-                onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))}
+                onClose={() => dispatch(setIsOpenDeleteCategoryDialog(false))}
                 handleDelete={handleDelete}
-                isSubmitting={isLoadingDeleteDept}
+                isSubmitting={isLoadingDeleteCategory || isLoadingDeleteSubCategory}
             />
         </div>
     )

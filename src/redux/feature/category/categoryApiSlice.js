@@ -8,8 +8,8 @@ const initialState = categoryAdapter.getInitialState();
 export const categoryApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getCategory: builder.query({
-            query: ({ pageNo = 1, pageSize = 20 }) => ({
-                url: `/categories?pageNo=${pageNo}&pageSize=${pageSize}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
+                url: `/categories?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

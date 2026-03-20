@@ -7,7 +7,7 @@ const utilSlice = createSlice({
         currentDateTime: "00/00/00",
         currentDate: "00/00/00",
         currentTime: "00:00:00",
-        rowTv: ["l"]
+        rowTv: ["l"],
     },
 
     reducers: {

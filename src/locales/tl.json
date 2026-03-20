@@ -70,7 +70,9 @@
     "create": "Lumikha",
     "cancel": "Kanselahin",
     "update": "I-update",
-    "back": "Bumalik"
+    "back": "Bumalik",
+    "addNewCategory": "Magdagdag ng Bagong Kategorya",
+    "addNewSubCategory": "Magdagdag ng Bagong Sub-Kategorya"
   },
   "department": {
     "create": "Lumikha ng Departamento",
@@ -109,7 +111,9 @@
     "unblock": "I-unblock",
     "head": "Tagapamahala",
     "position": "Posisyon",
-    "deptAndLine": "Departamento at Linya"
+    "deptAndLine": "Departamento at Linya",
+    "items": "Mga Item",
+    "subCategory": "Sub-Kategorya"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

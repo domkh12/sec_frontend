@@ -70,7 +70,9 @@
     "create": "생성",
     "cancel": "취소",
     "update": "수정",
-    "back": "뒤로"
+    "back": "뒤로",
+    "addNewCategory": "새 카테고리 추가",
+    "addNewSubCategory": "새 하위 카테고리 추가"
   },
   "department": {
     "create": "부서 생성",
@@ -109,7 +111,9 @@
     "unblock": "차단 해제",
     "head": "부서장",
     "position": "직위",
-    "deptAndLine": "부서 및 라인"
+    "deptAndLine": "부서 및 라인",
+    "items": "항목",
+    "subCategory": "하위 카테고리"
   },
   "factory": {
     "structure": "공장 구조"

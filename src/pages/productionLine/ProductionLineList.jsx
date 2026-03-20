@@ -54,12 +54,18 @@ function ProductionLineList(){
     
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoProductionLine(newPage + 1));
+        dispatch(setFilterProductionLine({
+            ...filterValue,
+            pageNo: newPage + 1,
+        }));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeProductionLine(event.target.value));
-        dispatch(setPageNoProductionLine(1));
+        dispatch(setFilterProductionLine({
+            ...filterValue,
+            pageNo: 1,
+            pageSize: event.target.value,
+        }));
     };
 
     const handleClose = () => {
@@ -116,7 +122,6 @@ function ProductionLineList(){
     ];
 
     const handleFilterChange = (key, value) => {
-        console.log(key, value);
         if (value === "all") {
             return dispatch(setFilterProductionLine({
                 ...filterValue,
@@ -150,7 +155,6 @@ function ProductionLineList(){
     };
 
     const handleDelete = async () => {
-        console.log(id);
         try {
             await deleteDept({id: id}).unwrap();
             dispatch(setIsOpenDeleteDeptDialog(false));

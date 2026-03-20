@@ -1,8 +1,7 @@
-import {Alert, Backdrop, Snackbar} from "@mui/material";
+import {Alert, Snackbar} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import BackButton from "../../components/ui/BackButton.jsx";
 import {useNavigate} from "react-router-dom";
-import CardList from "../../components/ui/CardList.jsx";
 import TableCus from "../../components/table/TableCus.jsx";
 import {
     useCreateDepartmentMutation,
@@ -23,9 +22,6 @@ import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
-import WifiRoundedIcon from "@mui/icons-material/WifiRounded";
-import WifiOffRoundedIcon from "@mui/icons-material/WifiOffRounded";
-import BlockRoundedIcon from "@mui/icons-material/BlockRounded";
 import StatCards from "../../components/card/StatCards.jsx";
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
