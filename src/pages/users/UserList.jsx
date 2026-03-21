@@ -49,7 +49,7 @@ function UserList(){
     const debounceSearch = useDebounce(searchValue, 500);
     const [blockUser] = useSetBlockUserMutation();
     const [unblockUser] = useSetUnblockUserMutation();
-    const {data: userState} = useGetUserStatsQuery();
+    const {data: userState, isLoading: isLoadingUserState, isSuccess: isSuccessUserState} = useGetUserStatsQuery();
     const[createUser] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
     const [deleteUser] = useDeleteUserMutation();
@@ -396,9 +396,9 @@ function UserList(){
 
     let content;
 
-    if (isLoading) content = (<LoadingComponent/>);
+    if (isLoading || isLoadingUserState) content = (<LoadingComponent/>);
 
-    if (isSuccess){
+    if (isSuccess && isSuccessUserState) {
         content = (
             <div className="pb-10">
                 <div className={`
