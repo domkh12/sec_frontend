@@ -56,6 +56,8 @@
   },
   "product": {
     "title": "产品",
+    "category": "类别",
+    "productCategory": "产品类别",
     "realStatus": "产品真实状态",
     "line": "生产线"
   },
@@ -68,7 +70,11 @@
     "create": "创建",
     "cancel": "取消",
     "update": "更新",
-    "back": "返回"
+    "back": "返回",
+    "addNewCategory": "添加新类别",
+    "addNewSubCategory": "添加新子类别",
+    "items": "项目",
+    "subCategory": "子类别"
   },
   "department": {
     "create": "创建部门",
@@ -104,12 +110,21 @@
     "description": "描述",
     "users": "用户",
     "block": "封锁",
-    "unblock": "解锁"
+    "unblock": "解锁",
+    "head": "部门负责人",
+    "position": "职位",
+    "deptAndLine": "部门与生产线"
   },
   "factory": {
     "structure": "工厂结构"
   },
   "filter": {
     "all": "全部"
+  },
+  "stats": {
+    "total_departments": "部门总数",
+    "total_lines": "生产线总数",
+    "total_workers": "员工总数",
+    "active_status": "运行状态"
   }
 }

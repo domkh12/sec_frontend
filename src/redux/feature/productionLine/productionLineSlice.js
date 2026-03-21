@@ -1,18 +1,26 @@
 import {createSlice} from "@reduxjs/toolkit";
 
-const productionlineSlice = createSlice({
-    name: "productionline",
+const productionLineSlice = createSlice({
+    name: "production:ine",
     initialState: {
         pageNo: 1,
         pageSize: 20,
         isOpenDialogAddOrEditProductionLine: false,
-        productionlineDataForUpdate: null,
+        productionLineDataForUpdate: null,
         isOpenSnackbarProductionLine: false,
         isOpenDeleteDeptDialog: false,
-        alertDept: {type: "success", message: ""}
-
+        alertDept: {type: "success", message: ""},
+        filter: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+            department: "",
+        }
     },
     reducers: {
+        setFilterProductionLine: (state, action) => {
+            state.filter = action.payload;
+        },
         setIsOpenDeleteDeptDialog: (state, action) => {
             state.isOpenDeleteDeptDialog = action.payload;
         },
@@ -38,6 +46,7 @@ const productionlineSlice = createSlice({
 });
 
 export const {
+    setFilterProductionLine,
     setIsOpenDeleteDeptDialog,
     setAlertDept,
     setIsOpenSnackbarProductionLine,
@@ -45,6 +54,6 @@ export const {
     setIsOpenDialogAddOrEditProductionLine,
     setPageNoProductionLine,
     setPageSizeProductionLine,
-} = productionlineSlice.actions;
+} = productionLineSlice.actions;
 
-export default productionlineSlice.reducer;
+export default productionLineSlice.reducer;

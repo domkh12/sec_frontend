@@ -56,6 +56,8 @@
   },
   "product": {
     "title": "Produkto",
+    "category": "Kategorya",
+    "productCategory": "Kategorya ng Produkto",
     "realStatus": "Tunay na Katayuan ng Produkto",
     "line": "Linya ng Produksyon"
   },
@@ -68,7 +70,9 @@
     "create": "Lumikha",
     "cancel": "Kanselahin",
     "update": "I-update",
-    "back": "Bumalik"
+    "back": "Bumalik",
+    "addNewCategory": "Magdagdag ng Bagong Kategorya",
+    "addNewSubCategory": "Magdagdag ng Bagong Sub-Kategorya"
   },
   "department": {
     "create": "Lumikha ng Departamento",
@@ -104,12 +108,23 @@
     "description": "Paglalarawan",
     "users": "Mga User",
     "block": "I-block",
-    "unblock": "I-unblock"
+    "unblock": "I-unblock",
+    "head": "Tagapamahala",
+    "position": "Posisyon",
+    "deptAndLine": "Departamento at Linya",
+    "items": "Mga Item",
+    "subCategory": "Sub-Kategorya"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
   },
   "filter": {
     "all": "Lahat"
+  },
+  "stats": {
+    "total_departments": "Kabuuan ng mga Departamento",
+    "total_lines": "Kabuuan ng mga Linya",
+    "total_workers": "Kabuuan ng mga Manggagawa",
+    "active_status": "Katayuan ng Operasyon"
   }
 }

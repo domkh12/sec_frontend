@@ -52,7 +52,7 @@ function Login() {
             if (authData.isRemember && authData.userRoles !== "") {
                 if (authData.userRoles === "ROLE_ADMIN") {
                     navigate("/admin");
-                } else if (authData.userRoles === "ROLE_HR_MANAGER") {
+                } else if (authData.userRoles === "ROLE_MANAGER") {
                     navigate("/manager");
                 } else if (authData.userRoles === "ROLE_VIEWER") {
                     navigate("/tv");
@@ -91,7 +91,7 @@ function Login() {
 
                 const roles = scope ? scope.split(" ") : [];
                 console.log(roles)
-                if (roles.includes(ROLES.ROLE_HR_MANAGER)) {
+                if (roles.includes(ROLES.ROLE_MANAGER)) {
                     try {
                         navigate("/manager");
                         saveLoginInfo(roles, username);
@@ -143,7 +143,6 @@ function Login() {
                 position: "relative",
             }}
         >
-            <ParticlesBackground backgroundColor="transparent" dotCount={50}/>
             <Paper
                 elevation={3}
                 sx={{

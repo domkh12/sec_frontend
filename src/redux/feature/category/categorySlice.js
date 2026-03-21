@@ -6,13 +6,36 @@ const categorySlice = createSlice({
         pageNo: 1,
         pageSize: 20,
         isOpenDialogAddOrEditCategory: false,
+        isOpenDialogAddOrEditSubCategory: false,
         categoryDataForUpdate: null,
         isOpenSnackbarCategory: false,
         isOpenDeleteCategoryDialog: false,
-        alertCategory: {type: "success", message: ""}
-
+        alertCategory: {type: "success", message: ""},
+        isOpenCollapseCategory: false,
+        filter: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+        },
+        deleteCategoryData: null,
     },
     reducers: {
+        setDeleteCategory: (state, action) => {
+            state.deleteCategoryData = action.payload;
+        },
+        setFilterCategory: (state, action) => {
+            state.filter = action.payload;
+        },
+        setCloseDialogAddOrEditCateAndSubCate: (state) => {
+            state.isOpenDialogAddOrEditCategory = false;
+            state.isOpenDialogAddOrEditSubCategory = false;
+        },
+        setIsOpenDialogAddOrEditSubCategory: (state, action) => {
+            state.isOpenDialogAddOrEditSubCategory = action.payload;
+        },
+        setIsOpenCollapseCategory: (state, action) => {
+            state.isOpenCollapseCategory = action.payload;
+        },
         setIsOpenDeleteCategoryDialog: (state, action) => {
             state.isOpenDeleteCategoryDialog = action.payload;
         },
@@ -38,6 +61,12 @@ const categorySlice = createSlice({
 });
 
 export const {
+    setDeleteCategory,
+    setFilterCategory,
+    setCloseDialogAddOrEdit,
+    setIsOpenDialogAddOrEditSubCategory,
+    setCloseDialogAddOrEditCateAndSubCate,
+    setIsOpenCollapseCategory,
     setIsOpenDeleteCategoryDialog,
     setAlertCategory,
     setIsOpenSnackbarCategory,

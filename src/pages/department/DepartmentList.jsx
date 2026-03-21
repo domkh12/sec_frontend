@@ -1,18 +1,17 @@
-import {Alert, Backdrop, Snackbar} from "@mui/material";
+import {Alert, Snackbar} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import BackButton from "../../components/ui/BackButton.jsx";
 import {useNavigate} from "react-router-dom";
-import CardList from "../../components/ui/CardList.jsx";
 import TableCus from "../../components/table/TableCus.jsx";
 import {
     useCreateDepartmentMutation,
     useDeleteDepartmentMutation,
-    useGetDepartmentQuery, useUpdateDepartmentMutation
+    useGetDepartmentQuery, useGetDeptStatsQuery, useUpdateDepartmentMutation
 } from "../../redux/feature/department/departmentApiSlice.js";
 import {useDispatch, useSelector} from "react-redux";
 import {
     setAlertDept,
-    setDepartmentDataForUpdate, setIsOpenDeleteDeptDialog,
+    setDepartmentDataForUpdate, setFilterDepartment, setIsOpenDeleteDeptDialog,
     setIsOpenDialogAddOrEditDepartment, setIsOpenSnackbarDepartment,
     setPageNoDepartment,
     setPageSizeDepartment
@@ -22,6 +21,13 @@ import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
+import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
+import StatCards from "../../components/card/StatCards.jsx";
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import useDebounce from "../../hook/useDebounce.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 function DepartmentList(){
     const {t} = useTranslation();
@@ -35,12 +41,16 @@ function DepartmentList(){
     const isOpenSnackbar = useSelector((state) => state.department.isOpenSnackbarDepartment);
     const alertDept = useSelector((state) => state.department.alertDept);
     const isOpenDeleteDialog = useSelector((state) => state.department.isOpenDeleteDeptDialog);
-    const[createDept] = useCreateDepartmentMutation();
-    const [updateDept] = useUpdateDepartmentMutation();
-    const [deleteDept] = useDeleteDepartmentMutation();
-    const {data: deptData, isLoading, isSuccess} = useGetDepartmentQuery({
+    const[createDept, {isLoading: isLoadingCreateDept}] = useCreateDepartmentMutation();
+    const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateDepartmentMutation();
+    const filterValue = useSelector((state) => state.department.filter);
+    const debounceSearch = useDebounce(filterValue.search, 500);
+    const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteDepartmentMutation();
+    const {data: deptStats} = useGetDeptStatsQuery();
+    const {data: deptData, isLoading, isSuccess, isFetching} = useGetDepartmentQuery({
         pageNo: pageNo,
-        pageSize: pageSize
+        pageSize: pageSize,
+        search: debounceSearch,
     });
 
     const handleChangePage = (event, newPage) => {
@@ -103,6 +113,20 @@ function DepartmentList(){
         setId(row.id);
     };
 
+    const handleFilterChange = (key, value) => {
+        if (value === "all") {
+            return dispatch(setFilterDepartment({
+                ...filterValue,
+                [key]: "",
+            }));
+        }
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterDepartment(newFilter));
+    }
+
     const handleDelete = async () => {
         console.log(id);
         try {
@@ -115,6 +139,12 @@ function DepartmentList(){
             dispatch(setAlertDept({type: "error", message: error.data.error.description}));
             dispatch(setIsOpenSnackbarDepartment(true));
         }
+    }
+
+    const handleClearAllFilters = () => {
+        dispatch(setFilterDepartment({
+            search: "",
+        }))
     }
 
     const columns = [
@@ -137,13 +167,13 @@ function DepartmentList(){
             align: "left",
         },
         {
-            id: "line",
-            label: t('line'),
+            id: "lines",
+            label: t('lines'),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "worker",
+            id: "workers",
             label: t("worker"),
             minWidth: 130,
             align: "left",
@@ -162,13 +192,9 @@ function DepartmentList(){
         },
     ]
 
-    const filterConfig = {
-
-    }
-
     let content;
 
-    if (isLoading) content = <Backdrop open={isLoading}/>;
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">
@@ -186,6 +212,37 @@ function DepartmentList(){
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditDepartment(true))}/>
                 </div>
+                <div>
+                    <StatCards cards={[
+                        {
+                            label: t("stats.total_departments"),
+                            value: deptStats?.totalDept || 0,
+                            color: "blue",
+                            icon: <ApartmentIcon/>
+                        },
+                        {
+                            label: t("stats.total_lines"),
+                            // Sums all lines from the current data list
+                            value: deptStats?.totalLine || 0,
+                            color: "violet",
+                            icon: <PrecisionManufacturingIcon fontSize="small"/>
+                        },
+                        {
+                            label: t("stats.total_workers"),
+                            // Sums all workers from the current data list
+                            value: deptStats?.totalWorker || 0,
+                            color: "emerald",
+                            icon: <PeopleAltRoundedIcon fontSize="small"/>
+                        },
+                        {
+                            label: t("stats.active_status"),
+                            // Filter based on status if your data has it
+                            value: deptStats?.totalActive || 0,
+                            color: "amber",
+                            icon: <CheckCircleRoundedIcon fontSize="small"/>
+                        },
+                    ]} />
+                </div>
                 <TableCus
                     columns={columns}
                     data={deptData}
@@ -194,18 +251,28 @@ function DepartmentList(){
                     onEdit={handleEdit}
                     onDelete={handleDeleteOpen}
                     isFilterActive={true}
+                    filterValue={filterValue}
+                    isFetching={isFetching}
+                    handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('table.department')}/${t('table.head')}`}
+                    onClearAllFilters={handleClearAllFilters}
                 />
             </div>
-            <DialogAddEditCus
-                fields={fields}
-                title={departmentDataForUpdate ? "Update Department" : "Create Department"}
-                isOpen={isOpen}
-                onClose={handleClose}
-                isUpdate={!!departmentDataForUpdate}
-                validationSchema={validationSchema}
-                handleSubmit={handleSubmit}
-                initialValues={departmentDataForUpdate ? departmentDataForUpdate : initialValues}/>
+            {
+                isOpen && (
+                    <DialogAddEditCus
+                        fields={fields}
+                        title={departmentDataForUpdate ? "Update Department" : "Create Department"}
+                        isOpen={isOpen}
+                        onClose={handleClose}
+                        isUpdate={!!departmentDataForUpdate}
+                        validationSchema={validationSchema}
+                        handleSubmit={handleSubmit}
+                        initialValues={departmentDataForUpdate ? departmentDataForUpdate : initialValues}
+                        isSubmitting={isLoadingCreateDept || isLoadingUpdateDept}
+                    />
+                )
+            }
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
@@ -221,7 +288,7 @@ function DepartmentList(){
                     {alertDept.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))} handleDelete={handleDelete}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteDeptDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteDept}/>
         </div>
     )
 

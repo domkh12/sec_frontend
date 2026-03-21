@@ -17,12 +17,13 @@ import TVLineInput from "./pages/tv/TVLineInput.jsx";
 import MenuManager from "./pages/menu/MenuManager.jsx";
 import MenuAdmin from "./pages/menu/MenuAdmin.jsx";
 import DepartmentList from "./pages/department/DepartmentList.jsx";
-import MenuTvFetched from "./pages/menu/MenuTvFetched.jsx";
 import ProductionLineList from "./pages/productionLine/ProductionLineList.jsx";
 import MenuTesting from "./pages/menu/MenuTesing.jsx";
 import ProductList from "./pages/product/ProductList.jsx";
 import Profile from "./pages/profile/Profile.jsx";
 import RoleList from "./pages/role/RoleList.jsx";
+import MESInterface from "./pages/menu/MenuTesting1.jsx";
+import CategoryList from "./pages/category/CategoryList.jsx";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           {/* Testing routes */}
           <Route path="/admin-menu-testing" element={<MenuTesting/>}/>
+          <Route path="/admin-menu-testing1" element={<MESInterface/>}/>
           {/* Public routes */}
           <Route path="/" element={<Navigate to="/login" replace />}/>
           <Route path="/login" element={<Login/>}/>
@@ -42,7 +44,7 @@ function App() {
                   <Route element={<Prefetch/>}>
 
                       {/* Start dash manager */}
-                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_HR_MANAGER]}/>}>
+                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_MANAGER]}/>}>
                           <Route path="/manager" element={<LayoutManager/>}>
                               <Route index element={<MenuManager/>}/>
                               <Route path="users" element={<UserList/>}/>
@@ -68,6 +70,7 @@ function App() {
                               <Route path="profile" element={<Profile/>}/>
                               <Route path="users" element={<UserList/>}/>
                               <Route path="roles" element={<RoleList/>}/>
+                              <Route path="categories" element={<CategoryList/>}/>
                           </Route>
                       </Route>
 

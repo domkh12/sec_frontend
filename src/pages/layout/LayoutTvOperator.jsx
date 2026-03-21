@@ -56,7 +56,6 @@ function LayoutTvOperator(){
 
     if (isSuccess) content = (
         <main className="bg-main py-16">
-            <ParticlesBackground backgroundColor={"transparent"} dotCount={50}/>
             <NavBarCus title={t("tv.title")} backUrl={"/manager"}/>
             <div className="flex justify-center items-center flex-wrap gap-10 pt-10">
                 {tv.map((tv) => (

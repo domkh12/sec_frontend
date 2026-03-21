@@ -8,8 +8,8 @@ const initialState = departmentAdapter.getInitialState();
 export const departmentApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getDepartment: builder.query({
-            query: ({ pageNo = 1, pageSize = 5 }) => ({
-                url: `/departments?pageNo=${pageNo}&pageSize=${pageSize}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
+                url: `/departments?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -37,6 +37,26 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
+        getDeptStats: builder.query({
+            query: () => ({
+                url: `/departments/stats`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "DeptStats", id: "LIST" }],
+        }),
+
+        getDeptLookup: builder.query({
+            query: () => ({
+                url: `/departments/lookup`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "DeptLookup", id: "LIST" }],
+        }),
+
         createDepartment: builder.mutation({
             query: (initialState) => ({
                 url: "/departments",
@@ -45,7 +65,10 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "Department", id: "LIST" }],
+            invalidatesTags:(result, error, arg) => [
+                { type: "Department", id: "LIST" },
+                { type: "DeptLookup", id: "LIST" },
+            ],
         }),
 
         updateDepartment: builder.mutation({
@@ -56,7 +79,10 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
                     ...initialDepartmentData,
                 },
             }),
-            invalidatesTags: [{type: "Department", id: "LIST"}],
+            invalidatesTags: [
+                {type: "Department", id: "LIST"},
+                { type: "DeptLookup", id: "LIST" },
+            ],
         }),
 
         deleteDepartment: builder.mutation({
@@ -67,13 +93,18 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
                     id,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "Department", id: "LIST" }],
+            invalidatesTags: (result, error, arg) => [
+                { type: "Department", id: "LIST" },
+                { type: "DeptLookup", id: "LIST" },
+            ],
         }),
 
     }),
 });
 
 export const {
+    useGetDeptStatsQuery,
+    useGetDeptLookupQuery,
     useUpdateDepartmentMutation,
     useDeleteDepartmentMutation,
     useCreateDepartmentMutation,
