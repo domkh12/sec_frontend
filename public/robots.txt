@@ -1,0 +1,17 @@
+User-agent: *
+
+# Block all protected/admin routes
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /manager
+Disallow: /manager/*
+Disallow: /tv
+Disallow: /tv/*
+Disallow: /unauthorize
+Disallow: /admin-menu-testing
+
+# Allow only public routes
+Allow: /
+Allow: /login
+
+Sitemap: https://sec-mega.site/sitemap.xml

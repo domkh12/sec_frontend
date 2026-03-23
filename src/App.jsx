@@ -1,7 +1,5 @@
+import {lazy, Suspense} from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
-import LayoutManager from "./pages/layout/LayoutManager.jsx";
-import UserList from "./pages/users/UserList.jsx";
-import TvDashboardDisplay from "./pages/tv/TvDashboardDisplay.jsx";
 import Login from "./pages/auth/Login.jsx";
 import PersistLogin from "./pages/auth/PersistLogin.jsx";
 import Prefetch from "./pages/auth/Prefetch.jsx";
@@ -9,21 +7,25 @@ import RequireAuth from "./pages/auth/RequireAuth.jsx";
 import {ROLES} from "./config/roles.js";
 import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
-import {Suspense} from "react";
-import LayoutAdmin from "./pages/layout/LayoutAdmin.jsx";
-import LayoutTvOperator from "./pages/layout/LayoutTvOperator.jsx";
-import MenuTv from "./pages/menu/MenuTv.jsx";
-import TVLineInput from "./pages/tv/TVLineInput.jsx";
-import MenuManager from "./pages/menu/MenuManager.jsx";
-import MenuAdmin from "./pages/menu/MenuAdmin.jsx";
-import DepartmentList from "./pages/department/DepartmentList.jsx";
-import ProductionLineList from "./pages/productionLine/ProductionLineList.jsx";
-import MenuTesting from "./pages/menu/MenuTesing.jsx";
-import ProductList from "./pages/product/ProductList.jsx";
-import Profile from "./pages/profile/Profile.jsx";
-import RoleList from "./pages/role/RoleList.jsx";
-import CategoryList from "./pages/category/CategoryList.jsx";
-import BuyerList from "./pages/buyer/BuyerList.jsx";
+
+// Lazy load everything else
+const LayoutManager = lazy(() => import("./pages/layout/LayoutManager.jsx"));
+const LayoutAdmin = lazy(() => import("./pages/layout/LayoutAdmin.jsx"));
+const LayoutTvOperator = lazy(() => import("./pages/layout/LayoutTvOperator.jsx"));
+const UserList = lazy(() => import("./pages/users/UserList.jsx"));
+const TvDashboardDisplay = lazy(() => import("./pages/tv/TvDashboardDisplay.jsx"));
+const MenuTv = lazy(() => import("./pages/menu/MenuTv.jsx"));
+const TVLineInput = lazy(() => import("./pages/tv/TVLineInput.jsx"));
+const MenuManager = lazy(() => import("./pages/menu/MenuManager.jsx"));
+const MenuAdmin = lazy(() => import("./pages/menu/MenuAdmin.jsx"));
+const DepartmentList = lazy(() => import("./pages/department/DepartmentList.jsx"));
+const ProductionLineList = lazy(() => import("./pages/productionLine/ProductionLineList.jsx"));
+const ProductList = lazy(() => import("./pages/product/ProductList.jsx"));
+const Profile = lazy(() => import("./pages/profile/Profile.jsx"));
+const RoleList = lazy(() => import("./pages/role/RoleList.jsx"));
+const CategoryList = lazy(() => import("./pages/category/CategoryList.jsx"));
+const BuyerList = lazy(() => import("./pages/buyer/BuyerList.jsx"));
+const MenuTesting = lazy(() => import("./pages/menu/MenuTesing.jsx"));
 
 function App() {
   return (
