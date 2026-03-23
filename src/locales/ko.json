@@ -113,7 +113,8 @@
     "position": "직위",
     "deptAndLine": "부서 및 라인",
     "items": "항목",
-    "subCategory": "하위 카테고리"
+    "subCategory": "하위 카테고리",
+    "buyer": "구매자"
   },
   "factory": {
     "structure": "공장 구조"

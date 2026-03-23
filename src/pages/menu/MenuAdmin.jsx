@@ -44,7 +44,7 @@ function MenuAdmin(){
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("Other")}</Typography>
-                        <MenuButton title={`${t("Buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("products")}/>
+                        <MenuButton title={`${t("Buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("buyers")}/>
                     </div>
                 </div>
             </div>
@@ -61,6 +61,20 @@ function MenuAdmin(){
                     />
                 </div>
             </div>
+
+            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
+                <Typography variant="h6" sx={{color: yellow[600]}}>{t('purchaseOrder')}</Typography>
+                <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
+                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('po.transaction')}</Typography>
+                    <MenuButton
+                        title={`${t('inputData')}`}
+                        iconPath={"/images/smart-tv.png"}
+                        onClick={() => navigate("tv-menu")}
+                    />
+                </div>
+            </div>
+
         </div>
     )
 }

@@ -22,8 +22,8 @@ import MenuTesting from "./pages/menu/MenuTesing.jsx";
 import ProductList from "./pages/product/ProductList.jsx";
 import Profile from "./pages/profile/Profile.jsx";
 import RoleList from "./pages/role/RoleList.jsx";
-import MESInterface from "./pages/menu/MenuTesting1.jsx";
 import CategoryList from "./pages/category/CategoryList.jsx";
+import BuyerList from "./pages/buyer/BuyerList.jsx";
 
 function App() {
   return (
@@ -31,7 +31,6 @@ function App() {
         <Routes>
           {/* Testing routes */}
           <Route path="/admin-menu-testing" element={<MenuTesting/>}/>
-          <Route path="/admin-menu-testing1" element={<MESInterface/>}/>
           {/* Public routes */}
           <Route path="/" element={<Navigate to="/login" replace />}/>
           <Route path="/login" element={<Login/>}/>
@@ -71,6 +70,7 @@ function App() {
                               <Route path="users" element={<UserList/>}/>
                               <Route path="roles" element={<RoleList/>}/>
                               <Route path="categories" element={<CategoryList/>}/>
+                              <Route path="buyers" element={<BuyerList/>}/>
                           </Route>
                       </Route>
 

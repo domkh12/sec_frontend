@@ -113,7 +113,8 @@
     "position": "Position",
     "deptAndLine": "Department & Line",
     "items": "Items",
-    "subCategory": "Sub Category"
+    "subCategory": "Sub Category",
+    "buyer": "Buyer"
   },
   "factory": {
     "structure": "Factory Structure"

@@ -10,6 +10,7 @@ import productReducer from "../feature/product/productSlice.js"
 import userReducer from "../feature/user/userSlice.js"
 import roleReducer from "../feature/role/roleSlice.js"
 import categoryReducer from "../feature/category/categorySlice.js"
+import buyerReducer from "../feature/buyer/buyerSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -22,7 +23,8 @@ const store = configureStore({
     product: productReducer,
     user: userReducer,
     role: roleReducer,
-    category: categoryReducer
+    category: categoryReducer,
+    buyer: buyerReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

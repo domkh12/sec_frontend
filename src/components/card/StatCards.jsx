@@ -68,7 +68,7 @@ function StatCard({ label, value, color = "sky", icon }) {
 
 function StatCards({ cards = [] }) {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 my-3">
             {cards.map((card, i) => (
                 <StatCard key={card.label ?? i} {...card} />
             ))}

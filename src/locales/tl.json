@@ -113,7 +113,8 @@
     "position": "Posisyon",
     "deptAndLine": "Departamento at Linya",
     "items": "Mga Item",
-    "subCategory": "Sub-Kategorya"
+    "subCategory": "Sub-Kategorya",
+    "buyer": "Bumibili"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
