@@ -114,7 +114,8 @@
     "deptAndLine": "Departamento at Linya",
     "items": "Mga Item",
     "subCategory": "Sub-Kategorya",
-    "buyer": "Bumibili"
+    "buyer": "Bumibili",
+    "file": "파일"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
@@ -127,5 +128,10 @@
     "total_lines": "Kabuuan ng mga Linya",
     "total_workers": "Kabuuan ng mga Manggagawa",
     "active_status": "Katayuan ng Operasyon"
-  }
+  },
+  "purchaseOrder": "Purchase Order",
+  "po": {
+    "transaction": "Transaksyon ng PO"
+  },
+  "other": "Iba pa"
 }

@@ -40,4 +40,35 @@ const theme = createTheme({
     },
 });
 
+export const searchTextField = {
+    width: "100%",
+    "& .MuiInputBase-input": {
+        color: "#fff",
+    },
+    "& .MuiInputLabel-root": {
+        color: "rgba(255,255,255,0.62)",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+        color: "#fff",
+    },
+    "& .MuiOutlinedInput-root": {
+        borderRadius: "10px",
+        "& fieldset": {
+            borderColor: "rgba(255,255,255,0.3)",
+        },
+        "&:hover fieldset": {
+            borderColor: "rgba(255,255,255,0.6)",
+        },
+        "&.Mui-focused fieldset": {
+            borderColor: "#fff",
+        },
+    },
+    "& .MuiInputAdornment-root": {
+        color: "rgba(255,255,255,0.62)",
+    },
+    "& .MuiInputAdornment-root .MuiSvgIcon-root": {
+        fontSize: "1.2rem",
+    },
+};
+
 export default theme;

@@ -89,6 +89,19 @@ export const buyerApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        uploadBuyerFile: builder.mutation({
+            query: ({id, ...initialBuyerData}) => ({
+                url: `/buyers/${id}/file-upload`,
+                method: "PUT",
+                body: {
+                    ...initialBuyerData,
+                },
+            }),
+            invalidatesTags: [
+                {type: "Buyer", id: "LIST"},
+            ],
+        }),
+
         deleteBuyer: builder.mutation({
             query: ({ id }) => ({
                 url: `/buyers/${id}`,
@@ -108,6 +121,7 @@ export const buyerApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useUploadBuyerFileMutation,
     useGetBuyerStatsQuery,
     useGetBuyerLookupQuery,
     useUpdateBuyerMutation,

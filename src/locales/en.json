@@ -114,7 +114,8 @@
     "deptAndLine": "Department & Line",
     "items": "Items",
     "subCategory": "Sub Category",
-    "buyer": "Buyer"
+    "buyer": "Buyer",
+    "file": "File"
   },
   "factory": {
     "structure": "Factory Structure"
@@ -127,6 +128,10 @@
     "total_lines": "Production Lines",
     "total_workers": "Total Workers",
     "active_status": "Active Status"
-  }
-
+  },
+  "purchaseOrder": "Purchase Order",
+  "po": {
+    "transaction": "PO Transaction"
+  },
+  "other": "Other"
 }

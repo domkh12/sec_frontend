@@ -18,9 +18,18 @@ export const fileApiSlice = apiSlice.injectEndpoints({
             // invalidatesTags: [{ type: "File", id: "LIST" }],
         }),
 
+        uploadMultipleFile: builder.mutation({
+            query: (formData) => ({
+                url: "/files/multiple",
+                method: "POST",
+                body: formData,
+                formData: true
+            }),
+        })
     }),
 });
 
 export const {
+    useUploadMultipleFileMutation,
     useUploadFileMutation
 } = fileApiSlice;

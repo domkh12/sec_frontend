@@ -11,6 +11,7 @@ import SelectFilter from "../select/SelectFilter.jsx";
 import KeyOffIcon from '@mui/icons-material/KeyOff';
 import KeyIcon from '@mui/icons-material/Key';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 
 // ── Stable style objects (defined OUTSIDE component — never recreated) ──────
 const cellSx = {
@@ -168,6 +169,13 @@ const blockBtnSx = {
     transition: "all 0.15s ease",
 };
 
+const fileBtnSx = {
+    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
+    background: "rgba(16,185,129,0.22)", border: "1px solid rgba(16,185,129,0.55)", color: "#10b981",
+    "&:hover": { background: "rgba(16,185,129,0.4)", boxShadow: "0 0 14px rgba(16,185,129,0.45)", transform: "translateY(-1px)" },
+    transition: "all 0.15s ease",
+};
+
 const unblockBtnSx = {
     minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
     background: "rgba(34,197,94,0.22)", border: "1px solid rgba(34,197,94,0.55)", color: "#86efac",
@@ -261,7 +269,7 @@ const ActiveFilterChips = memo(function ActiveFilterChips({ filterConfig=[], fil
 const TableRowMemo = memo(function TableRowMemo({
                                                     id, idx, entity, columns, collapseColumns,
                                                     onView, onEdit, onDelete, onBlock,
-                                                    tView, tEdit, tDelete, onDeleteSub, tDeleteSub, tBlock, tUnblock, onUnblock, isCollapseRow, collapseDataKey
+                                                    tView, tEdit, tDelete,tFile, handleFile, onDeleteSub, tDeleteSub, tBlock, tUnblock, onUnblock, isCollapseRow, collapseDataKey
                                                 }) {
     const [open, setOpen] = useState(false); // ← local state
 
@@ -279,6 +287,7 @@ const TableRowMemo = memo(function TableRowMemo({
     }, [onDeleteSub]);
     const handleBlock   = useCallback(() => onBlock?.(entity),   [onBlock,   entity]);
     const handleUnblock = useCallback(() => onUnblock?.(entity), [onUnblock, entity]);
+    const handleFileClick = useCallback(() => handleFile?.(entity), [handleFile, entity]);
 
     const isBlocked = entity.status?.toUpperCase() === "BLOCKED";
 
@@ -329,6 +338,14 @@ const TableRowMemo = memo(function TableRowMemo({
                                         </Tooltip>
                                     )
                                 )}
+                                { handleFile && (
+                                    <Tooltip title={tFile}>
+                                        <Button onClick={handleFileClick} sx={fileBtnSx}>
+                                            <FolderRoundedIcon fontSize="small" sx={{ color: "#10b981" }} />
+                                        </Button>
+                                    </Tooltip>
+                                    )
+                                }
                                 {onDelete && (
                                     <Tooltip title={tDelete}>
                                         <Button onClick={handleDelete} sx={deleteBtnSx}>
@@ -527,7 +544,7 @@ const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5 }) {
     );
 });
 // ── Main component ────────────────────────────────────────────────────────────
-function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey }) {
+function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey, handleFile }) {
     const { t } = useTranslation();
     const { ids, entities, totalElements, pageSize, pageNo } = data;
 
@@ -535,8 +552,9 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
     const tEdit   = useMemo(() => t("table.edit"),   [t]);
     const tDelete = useMemo(() => t("table.delete"), [t]);
     const tDeleteSub = useMemo(() => t("table.delete"), [t]);
-    const tBlock = useMemo(() => t('table.block'), [t])
-    const tUnblock = useMemo(() => t('table.unblock'), [t])
+    const tBlock = useMemo(() => t('table.block'), [t]);
+    const tUnblock = useMemo(() => t('table.unblock'), [t]);
+    const tFile = useMemo(() => t('table.file'), [t]);
 
     const skeletonRowCount = useMemo(() => pageSize || 20, [pageSize]);
 
@@ -580,9 +598,11 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                 collapseDataKey={collapseDataKey}
                 onDeleteSub={onDeleteSub}
                 tDeleteSub={tDeleteSub}
+                tFile={tFile}
+                handleFile={handleFile}
             />
         ));
-    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, skeletonRowCount, collapseColumns, collapseDataKey]);
+    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, skeletonRowCount, collapseColumns, collapseDataKey, handleFile, tFile]);
 
     return (
         <div className="rounded-xl overflow-hidden" style={wrapperStyle}>

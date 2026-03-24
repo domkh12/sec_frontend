@@ -28,6 +28,7 @@ import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useGetBuyerQuery} from "../../redux/feature/buyer/buyerApiSlice.js";
+import Seo from "../../components/seo/Seo.jsx";
 
 function BuyerList() {
     const {t} = useTranslation();
@@ -168,22 +169,19 @@ function BuyerList() {
         },
     ]
 
+    const handleFileClick =(key) => {
+        console.log(key);
+        navigate(`/admin/buyers/${key.id}/file-manager`);
+    }
+
     let content;
 
     if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">
-            <div className={`
-                    relative z-10 gap-2
-                    px-5 py-2.5 m-2
-                    rounded-xl overflow-hidden
-                    border border-white/25
-                    bg-white/10
-                    shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
-                    backdrop-blur-md
-                    transition-all duration-200 ease-out
-                `}>
+            <Seo title="Buyer List"/>
+            <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditBuyer(true))}/>
@@ -225,6 +223,7 @@ function BuyerList() {
                     handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('table.buyer')}`}
                     onClearAllFilters={handleClearAllFilters}
+                    handleFile={handleFileClick}
                 />
             </div>
             {

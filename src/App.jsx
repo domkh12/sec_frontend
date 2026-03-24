@@ -7,6 +7,8 @@ import RequireAuth from "./pages/auth/RequireAuth.jsx";
 import {ROLES} from "./config/roles.js";
 import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
+import LoadingComponent from "./components/ui/LoadingComponent.jsx";
+import FileManager from "./pages/file/FileManager.jsx";
 
 // Lazy load everything else
 const LayoutManager = lazy(() => import("./pages/layout/LayoutManager.jsx"));
@@ -29,7 +31,7 @@ const MenuTesting = lazy(() => import("./pages/menu/MenuTesing.jsx"));
 
 function App() {
   return (
-    <Suspense fallback={<p>Loading</p>}>
+    <Suspense fallback={<LoadingComponent/>}>
         <Routes>
           {/* Testing routes */}
           <Route path="/admin-menu-testing" element={<MenuTesting/>}/>
@@ -72,7 +74,10 @@ function App() {
                               <Route path="users" element={<UserList/>}/>
                               <Route path="roles" element={<RoleList/>}/>
                               <Route path="categories" element={<CategoryList/>}/>
-                              <Route path="buyers" element={<BuyerList/>}/>
+                              <Route path="buyers">
+                                  <Route index element={<BuyerList/>}/>
+                                  <Route path=":id/file-manager" element={<FileManager/>}/>
+                              </Route>
                           </Route>
                       </Route>
 

@@ -123,7 +123,6 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
             <DialogActions sx={{ pb: 2, px: 2.5, gap: 1, justifyContent: "center" }}>
                 <Button
                     onClick={onClose}
-                    disabled={isSubmitting}
                     variant="outlined"
                     size="small"
                     sx={{

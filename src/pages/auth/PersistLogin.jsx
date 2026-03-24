@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import usePersist from "../../hook/usePersist";
 import {Paper} from "@mui/material";
 import Unauthorize from "../error/Unauthorize.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 function PersistLogin() {
     const [persist, setPersist] = usePersist();
@@ -38,7 +39,7 @@ function PersistLogin() {
         content = <Paper><Outlet /></Paper>;
     } else if(isLoading){
         // content = <LoadingOneComponent />;
-        content = <p>Loading</p>
+        content = (<LoadingComponent/>)
     } else if (isError) {
         localStorage.removeItem("isRemember");
         // content = <Error401Component />;
