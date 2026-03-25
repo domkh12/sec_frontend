@@ -43,7 +43,7 @@ function StatCard({ label, value, color = "sky", icon }) {
             <div className={`absolute inset-0 bg-gradient-to-br ${c.grad} via-transparent to-transparent pointer-events-none`} />
 
             {/* Label */}
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.1em] text-white/40 mb-1.5">
+            <p className="text-[0.7rem] uppercase tracking-[0.1em] text-white/90 mb-1.5">
                 {label}
             </p>
 

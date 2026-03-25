@@ -127,7 +127,10 @@
     "total_departments": "Total Departments",
     "total_lines": "Production Lines",
     "total_workers": "Total Workers",
-    "active_status": "Active Status"
+    "active_status": "Active Status",
+    "activeOrder": "Active Orders",
+    "totalBuyers": "Total Buyers",
+    "totalPcs": "Total Pcs"
   },
   "purchaseOrder": "Purchase Order",
   "po": {

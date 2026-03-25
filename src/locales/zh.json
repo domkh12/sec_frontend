@@ -127,7 +127,10 @@
     "total_departments": "部门总数",
     "total_lines": "生产线总数",
     "total_workers": "员工总数",
-    "active_status": "运行状态"
+    "active_status": "运行状态",
+    "activeOrder": "活跃订单",
+    "totalBuyers": "买家总数",
+    "totalPcs": "总件数"
   },
   "purchaseOrder": "采购订单",
   "po": {

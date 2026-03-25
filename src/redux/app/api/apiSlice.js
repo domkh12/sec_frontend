@@ -71,7 +71,8 @@ export const apiSlice = createApi({
     "DeptLookup",
     "DeptStats",
     "SubCategory",
-    "Buyer"
+    "Buyer",
+    "BuyerFile"
   ],
   endpoints: (builder) => ({}),
 });

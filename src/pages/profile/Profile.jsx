@@ -14,10 +14,7 @@ import InputFileUpload from "../../components/ui/InputFileUpload.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
 import {useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSlice.js";
 import {setAlertProfile, setIsOpenSnackbarProfile} from "../../redux/feature/auth/authSlice.js";
-import {setAlertDept} from "../../redux/feature/department/departmentSlice.js";
-import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
 import useFileUpload from "../../hook/useFileUpload.jsx";
-import {useEffect} from "react";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({

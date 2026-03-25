@@ -127,7 +127,10 @@
     "total_departments": "Kabuuan ng mga Departamento",
     "total_lines": "Kabuuan ng mga Linya",
     "total_workers": "Kabuuan ng mga Manggagawa",
-    "active_status": "Katayuan ng Operasyon"
+    "active_status": "Katayuan ng Operasyon",
+    "activeOrder": "Aktibong Mga Order",
+    "totalBuyers": "Kabuuang Bumibili",
+    "totalPcs": "Kabuuang Piraso"
   },
   "purchaseOrder": "Purchase Order",
   "po": {

@@ -31,6 +31,7 @@ import WifiOffRoundedIcon from '@mui/icons-material/WifiOffRounded';
 import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
 import DialogConfirmBlock from "../../components/dialog/DialogConfirmBlock.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
+import Seo from "../../components/seo/Seo.jsx";
 
 function UserList(){
     const {t} = useTranslation();
@@ -413,6 +414,7 @@ function UserList(){
     if (isSuccess && isSuccessUserStats){
         content = (
             <div className="pb-10">
+                <Seo title="User List"/>
                 <div className={`
                     relative z-10 gap-2
                     px-5 py-2.5 m-2

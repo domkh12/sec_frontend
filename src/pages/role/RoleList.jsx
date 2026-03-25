@@ -4,14 +4,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {useGetRoleQuery} from "../../redux/feature/role/roleApiSlice.js";
 import {
     setFilterRole,
-    setPageNoRole,
-    setPageSizeRole,
 } from "../../redux/feature/role/roleSlice.js";
-import {Alert, Backdrop, Snackbar} from "@mui/material";
 import BackButton from "../../components/ui/BackButton.jsx";
 import TableCus from "../../components/table/TableCus.jsx";
 import useDebounce from "../../hook/useDebounce.jsx";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
+import Seo from "../../components/seo/Seo.jsx";
 
 function RoleList(){
     const {t} = useTranslation();
@@ -81,6 +79,7 @@ function RoleList(){
     if (isSuccess){
         content = (
             <div className="pb-10">
+                <Seo title="Role List"/>
                 <div className={`
                     relative z-10 gap-2
                     px-5 py-2.5 m-2

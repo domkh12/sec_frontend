@@ -24,8 +24,7 @@ const cellSx = {
 };
 
 const headerCellSx = {
-    fontWeight: 700,
-    fontSize: "0.7rem",
+    fontSize: "0.8rem",
     border: "1px solid rgba(255,255,255,0.15)",
     padding: "12px 14px",
     background: "rgba(255,255,255,0.12)",

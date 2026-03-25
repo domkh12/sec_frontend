@@ -3,7 +3,8 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    useCreateBuyerMutation, useDeleteBuyerMutation, useGetBuyerStatsQuery,
+    useCreateBuyerMutation,
+    useDeleteBuyerMutation, useGetBuyerQuery, useGetBuyerStatsQuery,
     useUpdateBuyerMutation
 } from "../../redux/feature/buyer/buyerApiSlice.js";
 import useDebounce from "../../hook/useDebounce.jsx";
@@ -16,21 +17,19 @@ import {
 } from "../../redux/feature/buyer/buyerSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
+import Seo from "../../components/seo/Seo.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import StatCards from "../../components/card/StatCards.jsx";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
-import {useGetBuyerQuery} from "../../redux/feature/buyer/buyerApiSlice.js";
-import Seo from "../../components/seo/Seo.jsx";
 
-function BuyerList() {
+function SizeList() {
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
@@ -262,5 +261,4 @@ function BuyerList() {
 
     return content;
 }
-
-export default BuyerList;
+export default SizeList;

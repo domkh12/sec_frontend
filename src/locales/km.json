@@ -127,7 +127,10 @@
     "total_departments": "ដេប៉ាតឺម៉ង់សរុប",
     "total_lines": "ខ្សែសង្វាក់ផលិតកម្ម",
     "total_workers": "កម្លាំងពលកម្មសរុប",
-    "active_status": "ស្ថានភាពប្រតិបត្តិការ"
+    "active_status": "ស្ថានភាពប្រតិបត្តិការ",
+    "activeOrder": "ការបញ្ជាទិញសកម្ម",
+    "totalBuyers": "អ្នកទិញសរុប",
+    "totalPcs": "ចំនួនសរុប"
   },
   "purchaseOrder": "ការបញ្ជាទិញ",
   "po": {

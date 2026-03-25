@@ -49,6 +49,18 @@ export const buyerApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getBuyerFiles: builder.query({
+            query: ({id}) => ({
+                url: `/buyers/${id}/files`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [
+                { type: "BuyerFile", id: "LIST" }
+            ],
+        }),
+
         getBuyerLookup: builder.query({
             query: () => ({
                 url: `/buyers/lookup`,
@@ -99,6 +111,7 @@ export const buyerApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: [
                 {type: "Buyer", id: "LIST"},
+                { type: "BuyerFile", id: "LIST" }
             ],
         }),
 
@@ -121,6 +134,7 @@ export const buyerApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetBuyerFilesQuery,
     useUploadBuyerFileMutation,
     useGetBuyerStatsQuery,
     useGetBuyerLookupQuery,

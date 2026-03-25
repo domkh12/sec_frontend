@@ -126,7 +126,10 @@
     "total_departments": "총 부서 수",
     "total_lines": "총 생산 라인",
     "total_workers": "총 인원수",
-    "active_status": "가동 상태"
+    "active_status": "가동 상태",
+    "activeOrder": "활성 주문",
+    "totalBuyers": "총 구매자",
+    "totalPcs": "총 개수"
   },
   "purchaseOrder": "구매 주문",
   "po": {
