@@ -115,7 +115,9 @@
     "items": "Mga Item",
     "subCategory": "Sub-Kategorya",
     "buyer": "Bumibili",
-    "file": "파일"
+    "file": "File",
+    "color": "Kulay",
+    "size": "Laki"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

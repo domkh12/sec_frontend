@@ -11,6 +11,8 @@ import userReducer from "../feature/user/userSlice.js"
 import roleReducer from "../feature/role/roleSlice.js"
 import categoryReducer from "../feature/category/categorySlice.js"
 import buyerReducer from "../feature/buyer/buyerSlice.js"
+import sizeReducer from "../feature/size/sizeSlice.js"
+import colorReducer from "../feature/color/colorSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -24,7 +26,9 @@ const store = configureStore({
     user: userReducer,
     role: roleReducer,
     category: categoryReducer,
-    buyer: buyerReducer
+    buyer: buyerReducer,
+    size: sizeReducer,
+    color: colorReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

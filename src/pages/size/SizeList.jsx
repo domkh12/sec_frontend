@@ -3,27 +3,23 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    useCreateBuyerMutation,
-    useDeleteBuyerMutation, useGetBuyerQuery, useGetBuyerStatsQuery,
-    useUpdateBuyerMutation
-} from "../../redux/feature/buyer/buyerApiSlice.js";
+    useCreateSizeMutation,
+    useDeleteSizeMutation, useGetSizeQuery, useGetSizeStatsQuery,
+    useUpdateSizeMutation
+} from "../../redux/feature/size/sizeApiSlice.js";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {
-    setAlertBuyer,
-    setBuyerDataForUpdate, setFilterBuyer, setIsOpenDeleteBuyerDialog,
-    setIsOpenDialogAddOrEditBuyer, setIsOpenSnackbarBuyer,
-    setPageNoBuyer,
-    setPageSizeBuyer
-} from "../../redux/feature/buyer/buyerSlice.js";
+    setAlertSize,
+    setSizeDataForUpdate, setFilterSize, setIsOpenDeleteSizeDialog,
+    setIsOpenDialogAddOrEditSize, setIsOpenSnackbarSize,
+    setPageNoSize,
+    setPageSizeSize
+} from "../../redux/feature/size/sizeSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 import Seo from "../../components/seo/Seo.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
-import StatCards from "../../components/card/StatCards.jsx";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
@@ -34,88 +30,88 @@ function SizeList() {
     const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const pageNo = useSelector((state) => state.buyer.pageNo);
-    const pageSize = useSelector((state) => state.buyer.pageSize);
-    const buyerDataForUpdate = useSelector((state) => state.buyer.buyerDataForUpdate);
-    const isOpen = useSelector((state) => state.buyer.isOpenDialogAddOrEditBuyer);
-    const isOpenSnackbar = useSelector((state) => state.buyer.isOpenSnackbarBuyer);
-    const alertBuyer = useSelector((state) => state.buyer.alertBuyer);
-    const isOpenDeleteDialog = useSelector((state) => state.buyer.isOpenDeleteBuyerDialog);
-    const[createBuyer, {isLoading: isLoadingCreateBuyer}] = useCreateBuyerMutation();
-    const [updateBuyer, {isLoading: isLoadingUpdateBuyer}] = useUpdateBuyerMutation();
-    const filterValue = useSelector((state) => state.buyer.filter);
+    const pageNo = useSelector((state) => state.size.pageNo);
+    const pageSize = useSelector((state) => state.size.pageSize);
+    const sizeDataForUpdate = useSelector((state) => state.size.sizeDataForUpdate);
+    const isOpen = useSelector((state) => state.size.isOpenDialogAddOrEditSize);
+    const isOpenSnackbar = useSelector((state) => state.size.isOpenSnackbarSize);
+    const alertSize = useSelector((state) => state.size.alertSize);
+    const isOpenDeleteDialog = useSelector((state) => state.size.isOpenDeleteSizeDialog);
+    const[createSize, {isLoading: isLoadingCreateSize}] = useCreateSizeMutation();
+    const [updateSize, {isLoading: isLoadingUpdateSize}] = useUpdateSizeMutation();
+    const filterValue = useSelector((state) => state.size.filter);
     const debounceSearch = useDebounce(filterValue.search, 500);
-    const [deleteBuyer, {isLoading: isLoadingDeleteBuyer}] = useDeleteBuyerMutation();
-    const {data: buyerStats} = useGetBuyerStatsQuery();
-    const {data: buyerData, isLoading, isSuccess, isFetching} = useGetBuyerQuery({
+    const [deleteSize, {isLoading: isLoadingDeleteSize}] = useDeleteSizeMutation();
+    const {data: sizeStats} = useGetSizeStatsQuery();
+    const {data: sizeData, isLoading, isSuccess, isFetching} = useGetSizeQuery({
         pageNo: pageNo,
         pageSize: pageSize,
         search: debounceSearch,
     });
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoBuyer(newPage + 1));
+        dispatch(setPageNoSize(newPage + 1));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeBuyer(event.target.value));
-        dispatch(setPageNoBuyer(1));
+        dispatch(setPageSizeSize(event.target.value));
+        dispatch(setPageNoSize(1));
     };
 
     const handleClose = () => {
-        dispatch(setIsOpenDialogAddOrEditBuyer(false));
-        dispatch(setBuyerDataForUpdate(null));
+        dispatch(setIsOpenDialogAddOrEditSize(false));
+        dispatch(setSizeDataForUpdate(null));
     }
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required(t("validation.required"))
+        size: Yup.string().required(t("validation.required"))
     });
 
     const handleSubmit = async (values, {resetForm}) => {
         try {
-            if (buyerDataForUpdate) {
-                await updateBuyer({
-                    id: buyerDataForUpdate.id,
-                    name: values.name,
+            if (sizeDataForUpdate) {
+                await updateSize({
+                    id: sizeDataForUpdate.id,
+                    size: values.size,
                 }).unwrap();
-                dispatch(setAlertBuyer({type: "success", message: "Update successfully"}));
-                dispatch(setBuyerDataForUpdate(null));
+                dispatch(setAlertSize({type: "success", message: "Update successfully"}));
+                dispatch(setSizeDataForUpdate(null));
             }else {
-                await createBuyer({
-                    name: values.name,
+                await createSize({
+                    size: values.size,
                 }).unwrap();
-                dispatch(setAlertBuyer({type: "success", message: "Create successfully"}));
+                dispatch(setAlertSize({type: "success", message: "Create successfully"}));
             }
-            dispatch(setIsOpenSnackbarBuyer(true));
-            dispatch(setIsOpenDialogAddOrEditBuyer(false));
+            dispatch(setIsOpenSnackbarSize(true));
+            dispatch(setIsOpenDialogAddOrEditSize(false));
             resetForm();
         } catch (error) {
-            dispatch(setAlertBuyer({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarBuyer(true));
+            dispatch(setAlertSize({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarSize(true));
         }
     };
 
     const fields = [
-        { name: "name",     label: "table.buyer",     type: "text" },
+        { name: "size",     label: "table.size",     type: "text" },
     ];
 
     const initialValues ={
-        buyer: ""
+        size: ""
     }
 
     const handleEdit = (row) => {
-        dispatch(setIsOpenDialogAddOrEditBuyer(true));
-        dispatch(setBuyerDataForUpdate(row));
+        dispatch(setIsOpenDialogAddOrEditSize(true));
+        dispatch(setSizeDataForUpdate(row));
     };
 
     const handleDeleteOpen = (row) => {
-        dispatch(setIsOpenDeleteBuyerDialog(true));
+        dispatch(setIsOpenDeleteSizeDialog(true));
         setId(row.id);
     };
 
     const handleFilterChange = (key, value) => {
         if (value === "all") {
-            return dispatch(setFilterBuyer({
+            return dispatch(setFilterSize({
                 ...filterValue,
                 [key]: "",
             }));
@@ -124,25 +120,24 @@ function SizeList() {
             ...filterValue,
             [key]: value,
         }
-        dispatch(setFilterBuyer(newFilter));
+        dispatch(setFilterSize(newFilter));
     }
 
     const handleDelete = async () => {
-        console.log(id);
         try {
-            await deleteBuyer({id: id}).unwrap();
-            dispatch(setIsOpenDeleteBuyerDialog(false));
-            dispatch(setAlertBuyer({type: "success", message: "Delete successfully"}));
-            dispatch(setIsOpenSnackbarBuyer(true));
+            await deleteSize({id: id}).unwrap();
+            dispatch(setIsOpenDeleteSizeDialog(false));
+            dispatch(setAlertSize({type: "success", message: "Delete successfully"}));
+            dispatch(setIsOpenSnackbarSize(true));
         }catch (error) {
-            dispatch(setIsOpenDeleteBuyerDialog(false));
-            dispatch(setAlertBuyer({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarBuyer(true));
+            dispatch(setIsOpenDeleteSizeDialog(false));
+            dispatch(setAlertSize({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarSize(true));
         }
     }
 
     const handleClearAllFilters = () => {
-        dispatch(setFilterBuyer({
+        dispatch(setFilterSize({
             search: "",
         }))
     }
@@ -155,8 +150,8 @@ function SizeList() {
             align: "left",
         },
         {
-            id: "name",
-            label: t("table.buyer"),
+            id: "size",
+            label: t("table.size"),
             minWidth: 130,
             align: "left",
         },
@@ -168,50 +163,21 @@ function SizeList() {
         },
     ]
 
-    const handleFileClick =(key) => {
-        console.log(key);
-        navigate(`/admin/buyers/${key.id}/file-manager`);
-    }
-
     let content;
 
     if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">
-            <Seo title="Buyer List"/>
+            <Seo title="Size List"/>
             <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
-                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditBuyer(true))}/>
-                </div>
-                <div>
-                    <StatCards cards={[
-                        {
-                            label: t("stats.totalBuyers"),
-                            value: buyerStats?.totalBuyer || 0,
-                            color: "blue",
-                            icon: <ApartmentIcon/>
-                        },
-                        {
-                            label: t("stats.activeOrder"),
-                            // Sums all lines from the current data list
-                            value: buyerStats?.activeOrder || 0,
-                            color: "violet",
-                            icon: <PrecisionManufacturingIcon fontSize="small"/>
-                        },
-                        {
-                            label: t("stats.totalPcs"),
-                            // Sums all workers from the current data list
-                            value: buyerStats?.totalPcs || 0,
-                            color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
-                        },
-                    ]} />
+                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditSize(true))}/>
                 </div>
                 <TableCus
                     columns={columns}
-                    data={buyerData}
+                    data={sizeData}
                     handleChangePage={handleChangePage}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                     onEdit={handleEdit}
@@ -220,42 +186,41 @@ function SizeList() {
                     filterValue={filterValue}
                     isFetching={isFetching}
                     handleFilterChange={handleFilterChange}
-                    searchPlaceholderText={`${t('table.buyer')}`}
+                    searchPlaceholderText={`${t('table.size')}`}
                     onClearAllFilters={handleClearAllFilters}
-                    handleFile={handleFileClick}
                 />
             </div>
             {
                 isOpen && (
                     <DialogAddEditCus
                         fields={fields}
-                        title={buyerDataForUpdate ? "Update Buyer" : "Create Buyer"}
+                        title={sizeDataForUpdate ? "Update Size" : "Create Size"}
                         isOpen={isOpen}
                         onClose={handleClose}
-                        isUpdate={!!buyerDataForUpdate}
+                        isUpdate={!!sizeDataForUpdate}
                         validationSchema={validationSchema}
                         handleSubmit={handleSubmit}
-                        initialValues={buyerDataForUpdate ? buyerDataForUpdate : initialValues}
-                        isSubmitting={isLoadingCreateBuyer || isLoadingUpdateBuyer}
+                        initialValues={sizeDataForUpdate ? sizeDataForUpdate : initialValues}
+                        isSubmitting={isLoadingCreateSize || isLoadingUpdateSize}
                     />
                 )
             }
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
-                onClose={() => dispatch(setIsOpenSnackbarBuyer(false))}
+                onClose={() => dispatch(setIsOpenSnackbarSize(false))}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert
-                    onClose={() => dispatch(setIsOpenSnackbarBuyer(false))}
-                    severity={alertBuyer.type}
+                    onClose={() => dispatch(setIsOpenSnackbarSize(false))}
+                    severity={alertSize.type}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {alertBuyer.message}
+                    {alertSize.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteBuyerDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteBuyer}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteSizeDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteSize}/>
         </div>
     )
 

@@ -10,6 +10,7 @@ import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import FileManager from "./pages/file/FileManager.jsx";
 import SizeList from "./pages/size/SizeList.jsx";
+import ColorList from "./pages/color/ColorList.jsx";
 
 // Lazy load everything else
 const LayoutManager = lazy(() => import("./pages/layout/LayoutManager.jsx"));
@@ -76,6 +77,7 @@ function App() {
                               <Route path="roles" element={<RoleList/>}/>
                               <Route path="categories" element={<CategoryList/>}/>
                               <Route path="sizes" element={<SizeList/>} />
+                              <Route path="colors" element={<ColorList/>} />
                               <Route path="buyers">
                                   <Route index element={<BuyerList/>}/>
                                   <Route path=":id/file-manager" element={<FileManager/>}/>

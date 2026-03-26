@@ -11,8 +11,6 @@ import {
     setAlertBuyer,
     setBuyerDataForUpdate, setFilterBuyer, setIsOpenDeleteBuyerDialog,
     setIsOpenDialogAddOrEditBuyer, setIsOpenSnackbarBuyer,
-    setPageNoBuyer,
-    setPageSizeBuyer
 } from "../../redux/feature/buyer/buyerSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
@@ -22,7 +20,6 @@ import StatCards from "../../components/card/StatCards.jsx";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
@@ -49,18 +46,24 @@ function BuyerList() {
     const [deleteBuyer, {isLoading: isLoadingDeleteBuyer}] = useDeleteBuyerMutation();
     const {data: buyerStats} = useGetBuyerStatsQuery();
     const {data: buyerData, isLoading, isSuccess, isFetching} = useGetBuyerQuery({
-        pageNo: pageNo,
-        pageSize: pageSize,
+        pageNo: filterValue.pageNo,
+        pageSize: filterValue.pageSize,
         search: debounceSearch,
     });
 
     const handleChangePage = (event, newPage) => {
-        dispatch(setPageNoBuyer(newPage + 1));
+        dispatch(setFilterBuyer({
+            ...filterValue,
+            pageNo: newPage + 1,
+        }));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setPageSizeBuyer(event.target.value));
-        dispatch(setPageNoBuyer(1));
+        dispatch(setFilterBuyer({
+            ...filterValue,
+            pageSize: event.target.value,
+            pageNo: 1,
+        }))
     };
 
     const handleClose = () => {

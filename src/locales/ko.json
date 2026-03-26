@@ -114,7 +114,10 @@
     "deptAndLine": "부서 및 라인",
     "items": "항목",
     "subCategory": "하위 카테고리",
-    "buyer": "구매자"
+    "buyer": "구매자",
+    "file": "파일",
+    "color": "색상",
+    "size": "사이즈"
   },
   "factory": {
     "structure": "공장 구조"

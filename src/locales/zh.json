@@ -115,7 +115,9 @@
     "position": "职位",
     "deptAndLine": "部门与生产线",
     "buyer": "买家",
-    "file": "文件"
+    "file": "文件",
+    "color": "颜色",
+    "size": "尺寸"
   },
   "factory": {
     "structure": "工厂结构"

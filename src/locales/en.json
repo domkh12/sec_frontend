@@ -115,7 +115,9 @@
     "items": "Items",
     "subCategory": "Sub Category",
     "buyer": "Buyer",
-    "file": "File"
+    "file": "File",
+    "color": "Color",
+    "size": "Size"
   },
   "factory": {
     "structure": "Factory Structure"
