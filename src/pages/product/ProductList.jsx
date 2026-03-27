@@ -23,6 +23,9 @@ import {
 } from "../../redux/feature/product/productSlice.js";
 import {SIZES} from "../../config/size.js";
 import {useCreateCategoryMutation, useGetCategoryQuery} from "../../redux/feature/category/categoryApiSlice.js";
+import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
+import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
+import {useGetSubCategoryQuery} from "../../redux/feature/category/subCategoryApiSlice.js";
 
 function ProductList() {
     const {t} = useTranslation();
@@ -46,6 +49,15 @@ function ProductList() {
         pageNo: pageNo,
         pageSize: pageSize
     });
+    const {data: colorData} = useGetColorQuery({
+        pageNo: 1,
+        pageSize: 999
+    });
+    const {data: sizeData} = useGetSizeQuery({
+        pageNo: 1,
+        pageSize: 999
+    });
+
     const {data: cateData, isLoading: isLoadingGetCate, isSuccess: isSuccessGetCate} = useGetCategoryQuery({
         pageNo: 1,
         pageSize: 999
@@ -114,7 +126,6 @@ function ProductList() {
         }
     };
     const fields = [
-        { name: "code",     label: "code",     type: "text" },
         { name: "styleName",     label: "styleName",     type: "text" },
         {
             name: "category",
@@ -144,17 +155,49 @@ function ProductList() {
 
             },
         },
-        { name: "color",     label: "color",     type: "text" },
+        { name: "color",
+          label: "color",
+          type: "autocomplete",
+          minWidth: 130,
+          fetchOptions: async () => {
+            return Object.values(colorData?.entities ?? {}).map((color) => ({
+                value: color.id,
+                label: color.color,
+            }));
+          },
+          addNew: {
+              label: "Add new color",
+              title: "New Color",
+              fields: [
+                  { name: "color",  label: "color",  type: "text" },
+              ],
+              initialValues: {color: ""},
+              onSubmit: async (values, helpers) => {
+                console.log(values);
+              }
+          }
+        },
         {
             name: "size",
             label: "size",
             type: "autocomplete",
             minWidth: 130,
             fetchOptions: async () => {
-                return Object.values(SIZES.map((size) => ({
-                    value: size?.id,
-                    label: size?.label,
-                })))
+                return Object.values(sizeData?.entities ?? {}).map((size) => ({
+                    value: size.id,
+                    label: size.size,
+                }));
+            },
+            addNew: {
+                label: "Add new Size",
+                title: "New Size",
+                fields: [
+                    { name: "size",  label: "size",  type: "text" },
+                ],
+                initialValues: {size: ""},
+                onSubmit: async (values, helpers) => {
+                    console.log(values);
+                }
             }
         },
     ];
@@ -202,32 +245,20 @@ function ProductList() {
 
     const columns = [
         {
-            id: "code",
-            label: t("code"),
-            minWidth: 50,
-            align: "left",
-        },
-        {
-            id: "styleName",
-            label: t("styleName"),
+            id: "styleNo",
+            label: t("styleNo"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "category",
-            label: t("category"),
+            id: "size",
+            label: t("size"),
             minWidth: 130,
             align: "left",
         },
         {
-            id: "buyer",
-            label: t("buyer"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "smv",
-            label: t("smv"),
+            id: "subCategory",
+            label: t("subCategory"),
             minWidth: 130,
             align: "left",
         },
@@ -257,16 +288,7 @@ function ProductList() {
 
     if (isSuccess) content = (
         <div className="pb-10">
-            <div className={`
-                    relative z-10 gap-2
-                    px-5 py-2.5 m-2
-                    rounded-xl overflow-hidden
-                    border border-white/25
-                    bg-white/10
-                    shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
-                    backdrop-blur-md
-                    transition-all duration-200 ease-out
-                `}>
+            <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProduct(true))}/>
