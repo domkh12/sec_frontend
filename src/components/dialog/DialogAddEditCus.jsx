@@ -9,6 +9,7 @@ import { useRef, useState, useEffect, useMemo } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import PasswordField from "../ui/PasswordField.jsx";
 import NestedDepartmentSelect from "../util/NestedDepartmentSelect.jsx";
+import {CheckBox, CheckBoxOutlineBlank} from "@mui/icons-material";
 
 function DialogAddEditCus({
                               title,
@@ -385,6 +386,69 @@ function DialogAddEditCus({
                                 }}
                             />
                         )}
+                    />
+                );
+            case "autocomplete-checkbox":
+                return wrap(
+                    <Autocomplete
+                        multiple
+                        options={resolvedOptions}
+                        disableCloseOnSelect
+                        loading={isLoading}
+                        getOptionKey={(opt) => opt.value}
+                        getOptionLabel={(opt) => opt.label ?? ""}
+                        value={resolvedOptions.filter((o) => (values[field.name] || []).includes(o.value))}
+                        onChange={(_, selected) =>
+                            setFieldValue(
+                                field.name,
+                                selected.map((item) => item.value
+                            ))
+                        }
+                        componentsProps={{
+                            paper: {
+                                sx: {
+                                    background: "rgba(15,23,42,0.92)",
+                                    backdropFilter: "blur(20px)",
+                                    border: "1px solid rgba(255,255,255,0.12)",
+                                    borderRadius: "10px",
+                                    boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                                    "& .MuiAutocomplete-option": {
+                                        color: "#fff !important",
+                                        fontSize: "0.875rem",
+                                        '&[aria-selected="true"]': { backgroundColor: "rgba(147,197,253,0.18) !important" },
+                                        "&:hover": { backgroundColor: "rgba(255,255,255,0.08) !important" },
+                                    },
+                                    "& .MuiAutocomplete-noOptions": {
+                                        color: "rgba(255,255,255,0.45)",
+                                        fontSize: "0.875rem",
+                                    },
+
+                                },
+                            },
+                        }}
+                        renderOption={(props, option, { selected }) => {
+                            const { key, ...optionProps } = props;
+                            const SelectionIcon = selected ? CheckBox : CheckBoxOutlineBlank;
+                            return (
+                                <li key={key} {...optionProps}>
+                                    <SelectionIcon
+                                        fontSize="small"
+                                        className="mr-2 my-1"
+                                    />
+                                    {option.label}
+                                </li>
+                            );
+                        }}
+
+                        renderInput={(params) => {
+                            return (
+                                <TextField
+                                    {...params}
+                                    {...commonProps}
+                                    onBlur={handleBlur}
+                                />
+                            )
+                        }}
                     />
                 );
             case "nestedSelect":

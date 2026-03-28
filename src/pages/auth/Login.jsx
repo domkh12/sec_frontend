@@ -143,19 +143,8 @@ function Login() {
                 position: "relative",
             }}
         >
-            <Paper
-                elevation={3}
-                sx={{
-                    p: 3,
-                    m: 2,
-                    width: "100%",
-                    maxWidth: 400,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    borderRadius: 3,
-                    zIndex: 1
-                }}
+            <div
+                className="card-glass flex flex-col items-center py-12 absolute"
             >
                 {/* Logo */}
                 <img src="/images/sec_logo.png" alt="sec_logo" className="mb-8 w-28 h-full"/>
@@ -247,7 +236,7 @@ function Login() {
                         </Form>
                     )}
                 </Formik>
-            </Paper>
+            </div>
         </Box>
     );
 }

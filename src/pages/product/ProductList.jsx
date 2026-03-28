@@ -22,7 +22,11 @@ import {
     setIsOpenSnackbarProduct, setProductDataForUpdate
 } from "../../redux/feature/product/productSlice.js";
 import {SIZES} from "../../config/size.js";
-import {useCreateCategoryMutation, useGetCategoryQuery} from "../../redux/feature/category/categoryApiSlice.js";
+import {
+    useCreateCategoryMutation,
+    useGetCategoryLookupQuery,
+    useGetCategoryQuery
+} from "../../redux/feature/category/categoryApiSlice.js";
 import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
 import {useGetSubCategoryQuery} from "../../redux/feature/category/subCategoryApiSlice.js";
@@ -45,6 +49,8 @@ function ProductList() {
     const [createCategory] = useCreateCategoryMutation();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const {data: categoryLookup} = useGetCategoryLookupQuery();
+    console.log(categoryLookup);
     const {data: prodData, isLoading, isSuccess} = useGetProductQuery({
         pageNo: pageNo,
         pageSize: pageSize
@@ -78,11 +84,11 @@ function ProductList() {
     }
 
     const validationSchema = Yup.object().shape({
-        code:      Yup.string().required(t("validation.required")),
-        styleName: Yup.string().required(t("validation.required")),
-        category:  Yup.string().required(t("validation.required")),
-        color:     Yup.string().required(t("validation.required")),
-        size:      Yup.string().required(t("validation.required")),
+        // code:      Yup.string().required(t("validation.required")),
+        // styleName: Yup.string().required(t("validation.required")),
+        // category:  Yup.string().required(t("validation.required")),
+        // color:     Yup.string().required(t("validation.required")),
+        // size:      Yup.string().required(t("validation.required")),
     });
 
     const categorySchema = Yup.object().shape({
@@ -98,7 +104,7 @@ function ProductList() {
                      id: productDataForUpdate.id,
                      code:      values.code,
                      styleName: values.styleName,
-                     cateId:  values.category,
+                     subCategoryId:  values.category,
                      color:     values.color,
                      size:      values.size,
                 }).unwrap();
@@ -106,11 +112,10 @@ function ProductList() {
                 dispatch(setProductDataForUpdate(null));
             }else {
                 await createProduct({
-                    code:      values.code,
-                    styleName: values.styleName,
-                    cateId:  values.category,
-                    color:     values.color,
-                    size:      values.size,
+                    styleNo: values.styleNo,
+                    subCategoryId:  values.category,
+                    colorId:     values.color,
+                    sizeId:      values.size,
                 }).unwrap();
                 dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
             }
@@ -126,13 +131,13 @@ function ProductList() {
         }
     };
     const fields = [
-        { name: "styleName",     label: "styleName",     type: "text" },
+        { name: "styleNo",     label: "styleNo",     type: "text" },
         {
-            name: "category",
+            name: "categoryLookup",
             label: "category",
-            type: "autocomplete",
+            type: "nestedSelect",
             fetchOptions: async () => {
-                return Object.values(cateData?.entities ?? {}).map((cate) => ({
+                return Object.values(categoryLookup?.entities ?? {}).map((cate) => ({
                     value: cate.id,
                     label: cate.name,
                 }));
@@ -157,7 +162,7 @@ function ProductList() {
         },
         { name: "color",
           label: "color",
-          type: "autocomplete",
+          type: "autocomplete-checkbox",
           minWidth: 130,
           fetchOptions: async () => {
             return Object.values(colorData?.entities ?? {}).map((color) => ({
@@ -180,7 +185,7 @@ function ProductList() {
         {
             name: "size",
             label: "size",
-            type: "autocomplete",
+            type: "autocomplete-checkbox",
             minWidth: 130,
             fetchOptions: async () => {
                 return Object.values(sizeData?.entities ?? {}).map((size) => ({
@@ -188,7 +193,7 @@ function ProductList() {
                     label: size.size,
                 }));
             },
-            addNew: {
+            addXNew: {
                 label: "Add new Size",
                 title: "New Size",
                 fields: [
@@ -203,11 +208,10 @@ function ProductList() {
     ];
 
     const initialValues = {
-        code:      "",
-        styleName: "",
+        styleNo: "",
         category:  "",
-        color:     "",
-        size:      "",
+        color:     [],
+        size:      [],
     };
 
     const handleEdit = (row) => {

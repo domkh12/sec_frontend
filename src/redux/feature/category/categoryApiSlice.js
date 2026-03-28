@@ -37,6 +37,16 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
+        getCategoryLookup: builder.query({
+            query: () => ({
+                url: `/categories/lookup`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "CategoryLookup", id: "LIST" }],
+        }),
+
         createCategory: builder.mutation({
             query: (initialState) => ({
                 url: "/categories",
@@ -77,6 +87,7 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetCategoryLookupQuery,
     useUpdateCategoryMutation,
     useDeleteCategoryMutation,
     useCreateCategoryMutation,
