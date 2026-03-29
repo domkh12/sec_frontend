@@ -117,7 +117,8 @@
     "buyer": "买家",
     "file": "文件",
     "color": "颜色",
-    "size": "尺寸"
+    "size": "尺寸",
+    "styleNo": "款号"
   },
   "factory": {
     "structure": "工厂结构"

@@ -39,15 +39,15 @@ function UserList(){
     const dispatch = useDispatch();
     const [id, setId] = useState(null);
     const {isMd} = useBreakpoints();
-    const userDataForUpdate = useSelector((state) => state.user.userDataForUpdate);
-    const isOpen = useSelector((state) => state.user.isOpenDialogAddOrEditUser);
-    const isOpenSnackbar = useSelector((state) => state.user.isOpenSnackbarUser);
-    const alertUser = useSelector((state) => state.user.alertUser);
-    const isOpenDeleteDialog = useSelector((state) => state.user.isOpenDeleteUserDialog);
-    const isOpenBlockDialog = useSelector((state) => state.user.isOpenBlockUserDialog);
-    const idBlockUser = useSelector((state) => state.user.idBlockUser);
-    const filterValue = useSelector((state) => state.user.filter);
-    const searchValue = useSelector((state) => state.user.filter.search);
+    const userDataForUpdate    = useSelector((s) => s.user.userDataForUpdate);
+    const isOpen               = useSelector((s) => s.user.isOpenDialogAddOrEditUser);
+    const isOpenSnackbar       = useSelector((s) => s.user.isOpenSnackbarUser);
+    const alertUser            = useSelector((s) => s.user.alertUser);
+    const isOpenDeleteDialog   = useSelector((s) => s.user.isOpenDeleteUserDialog);
+    const isOpenBlockDialog    = useSelector((s) => s.user.isOpenBlockUserDialog);
+    const idBlockUser          = useSelector((s) => s.user.idBlockUser);
+    const filterValue          = useSelector((s) => s.user.filter);
+    const searchValue          = useSelector((s) => s.user.filter.search);
     const debounceSearch = useDebounce(searchValue, 500);
     const [blockUser, {isLoading: isLoadingBlockUser}] = useSetBlockUserMutation();
     const [unblockUser] = useSetUnblockUserMutation();
@@ -164,8 +164,8 @@ function UserList(){
                     username: values.username,
                     password: values.password,
                     roleId: values.role,
-                    lineId: values.department.lineId,
-                    departmentId: values.department.deptId,
+                    lineId: values.department.childId,
+                    departmentId: values.department.parentId,
                     position: values.position,
                 }).unwrap();
                 dispatch(setAlertUser({type: "success", message: "Update successfully"}));
@@ -180,8 +180,8 @@ function UserList(){
                     username: values.username,
                     password: values.password,
                     roleId: values.role,
-                    lineId: values.department.lineId,
-                    departmentId: values.department.deptId,
+                    lineId: values.department.childId,
+                    departmentId: values.department.parentId,
                     position: values.position,
                 }).unwrap();
                 dispatch(setAlertUser({type: "success", message: "Create successfully"}));
@@ -223,12 +223,6 @@ function UserList(){
             type: "nestedSelect",
             minWidth: 130,
             options: deptLookupData,
-            fetchOptions: async () => {
-                return Object.values(deptLookupData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.department,
-                }));
-            },
         }
     ];
 
@@ -308,8 +302,8 @@ function UserList(){
             username: row.username,
             role: row.roleId,
             department: {
-                deptId: row.departmentId,
-                lineId: row.lineId
+                parentId: row.departmentId,
+                childId: row.lineId
             },
             position: row.position
         }));

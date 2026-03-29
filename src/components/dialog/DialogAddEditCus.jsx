@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useRef, useState, useEffect, useMemo } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import PasswordField from "../ui/PasswordField.jsx";
-import NestedDepartmentSelect from "../util/NestedDepartmentSelect.jsx";
+import NestedSelect from "../util/NestedSelect.jsx";
 import {CheckBox, CheckBoxOutlineBlank} from "@mui/icons-material";
 
 function DialogAddEditCus({
@@ -453,7 +453,7 @@ function DialogAddEditCus({
                 );
             case "nestedSelect":
                 return wrap(
-                    <NestedDepartmentSelect
+                    <NestedSelect
                         label={field.label}
                         options={field.options}
                         value={values[field.name]}

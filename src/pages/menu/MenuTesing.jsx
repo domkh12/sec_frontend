@@ -176,9 +176,7 @@ const DATA = {
 };
 
 const STATS = { activeLines:12, todayOutput:4820, efficiency:91, openDefects:7, totalWorkers:476, pendingOrders:3 };
-
 const PERMISSION_TYPES = ["System Access","Module Access","Data Export","Report Access","Override Authority","Special Operation","Admin Privilege","Temporary Elevation"];
-
 const INITIAL_PERMISSIONS = [
   { id:"PR-001", worker:"Malis Heng", dept:"Sewing", position:"Machine Operator", type:"Module Access", module:"Quality", fromDate:"2026-03-06", toDate:"2026-03-20", reason:"Requested to view defect reports for Line A1 improvement project", status:"Approved", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 08:00", note:"Read-only access approved for 2 weeks." },
   { id:"PR-002", worker:"Dara Pich", dept:"Production", position:"Supervisor", type:"Data Export", module:"Production", fromDate:"2026-03-05", toDate:"2026-03-05", reason:"Monthly KPI report export for management meeting", status:"Approved", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 07:30", note:"One-time export approved." },
@@ -294,7 +292,7 @@ const inputCls = "w-full bg-white/5 border border-white/15 rounded-xl px-3 py-2.
 const selectCls = "w-full bg-[#1a1c18] border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white/80 focus:outline-none focus:border-amber-400/50 transition-all appearance-none";
 
 // ═══════════════════════════════════════════════════════════════
-// SCROLLABLE TABLE WRAPPER
+// TABLE
 // ═══════════════════════════════════════════════════════════════
 function Table({ cols, rows, color="blue" }) {
   const a = ACCENT[color];
@@ -309,7 +307,7 @@ function Table({ cols, rows, color="blue" }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// MODAL SHELL
+// MODAL
 // ═══════════════════════════════════════════════════════════════
 function Modal({ title, subtitle, icon, accentColor="amber", onClose, children, maxW="max-w-lg" }) {
   const a = ACCENT[accentColor];
@@ -344,9 +342,6 @@ function SavedState({ message="Changes Saved", accentColor="green" }) {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// CONFIRM DELETE MODAL
-// ═══════════════════════════════════════════════════════════════
 function ConfirmDeleteModal({ title, desc, onClose, onConfirm }) {
   return (
       <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.82)", backdropFilter:"blur(12px)" }}>
@@ -369,7 +364,7 @@ function ConfirmDeleteModal({ title, desc, onClose, onConfirm }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SEARCH + FILTER TOOLBAR
+// SEARCH + FILTER
 // ═══════════════════════════════════════════════════════════════
 function SearchBar({ value, onChange, placeholder="Search…" }) {
   return (
@@ -408,11 +403,13 @@ function FilterPills({ options, value, onChange }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── USERS PAGE ──────────────────────────────────────────────
+// ALL_DEPTS
 // ═══════════════════════════════════════════════════════════════
-// All departments including non-factory ones (IT, Production mgmt, etc.)
 const ALL_DEPTS = ["IT", "Production", ...DATA.departments.map(d => d.name)];
 
+// ═══════════════════════════════════════════════════════════════
+// USERS PAGE
+// ═══════════════════════════════════════════════════════════════
 function EditUserModal({ user, onClose, onSave }) {
   const [form, setForm] = useState({ ...user });
   const [saved, setSaved] = useState(false);
@@ -427,20 +424,13 @@ function EditUserModal({ user, onClose, onSave }) {
                 <FormField label="Email" required><input type="email" className={inputCls} value={form.email} onChange={e=>set("email",e.target.value)}/></FormField>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Role">
-                  <div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
-                <FormField label="Department">
-                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}>{ALL_DEPTS.map(d=><option key={d} value={d}>{d}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
+                <FormField label="Role"><div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                <FormField label="Department"><div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}>{ALL_DEPTS.map(d=><option key={d} value={d}>{d}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               </div>
               <FormField label="Status">
                 <div className="flex gap-2">
                   {["Active","Inactive"].map(s=>(
-                      <button key={s} onClick={()=>set("status",s)}
-                              className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Active"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":"bg-rose-400/20 border-rose-400/40 text-rose-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
-                        {s==="Active"?"✓":"🔒"} {s}
-                      </button>
+                      <button key={s} onClick={()=>set("status",s)} className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Active"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":"bg-rose-400/20 border-rose-400/40 text-rose-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>{s==="Active"?"✓":"🔒"} {s}</button>
                   ))}
                 </div>
               </FormField>
@@ -469,20 +459,13 @@ function AddUserModal({ onClose, onSave }) {
                 <FormField label="Email" required><input type="email" className={inputCls} placeholder="user@sec.com" value={form.email} onChange={e=>set("email",e.target.value)}/></FormField>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Role" required>
-                  <div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}><option value="">Select role…</option>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
-                <FormField label="Department" required>
-                  <div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}><option value="">Select dept…</option>{ALL_DEPTS.map(d=><option key={d} value={d}>{d}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
+                <FormField label="Role" required><div className="relative"><select className={selectCls} value={form.role} onChange={e=>set("role",e.target.value)}><option value="">Select role…</option>{DATA.roles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                <FormField label="Department" required><div className="relative"><select className={selectCls} value={form.dept} onChange={e=>set("dept",e.target.value)}><option value="">Select dept…</option>{ALL_DEPTS.map(d=><option key={d} value={d}>{d}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               </div>
               <FormField label="Status">
                 <div className="flex gap-2">
                   {["Active","Inactive"].map(s=>(
-                      <button key={s} onClick={()=>set("status",s)}
-                              className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Active"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":"bg-rose-400/20 border-rose-400/40 text-rose-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
-                        {s==="Active"?"✓":"🔒"} {s}
-                      </button>
+                      <button key={s} onClick={()=>set("status",s)} className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Active"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":"bg-rose-400/20 border-rose-400/40 text-rose-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>{s==="Active"?"✓":"🔒"} {s}</button>
                   ))}
                 </div>
               </FormField>
@@ -506,52 +489,37 @@ function UsersPage({ onBack }) {
   const [editUser, setEditUser] = useState(null);
   const [deleteUser, setDeleteUser] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
-
-  const allRoles = DATA.roles.map(r => r.name);
-  const allDepts = ALL_DEPTS;
-
+  const allRoles = DATA.roles.map(r=>r.name);
   const filtered = users.filter(u => {
     const q = search.toLowerCase();
     return (!q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.role.toLowerCase().includes(q) || u.dept.toLowerCase().includes(q))
-        && (filterRole==="All" || u.role===filterRole)
-        && (filterDept==="All" || u.dept===filterDept)
-        && (filterStatus==="All" || u.status===filterStatus);
+        && (filterRole==="All" || u.role===filterRole) && (filterDept==="All" || u.dept===filterDept) && (filterStatus==="All" || u.status===filterStatus);
   });
-
   const hasFilters = search || filterRole!=="All" || filterDept!=="All" || filterStatus!=="All";
-
   return (
       <div>
         {editUser && <EditUserModal user={editUser} onClose={()=>setEditUser(null)} onSave={f=>{setUsers(us=>us.map(u=>u.id===f.id?{...u,...f}:u));setEditUser(null);}}/>}
         {deleteUser && <ConfirmDeleteModal title="Delete User?" desc={`${deleteUser.name} — ${deleteUser.role}`} onClose={()=>setDeleteUser(null)} onConfirm={()=>{setUsers(us=>us.filter(u=>u.id!==deleteUser.id));setDeleteUser(null);}}/>}
         {showAdd && <AddUserModal onClose={()=>setShowAdd(false)} onSave={f=>{setUsers(us=>[{...f,id:Math.max(...us.map(u=>u.id))+1,lastLogin:"Never"},...us]);}}/>}
-
         <PageHeader title="User Management" subtitle="Administration • Access Control" icon="👥" onBack={onBack} color="amber"
                     actions={<button onClick={()=>setShowAdd(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(96,165,250,0.25),rgba(96,165,250,0.1))", border:"1px solid rgba(96,165,250,0.4)", color:"#60a5fa" }}>➕ Add User</button>}/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Total Users" value={users.length} icon="👤" color="amber"/>
           <StatCard label="Active" value={users.filter(u=>u.status==="Active").length} icon="✅" color="green"/>
           <StatCard label="Inactive" value={users.filter(u=>u.status==="Inactive").length} icon="🔒" color="rose"/>
           <StatCard label="Roles" value={DATA.roles.length} icon="🛡️" color="blue"/>
         </div>
-
-        {/* Toolbar */}
         <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
           <SearchBar value={search} onChange={setSearch} placeholder="Search by name, email, role, department…"/>
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] text-white/25 uppercase tracking-widest shrink-0">Filter:</span>
             <FilterSelect value={filterRole} onChange={setFilterRole} options={allRoles} allLabel="All Roles"/>
-            <FilterSelect value={filterDept} onChange={setFilterDept} options={allDepts} allLabel="All Depts"/>
+            <FilterSelect value={filterDept} onChange={setFilterDept} options={ALL_DEPTS} allLabel="All Depts"/>
             <FilterPills options={[{label:"All",value:"All"},{label:"Active",value:"Active"},{label:"Inactive",value:"Inactive"}]} value={filterStatus} onChange={setFilterStatus}/>
             {hasFilters && <button onClick={()=>{setSearch("");setFilterRole("All");setFilterDept("All");setFilterStatus("All");}} className="px-2.5 py-1 rounded-lg text-[10px] text-white/30 hover:text-white/60 border border-white/8 hover:border-white/20 transition-all">✕ Clear</button>}
-            <span className="ml-auto text-[10px] text-white/25">
-            <span className="text-white/50 font-medium">{filtered.length}</span> of {users.length} users{hasFilters&&<span className="text-amber-400/50 ml-1">(filtered)</span>}
-          </span>
+            <span className="ml-auto text-[10px] text-white/25"><span className="text-white/50 font-medium">{filtered.length}</span> of {users.length} users{hasFilters&&<span className="text-amber-400/50 ml-1">(filtered)</span>}</span>
           </div>
         </div>
-
-        {/* User rows */}
         <div className="space-y-2">
           {filtered.map(u=>{
             const ac = u.status==="Active" ? ACCENT.green : ACCENT.rose;
@@ -562,18 +530,9 @@ function UsersPage({ onBack }) {
                   <div className="flex items-center gap-4 px-4 py-3">
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold shrink-0" style={{ background:ac.bg, border:`1px solid ${ac.border}`, color:ac.text }}>{initials}</div>
                     <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-4 gap-x-4 items-center">
-                      <div>
-                        <p className="text-xs font-semibold text-white/90 truncate">{u.name}</p>
-                        <p className="text-[10px] text-white/40 truncate font-mono">{u.email}</p>
-                      </div>
-                      <div className="flex items-center gap-2 mt-1 md:mt-0">
-                        <Badge color="amber">{u.role}</Badge>
-                        <Badge color="blue">{u.dept}</Badge>
-                      </div>
-                      <div className="hidden md:block">
-                        <p className="text-[10px] text-white/30">Last login</p>
-                        <p className="text-[11px] text-white/55">{u.lastLogin}</p>
-                      </div>
+                      <div><p className="text-xs font-semibold text-white/90 truncate">{u.name}</p><p className="text-[10px] text-white/40 truncate font-mono">{u.email}</p></div>
+                      <div className="flex items-center gap-2 mt-1 md:mt-0"><Badge color="amber">{u.role}</Badge><Badge color="blue">{u.dept}</Badge></div>
+                      <div className="hidden md:block"><p className="text-[10px] text-white/30">Last login</p><p className="text-[11px] text-white/55">{u.lastLogin}</p></div>
                       <div><StatusBadge status={u.status}/></div>
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -597,7 +556,7 @@ function UsersPage({ onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── WORK ORDERS PAGE ─────────────────────────────────────────
+// WORK ORDERS PAGE
 // ═══════════════════════════════════════════════════════════════
 function AddWorkOrderModal({ onClose, onSave }) {
   const [form, setForm] = useState({ product:"", buyer:"", qty:"", due:"", line:"", status:"Pending", done:0, priority:"Medium" });
@@ -610,24 +569,16 @@ function AddWorkOrderModal({ onClose, onSave }) {
         {saved ? <SavedState message="Work Order Created" accentColor="green"/> : (
             <div className="px-6 pb-6 space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Product" required>
-                  <div className="relative"><select className={selectCls} value={form.product} onChange={e=>set("product",e.target.value)}><option value="">Select product…</option>{DATA.products.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
-                <FormField label="Buyer" required>
-                  <div className="relative"><select className={selectCls} value={form.buyer} onChange={e=>set("buyer",e.target.value)}><option value="">Select buyer…</option>{DATA.buyers.map(b=><option key={b.id} value={b.name}>{b.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
+                <FormField label="Product" required><div className="relative"><select className={selectCls} value={form.product} onChange={e=>set("product",e.target.value)}><option value="">Select product…</option>{DATA.products.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                <FormField label="Buyer" required><div className="relative"><select className={selectCls} value={form.buyer} onChange={e=>set("buyer",e.target.value)}><option value="">Select buyer…</option>{DATA.buyers.map(b=><option key={b.id} value={b.name}>{b.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <FormField label="Quantity" required><input type="number" className={inputCls} placeholder="e.g. 5000" value={form.qty} onChange={e=>set("qty",e.target.value)}/></FormField>
                 <FormField label="Due Date" required><input type="date" className={inputCls} value={form.due} onChange={e=>set("due",e.target.value)} style={{ colorScheme:"dark" }}/></FormField>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Line" required>
-                  <div className="relative"><select className={selectCls} value={form.line} onChange={e=>set("line",e.target.value)}><option value="">Select line…</option>{DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name} ({l.dept})</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
-                <FormField label="Priority">
-                  <div className="relative"><select className={selectCls} value={form.priority} onChange={e=>set("priority",e.target.value)}><option value="Critical">Critical</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
+                <FormField label="Line" required><div className="relative"><select className={selectCls} value={form.line} onChange={e=>set("line",e.target.value)}><option value="">Select line…</option>{DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name} ({l.dept})</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                <FormField label="Priority"><div className="relative"><select className={selectCls} value={form.priority} onChange={e=>set("priority",e.target.value)}><option value="Critical">Critical</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               </div>
               {!valid && <p className="text-[10px] text-white/20 text-center">Fill in all required fields</p>}
               <div className="flex gap-3 pt-1">
@@ -650,20 +601,14 @@ function EditWorkOrderModal({ wo, onClose, onSave }) {
         {saved ? <SavedState message="Work Order Updated" accentColor="green"/> : (
             <div className="px-6 pb-6 space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Status">
-                  <div className="relative"><select className={selectCls} value={form.status} onChange={e=>set("status",e.target.value)}>{["Pending","In Progress","Delayed","Completed"].map(s=><option key={s} value={s}>{s}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
-                <FormField label="Priority">
-                  <div className="relative"><select className={selectCls} value={form.priority} onChange={e=>set("priority",e.target.value)}>{["Critical","High","Medium","Low"].map(p=><option key={p} value={p}>{p}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                </FormField>
+                <FormField label="Status"><div className="relative"><select className={selectCls} value={form.status} onChange={e=>set("status",e.target.value)}>{["Pending","In Progress","Delayed","Completed"].map(s=><option key={s} value={s}>{s}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                <FormField label="Priority"><div className="relative"><select className={selectCls} value={form.priority} onChange={e=>set("priority",e.target.value)}>{["Critical","High","Medium","Low"].map(p=><option key={p} value={p}>{p}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <FormField label="Done (pcs)"><input type="number" className={inputCls} value={form.done} onChange={e=>set("done",Number(e.target.value))}/></FormField>
                 <FormField label="Due Date"><input type="date" className={inputCls} value={form.due} onChange={e=>set("due",e.target.value)} style={{ colorScheme:"dark" }}/></FormField>
               </div>
-              <FormField label="Line">
-                <div className="relative"><select className={selectCls} value={form.line} onChange={e=>set("line",e.target.value)}>{DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-              </FormField>
+              <FormField label="Line"><div className="relative"><select className={selectCls} value={form.line} onChange={e=>set("line",e.target.value)}>{DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               <div className="flex gap-3 pt-1">
                 <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
                 <button onClick={handleSave} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>💾 Save Changes</button>
@@ -682,40 +627,27 @@ function WorkOrdersPage({ onBack }) {
   const [editWO, setEditWO] = useState(null);
   const [deleteWO, setDeleteWO] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
-  const [view, setView] = useState("cards"); // cards | table
-
+  const [view, setView] = useState("cards");
   const filtered = orders.filter(o => {
     const q = search.toLowerCase();
     return (!q || o.id.toLowerCase().includes(q) || o.product.toLowerCase().includes(q) || o.buyer.toLowerCase().includes(q) || o.line.toLowerCase().includes(q))
-        && (filterStatus==="All" || o.status===filterStatus)
-        && (filterPriority==="All" || o.priority===filterPriority);
+        && (filterStatus==="All" || o.status===filterStatus) && (filterPriority==="All" || o.priority===filterPriority);
   });
-
-  const priorityColor = { Critical:"rose", High:"rose", Medium:"amber", Low:"green" };
   const statusColor = { "In Progress":"blue", Pending:"amber", Delayed:"rose", Completed:"green" };
-
-  const addOrder = (form) => {
-    const newId = `WO-2026-00${orders.length+1}`;
-    setOrders(os=>[{ ...form, id:newId, qty:Number(form.qty), done:0 }, ...os]);
-  };
-
+  const addOrder = (form) => { const newId = `WO-2026-00${orders.length+1}`; setOrders(os=>[{ ...form, id:newId, qty:Number(form.qty), done:0 }, ...os]); };
   return (
       <div>
         {editWO && <EditWorkOrderModal wo={editWO} onClose={()=>setEditWO(null)} onSave={f=>{setOrders(os=>os.map(o=>o.id===f.id?{...o,...f}:o));setEditWO(null);}}/>}
         {deleteWO && <ConfirmDeleteModal title="Delete Work Order?" desc={`${deleteWO.id} — ${deleteWO.product}`} onClose={()=>setDeleteWO(null)} onConfirm={()=>{setOrders(os=>os.filter(o=>o.id!==deleteWO.id));setDeleteWO(null);}}/>}
         {showAdd && <AddWorkOrderModal onClose={()=>setShowAdd(false)} onSave={addOrder}/>}
-
         <PageHeader title="Work Orders" subtitle="Production • Planning" icon="📋" onBack={onBack} color="green"
                     actions={<button onClick={()=>setShowAdd(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>+ New Order</button>}/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="In Progress" value={orders.filter(w=>w.status==="In Progress").length} icon="⚙️" color="blue"/>
           <StatCard label="Pending" value={orders.filter(w=>w.status==="Pending").length} icon="⏳" color="amber"/>
           <StatCard label="Delayed" value={orders.filter(w=>w.status==="Delayed").length} icon="⚠️" color="rose"/>
           <StatCard label="Total Qty" value={orders.reduce((s,w)=>s+Number(w.qty),0).toLocaleString()} icon="👕" color="green"/>
         </div>
-
-        {/* Toolbar */}
         <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
           <SearchBar value={search} onChange={setSearch} placeholder="Search by order ID, product, buyer, line…"/>
           <div className="flex flex-wrap items-center gap-2">
@@ -724,59 +656,33 @@ function WorkOrdersPage({ onBack }) {
             {(search||filterStatus!=="All"||filterPriority!=="All") && <button onClick={()=>{setSearch("");setFilterStatus("All");setFilterPriority("All");}} className="px-2.5 py-1 rounded-lg text-[10px] text-white/30 hover:text-white/60 border border-white/8 transition-all">✕ Clear</button>}
             <div className="ml-auto flex items-center gap-1.5">
               {["cards","table"].map(v=>(
-                  <button key={v} onClick={()=>setView(v)}
-                          className={`px-2.5 py-1 rounded-lg text-[10px] border transition-all ${view===v?"bg-green-400/20 border-green-400/40 text-green-300":"bg-white/5 border-white/8 text-white/30 hover:bg-white/8"}`}>
-                    {v==="cards"?"⊞ Cards":"☰ Table"}
-                  </button>
+                  <button key={v} onClick={()=>setView(v)} className={`px-2.5 py-1 rounded-lg text-[10px] border transition-all ${view===v?"bg-green-400/20 border-green-400/40 text-green-300":"bg-white/5 border-white/8 text-white/30 hover:bg-white/8"}`}>{v==="cards"?"⊞ Cards":"☰ Table"}</button>
               ))}
             </div>
           </div>
           <span className="text-[10px] text-white/25 block"><span className="text-white/50 font-medium">{filtered.length}</span> of {orders.length} orders</span>
         </div>
-
-        {/* Cards view */}
         {view==="cards" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {filtered.map(wo=>{
                 const pct = wo.qty>0 ? Math.round(wo.done/wo.qty*100) : 0;
-                const sc = statusColor[wo.status]||"gray";
-                const a = ACCENT[sc];
+                const sc = statusColor[wo.status]||"gray"; const a = ACCENT[sc];
                 return (
                     <div key={wo.id} className="relative rounded-2xl overflow-hidden group" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))", border:`1px solid ${a.border}`, transition:"transform 0.15s ease" }}
                          onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
                       <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.bar}`}/>
                       <div className="p-4">
-                        {/* Header */}
                         <div className="flex items-start justify-between gap-2 mb-3">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-mono text-[10px] text-white/30">{wo.id}</span>
-                              <StatusBadge status={wo.priority}/>
-                            </div>
-                            <p className="text-sm font-bold text-white/90">{wo.product}</p>
-                            <p className="text-[11px] text-white/45 mt-0.5">{wo.buyer} · {wo.line}</p>
-                          </div>
+                          <div><div className="flex items-center gap-2 mb-1"><span className="font-mono text-[10px] text-white/30">{wo.id}</span><StatusBadge status={wo.priority}/></div><p className="text-sm font-bold text-white/90">{wo.product}</p><p className="text-[11px] text-white/45 mt-0.5">{wo.buyer} · {wo.line}</p></div>
                           <StatusBadge status={wo.status}/>
                         </div>
-
-                        {/* Progress */}
                         <div className="mb-3">
-                          <div className="flex justify-between text-[10px] text-white/40 mb-1.5">
-                            <span>Progress</span>
-                            <span className="font-semibold" style={{ color:pct>=90?"#34d399":pct>=60?"#60a5fa":"#fbbf24" }}>{wo.done.toLocaleString()} / {Number(wo.qty).toLocaleString()} pcs</span>
-                          </div>
-                          <div className="w-full h-2 rounded-full bg-white/10">
-                            <div className="h-full rounded-full transition-all duration-700" style={{ width:`${pct}%`, background:pct>=90?"#34d399":pct>=60?"#60a5fa":pct>=30?"#fbbf24":"#fb7185" }}/>
-                          </div>
+                          <div className="flex justify-between text-[10px] text-white/40 mb-1.5"><span>Progress</span><span className="font-semibold" style={{ color:pct>=90?"#34d399":pct>=60?"#60a5fa":"#fbbf24" }}>{wo.done.toLocaleString()} / {Number(wo.qty).toLocaleString()} pcs</span></div>
+                          <div className="w-full h-2 rounded-full bg-white/10"><div className="h-full rounded-full transition-all duration-700" style={{ width:`${pct}%`, background:pct>=90?"#34d399":pct>=60?"#60a5fa":pct>=30?"#fbbf24":"#fb7185" }}/></div>
                           <div className="text-right text-[10px] font-bold mt-1" style={{ color:pct>=90?"#34d399":pct>=60?"#60a5fa":"#fbbf24" }}>{pct}%</div>
                         </div>
-
-                        {/* Footer */}
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 text-[10px] text-white/35">
-                            <span>📅</span>
-                            <span>Due: <span className="text-white/60">{wo.due}</span></span>
-                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-white/35"><span>📅</span><span>Due: <span className="text-white/60">{wo.due}</span></span></div>
                           <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button onClick={()=>setEditWO(wo)} className="px-2 py-1 rounded-lg text-[10px] border transition-all" style={{ background:"rgba(251,191,36,0.1)", border:"1px solid rgba(251,191,36,0.25)", color:"#fbbf24" }}>✏️ Edit</button>
                             <button onClick={()=>setDeleteWO(wo)} className="px-2 py-1 rounded-lg text-[10px] border transition-all" style={{ background:"rgba(251,113,133,0.08)", border:"1px solid rgba(251,113,133,0.2)", color:"#fb7185" }}>🗑</button>
@@ -788,43 +694,28 @@ function WorkOrdersPage({ onBack }) {
               })}
             </div>
         )}
-
-        {/* Table view */}
         {view==="table" && (
             <GlassCard color="green">
               <Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Priority","Status",""]}
                      rows={filtered.map(wo=>[
                        <span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,
-                       wo.product, wo.buyer,
-                       Number(wo.qty).toLocaleString(), wo.done.toLocaleString(),
+                       wo.product, wo.buyer, Number(wo.qty).toLocaleString(), wo.done.toLocaleString(),
                        <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,
-                       wo.line, wo.due,
-                       <StatusBadge status={wo.priority}/>, <StatusBadge status={wo.status}/>,
-                       <div className="flex gap-1">
-                         <button onClick={()=>setEditWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,191,36,0.1)", color:"#fbbf24" }}>✏️</button>
-                         <button onClick={()=>setDeleteWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,113,133,0.1)", color:"#fb7185" }}>🗑</button>
-                       </div>
+                       wo.line, wo.due, <StatusBadge status={wo.priority}/>, <StatusBadge status={wo.status}/>,
+                       <div className="flex gap-1"><button onClick={()=>setEditWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,191,36,0.1)", color:"#fbbf24" }}>✏️</button><button onClick={()=>setDeleteWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,113,133,0.1)", color:"#fb7185" }}>🗑</button></div>
                      ])}/>
             </GlassCard>
         )}
-
-        {filtered.length===0 && (
-            <div className="text-center py-14">
-              <p className="text-3xl mb-3">📋</p>
-              <p className="text-sm text-white/30">No work orders match your filter</p>
-            </div>
-        )}
+        {filtered.length===0 && <div className="text-center py-14"><p className="text-3xl mb-3">📋</p><p className="text-sm text-white/30">No work orders match your filter</p></div>}
       </div>
   );
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── SCHEDULE PAGE (FIXED) ────────────────────────────────────
+// SCHEDULE PAGE
 // ═══════════════════════════════════════════════════════════════
 function SchedulePage({ onBack }) {
   const [activeWO, setActiveWO] = useState(null);
-
-  // Build week dates relative to today (Mar 5 = Wed)
   const weekDates = [
     { label:"Mon", date:"Mar 03", iso:"2026-03-03", past:true },
     { label:"Tue", date:"Mar 04", iso:"2026-03-04", past:true },
@@ -833,24 +724,14 @@ function SchedulePage({ onBack }) {
     { label:"Fri", date:"Mar 07", iso:"2026-03-07" },
     { label:"Sat", date:"Mar 08", iso:"2026-03-08" },
   ];
-
-  // Map each line to its active work orders
   const lineToWO = {};
-  DATA.workOrders.forEach(wo => {
-    if (!lineToWO[wo.line]) lineToWO[wo.line] = [];
-    lineToWO[wo.line].push(wo);
-  });
-
+  DATA.workOrders.forEach(wo => { if (!lineToWO[wo.line]) lineToWO[wo.line] = []; lineToWO[wo.line].push(wo); });
   const getCellState = (line, day) => {
-    const wos = lineToWO[line.name] || [];
-    if (!wos.length) return { state:"idle", wo:null };
+    const wos = lineToWO[line.name] || []; if (!wos.length) return { state:"idle", wo:null };
     const wo = wos[0];
-    if (day.past) return { state:"done", wo };
-    if (day.today) return { state:"active", wo };
-    if (wo.status==="Delayed") return { state:"delayed", wo };
-    return { state:"planned", wo };
+    if (day.past) return { state:"done", wo }; if (day.today) return { state:"active", wo };
+    if (wo.status==="Delayed") return { state:"delayed", wo }; return { state:"planned", wo };
   };
-
   const cellStyle = (state) => {
     switch(state) {
       case "done":    return { bg:"rgba(255,255,255,0.06)", text:"rgba(255,255,255,0.35)", label:"Done", dot:"#34d399" };
@@ -860,12 +741,9 @@ function SchedulePage({ onBack }) {
       default:        return { bg:"rgba(255,255,255,0.03)", text:"rgba(255,255,255,0.15)", label:"—", dot:"transparent" };
     }
   };
-
   const priorityGlyph = { Critical:"🔴", High:"🟠", Medium:"🟡", Low:"🟢" };
-
   return (
       <div>
-        {/* WO detail popover */}
         {activeWO && (
             <div className="fixed inset-0 z-40 flex items-end md:items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.6)", backdropFilter:"blur(6px)" }} onClick={()=>setActiveWO(null)}>
               <div className="relative w-full max-w-sm rounded-2xl p-5" style={{ background:"linear-gradient(145deg,rgba(22,24,18,0.98),rgba(14,16,12,0.99))", border:"1px solid rgba(52,211,153,0.3)" }} onClick={e=>e.stopPropagation()}>
@@ -884,41 +762,26 @@ function SchedulePage({ onBack }) {
               </div>
             </div>
         )}
-
         <PageHeader title="Production Schedule" subtitle="Production • Planning" icon="📅" onBack={onBack} color="green"/>
-
-        {/* Week legend */}
         <div className="flex items-center gap-4 mb-4 flex-wrap">
           <span className="text-[10px] text-white/30 uppercase tracking-widest">Week of Mar 3–8, 2026</span>
           <div className="flex items-center gap-3">
             {[{dot:"#34d399",label:"Done / Today"},{dot:"#60a5fa",label:"Planned"},{dot:"#fb7185",label:"Delayed"},{dot:"rgba(255,255,255,0.15)",label:"Idle"}].map(l=>(
-                <div key={l.label} className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full" style={{ background:l.dot }}/>
-                  <span className="text-[10px] text-white/35">{l.label}</span>
-                </div>
+                <div key={l.label} className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{ background:l.dot }}/><span className="text-[10px] text-white/35">{l.label}</span></div>
             ))}
           </div>
         </div>
-
         <GlassCard color="green">
-          {/* Work order quick reference */}
           <div className="mb-5 p-3 rounded-xl" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
             <p className="text-[9px] text-green-400/50 font-semibold uppercase tracking-widest mb-2">Active Work Orders This Week</p>
             <div className="flex flex-wrap gap-2">
               {DATA.workOrders.map(wo=>(
-                  <button key={wo.id} onClick={()=>setActiveWO(wo)}
-                          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all hover:-translate-y-0.5"
-                          style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.6)" }}>
-                    <span>{priorityGlyph[wo.priority]}</span>
-                    <span className="font-mono">{wo.id.split("-").pop()}</span>
-                    <span className="text-white/40">{wo.product.split(" ").slice(0,2).join(" ")}</span>
-                    <StatusBadge status={wo.status}/>
+                  <button key={wo.id} onClick={()=>setActiveWO(wo)} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all hover:-translate-y-0.5" style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.6)" }}>
+                    <span>{priorityGlyph[wo.priority]}</span><span className="font-mono">{wo.id.split("-").pop()}</span><span className="text-white/40">{wo.product.split(" ").slice(0,2).join(" ")}</span><StatusBadge status={wo.status}/>
                   </button>
               ))}
             </div>
           </div>
-
-          {/* Schedule grid */}
           <div className="overflow-x-auto">
             <table className="w-full text-xs border-separate" style={{ borderSpacing:"0 2px" }}>
               <thead>
@@ -926,8 +789,7 @@ function SchedulePage({ onBack }) {
                 <th className="text-left px-3 py-2 text-white/40 font-semibold text-[11px] w-24 sticky left-0" style={{ background:"rgba(12,14,10,0.7)" }}>Line</th>
                 {weekDates.map(d=>(
                     <th key={d.iso} className={`px-2 py-2 text-center text-[11px] font-semibold w-24 ${d.today?"text-green-400":"text-white/40"}`}>
-                      <div>{d.label}</div>
-                      <div className={`text-[9px] font-normal mt-0.5 ${d.today?"text-green-300/70":"text-white/20"}`}>{d.date}</div>
+                      <div>{d.label}</div><div className={`text-[9px] font-normal mt-0.5 ${d.today?"text-green-300/70":"text-white/20"}`}>{d.date}</div>
                       {d.today && <div className="mx-auto mt-1 w-1 h-1 rounded-full bg-green-400"/>}
                     </th>
                 ))}
@@ -937,37 +799,24 @@ function SchedulePage({ onBack }) {
               </thead>
               <tbody>
               {DATA.productionLines.map((line,i)=>{
-                const wos = lineToWO[line.name] || [];
-                const wo = wos[0] || null;
+                const wos = lineToWO[line.name] || []; const wo = wos[0] || null;
                 return (
                     <tr key={i} className="group">
                       <td className="px-3 py-2 sticky left-0 rounded-l-xl" style={{ background:"rgba(12,14,10,0.5)" }}>
-                        <p className="font-semibold text-green-300/80">{line.name}</p>
-                        <p className="text-[9px] text-white/30">{line.dept}</p>
+                        <p className="font-semibold text-green-300/80">{line.name}</p><p className="text-[9px] text-white/30">{line.dept}</p>
                       </td>
                       {weekDates.map(day=>{
-                        const { state, wo:cellWO } = getCellState(line, day);
-                        const cs = cellStyle(state);
+                        const { state, wo:cellWO } = getCellState(line, day); const cs = cellStyle(state);
                         return (
                             <td key={day.iso} className="px-1.5 py-2 text-center">
-                              <button
-                                  onClick={()=>cellWO&&setActiveWO(cellWO)}
-                                  className={`w-full h-10 rounded-xl text-[10px] font-medium flex items-center justify-center gap-1 transition-all ${cellWO?"hover:scale-105 cursor-pointer":"cursor-default"} ${day.today?"ring-1 ring-green-400/40":""}`}
-                                  style={{ background:cs.bg, color:cs.text }}>
-                                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:cs.dot }}/>
-                                {cs.label}
+                              <button onClick={()=>cellWO&&setActiveWO(cellWO)} className={`w-full h-10 rounded-xl text-[10px] font-medium flex items-center justify-center gap-1 transition-all ${cellWO?"hover:scale-105 cursor-pointer":"cursor-default"} ${day.today?"ring-1 ring-green-400/40":""}`} style={{ background:cs.bg, color:cs.text }}>
+                                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:cs.dot }}/>{cs.label}
                               </button>
                             </td>
                         );
                       })}
                       <td className="px-3 py-2">
-                        {wo ? (
-                            <button onClick={()=>setActiveWO(wo)} className="text-left hover:bg-white/5 rounded-lg p-1 transition-colors w-full">
-                              <p className="font-mono text-[9px] text-white/30">{wo.id}</p>
-                              <p className="text-[11px] text-white/70 truncate max-w-[130px]">{wo.product}</p>
-                              <p className="text-[9px] text-white/35">{wo.buyer}</p>
-                            </button>
-                        ) : <span className="text-white/15 text-[10px]">No order</span>}
+                        {wo ? (<button onClick={()=>setActiveWO(wo)} className="text-left hover:bg-white/5 rounded-lg p-1 transition-colors w-full"><p className="font-mono text-[9px] text-white/30">{wo.id}</p><p className="text-[11px] text-white/70 truncate max-w-[130px]">{wo.product}</p><p className="text-[9px] text-white/35">{wo.buyer}</p></button>) : <span className="text-white/15 text-[10px]">No order</span>}
                       </td>
                       <td className="px-3 py-2 rounded-r-xl min-w-[120px]">
                         {wo ? <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/> : <span className="text-white/15 text-[10px]">—</span>}
@@ -984,7 +833,7 @@ function SchedulePage({ onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── PERMISSIONS PAGE ─────────────────────────────────────────
+// PERMISSIONS PAGE
 // ═══════════════════════════════════════════════════════════════
 function HREntryModal({ onClose, onSave }) {
   const BLANK = { worker:"", dept:"", position:"", type:"", module:"", fromDate:"", toDate:"", reason:"", status:"Pending", note:"" };
@@ -1013,10 +862,7 @@ function HREntryModal({ onClose, onSave }) {
                 {form.worker && (
                     <div className="flex items-center gap-3 rounded-xl p-3 mt-2" style={{ background:"rgba(251,191,36,0.06)", border:"1px solid rgba(251,191,36,0.15)" }}>
                       <div className="w-8 h-8 rounded-lg bg-amber-400/15 flex items-center justify-center text-sm shrink-0">👷</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-white/80 truncate">{form.worker}</p>
-                        <p className="text-[10px] text-white/35">{form.position} · {form.dept}</p>
-                      </div>
+                      <div className="flex-1 min-w-0"><p className="text-xs font-semibold text-white/80 truncate">{form.worker}</p><p className="text-[10px] text-white/35">{form.position} · {form.dept}</p></div>
                       <Badge color="amber">Selected</Badge>
                     </div>
                 )}
@@ -1024,12 +870,8 @@ function HREntryModal({ onClose, onSave }) {
               <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
                 <p className="text-[9px] text-blue-400/50 font-semibold uppercase tracking-widest mb-3">Permission Details</p>
                 <div className="grid grid-cols-2 gap-3">
-                  <FormField label="Permission Type" required>
-                    <div className="relative"><select className={selectCls} value={form.type} onChange={e=>set("type",e.target.value)}><option value="">Select type…</option>{PERMISSION_TYPES.map(t=><option key={t} value={t}>{t}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                  </FormField>
-                  <FormField label="Module / Area" required>
-                    <div className="relative"><select className={selectCls} value={form.module} onChange={e=>set("module",e.target.value)}><option value="">Select module…</option>{modules.map(m=><option key={m} value={m}>{m}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div>
-                  </FormField>
+                  <FormField label="Permission Type" required><div className="relative"><select className={selectCls} value={form.type} onChange={e=>set("type",e.target.value)}><option value="">Select type…</option>{PERMISSION_TYPES.map(t=><option key={t} value={t}>{t}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                  <FormField label="Module / Area" required><div className="relative"><select className={selectCls} value={form.module} onChange={e=>set("module",e.target.value)}><option value="">Select module…</option>{modules.map(m=><option key={m} value={m}>{m}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
                 </div>
               </div>
               <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
@@ -1045,23 +887,14 @@ function HREntryModal({ onClose, onSave }) {
               <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
                 <p className="text-[9px] text-violet-400/50 font-semibold uppercase tracking-widest mb-3">Reason & Notes</p>
                 <div className="space-y-3">
-                  <FormField label="Reason Given by Worker" required>
-                    <textarea className={`${inputCls} resize-none`} rows={3} placeholder="What did the worker say they need this access for…" value={form.reason} onChange={e=>set("reason",e.target.value)}/>
-                  </FormField>
-                  <FormField label="HR Note (optional)">
-                    <input type="text" className={inputCls} placeholder="Internal note from HR…" value={form.note} onChange={e=>set("note",e.target.value)}/>
-                  </FormField>
+                  <FormField label="Reason Given by Worker" required><textarea className={`${inputCls} resize-none`} rows={3} placeholder="What did the worker say they need this access for…" value={form.reason} onChange={e=>set("reason",e.target.value)}/></FormField>
+                  <FormField label="HR Note (optional)"><input type="text" className={inputCls} placeholder="Internal note from HR…" value={form.note} onChange={e=>set("note",e.target.value)}/></FormField>
                 </div>
               </div>
               <FormField label="Initial Status">
                 <div className="flex gap-2">
                   {["Pending","Approved","Rejected"].map(s=>(
-                      <button key={s} onClick={()=>set("status",s)}
-                              className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s
-                                  ? s==="Approved"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300"
-                                      : s==="Rejected"?"bg-rose-400/20 border-rose-400/40 text-rose-300"
-                                          : "bg-amber-400/20 border-amber-400/40 text-amber-300"
-                                  : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
+                      <button key={s} onClick={()=>set("status",s)} className={`flex-1 py-2 rounded-xl text-[11px] font-medium border transition-all ${form.status===s ? s==="Approved"?"bg-emerald-400/20 border-emerald-400/40 text-emerald-300":s==="Rejected"?"bg-rose-400/20 border-rose-400/40 text-rose-300":"bg-amber-400/20 border-amber-400/40 text-amber-300" : "bg-white/5 border-white/10 text-white/40 hover:bg-white/8"}`}>
                         {s==="Approved"?"✓":s==="Rejected"?"✗":"⏳"} {s}
                       </button>
                   ))}
@@ -1083,35 +916,23 @@ function PermissionsPage({ onBack }) {
   const [showEntry, setShowEntry] = useState(false);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
-
-  const handleSave = (form) => {
-    const id = `PR-${String(records.length+1).padStart(3,"0")}`;
-    setRecords(r=>[{ ...form, id, enteredBy:"Sophea Keo", enteredAt:new Date().toISOString().slice(0,16).replace("T"," ") }, ...r]);
-  };
-
+  const handleSave = (form) => { const id = `PR-${String(records.length+1).padStart(3,"0")}`; setRecords(r=>[{ ...form, id, enteredBy:"Sophea Keo", enteredAt:new Date().toISOString().slice(0,16).replace("T"," ") }, ...r]); };
   const changeStatus = (id,status) => setRecords(r=>r.map(x=>x.id===id?{...x,status}:x));
   const deleteRecord = (id) => setRecords(r=>r.filter(x=>x.id!==id));
   const daysDiff = (a,b)=>{ const d=new Date(b)-new Date(a); return isNaN(d)?0:Math.max(0,Math.round(d/86400000)+1); };
   const statusColor = { Approved:"green", Pending:"amber", Rejected:"rose" };
-
-  const filtered = records.filter(r=>{
-    const q = search.toLowerCase();
-    return (filter==="All"||r.status===filter) && (!q||r.worker.toLowerCase().includes(q)||r.type.toLowerCase().includes(q)||r.module.toLowerCase().includes(q));
-  });
-
+  const filtered = records.filter(r=>{ const q=search.toLowerCase(); return (filter==="All"||r.status===filter)&&(!q||r.worker.toLowerCase().includes(q)||r.type.toLowerCase().includes(q)||r.module.toLowerCase().includes(q)); });
   return (
       <div>
         {showEntry && <HREntryModal onClose={()=>setShowEntry(false)} onSave={handleSave}/>}
         <PageHeader title="Permission Records" subtitle="HR • Access Control Entry" icon="🔐" onBack={onBack} color="amber"
                     actions={<button onClick={()=>setShowEntry(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.25),rgba(251,191,36,0.1))", border:"1px solid rgba(251,191,36,0.4)", color:"#fbbf24" }}>+ New Entry</button>}/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Total" value={records.length} icon="🔐" color="amber"/>
           <StatCard label="Pending" value={records.filter(r=>r.status==="Pending").length} icon="⏳" color="amber"/>
           <StatCard label="Approved" value={records.filter(r=>r.status==="Approved").length} icon="✅" color="green"/>
           <StatCard label="Rejected" value={records.filter(r=>r.status==="Rejected").length} icon="✗" color="rose"/>
         </div>
-
         <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
           <SearchBar value={search} onChange={setSearch} placeholder="Search by worker, type, module…"/>
           <div className="flex items-center gap-2 flex-wrap">
@@ -1119,40 +940,27 @@ function PermissionsPage({ onBack }) {
             <span className="ml-auto text-[10px] text-white/25"><span className="text-white/50 font-medium">{filtered.length}</span> records</span>
           </div>
         </div>
-
         <div className="space-y-3">
           {filtered.map(rec=>{
-            const sc = statusColor[rec.status]||"gray";
-            const a = ACCENT[sc];
+            const sc = statusColor[rec.status]||"gray"; const a = ACCENT[sc];
             return (
                 <div key={rec.id} className="relative rounded-2xl overflow-hidden hover:-translate-y-px transition-all" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))", border:`1px solid ${a.border}`, boxShadow:`0 4px 20px rgba(0,0,0,0.3)` }}>
                   <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${a.bar}`}/>
                   <div className="p-4">
                     <div className="flex items-start justify-between gap-3 flex-wrap">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 font-bold" style={{ background:a.bg, border:`1px solid ${a.border}`, color:a.text }}>
-                          {rec.worker.split(" ").map(w=>w[0]).join("").slice(0,2)}
-                        </div>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 font-bold" style={{ background:a.bg, border:`1px solid ${a.border}`, color:a.text }}>{rec.worker.split(" ").map(w=>w[0]).join("").slice(0,2)}</div>
                         <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                            <span className="font-mono text-[10px] text-white/30">{rec.id}</span>
-                            <StatusBadge status={rec.status}/>
-                          </div>
+                          <div className="flex items-center gap-2 flex-wrap mb-0.5"><span className="font-mono text-[10px] text-white/30">{rec.id}</span><StatusBadge status={rec.status}/></div>
                           <p className="text-xs font-semibold text-white/85 truncate">{rec.worker}</p>
                           <p className="text-[10px] text-white/35">{rec.position} · {rec.dept}</p>
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-[11px] font-semibold text-white/65 mb-1">{rec.type}</p>
-                        <Badge color="blue">{rec.module}</Badge>
-                      </div>
+                      <div className="text-right shrink-0"><p className="text-[11px] font-semibold text-white/65 mb-1">{rec.type}</p><Badge color="blue">{rec.module}</Badge></div>
                     </div>
                     <div className="mt-3 flex items-center gap-3 flex-wrap">
                       <div className="flex items-center gap-1.5 text-[11px]">
-                        <span className="text-amber-400/60">📅</span>
-                        <span className="text-white/55">{rec.fromDate}</span>
-                        <span className="text-white/20 mx-0.5">→</span>
-                        <span className="text-white/55">{rec.toDate}</span>
+                        <span className="text-amber-400/60">📅</span><span className="text-white/55">{rec.fromDate}</span><span className="text-white/20 mx-0.5">→</span><span className="text-white/55">{rec.toDate}</span>
                         <span className="ml-1 px-1.5 py-0.5 rounded-md text-[9px]" style={{ background:"rgba(255,255,255,0.07)", color:"rgba(255,255,255,0.4)" }}>{daysDiff(rec.fromDate,rec.toDate)}d</span>
                       </div>
                       <span className="text-[10px] text-white/25">by {rec.enteredBy} · {rec.enteredAt}</span>
@@ -1165,12 +973,7 @@ function PermissionsPage({ onBack }) {
                       <div className="flex items-center gap-1.5">
                         <span className="text-[9px] text-white/25 uppercase tracking-widest mr-1">Status:</span>
                         {["Pending","Approved","Rejected"].map(s=>(
-                            <button key={s} onClick={()=>changeStatus(rec.id,s)}
-                                    className={`px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all ${rec.status===s
-                                        ? s==="Approved"?"bg-emerald-400/25 border-emerald-400/40 text-emerald-300"
-                                            : s==="Rejected"?"bg-rose-400/25 border-rose-400/40 text-rose-300"
-                                                : "bg-amber-400/25 border-amber-400/40 text-amber-300"
-                                        : "bg-white/5 border-white/8 text-white/25 hover:text-white/50 hover:bg-white/8"}`}>
+                            <button key={s} onClick={()=>changeStatus(rec.id,s)} className={`px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all ${rec.status===s ? s==="Approved"?"bg-emerald-400/25 border-emerald-400/40 text-emerald-300":s==="Rejected"?"bg-rose-400/25 border-rose-400/40 text-rose-300":"bg-amber-400/25 border-amber-400/40 text-amber-300" : "bg-white/5 border-white/8 text-white/25 hover:text-white/50 hover:bg-white/8"}`}>
                               {s==="Approved"?"✓":s==="Rejected"?"✗":"⏳"} {s}
                             </button>
                         ))}
@@ -1188,7 +991,7 @@ function PermissionsPage({ onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── ALL OTHER PAGES ──────────────────────────────────────────
+// ALL OTHER SIMPLE PAGES
 // ═══════════════════════════════════════════════════════════════
 function RolesPage({onBack}){return(<div><PageHeader title="Roles & Permissions" subtitle="Administration • Access Control" icon="🛡️" onBack={onBack} color="amber"/><GlassCard color="amber"><Table color="amber" cols={["#","Role","Description","Users","Permissions"]} rows={DATA.roles.map(r=>[r.id,<span className="font-semibold text-amber-300">{r.name}</span>,r.desc,r.users,<Badge color="blue">{r.permissions} perms</Badge>])}/></GlassCard></div>);}
 function AuditLogPage({onBack}){return(<div><PageHeader title="Audit Log" subtitle="Administration • System" icon="📜" onBack={onBack} color="amber"/><GlassCard color="amber"><div className="space-y-2">{DATA.auditLog.map((log,i)=>(<div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 transition-colors"><div className="w-7 h-7 rounded-lg flex items-center justify-center text-sm shrink-0 bg-amber-400/15 border border-amber-400/25">📝</div><div className="flex-1 min-w-0"><p className="text-xs text-white/80">{log.action}</p><p className="text-[10px] text-white/35 mt-0.5">{log.user} • {log.time}</p></div><Badge color="amber">{log.module}</Badge></div>))}</div></GlassCard></div>);}
@@ -1214,8 +1017,9 @@ function EmployeesPage({onBack}){return(<div><PageHeader title="Employees" subti
 function AttendancePage({onBack}){return(<div><PageHeader title="Attendance" subtitle="HR • Attendance" icon="🕐" onBack={onBack} color="violet"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Present" value={DATA.attendance.filter(a=>a.status==="Present"||a.status==="OT").length} icon="✅" color="green"/><StatCard label="Absent" value={DATA.attendance.filter(a=>a.status==="Absent").length} icon="❌" color="rose"/><StatCard label="OT" value={DATA.attendance.filter(a=>a.status==="OT").length} icon="⏰" color="amber"/><StatCard label="Date" value="Mar 5" icon="📅" color="blue"/></div><GlassCard color="violet"><Table color="violet" cols={["#","Employee","Dept","Date","Time In","Time Out","OT Hrs","Status"]} rows={DATA.attendance.map((a,i)=>[i+1,a.employee,a.dept,a.date,a.in,a.out,a.ot?<span className="text-amber-400">{a.ot}h</span>:"–",<StatusBadge status={a.status}/>])}/></GlassCard></div>);}
 function LeavePage({onBack}){return(<div><PageHeader title="Leave Management" subtitle="HR • Leave" icon="🌴" onBack={onBack} color="violet"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Requests" value={DATA.leaves.length} icon="📋" color="violet"/><StatCard label="Approved" value={DATA.leaves.filter(l=>l.status==="Approved").length} icon="✅" color="green"/><StatCard label="Pending" value={DATA.leaves.filter(l=>l.status==="Pending").length} icon="⏳" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["#","Employee","Leave Type","From","To","Days","Approver","Status"]} rows={DATA.leaves.map((l,i)=>[i+1,l.employee,<Badge color="violet">{l.type}</Badge>,l.from,l.to,l.days,l.approver,<StatusBadge status={l.status}/>])}/></GlassCard></div>);}
 function PayrollPage({onBack}){return(<div><PageHeader title="Payroll" subtitle="HR • Finance" icon="💵" onBack={onBack} color="violet"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total Payroll" value={`$${DATA.payroll.reduce((s,p)=>s+p.net,0).toLocaleString()}`} icon="💵" color="violet"/><StatCard label="Employees" value={DATA.payroll.length} icon="👷" color="blue"/><StatCard label="Paid" value={DATA.payroll.filter(p=>p.status==="Paid").length} icon="✅" color="green"/><StatCard label="Processing" value={DATA.payroll.filter(p=>p.status==="Processing").length} icon="⏳" color="amber"/></div><GlassCard color="violet"><Table color="violet" cols={["Employee","Dept","Base $","OT $","Bonus $","Deduct $","Net $","Month","Status"]} rows={DATA.payroll.map(p=>[<span className="font-medium text-white/90">{p.employee}</span>,p.dept,`$${p.base}`,<span className="text-amber-400">${p.ot}</span>,<span className="text-green-400">${p.bonus}</span>,<span className="text-rose-400">-${p.deduction}</span>,<span className="font-bold text-violet-300">${p.net}</span>,p.month,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
+
 // ═══════════════════════════════════════════════════════════════
-// SHARED REPORT HELPERS
+// REPORT HELPERS + REPORT PAGES
 // ═══════════════════════════════════════════════════════════════
 function ReportMeta({ generated="2026-03-05 09:30", period="March 2026", preparedBy="Sophea Keo" }) {
   return (
@@ -1249,9 +1053,7 @@ function MiniBar({ label, value, max, color="green" }) {
   return (
       <div className="flex items-center gap-3 py-1.5">
         <span className="text-[11px] text-white/50 w-24 shrink-0 truncate">{label}</span>
-        <div className="flex-1 h-2 rounded-full bg-white/8">
-          <div className="h-full rounded-full transition-all" style={{ width:`${pct}%`, background:col }}/>
-        </div>
+        <div className="flex-1 h-2 rounded-full bg-white/8"><div className="h-full rounded-full transition-all" style={{ width:`${pct}%`, background:col }}/></div>
         <span className="text-[11px] font-semibold w-16 text-right" style={{ color:col }}>{value.toLocaleString()}</span>
         <span className="text-[9px] text-white/25 w-8 text-right">{pct}%</span>
       </div>
@@ -1259,7 +1061,6 @@ function MiniBar({ label, value, max, color="green" }) {
 }
 
 function DonutChart({ segments, size=80 }) {
-  // segments: [{value, color, label}]
   const total = segments.reduce((s,x)=>s+x.value,0);
   let offset = 0;
   const r = 28, cx = 40, cy = 40, circ = 2*Math.PI*r;
@@ -1268,18 +1069,9 @@ function DonutChart({ segments, size=80 }) {
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10"/>
         {segments.map((seg,i) => {
           const pct = total > 0 ? seg.value / total : 0;
-          const dash = pct * circ;
-          const gap = circ - dash;
-          const el = (
-              <circle key={i} cx={cx} cy={cy} r={r} fill="none"
-                      stroke={seg.color} strokeWidth="10"
-                      strokeDasharray={`${dash} ${gap}`}
-                      strokeDashoffset={-offset * circ}
-                      strokeLinecap="butt"
-                      style={{ transform:"rotate(-90deg)", transformOrigin:"40px 40px" }}/>
-          );
-          offset += pct;
-          return el;
+          const dash = pct * circ; const gap = circ - dash;
+          const el = (<circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={seg.color} strokeWidth="10" strokeDasharray={`${dash} ${gap}`} strokeDashoffset={-offset * circ} strokeLinecap="butt" style={{ transform:"rotate(-90deg)", transformOrigin:"40px 40px" }}/>);
+          offset += pct; return el;
         })}
       </svg>
   );
@@ -1289,17 +1081,11 @@ function SummaryRow({ label, value, sub, highlight }) {
   return (
       <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
         <span className="text-[11px] text-white/50">{label}</span>
-        <div className="text-right">
-          <span className={`text-xs font-semibold ${highlight||"text-white/80"}`}>{value}</span>
-          {sub && <span className="text-[9px] text-white/30 ml-2">{sub}</span>}
-        </div>
+        <div className="text-right"><span className={`text-xs font-semibold ${highlight||"text-white/80"}`}>{value}</span>{sub && <span className="text-[9px] text-white/30 ml-2">{sub}</span>}</div>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 1. PRODUCTION REPORT
-// ═══════════════════════════════════════════════════════════════
 function ProductionReportPage({ onBack }) {
   const totalTarget = DATA.productionLines.reduce((s,l)=>s+l.target,0);
   const totalActual = DATA.productionLines.reduce((s,l)=>s+l.actual,0);
@@ -1307,31 +1093,18 @@ function ProductionReportPage({ onBack }) {
   const topLine = [...DATA.productionLines].sort((a,b)=>b.eff-a.eff)[0];
   const lowLine = [...DATA.productionLines].sort((a,b)=>a.eff-b.eff)[0];
   const woByStatus = ["In Progress","Pending","Delayed"].map(s=>({ label:s, count:DATA.workOrders.filter(w=>w.status===s).length }));
-
   return (
       <div>
         <PageHeader title="Production Report" subtitle="Reports • Production" icon="📊" onBack={onBack} color="green"/>
         <ReportMeta period="March 2026 — Week 10" preparedBy="Dara Pich"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Total Output" value={totalActual.toLocaleString()} icon="👕" color="green" sub="pcs today"/>
           <StatCard label="Overall Efficiency" value={`${overallEff}%`} icon="📈" color={overallEff>=90?"green":overallEff>=75?"blue":"amber"}/>
           <StatCard label="Active Lines" value={DATA.productionLines.length} icon="⚡" color="blue"/>
           <StatCard label="Total Target" value={totalTarget.toLocaleString()} icon="🎯" color="amber" sub="pcs"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          {/* Line efficiency breakdown */}
-          <div className="md:col-span-2">
-            <GlassCard color="green">
-              <ReportSection title="Line Efficiency Breakdown" color="green">
-                {DATA.productionLines.map((l,i)=>(
-                    <MiniBar key={i} label={l.name} value={l.actual} max={l.target} color={l.eff>=90?"green":l.eff>=75?"blue":"amber"}/>
-                ))}
-              </ReportSection>
-            </GlassCard>
-          </div>
-          {/* KPI summary */}
+          <div className="md:col-span-2"><GlassCard color="green"><ReportSection title="Line Efficiency Breakdown" color="green">{DATA.productionLines.map((l,i)=>(<MiniBar key={i} label={l.name} value={l.actual} max={l.target} color={l.eff>=90?"green":l.eff>=75?"blue":"amber"}/>))}</ReportSection></GlassCard></div>
           <GlassCard color="green">
             <ReportSection title="KPI Summary" color="green">
               <SummaryRow label="Best Line" value={topLine.name} sub={`${topLine.eff}%`} highlight="text-green-400"/>
@@ -1341,33 +1114,20 @@ function ProductionReportPage({ onBack }) {
               <SummaryRow label="Total Workers" value={DATA.productionLines.reduce((s,l)=>s+l.workers,0)} sub="across all lines"/>
             </ReportSection>
             <ReportSection title="Work Order Status" color="green">
-              {woByStatus.map(w=>(
-                  <SummaryRow key={w.label} label={w.label} value={`${w.count} orders`} highlight={w.label==="Delayed"?"text-rose-400":w.label==="In Progress"?"text-blue-400":"text-amber-400"}/>
-              ))}
+              {woByStatus.map(w=>(<SummaryRow key={w.label} label={w.label} value={`${w.count} orders`} highlight={w.label==="Delayed"?"text-rose-400":w.label==="In Progress"?"text-blue-400":"text-amber-400"}/>))}
             </ReportSection>
           </GlassCard>
         </div>
-
-        {/* Work order progress table */}
         <GlassCard color="green">
           <ReportSection title="Work Order Progress" color="green">
             <Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Status"]}
-                   rows={DATA.workOrders.map(wo=>[
-                     <span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,
-                     wo.product, wo.buyer,
-                     wo.qty.toLocaleString(), wo.done.toLocaleString(),
-                     <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,
-                     wo.line, wo.due, <StatusBadge status={wo.status}/>
-                   ])}/>
+                   rows={DATA.workOrders.map(wo=>[<span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,wo.product,wo.buyer,wo.qty.toLocaleString(),wo.done.toLocaleString(),<ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,wo.line,wo.due,<StatusBadge status={wo.status}/>])}/>
           </ReportSection>
         </GlassCard>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 2. QUALITY REPORT
-// ═══════════════════════════════════════════════════════════════
 function QualityReportPage({ onBack }) {
   const totalChecked = DATA.inspections.reduce((s,i)=>s+i.checked,0);
   const totalPassed = DATA.inspections.reduce((s,i)=>s+i.passed,0);
@@ -1377,242 +1137,96 @@ function QualityReportPage({ onBack }) {
   const totalDefectQty = DATA.defects.reduce((s,d)=>s+d.qty,0);
   const bySeverity = ["Critical","Major","Minor"].map(s=>({ label:s, count:DATA.defects.filter(d=>d.severity===s).length, qty:DATA.defects.filter(d=>d.severity===s).reduce((t,d)=>t+d.qty,0) }));
   const byLine = [...new Set(DATA.defects.map(d=>d.line))].map(l=>({ line:l, count:DATA.defects.filter(d=>d.line===l).length }));
-
   return (
       <div>
         <PageHeader title="Quality Report" subtitle="Reports • Quality Control" icon="🔍" onBack={onBack} color="rose"/>
         <ReportMeta period="March 2026" preparedBy="Sreymom Chan"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Pass Rate" value={`${passRate}%`} icon="✅" color={passRate>=95?"green":passRate>=85?"amber":"rose"}/>
           <StatCard label="Total Checked" value={totalChecked} icon="🔬" color="blue"/>
           <StatCard label="Total Failed" value={totalFailed} icon="❌" color="rose"/>
           <StatCard label="Open Defects" value={openDefects.length} icon="🚨" color="rose"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="md:col-span-2">
-            <GlassCard color="rose">
-              <ReportSection title="Inspection Results by Work Order" color="rose">
-                <Table color="rose" cols={["Work Order","Stage","Inspector","Checked","Passed","Failed","Pass Rate","Result"]}
-                       rows={DATA.inspections.map(i=>[
-                         <span className="font-mono text-rose-300 text-[10px]">{i.wo}</span>,
-                         <Badge color="blue">{i.stage}</Badge>,
-                         i.inspector, i.checked, i.passed,
-                         <span className="text-rose-300 font-semibold">{i.failed}</span>,
-                         <ProgressBar value={Math.round(i.passed/i.checked*100)}/>,
-                         <StatusBadge status={i.result}/>
-                       ])}/>
-              </ReportSection>
-            </GlassCard>
-          </div>
+          <div className="md:col-span-2"><GlassCard color="rose"><ReportSection title="Inspection Results by Work Order" color="rose"><Table color="rose" cols={["Work Order","Stage","Inspector","Checked","Passed","Failed","Pass Rate","Result"]} rows={DATA.inspections.map(i=>[<span className="font-mono text-rose-300 text-[10px]">{i.wo}</span>,<Badge color="blue">{i.stage}</Badge>,i.inspector,i.checked,i.passed,<span className="text-rose-300 font-semibold">{i.failed}</span>,<ProgressBar value={Math.round(i.passed/i.checked*100)}/>,<StatusBadge status={i.result}/>])}/></ReportSection></GlassCard></div>
           <GlassCard color="rose">
             <ReportSection title="Defect Severity" color="rose">
               <div className="flex items-center gap-4 mb-3">
-                <DonutChart segments={[
-                  { value:bySeverity[0].count, color:"#fb7185" },
-                  { value:bySeverity[1].count, color:"#fbbf24" },
-                  { value:bySeverity[2].count, color:"#60a5fa" },
-                ]}/>
-                <div className="space-y-1.5">
-                  {bySeverity.map((s,i)=>(
-                      <div key={i} className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full" style={{ background:i===0?"#fb7185":i===1?"#fbbf24":"#60a5fa" }}/>
-                        <span className="text-[10px] text-white/50">{s.label}</span>
-                        <span className="text-[10px] font-semibold text-white/80 ml-auto">{s.count}</span>
-                      </div>
-                  ))}
-                </div>
+                <DonutChart segments={[{value:bySeverity[0].count,color:"#fb7185"},{value:bySeverity[1].count,color:"#fbbf24"},{value:bySeverity[2].count,color:"#60a5fa"}]}/>
+                <div className="space-y-1.5">{bySeverity.map((s,i)=>(<div key={i} className="flex items-center gap-2"><div className="w-2 h-2 rounded-full" style={{ background:i===0?"#fb7185":i===1?"#fbbf24":"#60a5fa" }}/><span className="text-[10px] text-white/50">{s.label}</span><span className="text-[10px] font-semibold text-white/80 ml-auto">{s.count}</span></div>))}</div>
               </div>
               <SummaryRow label="Total Defect Qty" value={totalDefectQty} highlight="text-rose-400"/>
               <SummaryRow label="Defect Rate" value={`${((totalFailed/totalChecked)*100).toFixed(2)}%`}/>
             </ReportSection>
-            <ReportSection title="Defects by Line" color="rose">
-              {byLine.map((b,i)=><SummaryRow key={i} label={b.line} value={`${b.count} reports`}/>)}
-            </ReportSection>
+            <ReportSection title="Defects by Line" color="rose">{byLine.map((b,i)=><SummaryRow key={i} label={b.line} value={`${b.count} reports`}/>)}</ReportSection>
           </GlassCard>
         </div>
-
-        <GlassCard color="rose">
-          <ReportSection title="Open Defect Details" color="rose">
-            <Table color="rose" cols={["#","Line","Product","Type","Qty","Severity","Inspector","Date","Status"]}
-                   rows={DATA.defects.map(d=>[
-                     d.id, d.line, d.product, d.type,
-                     <span className="font-semibold text-rose-300">{d.qty}</span>,
-                     <StatusBadge status={d.severity}/>, d.inspector, d.date, <StatusBadge status={d.status}/>
-                   ])}/>
-          </ReportSection>
-        </GlassCard>
+        <GlassCard color="rose"><ReportSection title="Open Defect Details" color="rose"><Table color="rose" cols={["#","Line","Product","Type","Qty","Severity","Inspector","Date","Status"]} rows={DATA.defects.map(d=>[d.id,d.line,d.product,d.type,<span className="font-semibold text-rose-300">{d.qty}</span>,<StatusBadge status={d.severity}/>,d.inspector,d.date,<StatusBadge status={d.status}/>])}/></ReportSection></GlassCard>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 3. HR REPORT
-// ═══════════════════════════════════════════════════════════════
 function HRReportPage({ onBack }) {
   const presentCount = DATA.attendance.filter(a=>a.status==="Present"||a.status==="OT").length;
   const absentCount = DATA.attendance.filter(a=>a.status==="Absent").length;
-  const otCount = DATA.attendance.filter(a=>a.status==="OT").length;
   const totalOTHrs = DATA.attendance.reduce((s,a)=>s+a.ot,0);
   const totalPayroll = DATA.payroll.reduce((s,p)=>s+p.net,0);
   const totalBonus = DATA.payroll.reduce((s,p)=>s+p.bonus,0);
   const totalOTPay = DATA.payroll.reduce((s,p)=>s+p.ot,0);
   const pendingLeaves = DATA.leaves.filter(l=>l.status==="Pending").length;
-  const byDept = [...new Set(DATA.employees.map(e=>e.dept))].map(d=>({
-    dept:d, count:DATA.employees.filter(e=>e.dept===d).length, active:DATA.employees.filter(e=>e.dept===d&&e.status==="Active").length
-  }));
-
+  const byDept = [...new Set(DATA.employees.map(e=>e.dept))].map(d=>({ dept:d, count:DATA.employees.filter(e=>e.dept===d).length, active:DATA.employees.filter(e=>e.dept===d&&e.status==="Active").length }));
   return (
       <div>
         <PageHeader title="HR Report" subtitle="Reports • Human Resources" icon="👷" onBack={onBack} color="violet"/>
         <ReportMeta period="March 2026" preparedBy="Sophea Keo"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Present Today" value={`${presentCount}/${DATA.attendance.length}`} icon="✅" color="green"/>
           <StatCard label="Absent" value={absentCount} icon="❌" color="rose"/>
           <StatCard label="OT Hours" value={`${totalOTHrs}h`} icon="⏰" color="amber"/>
           <StatCard label="Leave Pending" value={pendingLeaves} icon="🌴" color="violet"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
           <div className="md:col-span-2 space-y-4">
-            <GlassCard color="violet">
-              <ReportSection title="Attendance Summary — Mar 5, 2026" color="violet">
-                <Table color="violet" cols={["Employee","Dept","In","Out","OT","Status"]}
-                       rows={DATA.attendance.map(a=>[
-                         a.employee, a.dept, a.in, a.out,
-                         a.ot?<span className="text-amber-400 font-semibold">{a.ot}h</span>:"–",
-                         <StatusBadge status={a.status}/>
-                       ])}/>
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="violet">
-              <ReportSection title="Payroll Summary — Feb 2026" color="violet">
-                <Table color="violet" cols={["Employee","Dept","Base","OT Pay","Bonus","Deduction","Net Pay","Status"]}
-                       rows={DATA.payroll.map(p=>[
-                         p.employee, p.dept,
-                         `$${p.base}`,
-                         <span className="text-amber-400">${p.ot}</span>,
-                         <span className="text-green-400">${p.bonus}</span>,
-                         <span className="text-rose-400">-${p.deduction}</span>,
-                         <span className="font-bold text-violet-300">${p.net}</span>,
-                         <StatusBadge status={p.status}/>
-                       ])}/>
-              </ReportSection>
-            </GlassCard>
+            <GlassCard color="violet"><ReportSection title="Attendance Summary — Mar 5, 2026" color="violet"><Table color="violet" cols={["Employee","Dept","In","Out","OT","Status"]} rows={DATA.attendance.map(a=>[a.employee,a.dept,a.in,a.out,a.ot?<span className="text-amber-400 font-semibold">{a.ot}h</span>:"–",<StatusBadge status={a.status}/>])}/></ReportSection></GlassCard>
+            <GlassCard color="violet"><ReportSection title="Payroll Summary — Feb 2026" color="violet"><Table color="violet" cols={["Employee","Dept","Base","OT Pay","Bonus","Deduction","Net Pay","Status"]} rows={DATA.payroll.map(p=>[p.employee,p.dept,`$${p.base}`,<span className="text-amber-400">${p.ot}</span>,<span className="text-green-400">${p.bonus}</span>,<span className="text-rose-400">-${p.deduction}</span>,<span className="font-bold text-violet-300">${p.net}</span>,<StatusBadge status={p.status}/>])}/></ReportSection></GlassCard>
           </div>
           <div className="space-y-4">
-            <GlassCard color="violet">
-              <ReportSection title="Payroll KPIs" color="violet">
-                <SummaryRow label="Total Payroll" value={`$${totalPayroll.toLocaleString()}`} highlight="text-violet-300"/>
-                <SummaryRow label="Total OT Pay" value={`$${totalOTPay}`} highlight="text-amber-400"/>
-                <SummaryRow label="Total Bonus" value={`$${totalBonus}`} highlight="text-green-400"/>
-              </ReportSection>
-              <ReportSection title="Workforce Breakdown" color="violet">
-                <SummaryRow label="Total Employees" value={DATA.employees.length}/>
-                <SummaryRow label="Permanent" value={DATA.employees.filter(e=>e.type==="Permanent").length}/>
-                <SummaryRow label="Contract" value={DATA.employees.filter(e=>e.type==="Contract").length}/>
-                <SummaryRow label="Active" value={DATA.employees.filter(e=>e.status==="Active").length} highlight="text-green-400"/>
-                <SummaryRow label="Inactive" value={DATA.employees.filter(e=>e.status==="Inactive").length} highlight="text-rose-400"/>
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="violet">
-              <ReportSection title="Staff by Department" color="violet">
-                {byDept.map((d,i)=>(<MiniBar key={i} label={d.dept} value={d.active} max={d.count} color="violet"/>))}
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="violet">
-              <ReportSection title="Leave Requests" color="violet">
-                <Table color="violet" cols={["Employee","Type","Days","Status"]}
-                       rows={DATA.leaves.map(l=>[l.employee,<Badge color="violet">{l.type}</Badge>,l.days,<StatusBadge status={l.status}/>])}/>
-              </ReportSection>
-            </GlassCard>
+            <GlassCard color="violet"><ReportSection title="Payroll KPIs" color="violet"><SummaryRow label="Total Payroll" value={`$${totalPayroll.toLocaleString()}`} highlight="text-violet-300"/><SummaryRow label="Total OT Pay" value={`$${totalOTPay}`} highlight="text-amber-400"/><SummaryRow label="Total Bonus" value={`$${totalBonus}`} highlight="text-green-400"/></ReportSection><ReportSection title="Workforce Breakdown" color="violet"><SummaryRow label="Total Employees" value={DATA.employees.length}/><SummaryRow label="Permanent" value={DATA.employees.filter(e=>e.type==="Permanent").length}/><SummaryRow label="Contract" value={DATA.employees.filter(e=>e.type==="Contract").length}/><SummaryRow label="Active" value={DATA.employees.filter(e=>e.status==="Active").length} highlight="text-green-400"/><SummaryRow label="Inactive" value={DATA.employees.filter(e=>e.status==="Inactive").length} highlight="text-rose-400"/></ReportSection></GlassCard>
+            <GlassCard color="violet"><ReportSection title="Staff by Department" color="violet">{byDept.map((d,i)=>(<MiniBar key={i} label={d.dept} value={d.active} max={d.count} color="violet"/>))}</ReportSection></GlassCard>
+            <GlassCard color="violet"><ReportSection title="Leave Requests" color="violet"><Table color="violet" cols={["Employee","Type","Days","Status"]} rows={DATA.leaves.map(l=>[l.employee,<Badge color="violet">{l.type}</Badge>,l.days,<StatusBadge status={l.status}/>])}/></ReportSection></GlassCard>
           </div>
         </div>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 4. INVENTORY / MATERIALS REPORT
-// ═══════════════════════════════════════════════════════════════
 function InventoryReportPage({ onBack }) {
   const lowStock = DATA.materials.filter(m=>m.stock<m.reorder);
   const okStock = DATA.materials.filter(m=>m.stock>=m.reorder);
   const totalValue = DATA.materials.reduce((s,m)=>s+(m.stock*m.cost),0);
   const lowValue = lowStock.reduce((s,m)=>s+(m.stock*m.cost),0);
-
   return (
       <div>
         <PageHeader title="Inventory Report" subtitle="Reports • Materials & Stock" icon="📦" onBack={onBack} color="teal"/>
         <ReportMeta period="March 2026" preparedBy="Sophea Keo"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Total Items" value={DATA.materials.length} icon="🧵" color="teal"/>
           <StatCard label="Low Stock" value={lowStock.length} icon="⚠️" color="rose"/>
           <StatCard label="Stock OK" value={okStock.length} icon="✅" color="green"/>
           <StatCard label="Total Value" value={`$${totalValue.toLocaleString()}`} icon="💰" color="amber"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="md:col-span-2">
-            <GlassCard color="teal">
-              <ReportSection title="Stock Level Analysis" color="teal">
-                {DATA.materials.map((m,i)=>{
-                  const pct = Math.min(Math.round(m.stock/Math.max(m.reorder*2,m.stock)*100),100);
-                  return <MiniBar key={i} label={m.name.split(" ").slice(0,2).join(" ")} value={m.stock} max={Math.max(m.reorder*2,m.stock)} color={m.stock<m.reorder?"rose":m.stock<m.reorder*1.5?"amber":"teal"}/>;
-                })}
-              </ReportSection>
-            </GlassCard>
-          </div>
+          <div className="md:col-span-2"><GlassCard color="teal"><ReportSection title="Stock Level Analysis" color="teal">{DATA.materials.map((m,i)=>(<MiniBar key={i} label={m.name.split(" ").slice(0,2).join(" ")} value={m.stock} max={Math.max(m.reorder*2,m.stock)} color={m.stock<m.reorder?"rose":m.stock<m.reorder*1.5?"amber":"teal"}/>))}</ReportSection></GlassCard></div>
           <div className="space-y-4">
-            <GlassCard color="rose">
-              <ReportSection title="⚠ Low Stock Alerts" color="rose">
-                {lowStock.length===0 ? <p className="text-[11px] text-white/30 text-center py-3">All items OK</p> :
-                    lowStock.map((m,i)=>(
-                        <div key={i} className="py-2 border-b border-white/5 last:border-0">
-                          <p className="text-[11px] text-white/75 font-medium">{m.name}</p>
-                          <div className="flex justify-between text-[10px] text-white/40 mt-0.5">
-                            <span>Stock: <span className="text-rose-400 font-semibold">{m.stock.toLocaleString()} {m.unit}</span></span>
-                            <span>Reorder: {m.reorder.toLocaleString()}</span>
-                          </div>
-                        </div>
-                    ))}
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="teal">
-              <ReportSection title="Value Summary" color="teal">
-                <SummaryRow label="Total Inventory Value" value={`$${totalValue.toLocaleString()}`} highlight="text-teal-300"/>
-                <SummaryRow label="Low Stock Value" value={`$${lowValue.toLocaleString()}`} highlight="text-rose-400"/>
-                <SummaryRow label="Healthy Stock Value" value={`$${(totalValue-lowValue).toLocaleString()}`} highlight="text-green-400"/>
-              </ReportSection>
-            </GlassCard>
+            <GlassCard color="rose"><ReportSection title="⚠ Low Stock Alerts" color="rose">{lowStock.length===0?<p className="text-[11px] text-white/30 text-center py-3">All items OK</p>:lowStock.map((m,i)=>(<div key={i} className="py-2 border-b border-white/5 last:border-0"><p className="text-[11px] text-white/75 font-medium">{m.name}</p><div className="flex justify-between text-[10px] text-white/40 mt-0.5"><span>Stock: <span className="text-rose-400 font-semibold">{m.stock.toLocaleString()} {m.unit}</span></span><span>Reorder: {m.reorder.toLocaleString()}</span></div></div>))}</ReportSection></GlassCard>
+            <GlassCard color="teal"><ReportSection title="Value Summary" color="teal"><SummaryRow label="Total Inventory Value" value={`$${totalValue.toLocaleString()}`} highlight="text-teal-300"/><SummaryRow label="Low Stock Value" value={`$${lowValue.toLocaleString()}`} highlight="text-rose-400"/><SummaryRow label="Healthy Stock Value" value={`$${(totalValue-lowValue).toLocaleString()}`} highlight="text-green-400"/></ReportSection></GlassCard>
           </div>
         </div>
-
-        <GlassCard color="teal">
-          <ReportSection title="Full Stock Listing" color="teal">
-            <Table color="teal" cols={["Code","Material","Unit","Current Stock","Reorder Point","Cost/Unit","Total Value","Supplier","Status"]}
-                   rows={DATA.materials.map(m=>[
-                     <span className="font-mono text-teal-300 text-[10px]">{m.code}</span>,
-                     m.name, m.unit,
-                     <span className={m.stock<m.reorder?"text-rose-300 font-bold":"text-white/80"}>{m.stock.toLocaleString()}</span>,
-                     m.reorder.toLocaleString(),
-                     `$${m.cost}`,
-                     <span className="text-teal-300">${(m.stock*m.cost).toLocaleString()}</span>,
-                     m.supplier,
-                     m.stock<m.reorder?<Badge color="rose">Low Stock</Badge>:<Badge color="green">OK</Badge>
-                   ])}/>
-          </ReportSection>
-        </GlassCard>
+        <GlassCard color="teal"><ReportSection title="Full Stock Listing" color="teal"><Table color="teal" cols={["Code","Material","Unit","Current Stock","Reorder Point","Cost/Unit","Total Value","Supplier","Status"]} rows={DATA.materials.map(m=>[<span className="font-mono text-teal-300 text-[10px]">{m.code}</span>,m.name,m.unit,<span className={m.stock<m.reorder?"text-rose-300 font-bold":"text-white/80"}>{m.stock.toLocaleString()}</span>,m.reorder.toLocaleString(),`$${m.cost}`,<span className="text-teal-300">${(m.stock*m.cost).toLocaleString()}</span>,m.supplier,m.stock<m.reorder?<Badge color="rose">Low Stock</Badge>:<Badge color="green">OK</Badge>])}/></ReportSection></GlassCard>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 5. PROCUREMENT REPORT
-// ═══════════════════════════════════════════════════════════════
 function ProcurementReportPage({ onBack }) {
   const totalPOValue = DATA.purchaseOrders.reduce((s,p)=>s+p.amount,0);
   const delivered = DATA.purchaseOrders.filter(p=>p.status==="Delivered");
@@ -1620,228 +1234,82 @@ function ProcurementReportPage({ onBack }) {
   const pending = DATA.purchaseOrders.filter(p=>p.status==="Pending"||p.status==="Confirmed");
   const avgRating = (DATA.suppliers.reduce((s,x)=>s+x.rating,0)/DATA.suppliers.length).toFixed(1);
   const totalBuyerPcs = DATA.buyers.reduce((s,b)=>s+b.totalPcs,0);
-
   return (
       <div>
         <PageHeader title="Procurement Report" subtitle="Reports • Procurement & Logistics" icon="📦" onBack={onBack} color="teal"/>
         <ReportMeta period="March 2026" preparedBy="Kosal Vong"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Total PO Value" value={`$${totalPOValue.toLocaleString()}`} icon="💵" color="teal"/>
           <StatCard label="Delivered" value={delivered.length} icon="✅" color="green"/>
           <StatCard label="In Transit" value={inTransit.length} icon="🚢" color="blue"/>
           <StatCard label="Pending/Confirmed" value={pending.length} icon="⏳" color="amber"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-          <GlassCard color="teal">
-            <ReportSection title="Purchase Orders Summary" color="teal">
-              <Table color="teal" cols={["PO ID","Supplier","Material","Amount","Delivery","Status"]}
-                     rows={DATA.purchaseOrders.map(p=>[
-                       <span className="font-mono text-teal-300 text-[10px]">{p.id}</span>,
-                       p.supplier, p.material,
-                       <span className="font-semibold text-white/90">${p.amount.toLocaleString()}</span>,
-                       p.delivery, <StatusBadge status={p.status}/>
-                     ])}/>
-            </ReportSection>
-          </GlassCard>
-          <GlassCard color="teal">
-            <ReportSection title="Supplier Performance" color="teal">
-              <Table color="teal" cols={["Supplier","Material","Rating","Lead Days","Status"]}
-                     rows={DATA.suppliers.map(s=>[
-                       <span className="font-semibold text-teal-300">{s.name}</span>,
-                       s.material,
-                       <Stars rating={s.rating}/>,
-                       `${s.leadDays}d`, <StatusBadge status={s.status}/>
-                     ])}/>
-              <div className="mt-3 pt-3 border-t border-white/8">
-                <SummaryRow label="Avg Supplier Rating" value={`${avgRating} / 5.0`} highlight="text-amber-400"/>
-                <SummaryRow label="Best Supplier" value="YKK Cambodia" sub="5.0 ★" highlight="text-green-400"/>
-              </div>
-            </ReportSection>
-          </GlassCard>
+          <GlassCard color="teal"><ReportSection title="Purchase Orders Summary" color="teal"><Table color="teal" cols={["PO ID","Supplier","Material","Amount","Delivery","Status"]} rows={DATA.purchaseOrders.map(p=>[<span className="font-mono text-teal-300 text-[10px]">{p.id}</span>,p.supplier,p.material,<span className="font-semibold text-white/90">${p.amount.toLocaleString()}</span>,p.delivery,<StatusBadge status={p.status}/>])}/></ReportSection></GlassCard>
+          <GlassCard color="teal"><ReportSection title="Supplier Performance" color="teal"><Table color="teal" cols={["Supplier","Material","Rating","Lead Days","Status"]} rows={DATA.suppliers.map(s=>[<span className="font-semibold text-teal-300">{s.name}</span>,s.material,<Stars rating={s.rating}/>,`${s.leadDays}d`,<StatusBadge status={s.status}/>])}/><div className="mt-3 pt-3 border-t border-white/8"><SummaryRow label="Avg Supplier Rating" value={`${avgRating} / 5.0`} highlight="text-amber-400"/><SummaryRow label="Best Supplier" value="YKK Cambodia" sub="5.0 ★" highlight="text-green-400"/></div></ReportSection></GlassCard>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <GlassCard color="cyan">
-            <ReportSection title="Shipments Status" color="cyan">
-              <Table color="cyan" cols={["SH ID","Buyer","Qty","Method","ETD","ETA","Status"]}
-                     rows={DATA.shipments.map(s=>[
-                       <span className="font-mono text-cyan-300 text-[10px]">{s.id}</span>,
-                       s.buyer, s.qty.toLocaleString(),
-                       <Badge color="blue">{s.method}</Badge>,
-                       s.etd, s.eta, <StatusBadge status={s.status}/>
-                     ])}/>
-            </ReportSection>
-          </GlassCard>
-          <GlassCard color="cyan">
-            <ReportSection title="Buyer Order Summary" color="cyan">
-              <Table color="cyan" cols={["Buyer","Country","Orders","Total Pcs","Status"]}
-                     rows={DATA.buyers.map(b=>[
-                       <span className="font-semibold text-cyan-300">{b.name}</span>,
-                       b.country, b.activeOrders,
-                       <span className="font-semibold text-white/80">{b.totalPcs.toLocaleString()}</span>,
-                       <StatusBadge status={b.status}/>
-                     ])}/>
-              <div className="mt-3 pt-3 border-t border-white/8">
-                <SummaryRow label="Total Buyers" value={DATA.buyers.length}/>
-                <SummaryRow label="Total Ordered Pcs" value={totalBuyerPcs.toLocaleString()} highlight="text-cyan-300"/>
-              </div>
-            </ReportSection>
-          </GlassCard>
+          <GlassCard color="cyan"><ReportSection title="Shipments Status" color="cyan"><Table color="cyan" cols={["SH ID","Buyer","Qty","Method","ETD","ETA","Status"]} rows={DATA.shipments.map(s=>[<span className="font-mono text-cyan-300 text-[10px]">{s.id}</span>,s.buyer,s.qty.toLocaleString(),<Badge color="blue">{s.method}</Badge>,s.etd,s.eta,<StatusBadge status={s.status}/>])}/></ReportSection></GlassCard>
+          <GlassCard color="cyan"><ReportSection title="Buyer Order Summary" color="cyan"><Table color="cyan" cols={["Buyer","Country","Orders","Total Pcs","Status"]} rows={DATA.buyers.map(b=>[<span className="font-semibold text-cyan-300">{b.name}</span>,b.country,b.activeOrders,<span className="font-semibold text-white/80">{b.totalPcs.toLocaleString()}</span>,<StatusBadge status={b.status}/>])}/><div className="mt-3 pt-3 border-t border-white/8"><SummaryRow label="Total Buyers" value={DATA.buyers.length}/><SummaryRow label="Total Ordered Pcs" value={totalBuyerPcs.toLocaleString()} highlight="text-cyan-300"/></div></ReportSection></GlassCard>
         </div>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 6. FINANCE / COSTING REPORT
-// ═══════════════════════════════════════════════════════════════
 function FinanceReportPage({ onBack }) {
   const avgMargin = (DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1);
   const avgFOB = (DATA.costings.reduce((s,c)=>s+c.fob,0)/DATA.costings.length).toFixed(2);
-  const totalRevenue = DATA.costings.reduce((s,c)=>s+c.fob*1000,0);
-  const totalCost = DATA.costings.reduce((s,c)=>s+c.total*1000,0);
   const totalPayroll = DATA.payroll.reduce((s,p)=>s+p.net,0);
   const highMargin = [...DATA.costings].sort((a,b)=>b.margin-a.margin)[0];
   const lowMargin = [...DATA.costings].sort((a,b)=>a.margin-b.margin)[0];
-
   return (
       <div>
         <PageHeader title="Finance Report" subtitle="Reports • Finance & Costing" icon="💰" onBack={onBack} color="violet"/>
         <ReportMeta period="March 2026" preparedBy="Sophea Keo"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Avg Margin" value={`${avgMargin}%`} icon="📈" color="green"/>
           <StatCard label="Avg FOB" value={`$${avgFOB}`} icon="💵" color="violet"/>
           <StatCard label="Total Payroll" value={`$${totalPayroll.toLocaleString()}`} icon="👷" color="blue"/>
           <StatCard label="Styles Costed" value={DATA.costings.length} icon="👕" color="amber"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="md:col-span-2">
-            <GlassCard color="violet">
-              <ReportSection title="Cost Sheet Breakdown" color="violet">
-                <Table color="violet" cols={["Product","Fabric","Trim","Labor","Overhead","Total Cost","FOB","Margin","Profit/pc"]}
-                       rows={DATA.costings.map(c=>[
-                         c.product,
-                         `$${c.fabric}`, `$${c.trim}`, `$${c.labor}`, `$${c.overhead}`,
-                         <span className="font-semibold text-white/90">${c.total}</span>,
-                         <span className="font-semibold text-violet-300">${c.fob}</span>,
-                         <span className={`font-bold ${c.margin>=30?"text-green-400":"text-amber-400"}`}>{c.margin}%</span>,
-                         <span className="text-green-400">${(c.fob-c.total).toFixed(2)}</span>
-                       ])}/>
-              </ReportSection>
-              <ReportSection title="Cost Structure per Style (avg)" color="violet">
-                {[{label:"Fabric",value:DATA.costings.reduce((s,c)=>s+c.fabric,0)/DATA.costings.length,color:"teal"},
-                  {label:"Trim",value:DATA.costings.reduce((s,c)=>s+c.trim,0)/DATA.costings.length,color:"blue"},
-                  {label:"Labor",value:DATA.costings.reduce((s,c)=>s+c.labor,0)/DATA.costings.length,color:"amber"},
-                  {label:"Overhead",value:DATA.costings.reduce((s,c)=>s+c.overhead,0)/DATA.costings.length,color:"orange"}
-                ].map((x,i)=><MiniBar key={i} label={x.label} value={parseFloat(x.value.toFixed(2))} max={10} color={x.color}/>)}
-              </ReportSection>
-            </GlassCard>
-          </div>
+          <div className="md:col-span-2"><GlassCard color="violet"><ReportSection title="Cost Sheet Breakdown" color="violet"><Table color="violet" cols={["Product","Fabric","Trim","Labor","Overhead","Total Cost","FOB","Margin","Profit/pc"]} rows={DATA.costings.map(c=>[c.product,`$${c.fabric}`,`$${c.trim}`,`$${c.labor}`,`$${c.overhead}`,<span className="font-semibold text-white/90">${c.total}</span>,<span className="font-semibold text-violet-300">${c.fob}</span>,<span className={`font-bold ${c.margin>=30?"text-green-400":"text-amber-400"}`}>{c.margin}%</span>,<span className="text-green-400">${(c.fob-c.total).toFixed(2)}</span>])}/></ReportSection><ReportSection title="Cost Structure per Style (avg)" color="violet">{[{label:"Fabric",value:DATA.costings.reduce((s,c)=>s+c.fabric,0)/DATA.costings.length,color:"teal"},{label:"Trim",value:DATA.costings.reduce((s,c)=>s+c.trim,0)/DATA.costings.length,color:"blue"},{label:"Labor",value:DATA.costings.reduce((s,c)=>s+c.labor,0)/DATA.costings.length,color:"amber"},{label:"Overhead",value:DATA.costings.reduce((s,c)=>s+c.overhead,0)/DATA.costings.length,color:"orange"}].map((x,i)=><MiniBar key={i} label={x.label} value={parseFloat(x.value.toFixed(2))} max={10} color={x.color}/>)}</ReportSection></GlassCard></div>
           <div className="space-y-4">
-            <GlassCard color="violet">
-              <ReportSection title="Margin Analysis" color="violet">
-                <SummaryRow label="Highest Margin" value={highMargin.product.split(" ").slice(0,2).join(" ")} sub={`${highMargin.margin}%`} highlight="text-green-400"/>
-                <SummaryRow label="Lowest Margin" value={lowMargin.product.split(" ").slice(0,2).join(" ")} sub={`${lowMargin.margin}%`} highlight="text-rose-400"/>
-                <SummaryRow label="Avg Margin" value={`${avgMargin}%`} highlight="text-violet-300"/>
-                <SummaryRow label="Avg FOB" value={`$${avgFOB}`}/>
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="violet">
-              <ReportSection title="Payroll by Dept" color="violet">
-                {DATA.payroll.map((p,i)=>(
-                    <SummaryRow key={i} label={p.employee.split(" ")[0]} value={`$${p.net}`} sub={p.dept} highlight="text-violet-300"/>
-                ))}
-                <div className="mt-2 pt-2 border-t border-white/8">
-                  <SummaryRow label="Total" value={`$${totalPayroll.toLocaleString()}`} highlight="text-green-400"/>
-                </div>
-              </ReportSection>
-            </GlassCard>
+            <GlassCard color="violet"><ReportSection title="Margin Analysis" color="violet"><SummaryRow label="Highest Margin" value={highMargin.product.split(" ").slice(0,2).join(" ")} sub={`${highMargin.margin}%`} highlight="text-green-400"/><SummaryRow label="Lowest Margin" value={lowMargin.product.split(" ").slice(0,2).join(" ")} sub={`${lowMargin.margin}%`} highlight="text-rose-400"/><SummaryRow label="Avg Margin" value={`${avgMargin}%`} highlight="text-violet-300"/><SummaryRow label="Avg FOB" value={`$${avgFOB}`}/></ReportSection></GlassCard>
+            <GlassCard color="violet"><ReportSection title="Payroll by Dept" color="violet">{DATA.payroll.map((p,i)=>(<SummaryRow key={i} label={p.employee.split(" ")[0]} value={`$${p.net}`} sub={p.dept} highlight="text-violet-300"/>))}<div className="mt-2 pt-2 border-t border-white/8"><SummaryRow label="Total" value={`$${totalPayroll.toLocaleString()}`} highlight="text-green-400"/></div></ReportSection></GlassCard>
           </div>
         </div>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 7. MAINTENANCE REPORT
-// ═══════════════════════════════════════════════════════════════
 function MaintenanceReportPage({ onBack }) {
   const running = DATA.machines.filter(m=>m.status==="Running");
   const maintenance = DATA.machines.filter(m=>m.status==="Maintenance");
   const idle = DATA.machines.filter(m=>m.status==="Idle");
   const utilRate = Math.round(running.length/DATA.machines.length*100);
-  const byDept = [...new Set(DATA.machines.map(m=>m.dept))].map(d=>({
-    dept:d, total:DATA.machines.filter(m=>m.dept===d).length,
-    running:DATA.machines.filter(m=>m.dept===d&&m.status==="Running").length
-  }));
-
+  const byDept = [...new Set(DATA.machines.map(m=>m.dept))].map(d=>({ dept:d, total:DATA.machines.filter(m=>m.dept===d).length, running:DATA.machines.filter(m=>m.dept===d&&m.status==="Running").length }));
   return (
       <div>
         <PageHeader title="Maintenance Report" subtitle="Reports • Machines & Assets" icon="🔧" onBack={onBack} color="orange"/>
         <ReportMeta period="March 2026" preparedBy="Panha Rin"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Utilization" value={`${utilRate}%`} icon="⚙️" color={utilRate>=80?"green":"amber"}/>
           <StatCard label="Running" value={running.length} icon="✅" color="green"/>
           <StatCard label="In Maintenance" value={maintenance.length} icon="🔧" color="amber"/>
           <StatCard label="Idle" value={idle.length} icon="💤" color="rose"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="md:col-span-2">
-            <GlassCard color="orange">
-              <ReportSection title="Machine Status Register" color="orange">
-                <Table color="orange" cols={["ID","Machine","Type","Dept","Line","Last Service","Next Service","Status"]}
-                       rows={DATA.machines.map(m=>[
-                         <span className="font-mono text-orange-300 text-[10px]">{m.id}</span>,
-                         m.name, m.type, m.dept, m.line,
-                         m.lastService, m.nextService,
-                         <StatusBadge status={m.status}/>
-                       ])}/>
-              </ReportSection>
-            </GlassCard>
-          </div>
+          <div className="md:col-span-2"><GlassCard color="orange"><ReportSection title="Machine Status Register" color="orange"><Table color="orange" cols={["ID","Machine","Type","Dept","Line","Last Service","Next Service","Status"]} rows={DATA.machines.map(m=>[<span className="font-mono text-orange-300 text-[10px]">{m.id}</span>,m.name,m.type,m.dept,m.line,m.lastService,m.nextService,<StatusBadge status={m.status}/>])}/></ReportSection></GlassCard></div>
           <div className="space-y-4">
-            <GlassCard color="orange">
-              <ReportSection title="Utilization by Dept" color="orange">
-                {byDept.map((d,i)=><MiniBar key={i} label={d.dept} value={d.running} max={d.total} color="orange"/>)}
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="orange">
-              <ReportSection title="Status Summary" color="orange">
-                <div className="flex items-center gap-4 justify-center py-2">
-                  <DonutChart size={90} segments={[
-                    { value:running.length, color:"#34d399" },
-                    { value:maintenance.length, color:"#fbbf24" },
-                    { value:idle.length, color:"#fb7185" },
-                  ]}/>
-                  <div className="space-y-2">
-                    {[{label:"Running",count:running.length,color:"#34d399"},{label:"Maintenance",count:maintenance.length,color:"#fbbf24"},{label:"Idle",count:idle.length,color:"#fb7185"}].map((s,i)=>(
-                        <div key={i} className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full" style={{ background:s.color }}/>
-                          <span className="text-[10px] text-white/50">{s.label}</span>
-                          <span className="text-[10px] font-semibold text-white/80 ml-2">{s.count}</span>
-                        </div>
-                    ))}
-                  </div>
-                </div>
-                <SummaryRow label="Total Machines" value={DATA.machines.length}/>
-                <SummaryRow label="Utilization Rate" value={`${utilRate}%`} highlight={utilRate>=80?"text-green-400":"text-amber-400"}/>
-              </ReportSection>
-            </GlassCard>
+            <GlassCard color="orange"><ReportSection title="Utilization by Dept" color="orange">{byDept.map((d,i)=><MiniBar key={i} label={d.dept} value={d.running} max={d.total} color="orange"/>)}</ReportSection></GlassCard>
+            <GlassCard color="orange"><ReportSection title="Status Summary" color="orange"><div className="flex items-center gap-4 justify-center py-2"><DonutChart size={90} segments={[{value:running.length,color:"#34d399"},{value:maintenance.length,color:"#fbbf24"},{value:idle.length,color:"#fb7185"}]}/><div className="space-y-2">{[{label:"Running",count:running.length,color:"#34d399"},{label:"Maintenance",count:maintenance.length,color:"#fbbf24"},{label:"Idle",count:idle.length,color:"#fb7185"}].map((s,i)=>(<div key={i} className="flex items-center gap-2"><div className="w-2 h-2 rounded-full" style={{ background:s.color }}/><span className="text-[10px] text-white/50">{s.label}</span><span className="text-[10px] font-semibold text-white/80 ml-2">{s.count}</span></div>))}</div></div><SummaryRow label="Total Machines" value={DATA.machines.length}/><SummaryRow label="Utilization Rate" value={`${utilRate}%`} highlight={utilRate>=80?"text-green-400":"text-amber-400"}/></ReportSection></GlassCard>
           </div>
         </div>
       </div>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 8. KPI / EXECUTIVE SUMMARY REPORT
-// ═══════════════════════════════════════════════════════════════
 function KPIReportPage({ onBack }) {
   const totalTarget = DATA.productionLines.reduce((s,l)=>s+l.target,0);
   const totalActual = DATA.productionLines.reduce((s,l)=>s+l.actual,0);
@@ -1851,7 +1319,6 @@ function KPIReportPage({ onBack }) {
   const attendRate = Math.round((DATA.attendance.filter(a=>a.status!=="Absent").length/DATA.attendance.length)*100);
   const totalPayroll = DATA.payroll.reduce((s,p)=>s+p.net,0);
   const avgMargin = (DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1);
-
   const kpis = [
     { label:"Production Efficiency", value:`${overallEff}%`, target:"≥ 90%", status:overallEff>=90?"✅":"⚠️", color:overallEff>=90?"green":"amber" },
     { label:"Quality Pass Rate", value:`${passRate}%`, target:"≥ 95%", status:passRate>=95?"✅":"⚠️", color:passRate>=95?"green":"amber" },
@@ -1862,97 +1329,33 @@ function KPIReportPage({ onBack }) {
     { label:"Delayed Orders", value:DATA.workOrders.filter(w=>w.status==="Delayed").length, target:"0", status:DATA.workOrders.filter(w=>w.status==="Delayed").length===0?"✅":"❌", color:DATA.workOrders.filter(w=>w.status==="Delayed").length===0?"green":"rose" },
     { label:"Low Stock Items", value:DATA.materials.filter(m=>m.stock<m.reorder).length, target:"0", status:DATA.materials.filter(m=>m.stock<m.reorder).length===0?"✅":"⚠️", color:DATA.materials.filter(m=>m.stock<m.reorder).length===0?"green":"amber" },
   ];
-
   return (
       <div>
         <PageHeader title="KPI Executive Summary" subtitle="Reports • Factory Performance" icon="📈" onBack={onBack} color="amber"/>
         <ReportMeta period="March 2026 — Week 10" preparedBy="Sophea Keo"/>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
           <StatCard label="Production Eff." value={`${overallEff}%`} icon="⚙️" color={overallEff>=90?"green":"amber"}/>
           <StatCard label="Quality Pass" value={`${passRate}%`} icon="✅" color={passRate>=95?"green":"amber"}/>
           <StatCard label="Machine Util." value={`${utilRate}%`} icon="🔧" color={utilRate>=85?"green":"amber"}/>
           <StatCard label="Avg Margin" value={`${avgMargin}%`} icon="💰" color="violet"/>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="md:col-span-2">
-            <GlassCard color="amber">
-              <ReportSection title="Factory KPI Scorecard" color="amber">
-                <div className="space-y-2">
-                  {kpis.map((kpi,i)=>{
-                    const a = ACCENT[kpi.color];
-                    return (
-                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl" style={{ background:"rgba(255,255,255,0.03)", border:`1px solid ${a.border}` }}>
-                          <span className="text-base w-6 shrink-0">{kpi.status}</span>
-                          <span className="text-xs text-white/70 flex-1">{kpi.label}</span>
-                          <span className="text-[10px] text-white/30 hidden md:block">Target: {kpi.target}</span>
-                          <span className="text-sm font-bold" style={{ color:a.text }}>{kpi.value}</span>
-                        </div>
-                    );
-                  })}
-                </div>
-              </ReportSection>
-            </GlassCard>
-          </div>
+          <div className="md:col-span-2"><GlassCard color="amber"><ReportSection title="Factory KPI Scorecard" color="amber"><div className="space-y-2">{kpis.map((kpi,i)=>{ const a=ACCENT[kpi.color]; return(<div key={i} className="flex items-center gap-3 p-3 rounded-xl" style={{ background:"rgba(255,255,255,0.03)", border:`1px solid ${a.border}` }}><span className="text-base w-6 shrink-0">{kpi.status}</span><span className="text-xs text-white/70 flex-1">{kpi.label}</span><span className="text-[10px] text-white/30 hidden md:block">Target: {kpi.target}</span><span className="text-sm font-bold" style={{ color:a.text }}>{kpi.value}</span></div>);})}</div></ReportSection></GlassCard></div>
           <div className="space-y-4">
-            <GlassCard color="amber">
-              <ReportSection title="Overall Health" color="amber">
-                <div className="text-center py-3">
-                  <div className="text-4xl font-bold mb-1" style={{ color: kpis.filter(k=>k.status==="✅").length>=6?"#34d399":"#fbbf24" }}>
-                    {kpis.filter(k=>k.status==="✅").length}/{kpis.length}
-                  </div>
-                  <p className="text-[11px] text-white/40">KPIs on target</p>
-                  <div className="mt-3 w-full h-2.5 rounded-full bg-white/10">
-                    <div className="h-full rounded-full" style={{ width:`${Math.round(kpis.filter(k=>k.status==="✅").length/kpis.length*100)}%`, background: kpis.filter(k=>k.status==="✅").length>=6?"#34d399":"#fbbf24" }}/>
-                  </div>
-                </div>
-              </ReportSection>
-            </GlassCard>
-            <GlassCard color="amber">
-              <ReportSection title="Action Items" color="amber">
-                {kpis.filter(k=>k.status!=="✅").map((kpi,i)=>(
-                    <div key={i} className="flex items-start gap-2 py-1.5 border-b border-white/5 last:border-0">
-                      <span className="text-xs mt-0.5">{kpi.status}</span>
-                      <div>
-                        <p className="text-[11px] text-white/70">{kpi.label}</p>
-                        <p className="text-[10px] text-white/35">Current: {kpi.value} · Target: {kpi.target}</p>
-                      </div>
-                    </div>
-                ))}
-                {kpis.filter(k=>k.status!=="✅").length===0 && <p className="text-[11px] text-green-400 text-center py-2">All KPIs on target! 🎉</p>}
-              </ReportSection>
-            </GlassCard>
+            <GlassCard color="amber"><ReportSection title="Overall Health" color="amber"><div className="text-center py-3"><div className="text-4xl font-bold mb-1" style={{ color:kpis.filter(k=>k.status==="✅").length>=6?"#34d399":"#fbbf24" }}>{kpis.filter(k=>k.status==="✅").length}/{kpis.length}</div><p className="text-[11px] text-white/40">KPIs on target</p><div className="mt-3 w-full h-2.5 rounded-full bg-white/10"><div className="h-full rounded-full" style={{ width:`${Math.round(kpis.filter(k=>k.status==="✅").length/kpis.length*100)}%`, background:kpis.filter(k=>k.status==="✅").length>=6?"#34d399":"#fbbf24" }}/></div></div></ReportSection></GlassCard>
+            <GlassCard color="amber"><ReportSection title="Action Items" color="amber">{kpis.filter(k=>k.status!=="✅").map((kpi,i)=>(<div key={i} className="flex items-start gap-2 py-1.5 border-b border-white/5 last:border-0"><span className="text-xs mt-0.5">{kpi.status}</span><div><p className="text-[11px] text-white/70">{kpi.label}</p><p className="text-[10px] text-white/35">Current: {kpi.value} · Target: {kpi.target}</p></div></div>))}{kpis.filter(k=>k.status!=="✅").length===0&&<p className="text-[11px] text-green-400 text-center py-2">All KPIs on target! 🎉</p>}</ReportSection></GlassCard>
           </div>
         </div>
-
-        {/* Factory-wide summary bars */}
-        <GlassCard color="amber">
-          <ReportSection title="Line Performance Summary" color="amber">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-              {DATA.productionLines.map((l,i)=>(
-                  <div key={i} className="flex items-center gap-3 py-1.5">
-                    <span className="text-[11px] text-white/50 w-16 shrink-0">{l.name}</span>
-                    <div className="flex-1 h-2 rounded-full bg-white/8">
-                      <div className="h-full rounded-full" style={{ width:`${l.eff}%`, background:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fbbf24" }}/>
-                    </div>
-                    <span className="text-[11px] font-semibold w-10 text-right" style={{ color:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fbbf24" }}>{l.eff}%</span>
-                    <span className="text-[10px] text-white/25 w-20 text-right">{l.actual}/{l.target}</span>
-                  </div>
-              ))}
-            </div>
-          </ReportSection>
-        </GlassCard>
+        <GlassCard color="amber"><ReportSection title="Line Performance Summary" color="amber"><div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">{DATA.productionLines.map((l,i)=>(<div key={i} className="flex items-center gap-3 py-1.5"><span className="text-[11px] text-white/50 w-16 shrink-0">{l.name}</span><div className="flex-1 h-2 rounded-full bg-white/8"><div className="h-full rounded-full" style={{ width:`${l.eff}%`, background:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fbbf24" }}/></div><span className="text-[11px] font-semibold w-10 text-right" style={{ color:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fbbf24" }}>{l.eff}%</span><span className="text-[10px] text-white/25 w-20 text-right">{l.actual}/{l.target}</span></div>))}</div></ReportSection></GlassCard>
       </div>
   );
 }
 
 // ═══════════════════════════════════════════════════════════════
-// REPORTS HUB PAGE
+// REPORTS HUB
 // ═══════════════════════════════════════════════════════════════
 function ReportsPage({ onBack }) {
   const [activeReport, setActiveReport] = useState(null);
-
   const REPORT_PAGES = {
     production: <ProductionReportPage onBack={()=>setActiveReport(null)}/>,
     quality:    <QualityReportPage    onBack={()=>setActiveReport(null)}/>,
@@ -1963,9 +1366,7 @@ function ReportsPage({ onBack }) {
     maintenance:<MaintenanceReportPage onBack={()=>setActiveReport(null)}/>,
     kpi:        <KPIReportPage        onBack={()=>setActiveReport(null)}/>,
   };
-
   if (activeReport && REPORT_PAGES[activeReport]) return REPORT_PAGES[activeReport];
-
   const reports = [
     { id:"kpi",         icon:"📈", title:"KPI Executive Summary",    desc:"Factory-wide KPI scorecard, action items, health overview",   color:"amber", freq:"Real-time", badge:"New" },
     { id:"production",  icon:"🏗️", title:"Production Report",        desc:"Line efficiency, output vs target, work order progress",       color:"green",  freq:"Daily" },
@@ -1976,7 +1377,6 @@ function ReportsPage({ onBack }) {
     { id:"finance",     icon:"💰", title:"Finance / Costing Report", desc:"Cost sheet, margins, FOB prices, payroll breakdown",           color:"violet", freq:"Monthly" },
     { id:"maintenance", icon:"🔧", title:"Maintenance Report",       desc:"Machine status, utilization rate, service schedules",          color:"orange", freq:"Weekly" },
   ];
-
   const statusCounts = {
     production: `${Math.round(DATA.productionLines.reduce((s,l)=>s+l.actual,0)/DATA.productionLines.reduce((s,l)=>s+l.target,0)*100)}% eff`,
     quality: `${Math.round(DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length)}% pass`,
@@ -1985,54 +1385,34 @@ function ReportsPage({ onBack }) {
     procurement: `${DATA.purchaseOrders.filter(p=>p.status==="In Transit").length} in transit`,
     finance: `${(DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1)}% avg margin`,
     maintenance: `${DATA.machines.filter(m=>m.status==="Running").length}/${DATA.machines.length} running`,
-    kpi: `${[
-      DATA.productionLines.reduce((s,l)=>s+l.actual,0)/DATA.productionLines.reduce((s,l)=>s+l.target,0)>=0.9,
-      DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length>=95,
-      DATA.machines.filter(m=>m.status==="Running").length/DATA.machines.length>=0.85,
-    ].filter(Boolean).length}/8 KPIs met`,
+    kpi: `${[DATA.productionLines.reduce((s,l)=>s+l.actual,0)/DATA.productionLines.reduce((s,l)=>s+l.target,0)>=0.9,DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length>=95,DATA.machines.filter(m=>m.status==="Running").length/DATA.machines.length>=0.85].filter(Boolean).length}/8 KPIs met`,
   };
-
   return (
       <div>
         <PageHeader title="Reports Center" subtitle="Analytics & Reporting Hub" icon="📊" onBack={onBack} color="amber"/>
-
-        {/* Quick summary strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           <StatCard label="Report Types" value={reports.length} icon="📋" color="amber"/>
           <StatCard label="Daily Reports" value={reports.filter(r=>r.freq==="Daily").length} icon="📅" color="green"/>
           <StatCard label="Weekly Reports" value={reports.filter(r=>r.freq==="Weekly").length} icon="📆" color="blue"/>
           <StatCard label="Live Reports" value={reports.filter(r=>r.freq==="Real-time").length} icon="⚡" color="rose"/>
         </div>
-
-        {/* Report cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {reports.map((r) => {
             const a = ACCENT[r.color];
             return (
-                <button key={r.id} onClick={()=>setActiveReport(r.id)}
-                        className="relative text-left rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:scale-[1.01] group active:scale-95"
+                <button key={r.id} onClick={()=>setActiveReport(r.id)} className="relative text-left rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:scale-[1.01] group active:scale-95"
                         style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03))", border:`1px solid ${a.border}`, boxShadow:`0 8px 32px rgba(0,0,0,0.4),0 0 40px ${a.bg}` }}>
                   <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.bar}`}/>
                   <div className="p-5">
-                    {/* Icon + badge */}
                     <div className="flex items-start justify-between mb-3">
-                      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl" style={{ background:a.bg, border:`1px solid ${a.border}` }}>
-                        {r.icon}
-                      </div>
-                      <div className="flex flex-col items-end gap-1">
-                        <Badge color={r.color}>{r.freq}</Badge>
-                        {r.badge && <Badge color="rose">{r.badge}</Badge>}
-                      </div>
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{r.icon}</div>
+                      <div className="flex flex-col items-end gap-1"><Badge color={r.color}>{r.freq}</Badge>{r.badge && <Badge color="rose">{r.badge}</Badge>}</div>
                     </div>
-                    {/* Title + desc */}
                     <h3 className="text-sm font-bold text-white/90 mb-1 leading-snug">{r.title}</h3>
                     <p className="text-[11px] text-white/40 leading-relaxed mb-3">{r.desc}</p>
-                    {/* Live stat */}
                     <div className="flex items-center justify-between pt-3 border-t border-white/8">
                       <span className="text-[10px] font-semibold" style={{ color:a.text }}>{statusCounts[r.id]}</span>
-                      <span className="text-[10px] text-white/30 group-hover:text-white/60 transition-colors flex items-center gap-1">
-                    View Report <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span>
-                  </span>
+                      <span className="text-[10px] text-white/30 group-hover:text-white/60 transition-colors flex items-center gap-1">View Report <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span></span>
                     </div>
                   </div>
                 </button>
@@ -2044,7 +1424,307 @@ function ReportsPage({ onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── MENU COMPONENTS ──────────────────────────────────────────
+// PRODUCTION FLOW PAGE (NEW)
+// ═══════════════════════════════════════════════════════════════
+function ProductionFlowPage({ onBack }) {
+  const [activeStage, setActiveStage] = useState(null);
+
+  const whInput = DATA.materials.reduce((s, m) => s + m.stock, 0).toLocaleString();
+  const whLowStock = DATA.materials.filter(m => m.stock < m.reorder).length;
+  const cuttingLines  = DATA.productionLines.filter(l => l.dept === "Cutting");
+  const cuttingActual = cuttingLines.reduce((s, l) => s + l.actual, 0);
+  const cuttingTarget = cuttingLines.reduce((s, l) => s + l.target, 0);
+  const cuttingEff    = cuttingTarget > 0 ? Math.round(cuttingActual / cuttingTarget * 100) : 0;
+  const sewingLines  = DATA.productionLines.filter(l => l.dept === "Sewing");
+  const sewingActual = sewingLines.reduce((s, l) => s + l.actual, 0);
+  const sewingTarget = sewingLines.reduce((s, l) => s + l.target, 0);
+  const sewingEff    = sewingTarget > 0 ? Math.round(sewingActual / sewingTarget * 100) : 0;
+  const embDept = DATA.departments.find(d => d.name === "Embroidery");
+  const finishLines  = DATA.productionLines.filter(l => l.dept === "Finishing");
+  const finishActual = finishLines.reduce((s, l) => s + l.actual, 0);
+  const finishTarget = finishLines.reduce((s, l) => s + l.target, 0);
+  const finishEff    = finishTarget > 0 ? Math.round(finishActual / finishTarget * 100) : 0;
+  const openDefects   = DATA.defects.filter(d => d.status === "Open").length;
+  const critDefects   = DATA.defects.filter(d => d.severity === "Critical").length;
+  const totalChecked  = DATA.inspections.reduce((s, i) => s + i.checked, 0);
+  const totalPassed   = DATA.inspections.reduce((s, i) => s + i.passed, 0);
+  const qcPassRate    = totalChecked > 0 ? Math.round(totalPassed / totalChecked * 100) : 0;
+  const packLines  = DATA.productionLines.filter(l => l.dept === "Packing");
+  const packActual = packLines.reduce((s, l) => s + l.actual, 0);
+  const whOutQty    = DATA.shipments.reduce((s, sh) => s + sh.qty, 0).toLocaleString();
+  const confirmedSh = DATA.shipments.filter(s => s.status === "Confirmed").length;
+  const totalWOQty  = DATA.workOrders.reduce((s, w) => s + Number(w.qty), 0);
+  const totalWODone = DATA.workOrders.reduce((s, w) => s + Number(w.done), 0);
+  const overallPct  = totalWOQty > 0 ? Math.round(totalWODone / totalWOQty * 100) : 0;
+
+  const STAGES = [
+    {
+      id:"wh-in", icon:"📦", label:"WH Input", sublabel:"Raw materials received", color:"blue",
+      kpi:`${whInput} units stock`, alert:whLowStock>0?`⚠ ${whLowStock} low stock`:null,
+      detail:{
+        title:"Warehouse — Raw Material Input",
+        desc:"Fabric rolls, trims, threads, zippers, labels and accessories are received from suppliers, inspected (GRN), and stored. Materials are issued to cutting against approved work orders.",
+        stats:[{label:"Materials tracked",value:DATA.materials.length},{label:"Total stock units",value:DATA.materials.reduce((s,m)=>s+m.stock,0).toLocaleString()},{label:"Low stock alerts",value:whLowStock,danger:whLowStock>0},{label:"Active suppliers",value:DATA.suppliers.filter(s=>s.status==="Active").length},{label:"POs in transit",value:DATA.purchaseOrders.filter(p=>p.status==="In Transit").length}],
+        rows:DATA.materials.map(m=>({cells:[m.code,m.name,`${m.stock.toLocaleString()} ${m.unit}`,m.stock<m.reorder?"Low":"OK",m.supplier],alert:m.stock<m.reorder})),
+        cols:["Code","Material","Stock","Status","Supplier"],
+      },
+    },
+    {
+      id:"cutting", icon:"✂️", label:"Cutting", sublabel:"Lay · Marker · Cut", color:"amber",
+      kpi:`${cuttingEff}% efficiency`, alert:cuttingEff<85?`Below target`:null,
+      detail:{
+        title:"Cutting Department",
+        desc:"Fabric is laid in multiple plies. A CAD marker minimises wastage. Straight-knife or band-knife machines cut panels per size ratio. Cut bundles are numbered and sent to sewing.",
+        stats:[{label:"Cutting lines",value:cuttingLines.length},{label:"Today output",value:`${cuttingActual.toLocaleString()} pcs`},{label:"Target",value:`${cuttingTarget.toLocaleString()} pcs`},{label:"Efficiency",value:`${cuttingEff}%`,danger:cuttingEff<85},{label:"Machines running",value:DATA.machines.filter(m=>m.dept==="Cutting"&&m.status==="Running").length}],
+        rows:cuttingLines.map(l=>({cells:[l.name,l.supervisor,`${l.workers} workers`,`${l.actual.toLocaleString()} / ${l.target.toLocaleString()}`,`${l.eff}%`],alert:l.eff<80})),
+        cols:["Line","Supervisor","Workers","Output / Target","Efficiency"],
+      },
+    },
+    {
+      id:"sewing", icon:"🧵", label:"Sewing", sublabel:"Sub-assembly · Main · Closing", color:"green",
+      kpi:`${sewingActual.toLocaleString()} pcs today`, alert:sewingEff<85?`${sewingEff}% eff`:null,
+      detail:{
+        title:"Sewing / Assembly Lines",
+        desc:"Cut bundles enter the sewing floor. Sub-assembly prepares collars, cuffs, pockets. Main assembly joins panels and sets sleeves. Closing ops add zippers, buttons, and final stitching.",
+        stats:[{label:"Sewing lines",value:sewingLines.length},{label:"Today output",value:`${sewingActual.toLocaleString()} pcs`},{label:"Target",value:`${sewingTarget.toLocaleString()} pcs`},{label:"Avg efficiency",value:`${sewingEff}%`,danger:sewingEff<85},{label:"Total workers",value:sewingLines.reduce((s,l)=>s+l.workers,0)}],
+        rows:sewingLines.map(l=>({cells:[l.name,l.supervisor,`${l.workers}`,`${l.actual} / ${l.target}`,`${l.eff}%`],alert:l.eff<80})),
+        cols:["Line","Supervisor","Workers","Output / Target","Eff %"],
+      },
+    },
+    {
+      id:"embroidery", icon:"🪡", label:"Embroidery", sublabel:"Print · Logo · Badge (if reqd)", color:"violet",
+      kpi:embDept?`${embDept.workers} workers`:"Optional", optional:true,
+      detail:{
+        title:"Embroidery / Printing (Optional)",
+        desc:"Garments requiring logos, numbering, embroidery motifs, or heat-transfer prints are routed here before finishing. Multi-head machines run digitised designs. Once done, pieces re-join finishing.",
+        stats:[{label:"Dept head",value:embDept?.head||"Sina Kem"},{label:"Lines",value:embDept?.lines||3},{label:"Workers",value:embDept?.workers||36},{label:"Emb. machines",value:DATA.machines.filter(m=>m.type==="Embroidery").length},{label:"Floor",value:`Floor ${embDept?.floor||"A"}`}],
+        rows:DATA.machines.filter(m=>m.dept==="Embroidery").map(m=>({cells:[m.id,m.name,m.type,m.status,m.nextService],alert:m.status==="Maintenance"})),
+        cols:["ID","Machine","Type","Status","Next Service"],
+      },
+    },
+    {
+      id:"qc-inprocess", icon:"🔍", label:"In-process QC", sublabel:"Defect check · Rework gate", color:"rose",
+      kpi:`${qcPassRate}% pass rate`, alert:openDefects>0?`${openDefects} open defects`:null,
+      detail:{
+        title:"In-Process Quality Control",
+        desc:"QC inspectors check garments at key sewing operations. Defects are tagged and returned for rework. Critical defects stop the line. Pass rate is tracked per line and per work order.",
+        stats:[{label:"Pass rate",value:`${qcPassRate}%`,danger:qcPassRate<90},{label:"Total checked",value:totalChecked.toLocaleString()},{label:"Open defects",value:openDefects,danger:openDefects>0},{label:"Critical",value:critDefects,danger:critDefects>0},{label:"Rework items",value:DATA.defects.filter(d=>d.status==="Rework").length}],
+        rows:DATA.defects.map(d=>({cells:[d.line,d.type,`${d.qty} pcs`,d.severity,d.status,d.inspector],alert:d.severity==="Critical"||d.status==="Open"})),
+        cols:["Line","Defect type","Qty","Severity","Status","Inspector"],
+      },
+    },
+    {
+      id:"finishing", icon:"👔", label:"Finishing", sublabel:"Trim · Press · Label · Tag", color:"amber",
+      kpi:`${finishActual.toLocaleString()} pcs today`, alert:null,
+      detail:{
+        title:"Finishing Department",
+        desc:"Sewn garments go through thread trimming, spot cleaning, and pressing. Care labels and hang tags are attached. Any buyer-specific finishing requirements are applied. Sorted by size and colour before QC.",
+        stats:[{label:"Finishing lines",value:finishLines.length},{label:"Today output",value:`${finishActual.toLocaleString()} pcs`},{label:"Target",value:`${finishTarget.toLocaleString()} pcs`},{label:"Efficiency",value:`${finishEff}%`},{label:"Dept head",value:DATA.departments.find(d=>d.name==="Finishing")?.head||"Panha Rin"}],
+        rows:finishLines.map(l=>({cells:[l.name,l.supervisor,`${l.workers}`,`${l.actual} / ${l.target}`,`${l.eff}%`],alert:l.eff<80})),
+        cols:["Line","Supervisor","Workers","Output / Target","Eff %"],
+      },
+    },
+    {
+      id:"qc-final", icon:"✅", label:"Final QC", sublabel:"AQL inspection · Buyer standard", color:"rose",
+      kpi:`AQL 2.5 sampling`, alert:DATA.inspections.some(i=>i.result==="Fail")?"Fail found":null,
+      detail:{
+        title:"Final QC / AQL Inspection",
+        desc:"Finished garments are sampled under AQL 2.5. Buyer's quality standards and measurement specs are applied. Rejected lots are sent back for 100% check and rework.",
+        stats:[{label:"Inspections done",value:DATA.inspections.length},{label:"Total checked",value:DATA.inspections.reduce((s,i)=>s+i.checked,0).toLocaleString()},{label:"Pass",value:DATA.inspections.filter(i=>i.result==="Pass").length},{label:"Fail / returned",value:DATA.inspections.filter(i=>i.result==="Fail").length,danger:true},{label:"Avg pass rate",value:`${qcPassRate}%`}],
+        rows:DATA.inspections.map(i=>({cells:[i.wo,i.stage,i.inspector,i.date,`${i.passed}/${i.checked}`,i.result],alert:i.result==="Fail"})),
+        cols:["Work Order","Stage","Inspector","Date","Passed/Checked","Result"],
+      },
+    },
+    {
+      id:"packing", icon:"📫", label:"Packing", sublabel:"Fold · Poly-bag · Carton · Label", color:"gray",
+      kpi:`${packActual.toLocaleString()} pcs packed`, alert:null,
+      detail:{
+        title:"Packing Department",
+        desc:"Approved garments are folded, poly-bagged, and tagged per buyer specs. Assorted or solid packs are made per the packing instruction sheet. Cartons are labelled with buyer PO, style, size, colour, quantity.",
+        stats:[{label:"Packing lines",value:packLines.length},{label:"Today output",value:`${packActual.toLocaleString()} pcs`},{label:"Target",value:`${packLines.reduce((s,l)=>s+l.target,0).toLocaleString()} pcs`},{label:"Dept head",value:DATA.departments.find(d=>d.name==="Packing")?.head||"Kosal Vong"},{label:"Workers",value:DATA.departments.find(d=>d.name==="Packing")?.workers||60}],
+        rows:packLines.map(l=>({cells:[l.name,l.supervisor,`${l.workers}`,`${l.actual} / ${l.target}`,`${l.eff}%`],alert:l.eff<80})),
+        cols:["Line","Supervisor","Workers","Output / Target","Eff %"],
+      },
+    },
+    {
+      id:"wh-out", icon:"🚢", label:"WH Output", sublabel:"Finished goods → Shipment", color:"blue",
+      kpi:`${whOutQty} pcs ready`, alert:null,
+      detail:{
+        title:"Warehouse — Finished Goods Output & Shipment",
+        desc:"Packed cartons are received into the finished goods warehouse, allocated to shipment plans, and loaded onto trucks. Packing lists and commercial invoices are prepared for customs clearance.",
+        stats:[{label:"Shipments",value:DATA.shipments.length},{label:"Total pcs ready",value:whOutQty},{label:"Confirmed",value:confirmedSh},{label:"Scheduled",value:DATA.shipments.filter(s=>s.status==="Scheduled").length},{label:"Sea freight",value:DATA.shipments.filter(s=>s.method==="Sea Freight").length}],
+        rows:DATA.shipments.map(sh=>({cells:[sh.id,sh.buyer,sh.qty.toLocaleString(),sh.method,sh.etd,sh.eta,sh.status],alert:false})),
+        cols:["Shipment","Buyer","Qty","Method","ETD","ETA","Status"],
+      },
+    },
+  ];
+
+  const effColor = (v) => v>=90?"#34d399":v>=75?"#60a5fa":v>=50?"#fbbf24":"#fb7185";
+
+  const colorMap = {
+    blue:   { text:"#60a5fa", border:"rgba(96,165,250,0.35)",  bg:"rgba(96,165,250,0.12)",  bar:"from-blue-400/70 to-blue-300/30" },
+    amber:  { text:"#fbbf24", border:"rgba(251,191,36,0.35)",  bg:"rgba(251,191,36,0.12)",  bar:"from-amber-400/70 to-amber-300/30" },
+    green:  { text:"#34d399", border:"rgba(52,211,153,0.35)",  bg:"rgba(52,211,153,0.12)",  bar:"from-emerald-400/70 to-emerald-300/30" },
+    rose:   { text:"#fb7185", border:"rgba(251,113,133,0.35)", bg:"rgba(251,113,133,0.12)", bar:"from-rose-400/70 to-rose-300/30" },
+    violet: { text:"#a78bfa", border:"rgba(167,139,250,0.35)", bg:"rgba(167,139,250,0.12)", bar:"from-violet-400/70 to-violet-300/30" },
+    gray:   { text:"#94a3b8", border:"rgba(148,163,184,0.3)",  bg:"rgba(148,163,184,0.08)", bar:"from-slate-400/50 to-slate-300/20" },
+  };
+
+  const active = activeStage ? STAGES.find(s => s.id === activeStage) : null;
+
+  return (
+      <div>
+        {active && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.75)", backdropFilter:"blur(10px)" }}>
+              <div className="relative w-full max-w-2xl max-h-[88vh] overflow-y-auto rounded-3xl"
+                   style={{ background:"linear-gradient(145deg,rgba(22,24,18,0.99),rgba(14,16,12,0.99))", border:`1px solid ${colorMap[active.color].border}`, boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
+                <div className={`absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r ${colorMap[active.color].bar} rounded-b-full`}/>
+                <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background:colorMap[active.color].bg, border:`1px solid ${colorMap[active.color].border}` }}>{active.icon}</div>
+                    <div><h3 className="text-sm font-bold text-white/90">{active.detail.title}</h3><p className="text-[10px] text-white/30 uppercase tracking-widest">Production Flow · {active.label}</p></div>
+                  </div>
+                  <button onClick={()=>setActiveStage(null)} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                </div>
+                <div className="mx-6 mb-4 px-4 py-3 rounded-xl text-[11px] text-white/55 leading-relaxed" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>{active.detail.desc}</div>
+                <div className="grid grid-cols-5 gap-2 px-6 mb-4">
+                  {active.detail.stats.map((s,i)=>(
+                      <div key={i} className="rounded-xl px-3 py-2.5 text-center" style={{ background:"rgba(255,255,255,0.05)", border:`1px solid ${s.danger?"rgba(251,113,133,0.3)":colorMap[active.color].border}` }}>
+                        <p className="text-xs font-bold leading-none mb-1" style={{ color:s.danger?"#fb7185":colorMap[active.color].text }}>{s.value}</p>
+                        <p className="text-[9px] text-white/30 leading-tight">{s.label}</p>
+                      </div>
+                  ))}
+                </div>
+                {active.detail.rows.length > 0 && (
+                    <div className="mx-6 mb-6 overflow-x-auto rounded-xl" style={{ border:`1px solid ${colorMap[active.color].border}` }}>
+                      <table className="w-full text-xs">
+                        <thead><tr style={{ background:colorMap[active.color].bg, borderBottom:`1px solid ${colorMap[active.color].border}` }}>{active.detail.cols.map(c=>(<th key={c} className="text-left px-3 py-2 font-semibold text-white/50 uppercase tracking-wider text-[10px] whitespace-nowrap">{c}</th>))}</tr></thead>
+                        <tbody>{active.detail.rows.map((row,i)=>(<tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors" style={row.alert?{background:"rgba(251,113,133,0.06)"}:{}}>{row.cells.map((cell,j)=>(<td key={j} className="px-3 py-2 text-white/70 whitespace-nowrap">{cell}</td>))}</tr>))}</tbody>
+                      </table>
+                    </div>
+                )}
+              </div>
+            </div>
+        )}
+
+        <PageHeader title="Production Flow" subtitle="WH Input → Cut → Sew → Finish → WH Output" icon="🏭" onBack={onBack} color="green"/>
+
+        <div className="rounded-2xl p-4 mb-5" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] text-white/40 uppercase tracking-widest font-semibold">Overall production progress — all active work orders</span>
+            <span className="text-xs font-bold text-green-400">{overallPct}% complete</span>
+          </div>
+          <div className="w-full h-2.5 rounded-full bg-white/10"><div className="h-full rounded-full transition-all duration-700" style={{ width:`${overallPct}%`, background:effColor(overallPct) }}/></div>
+          <div className="flex items-center gap-4 mt-2 text-[10px] text-white/30">
+            <span>Total ordered: <span className="text-white/60 font-semibold">{totalWOQty.toLocaleString()} pcs</span></span>
+            <span>Completed: <span className="text-green-400 font-semibold">{totalWODone.toLocaleString()} pcs</span></span>
+            <span>Remaining: <span className="text-amber-400 font-semibold">{(totalWOQty-totalWODone).toLocaleString()} pcs</span></span>
+            <span className="ml-auto">Active WOs: <span className="text-white/60 font-semibold">{DATA.workOrders.length}</span></span>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="absolute left-[34px] top-10 bottom-10 w-px bg-gradient-to-b from-blue-400/20 via-green-400/20 to-blue-400/20 pointer-events-none"/>
+          <div className="space-y-2">
+            {STAGES.map((stage, idx) => {
+              const a = colorMap[stage.color];
+              return (
+                  <div key={stage.id}>
+                    {idx > 0 && (
+                        <div className="flex items-center ml-7 my-0.5">
+                          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2v8M5 8l3 4 3-4" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                          {stage.optional && <span className="ml-2 text-[9px] text-violet-400/60 uppercase tracking-widest font-semibold">optional route</span>}
+                        </div>
+                    )}
+                    <button onClick={()=>setActiveStage(stage.id)} className="w-full text-left relative rounded-2xl overflow-hidden group transition-all hover:-translate-y-0.5"
+                            style={{ background:stage.optional?"linear-gradient(135deg,rgba(167,139,250,0.07),rgba(255,255,255,0.02))":"linear-gradient(135deg,rgba(255,255,255,0.065),rgba(255,255,255,0.025))", border:`1px solid ${a.border}`, boxShadow:"0 4px 20px rgba(0,0,0,0.3)" }}>
+                      <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${a.bar}`}/>
+                      <div className="flex items-center gap-4 px-4 py-3">
+                        <div className="flex flex-col items-center shrink-0 w-14">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ background:a.bg, border:`1px solid ${a.border}` }}>{stage.icon}</div>
+                          {!stage.optional?<span className="text-[9px] text-white/20 mt-1">Step {idx+1}</span>:<span className="text-[9px] text-violet-400/50 mt-1">Optional</span>}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-sm font-bold text-white/90">{stage.label}</span>
+                            {stage.alert && <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background:"rgba(251,113,133,0.2)", color:"#fb7185", border:"1px solid rgba(251,113,133,0.3)" }}>{stage.alert}</span>}
+                          </div>
+                          <p className="text-[11px] text-white/40">{stage.sublabel}</p>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <p className="text-sm font-bold" style={{ color:a.text }}>{stage.kpi}</p>
+                          <p className="text-[10px] text-white/30 mt-0.5 group-hover:text-white/50 transition-colors">Tap for details →</p>
+                        </div>
+                        {(stage.id==="sewing"||stage.id==="cutting") && (
+                            <div className="hidden lg:flex flex-col gap-1 shrink-0 w-40">
+                              {(stage.id==="sewing"?sewingLines:cuttingLines).slice(0,3).map((l,i)=>(
+                                  <div key={i} className="flex items-center gap-1.5">
+                                    <span className="text-[9px] text-white/30 w-12 shrink-0">{l.name}</span>
+                                    <div className="flex-1 h-1 rounded-full bg-white/10"><div className="h-full rounded-full" style={{ width:`${l.eff}%`, background:effColor(l.eff) }}/></div>
+                                    <span className="text-[9px] w-8 text-right font-semibold" style={{ color:effColor(l.eff) }}>{l.eff}%</span>
+                                  </div>
+                              ))}
+                            </div>
+                        )}
+                      </div>
+                    </button>
+                  </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <GlassCard color="green">
+            <p className="text-[10px] text-white/40 uppercase tracking-widest mb-4 font-semibold">Live work order flow — progress through production</p>
+            <div className="space-y-4">
+              {DATA.workOrders.map(wo => {
+                const pct = wo.qty>0?Math.round(wo.done/wo.qty*100):0;
+                const stageNow = pct===0?"Cutting":pct<30?"Sewing":pct<60?"In-process QC":pct<80?"Finishing":pct<100?"Packing":"Shipped";
+                const stageColor = pct===0?"#fbbf24":pct<60?"#34d399":pct<80?"#fb7185":"#60a5fa";
+                const stages = ["WH In","Cutting","Sewing","QC","Finishing","Packing","WH Out"];
+                const stageIdx = Math.min(Math.floor(pct/(100/(stages.length-1))),stages.length-1);
+                return (
+                    <div key={wo.id} className="rounded-xl p-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                      <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-[10px] text-white/30">{wo.id}</span>
+                          <span className="text-xs font-semibold text-white/85">{wo.product}</span>
+                          <span className="text-[10px] text-white/40">{wo.buyer}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background:`${stageColor}22`, color:stageColor, border:`1px solid ${stageColor}44` }}>▶ {stageNow}</span>
+                          <StatusBadge status={wo.status}/><StatusBadge status={wo.priority}/>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-0 mb-2">
+                        {stages.map((s,i)=>(
+                            <div key={i} className="flex items-center flex-1">
+                              <div className="flex flex-col items-center w-full">
+                                <div className="w-2.5 h-2.5 rounded-full transition-all" style={{ background:i<=stageIdx?stageColor:"rgba(255,255,255,0.12)", boxShadow:i===stageIdx?`0 0 6px ${stageColor}88`:"none" }}/>
+                                <span className="text-[8px] text-white/25 mt-0.5 text-center leading-tight hidden md:block">{s}</span>
+                              </div>
+                              {i<stages.length-1&&<div className="flex-1 h-[1px] mb-3" style={{ background:i<stageIdx?stageColor:"rgba(255,255,255,0.08)" }}/>}
+                            </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-1.5 rounded-full bg-white/10"><div className="h-full rounded-full transition-all duration-700" style={{ width:`${pct}%`, background:effColor(pct) }}/></div>
+                        <span className="text-[10px] font-bold w-10 text-right" style={{ color:effColor(pct) }}>{pct}%</span>
+                        <span className="text-[10px] text-white/30 w-32 text-right">{wo.done.toLocaleString()} / {Number(wo.qty).toLocaleString()} pcs · Due {wo.due}</span>
+                      </div>
+                    </div>
+                );
+              })}
+            </div>
+          </GlassCard>
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MENU COMPONENTS
 // ═══════════════════════════════════════════════════════════════
 function MenuButton({ title, iconPath, onClick, badge, color="white" }) {
   return (
@@ -2086,9 +1766,6 @@ function Group({ label, color="amber", children }) {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ── DASHBOARD HOME QUICK ACTIONS ─────────────────────────────
-// ═══════════════════════════════════════════════════════════════
 function QuickAlerts({ onNav }) {
   const alerts = [
     { icon:"⚠️", text:"WO-2026-004 Sports Jersey is delayed", color:"rose", page:"work-orders" },
@@ -2114,7 +1791,7 @@ function QuickAlerts({ onNav }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── ROOT COMPONENT ───────────────────────────────────────────
+// ROOT COMPONENT
 // ═══════════════════════════════════════════════════════════════
 export default function SECFactory() {
   const [page, setPage] = useState(null);
@@ -2123,43 +1800,44 @@ export default function SECFactory() {
   const back = () => setPage(null);
 
   const PAGES = {
-    users: <UsersPage onBack={back}/>,
-    roles: <RolesPage onBack={back}/>,
-    "audit-log": <AuditLogPage onBack={back}/>,
-    settings: <SettingsPage onBack={back}/>,
-    departments: <DepartmentsPage onBack={back}/>,
-    "production-lines": <ProductionLinesPage onBack={back}/>,
-    products: <ProductsPage onBack={back}/>,
-    materials: <MaterialsPage onBack={back}/>,
-    shifts: <ShiftsPage onBack={back}/>,
-    standards: <StandardsPage onBack={back}/>,
-    "work-orders": <WorkOrdersPage onBack={back}/>,
-    schedule: <SchedulePage onBack={back}/>,
-    realtime: <RealtimePage onBack={back}/>,
-    tv: <TVDisplayPage onBack={back}/>,
-    machines: <MachinesPage onBack={back}/>,
-    defects: <DefectsPage onBack={back}/>,
-    inspections: <InspectionsPage onBack={back}/>,
-    dashboard: <DashboardPage onBack={back}/>,
-    costing: <CostingPage onBack={back}/>,
-    buyers: <BuyersPage onBack={back}/>,
-    suppliers: <SuppliersPage onBack={back}/>,
-    "purchase-orders": <PurchaseOrdersPage onBack={back}/>,
-    shipments: <ShipmentsPage onBack={back}/>,
-    employees: <EmployeesPage onBack={back}/>,
-    attendance: <AttendancePage onBack={back}/>,
-    leave: <LeavePage onBack={back}/>,
-    payroll: <PayrollPage onBack={back}/>,
-    reports: <ReportsPage onBack={back}/>,
-    "report-production":  <ProductionReportPage  onBack={back}/>,
-    "report-quality":     <QualityReportPage     onBack={back}/>,
-    "report-hr":          <HRReportPage          onBack={back}/>,
-    "report-inventory":   <InventoryReportPage   onBack={back}/>,
-    "report-procurement": <ProcurementReportPage onBack={back}/>,
-    "report-finance":     <FinanceReportPage     onBack={back}/>,
-    "report-maintenance": <MaintenanceReportPage onBack={back}/>,
-    "report-kpi":         <KPIReportPage         onBack={back}/>,
-    permissions: <PermissionsPage onBack={back}/>,
+    users:               <UsersPage onBack={back}/>,
+    roles:               <RolesPage onBack={back}/>,
+    "audit-log":         <AuditLogPage onBack={back}/>,
+    settings:            <SettingsPage onBack={back}/>,
+    departments:         <DepartmentsPage onBack={back}/>,
+    "production-lines":  <ProductionLinesPage onBack={back}/>,
+    products:            <ProductsPage onBack={back}/>,
+    materials:           <MaterialsPage onBack={back}/>,
+    shifts:              <ShiftsPage onBack={back}/>,
+    standards:           <StandardsPage onBack={back}/>,
+    "work-orders":       <WorkOrdersPage onBack={back}/>,
+    schedule:            <SchedulePage onBack={back}/>,
+    realtime:            <RealtimePage onBack={back}/>,
+    tv:                  <TVDisplayPage onBack={back}/>,
+    machines:            <MachinesPage onBack={back}/>,
+    defects:             <DefectsPage onBack={back}/>,
+    inspections:         <InspectionsPage onBack={back}/>,
+    dashboard:           <DashboardPage onBack={back}/>,
+    costing:             <CostingPage onBack={back}/>,
+    buyers:              <BuyersPage onBack={back}/>,
+    suppliers:           <SuppliersPage onBack={back}/>,
+    "purchase-orders":   <PurchaseOrdersPage onBack={back}/>,
+    shipments:           <ShipmentsPage onBack={back}/>,
+    employees:           <EmployeesPage onBack={back}/>,
+    attendance:          <AttendancePage onBack={back}/>,
+    leave:               <LeavePage onBack={back}/>,
+    payroll:             <PayrollPage onBack={back}/>,
+    reports:             <ReportsPage onBack={back}/>,
+    "production-flow":   <ProductionFlowPage onBack={back}/>,
+    "report-production": <ProductionReportPage onBack={back}/>,
+    "report-quality":    <QualityReportPage onBack={back}/>,
+    "report-hr":         <HRReportPage onBack={back}/>,
+    "report-inventory":  <InventoryReportPage onBack={back}/>,
+    "report-procurement":<ProcurementReportPage onBack={back}/>,
+    "report-finance":    <FinanceReportPage onBack={back}/>,
+    "report-maintenance":<MaintenanceReportPage onBack={back}/>,
+    "report-kpi":        <KPIReportPage onBack={back}/>,
+    permissions:         <PermissionsPage onBack={back}/>,
   };
 
   const I = (name) => `https://api.iconify.design/mdi:${name}.svg?color=white`;
@@ -2191,12 +1869,12 @@ export default function SECFactory() {
         <div className="sec-root min-h-screen"
              style={{ background:"radial-gradient(ellipse at 10% 10%,#1c2d1a 0%,transparent 50%),radial-gradient(ellipse at 90% 90%,#1a1f2e 0%,transparent 50%),radial-gradient(ellipse at 55% 45%,#1e1a10 0%,transparent 60%),#0c0e0b" }}>
 
-          {/* Background effects */}
+          {/* Background grid */}
           <div className="fixed inset-0 pointer-events-none opacity-30" style={{ backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px)", backgroundSize:"28px 28px" }}/>
           <div className="fixed w-96 h-96 rounded-full opacity-[0.08] blur-[100px] pointer-events-none -top-24 -left-24 animate-pulse" style={{ background:"#854d0e" }}/>
           <div className="fixed w-72 h-72 rounded-full opacity-[0.08] blur-[80px] pointer-events-none bottom-0 right-0 animate-pulse" style={{ background:"#1d4ed8", animationDelay:"2s" }}/>
 
-          {/* ── TOPBAR ── */}
+          {/* TOPBAR */}
           <div className="sticky top-0 z-30 backdrop-blur-xl border-b border-white/[0.06]" style={{ background:"rgba(12,14,11,0.85)" }}>
             <div className="px-5 lg:px-8 py-3 flex items-center gap-4">
               {page && (
@@ -2209,12 +1887,9 @@ export default function SECFactory() {
                 <h1 className="text-sm font-bold text-white/90 tracking-tight leading-tight">SEC Mega Factory</h1>
                 <p className="text-[9px] text-white/30 tracking-widest uppercase hidden sm:block">Garment ERP System · Phnom Penh</p>
               </div>
-
               <div className="flex items-center gap-2 ml-auto">
                 {!page && (
-                    <button onClick={()=>nav("permissions")}
-                            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all border hover:-translate-y-px"
-                            style={{ background:"rgba(251,191,36,0.12)", border:"1px solid rgba(251,191,36,0.3)", color:"#fbbf24" }}>
+                    <button onClick={()=>nav("permissions")} className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all border hover:-translate-y-px" style={{ background:"rgba(251,191,36,0.12)", border:"1px solid rgba(251,191,36,0.3)", color:"#fbbf24" }}>
                       🔐 Permissions
                       {permBadge > 0 && <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 text-[8px] font-bold text-gray-900 flex items-center justify-center">{permBadge}</span>}
                     </button>
@@ -2234,12 +1909,13 @@ export default function SECFactory() {
             </div>
           </div>
 
-          {/* ── CONTENT ── */}
+          {/* CONTENT */}
           <div className="relative z-10 px-5 lg:px-8 py-6" key={page}>
             {page && PAGES[page] ? (
                 <div className="fadein max-w-7xl mx-auto">{PAGES[page]}</div>
             ) : (
                 <div className="max-w-7xl mx-auto">
+
                   {/* KPI Strip */}
                   <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 mb-6 fadein">
                     {[
@@ -2257,7 +1933,7 @@ export default function SECFactory() {
                     <QuickAlerts onNav={nav}/>
                   </div>
 
-                  {/* Menu grid */}
+                  {/* Menu Sections */}
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 stagger">
 
                     {/* Administration */}
@@ -2292,6 +1968,7 @@ export default function SECFactory() {
                       <Group label="Planning" color="green">
                         <MenuButton title="Work Orders" iconPath={I("clipboard-list")} onClick={()=>nav("work-orders")} badge="3"/>
                         <MenuButton title="Schedule" iconPath={I("calendar-month")} onClick={()=>nav("schedule")}/>
+                        <MenuButton title="Flow" iconPath={I("sitemap")} onClick={()=>nav("production-flow")}/>
                       </Group>
                       <Group label="Monitoring" color="green">
                         <MenuButton title="Real-time" iconPath={I("monitor-eye")} onClick={()=>nav("realtime")}/>

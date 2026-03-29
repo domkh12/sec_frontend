@@ -117,7 +117,8 @@
     "buyer": "Bumibili",
     "file": "File",
     "color": "Kulay",
-    "size": "Laki"
+    "size": "Laki",
+    "styleNo": "Style No."
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

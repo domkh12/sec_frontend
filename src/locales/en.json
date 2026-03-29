@@ -117,7 +117,8 @@
     "buyer": "Buyer",
     "file": "File",
     "color": "Color",
-    "size": "Size"
+    "size": "Size",
+    "styleNo": "Style No"
   },
   "factory": {
     "structure": "Factory Structure"

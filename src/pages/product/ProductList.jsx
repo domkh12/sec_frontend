@@ -21,15 +21,12 @@ import {
     setIsOpenDialogAddOrEditProduct,
     setIsOpenSnackbarProduct, setProductDataForUpdate
 } from "../../redux/feature/product/productSlice.js";
-import {SIZES} from "../../config/size.js";
 import {
     useCreateCategoryMutation,
     useGetCategoryLookupQuery,
-    useGetCategoryQuery
 } from "../../redux/feature/category/categoryApiSlice.js";
 import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
-import {useGetSubCategoryQuery} from "../../redux/feature/category/subCategoryApiSlice.js";
 
 function ProductList() {
     const {t} = useTranslation();
@@ -50,7 +47,6 @@ function ProductList() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const {data: categoryLookup} = useGetCategoryLookupQuery();
-    console.log(categoryLookup);
     const {data: prodData, isLoading, isSuccess} = useGetProductQuery({
         pageNo: pageNo,
         pageSize: pageSize
@@ -63,11 +59,6 @@ function ProductList() {
         pageNo: 1,
         pageSize: 999
     });
-
-    const {data: cateData, isLoading: isLoadingGetCate, isSuccess: isSuccessGetCate} = useGetCategoryQuery({
-        pageNo: 1,
-        pageSize: 999
-    })
     
     const handleChangePage = (event, newPage) => {
         dispatch(setPageNoProductionLine(newPage + 1));
@@ -84,11 +75,10 @@ function ProductList() {
     }
 
     const validationSchema = Yup.object().shape({
-        // code:      Yup.string().required(t("validation.required")),
-        // styleName: Yup.string().required(t("validation.required")),
-        // category:  Yup.string().required(t("validation.required")),
-        // color:     Yup.string().required(t("validation.required")),
-        // size:      Yup.string().required(t("validation.required")),
+        styleNo:   Yup.string().required(t("validation.required")),
+        // category:  Yup.number().required(t("validation.required")),
+        color:     Yup.array().min(1, t("validation.required")).required(t("validation.required")),
+        size:      Yup.array().min(1, t("validation.required")).required(t("validation.required")),
     });
 
     const categorySchema = Yup.object().shape({
@@ -97,14 +87,14 @@ function ProductList() {
 
     const handleSubmit = async (values, {resetForm}) => {
         setIsSubmitting(true);
+        console.log(values);
         try {
             if (productDataForUpdate) {
 
                  await updateProduct({
                      id: productDataForUpdate.id,
-                     code:      values.code,
-                     styleName: values.styleName,
-                     subCategoryId:  values.category,
+                     styleNo: values.styleNo,
+                     subCategoryId:  values.subCategory.childId,
                      color:     values.color,
                      size:      values.size,
                 }).unwrap();
@@ -113,7 +103,7 @@ function ProductList() {
             }else {
                 await createProduct({
                     styleNo: values.styleNo,
-                    subCategoryId:  values.category,
+                    subCategoryId:  values.subCategory.childId,
                     colorId:     values.color,
                     sizeId:      values.size,
                 }).unwrap();
@@ -124,24 +114,19 @@ function ProductList() {
             resetForm();
         } catch (error) {
             console.log(error);
-            dispatch(setAlertProduct({type: "error", message: error?.data?.error?.description[0] ? error?.data?.error?.description[0]?.reason : error?.data?.error?.description}));
+            dispatch(setAlertProduct({type: "error", message: error?.data?.error?.description}));
             dispatch(setIsOpenSnackbarProduct(true));
         }finally {
             setIsSubmitting(false);
         }
     };
     const fields = [
-        { name: "styleNo",     label: "styleNo",     type: "text" },
+        { name: "styleNo",     label: "table.styleNo",     type: "text" },
         {
-            name: "categoryLookup",
+            name: "subCategory",
             label: "category",
             type: "nestedSelect",
-            fetchOptions: async () => {
-                return Object.values(categoryLookup?.entities ?? {}).map((cate) => ({
-                    value: cate.id,
-                    label: cate.name,
-                }));
-            },
+            options: categoryLookup,
             addNew: {
                 label: "Add new category",   // text shown below the field
                 title: "New Category",         // nested dialog title
@@ -209,7 +194,7 @@ function ProductList() {
 
     const initialValues = {
         styleNo: "",
-        category:  "",
+        subCategory:  "",
         color:     [],
         size:      [],
     };
@@ -220,7 +205,7 @@ function ProductList() {
             id: row.id,
             code: row.code,
             styleName: row.styleName,
-            category: row.cateId,
+            subCategoryId: row.subCategoryId,
             color: row.color,
             size: row.size,
         }));
@@ -250,7 +235,7 @@ function ProductList() {
     const columns = [
         {
             id: "styleNo",
-            label: t("styleNo"),
+            label: t("table.styleNo"),
             minWidth: 130,
             align: "left",
         },
@@ -262,7 +247,7 @@ function ProductList() {
         },
         {
             id: "subCategory",
-            label: t("subCategory"),
+            label: t("table.subCategory"),
             minWidth: 130,
             align: "left",
         },
@@ -274,7 +259,7 @@ function ProductList() {
         },
         {
             id: "status",
-            label: "status",
+            label: t("table.status"),
             minWidth: 130,
             align: "left",
         },
