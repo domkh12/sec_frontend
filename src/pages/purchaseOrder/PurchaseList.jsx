@@ -1,59 +1,45 @@
-import {Alert, Backdrop, Snackbar} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import BackButton from "../../components/ui/BackButton.jsx";
-import {useNavigate} from "react-router-dom";
-import TableCus from "../../components/table/TableCus.jsx";
-import {useDispatch, useSelector} from "react-redux";
-import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
-import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
-import * as Yup from "yup";
-import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {
-    useCreateProductMutation, useDeleteProductMutation,
-    useGetProductQuery, useGetProductStatsQuery,
+    useCreateProductMutation,
+    useDeleteProductMutation, useGetProductQuery,
     useUpdateProductMutation
 } from "../../redux/feature/product/productApiSlice.js";
-import {
-    setAlertProduct, setFilterProduct,
-    setIsOpenDeleteProductDialog,
-    setIsOpenDialogAddOrEditProduct,
-    setIsOpenSnackbarProduct, setProductDataForUpdate
-} from "../../redux/feature/product/productSlice.js";
-import {
-    useCreateCategoryMutation,
-    useGetCategoryLookupQuery,
-} from "../../redux/feature/category/categoryApiSlice.js";
+import {useCreateCategoryMutation, useGetCategoryLookupQuery} from "../../redux/feature/category/categoryApiSlice.js";
 import {useCreateColorMutation, useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
-import StatCards from "../../components/card/StatCards.jsx";
-import { FaTshirt } from "react-icons/fa";
-import { FaCircleCheck } from "react-icons/fa6";
-import { FaFilePen } from "react-icons/fa6";
-import useDebounce from "../../hook/useDebounce.jsx";
-import useAuth from "../../hook/useAuth.jsx";
-import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
+import {
+    setAlertProduct,
+    setFilterProduct, setIsOpenDeleteProductDialog,
+    setIsOpenDialogAddOrEditProduct, setIsOpenSnackbarProduct,
+    setProductDataForUpdate
+} from "../../redux/feature/product/productSlice.js";
+import * as Yup from "yup";
+import {Alert, Backdrop, Snackbar} from "@mui/material";
+import BackButton from "../../components/ui/BackButton.jsx";
+import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
+import TableCus from "../../components/table/TableCus.jsx";
+import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
+import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 
-function ProductList() {
+function PurchaseList() {
     const {t} = useTranslation();
     const [id, setId] = useState(null);
-    const {isMd} = useBreakpoints();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const {isManager, isAdmin} = useAuth();
 
     // -- Selector --------------------------------------------------------------------------------------------
+
     const productDataForUpdate     = useSelector((s) => s.product.productDataForUpdate);
     const isOpen                   = useSelector((s) => s.product.isOpenDialogAddOrEditProduct);
     const isOpenSnackbar           = useSelector((s) => s.product.isOpenSnackbarProduct);
     const alertProduct             = useSelector((s) => s.product.alertProduct);
     const isOpenDeleteDialog       = useSelector((s) => s.product.isOpenDeleteProductDialog);
     const filterValue              = useSelector((s) => s.product.filter);
-
-    // -- Debounce -----------------------------------------------------------
-    const searchFilter             = useDebounce(filterValue.search, 500);
 
     // -- Mutation -----------------------------------------------------------
     const [createProduct]   = useCreateProductMutation();
@@ -62,27 +48,23 @@ function ProductList() {
     const [createCategory]  = useCreateCategoryMutation();
     const [createColor]     = useCreateColorMutation();
 
-    // -- Query --------------------------------------------------------------
+    // -- Query ---------------------------------------------------------------
     const {data: categoryLookup}    = useGetCategoryLookupQuery();
     const {data: prodData,
         isLoading,
         isSuccess
     }                               = useGetProductQuery({
-                                        pageNo: filterValue.pageNo,
-                                        pageSize: filterValue.pageSize,
-                                        search: searchFilter,
-                                    });
+        pageNo: filterValue.pageNo,
+        pageSize: filterValue.pageSize,
+    });
     const {data: colorData}         = useGetColorQuery({
-                                        pageNo: 1,
-                                        pageSize: 999
-                                    });
+        pageNo: 1,
+        pageSize: 999
+    });
     const {data: sizeData}          = useGetSizeQuery({
-                                        pageNo: 1,
-                                        pageSize: 999
-                                    });
-    const {data: productStats,
-        isLoading:
-        isLoadingStatProduct}       = useGetProductStatsQuery();
+        pageNo: 1,
+        pageSize: 999
+    });
 
     // -- Handler ----------------------------------------------------------------
     const handleChangePage = (event, newPage) => {
@@ -172,20 +154,6 @@ function ProductList() {
         }
     };
 
-    const handleFilterChange = (key, value) => {
-        console.log(key, value);
-        if (key === "all") {
-           return dispatch(setFilterProduct({
-               ...filterValue,
-               [key]: ""
-           }))
-        }
-        dispatch(setFilterProduct({
-            ...filterValue,
-            [key]: value,
-        }))
-    }
-
     // -- Validation Schema ----------------------------------------------------------------------------------
     const validationSchema = Yup.object().shape({
         styleNo:      Yup.string().required(t("validation.required")),
@@ -224,35 +192,35 @@ function ProductList() {
             },
         },
         { name: "color",
-          label: "color",
-          type: "autocomplete-checkbox",
-          minWidth: 130,
-          fetchOptions: async () => {
-            return Object.values(colorData?.entities ?? {}).map((color) => ({
-                value: color.id,
-                label: color.color,
-            }));
-          },
-          addNew: {
-              label: "Add new color",
-              title: "New Color",
-              fields: [
-                  { name: "color",  label: "color",  type: "text" },
-              ],
-              initialValues: {color: ""},
-              onSubmit: async (values, helpers) => {
-                  try {
-                      await createColor({
-                          color: values.color
-                      }).unwrap();
-                      dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
-                      dispatch(setIsOpenSnackbarProduct(true));
-                  }catch (error) {
-                      dispatch(setAlertProduct({type: "error", message: error.data.error.description}));
-                      dispatch(setIsOpenSnackbarProduct(true));
-                  }
-              }
-          }
+            label: "color",
+            type: "autocomplete-checkbox",
+            minWidth: 130,
+            fetchOptions: async () => {
+                return Object.values(colorData?.entities ?? {}).map((color) => ({
+                    value: color.id,
+                    label: color.color,
+                }));
+            },
+            addNew: {
+                label: "Add new color",
+                title: "New Color",
+                fields: [
+                    { name: "color",  label: "color",  type: "text" },
+                ],
+                initialValues: {color: ""},
+                onSubmit: async (values, helpers) => {
+                    try {
+                        await createColor({
+                            color: values.color
+                        }).unwrap();
+                        dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
+                        dispatch(setIsOpenSnackbarProduct(true));
+                    }catch (error) {
+                        dispatch(setAlertProduct({type: "error", message: error.data.error.description}));
+                        dispatch(setIsOpenSnackbarProduct(true));
+                    }
+                }
+            }
         },
         {
             name: "size",
@@ -278,14 +246,6 @@ function ProductList() {
             }
         },
     ];
-
-    const filterConfig = [
-        {
-            id: "size",
-            label: "size",
-            width: isMd ? 150 : "100%",
-        }
-    ]
 
     const initialValues = {
         styleNo: "",
@@ -341,32 +301,12 @@ function ProductList() {
         <div className="pb-10">
             <div className="card-glass">
                 <div className="flex justify-between items-center">
-                    <BackButton onClick={() => isAdmin ? navigate("/admin") : isManager ? navigate("/manager") : navigate("/") }/>
+                    <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProduct(true))}/>
                 </div>
-                <div>
-                    <StatCards
-                        isLoading={isLoadingStatProduct}
-                        cards={[
-                            { label: "Total Styles",  value: productStats.totalStyleNo,  color: "violet", icon: <FaTshirt /> },
-                            { label: "Active",      value: productStats.totalActive,   color: "emerald", icon: <FaCircleCheck/>},
-                            { label: "Draft",  value: productStats.totalDraft,   color: "amber", icon: <FaFilePen/> },
-                        ]}
-                    />
-                </div>
-                <TableCus
-                    columns={columns}
-                    data={prodData}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    onEdit={handleEdit} onDelete={handleDeleteOpen}
-                    isFilterActive={true}
-                    filterValue={filterValue}
-                    searchPlaceholderText={`${t("table.styleNo")}`}
-                    handleFilterChange={handleFilterChange}
-                    filterConfig={filterConfig}
-                />
+                <TableCus columns={columns} data={prodData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
             </div>
+
             <DialogAddEditCus
                 fields={fields}
                 title={productDataForUpdate ? "Update Product" : "Create Product"}
@@ -401,4 +341,4 @@ function ProductList() {
     return content;
 }
 
-export default ProductList
+export default PurchaseList;

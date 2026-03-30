@@ -9,10 +9,17 @@ const productSlice = createSlice({
         productDataForUpdate: null,
         isOpenSnackbarProduct: false,
         isOpenDeleteProductDialog: false,
-        alertProduct: {type: "success", message: ""}
-
+        alertProduct: {type: "success", message: ""},
+        filter: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+        }
     },
     reducers: {
+        setFilterProduct: (state, action) => {
+            state.filter = action.payload;
+        },
         setIsOpenDeleteProductDialog: (state, action) => {
             state.isOpenDeleteProductDialog = action.payload;
         },
@@ -38,6 +45,7 @@ const productSlice = createSlice({
 });
 
 export const {
+    setFilterProduct,
     setIsOpenDeleteProductDialog,
     setAlertProduct,
     setIsOpenSnackbarProduct,

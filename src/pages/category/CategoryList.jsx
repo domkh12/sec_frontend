@@ -13,12 +13,7 @@ import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 import {
-    setAlertDept,
     setFilterProductionLine,
-    setIsOpenDeleteDeptDialog,
-    setIsOpenSnackbarProductionLine,
-    setPageNoProductionLine,
-    setPageSizeProductionLine,
     setProductionLineDataForUpdate
 } from "../../redux/feature/productionLine/productionLineSlice.js";
 import {
@@ -40,12 +35,9 @@ import {
 
 function CategoryList(){
     const {t} = useTranslation();
-    const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {isMd} = useBreakpoints();
     const deleteCategoryData = useSelector((state) => state.category.deleteCategoryData);
-    console.log(deleteCategoryData);
     const categoryDataForUpdate = useSelector((state) => state.category.categoryDataForUpdate);
     const isOpen = useSelector((state) => state.category.isOpenDialogAddOrEditCategory);
     const isOpenSubCategory = useSelector((state) => state.category.isOpenDialogAddOrEditSubCategory);

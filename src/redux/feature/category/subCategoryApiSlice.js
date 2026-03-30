@@ -48,7 +48,8 @@ export const subCategoryApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [
                 { type: "SubCategory", id: "LIST" },
                 { type: "Product", id: "LIST" },
-                { type: "Category", id: "LIST" }
+                { type: "Category", id: "LIST" },
+                { type: "CategoryLookup", id: "LIST" }
             ],
         }),
 
@@ -62,7 +63,8 @@ export const subCategoryApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: [
                 {type: "SubCategory", id: "LIST"},
-                { type: "Category", id: "LIST" }
+                { type: "Category", id: "LIST" },
+                { type: "CategoryLookup", id: "LIST" }
             ],
         }),
 
@@ -76,7 +78,8 @@ export const subCategoryApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: "SubCategory", id: "LIST" },
-                { type: "Category", id: "LIST" }
+                { type: "Category", id: "LIST" },
+                { type: "CategoryLookup", id: "LIST" }
             ],
         }),
 

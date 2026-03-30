@@ -15,6 +15,7 @@
  *     { label: "Active",      value: 80,  color: "emerald" },
  *   ]} />
  */
+import StatSkeleton from "../skeleton/StatSkeleton.jsx";
 
 const COLOR_MAP = {
     sky:     { grad: "from-sky-400/10",     num: "text-white",      badge: "bg-sky-500/15 border-sky-400/20",     line: "via-sky-400/50",     icon: "text-sky-300"     },
@@ -38,7 +39,7 @@ function StatCard({ label, value, color = "sky", icon }) {
     const c = COLOR_MAP[color] ?? COLOR_MAP.sky;
 
     return (
-        <div className="relative overflow-hidden rounded-xl border border-white/15 bg-white/[0.07] backdrop-blur-md px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)] hover:bg-white/[0.11] transition-all duration-200">
+        <div className="w-full relative overflow-hidden rounded-xl border border-white/15 bg-white/[0.07] backdrop-blur-md px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)] hover:bg-white/[0.11] transition-all duration-200">
             {/* Tinted gradient overlay */}
             <div className={`absolute inset-0 bg-gradient-to-br ${c.grad} via-transparent to-transparent pointer-events-none`} />
 
@@ -66,12 +67,23 @@ function StatCard({ label, value, color = "sky", icon }) {
     );
 }
 
-function StatCards({ cards = [] }) {
+function StatCards({ cards = [], isLoading, skeleton }) {
+    console.log(cards.length)
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 my-3">
-            {cards.map((card, i) => (
-                <StatCard key={card.label ?? i} {...card} />
-            ))}
+        <div className="flex justify-between flex-col md:flex-row  gap-3 my-3">
+            {
+                isLoading ? (
+                     cards.map((card, i) => (
+                             <StatSkeleton/>
+                     ))
+                )
+                :
+                (
+                    cards.map((card, i) => (
+                        <StatCard key={card.label ?? i} {...card} />
+                    ))
+                )
+            }
         </div>
     );
 }

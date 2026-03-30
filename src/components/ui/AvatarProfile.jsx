@@ -52,12 +52,6 @@ function AvatarProfile() {
         }
     };
 
-    const user = {
-        name: 'John Doe',
-        role: 'Administrator',
-        avatar: 'https://i.pravatar.cc/150?img=12'
-    };
-
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -154,7 +148,7 @@ function AvatarProfile() {
                         <LogoutTwoToneIcon fontSize="small" color="error" />
                     </ListItemIcon>
                     <ListItemText>
-                        <Typography color="error">{t('profile.logout')}</Typography>
+                        <Typography color="error">{isLoading ? "Logout ...." : t('profile.logout')}</Typography>
                     </ListItemText>
                 </MenuItem>
             </Menu>

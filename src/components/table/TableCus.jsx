@@ -491,20 +491,26 @@ const TableRowMemo = memo(function TableRowMemo({
 });
 
 // ── Skeleton rows for loading state ───────────────────────────────────────────
-const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5 }) {
+const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5, collapseColumns }) {
     return (
         <>
             {Array.from({ length: rowCount }).map((_, index) => (
                 <TableRow key={`skeleton-${index}`} sx={skeletonRowSx}>
+
                     {/* ── expand/collapse column ── */}
-                    <TableCell sx={skeletonCellSx} style={{ width: 50 }}>
-                        <Skeleton
-                            variant="circular"
-                            width={24}
-                            height={24}
-                            sx={{ bgcolor: 'rgba(255,255,255,0.1)', mx: 'auto' }}
-                        />
-                    </TableCell>
+                    {
+                        collapseColumns?.length > 0 && (
+                            <TableCell sx={skeletonCellSx} style={{ width: 50 }}>
+                                <Skeleton
+                                    variant="rounded"
+                                    sx={{
+                                        bgcolor: 'rgba(255,255,255,0.1)',
+                                        mx: 'auto'
+                                    }}
+                                />
+                            </TableCell>
+                        )
+                    }
 
                     {columns.map((col) => (
                         <TableCell
@@ -514,15 +520,15 @@ const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5 }) {
                             sx={skeletonCellSx}
                         >
                             {col.id === "action" ? (
-                                <Box sx={actionBoxSx}>
-                                    <Skeleton variant="circular" width={30} height={30} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
-                                    <Skeleton variant="circular" width={30} height={30} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
-                                    <Skeleton variant="circular" width={30} height={30} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
-                                    <Skeleton variant="circular" width={30} height={30} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
-                                </Box>
+                                <div className="flex justify-center items-center gap-5">
+                                    <Skeleton variant="rounded" width={20} height={20} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+                                    <Skeleton variant="rounded" width={20} height={20} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+                                    <Skeleton variant="rounded" width={20} height={20} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+                                    <Skeleton variant="rounded" width={20} height={20} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+                                </div>
                             ) : col.id === "status" ? (
-                                <Box sx={statusBoxSx}>
-                                    <Skeleton variant="rounded" width={80} height={24} sx={{ bgcolor: 'rgba(255,255,255,0.1)', borderRadius: '20px' }} />
+                                <Box>
+                                    <Skeleton variant="rounded" sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
                                 </Box>
                             ) : (
                                 <Skeleton
@@ -555,11 +561,9 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
     const tUnblock = useMemo(() => t('table.unblock'), [t]);
     const tFile = useMemo(() => t('table.file'), [t]);
 
-    const skeletonRowCount = useMemo(() => pageSize || 20, [pageSize]);
-
     const tableContent = useMemo(() => {
         if (isFetching) {
-            return <SkeletonRows columns={columns} rowCount={skeletonRowCount} />;
+            return <SkeletonRows columns={columns} collapseColumns={collapseColumns}/>;
         }
         if (!ids.length) {
             return (
@@ -601,7 +605,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                 handleFile={handleFile}
             />
         ));
-    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, skeletonRowCount, collapseColumns, collapseDataKey, handleFile, tFile]);
+    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, collapseColumns, collapseDataKey, handleFile, tFile]);
 
     return (
         <div className="rounded-xl overflow-hidden" style={wrapperStyle}>

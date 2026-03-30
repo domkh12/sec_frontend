@@ -176,6 +176,54 @@ const DATA = {
 };
 
 const STATS = { activeLines:12, todayOutput:4820, efficiency:91, openDefects:7, totalWorkers:476, pendingOrders:3 };
+
+// ── WAREHOUSE RAW MATERIAL DATA ────────────────────────────────
+const INIT_WH_RAW_TRANSACTIONS = [
+  { id:"GRN-001", date:"2026-03-05", type:"Receive", material:"Cotton Fabric 200gsm", code:"M001", qty:5000, unit:"Meters", ref:"PO-2026-001", supplier:"Tex Co.", receivedBy:"Kosal Vong", location:"Rack A1", note:"Good condition" },
+  { id:"GRN-002", date:"2026-03-04", type:"Receive", material:"Polyester Thread #60", code:"M002", qty:200, unit:"Spools", ref:"PO-2026-002", supplier:"Thread World", receivedBy:"Kosal Vong", location:"Rack B3", note:"" },
+  { id:"ISS-001", date:"2026-03-05", type:"Issue", material:"Cotton Fabric 200gsm", code:"M001", qty:1200, unit:"Meters", ref:"WO-2026-001", supplier:"—", receivedBy:"Virak Noun", location:"Rack A1", note:"Issued to Cut-1 for H&M Polo" },
+  { id:"ISS-002", date:"2026-03-05", type:"Issue", material:"Polyester Thread #60", code:"M002", qty:80, unit:"Spools", ref:"WO-2026-001", supplier:"—", receivedBy:"Chanta Mao", location:"Rack B3", note:"Line A1 replenishment" },
+  { id:"GRN-003", date:"2026-03-03", type:"Receive", material:"YKK Zipper 20cm", code:"M003", qty:3000, unit:"Pcs", ref:"PO-2026-003", supplier:"YKK Cambodia", receivedBy:"Kosal Vong", location:"Rack C2", note:"Checked against packing list" },
+  { id:"ISS-003", date:"2026-03-04", type:"Issue", material:"Button 15mm", code:"M005", qty:4000, unit:"Pcs", ref:"WO-2026-002", supplier:"—", receivedBy:"Dara Pich", location:"Rack D1", note:"For T-Shirt collar buttons" },
+  { id:"ADJ-001", date:"2026-03-03", type:"Adjust", material:"Elastic Band 2cm", code:"M004", qty:-30, unit:"Meters", ref:"WASTE-001", supplier:"—", receivedBy:"Sophea Keo", location:"Rack C5", note:"Damaged in storage, written off" },
+  { id:"GRN-004", date:"2026-03-02", type:"Receive", material:"Care Label", code:"M006", qty:10000, unit:"Pcs", ref:"PO-2026-REF", supplier:"Label Pro", receivedBy:"Kosal Vong", location:"Rack E1", note:"Main label batch" },
+];
+
+// ── PRODUCTION OUTPUT DATA ─────────────────────────────────────
+const INIT_PROD_OUTPUTS = [
+  { id:"OUT-001", date:"2026-03-05", shift:"Morning", line:"Line A1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:600, output:574, defects:12, rework:8, goodPcs:562, operator:"Malis Heng", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-002", date:"2026-03-05", shift:"Morning", line:"Line B1", wo:"WO-2026-002", product:"Women's T-Shirt", target:620, output:612, defects:5, rework:5, goodPcs:607, operator:"Sina Kem", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-003", date:"2026-03-05", shift:"Morning", line:"Line A2", wo:"WO-2026-003", product:"Cargo Shorts", target:580, output:490, defects:20, rework:12, goodPcs:470, operator:"Bopha Ly", supervisor:"Chanta Mao", note:"Machine downtime 30 min" },
+  { id:"OUT-004", date:"2026-03-05", shift:"Morning", line:"Line B2", wo:"WO-2026-004", product:"Sports Jersey", target:520, output:388, defects:5, rework:3, goodPcs:383, operator:"Ratha Sok", supervisor:"Virak Noun", note:"Color issue caused delay" },
+  { id:"OUT-005", date:"2026-03-05", shift:"Morning", line:"Cut-1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:1200, output:1180, defects:15, rework:10, goodPcs:1165, operator:"Virak Noun", supervisor:"Virak Noun", note:"" },
+  { id:"OUT-006", date:"2026-03-04", shift:"Morning", line:"Line A1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:600, output:588, defects:8, rework:6, goodPcs:580, operator:"Malis Heng", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-007", date:"2026-03-04", shift:"Afternoon", line:"Line B1", wo:"WO-2026-002", product:"Women's T-Shirt", target:620, output:605, defects:4, rework:4, goodPcs:601, operator:"Kosal Vong", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-008", date:"2026-03-04", shift:"Morning", line:"Finish-1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:800, output:762, defects:10, rework:7, goodPcs:752, operator:"Panha Rin", supervisor:"Panha Rin", note:"" },
+];
+
+// ── WAREHOUSE FINISHED GOODS DATA ─────────────────────────────
+const INIT_FG_STOCK = [
+  { id:"FG-001", wo:"WO-2026-001", product:"Men's Polo Shirt", buyer:"H&M", style:"P001", color:"Navy", size:"Assorted", qty:1200, cartons:60, location:"FG-Zone-A", packedDate:"2026-03-05", status:"Ready to Ship", qcStatus:"Passed" },
+  { id:"FG-002", wo:"WO-2026-002", product:"Women's T-Shirt", buyer:"Zara", style:"P002", color:"White", size:"Assorted", qty:2100, cartons:105, location:"FG-Zone-B", packedDate:"2026-03-04", status:"Allocated", qcStatus:"Passed" },
+  { id:"FG-003", wo:"WO-2026-004", product:"Sports Jersey", buyer:"Nike", style:"P004", color:"Red", size:"Assorted", qty:383, cartons:20, location:"FG-Zone-A", packedDate:"2026-03-05", status:"On Hold", qcStatus:"Fail - Rework" },
+  { id:"FG-004", wo:"WO-2026-001", product:"Men's Polo Shirt", buyer:"H&M", style:"P001", color:"Navy", size:"S", qty:400, cartons:20, location:"FG-Zone-C", packedDate:"2026-03-03", status:"Shipped", qcStatus:"Passed" },
+  { id:"FG-005", wo:"WO-2026-002", product:"Women's T-Shirt", buyer:"Zara", style:"P002", color:"White", size:"M", qty:900, cartons:45, location:"FG-Zone-B", packedDate:"2026-03-02", status:"Shipped", qcStatus:"Passed" },
+];
+const INIT_FG_TRANSACTIONS = [
+  { id:"FGT-001", date:"2026-03-05", type:"Stock In", fgId:"FG-001", product:"Men's Polo Shirt", buyer:"H&M", qty:1200, cartons:60, by:"Kosal Vong", note:"From packing line, QC cleared" },
+  { id:"FGT-002", date:"2026-03-04", type:"Stock In", fgId:"FG-002", product:"Women's T-Shirt", buyer:"Zara", qty:2100, cartons:105, by:"Kosal Vong", note:"Packing completed" },
+  { id:"FGT-003", date:"2026-03-05", type:"Stock In", fgId:"FG-003", product:"Sports Jersey", buyer:"Nike", qty:383, cartons:20, by:"Kosal Vong", note:"On hold — awaiting rework clearance" },
+  { id:"FGT-004", date:"2026-03-05", type:"Allocate", fgId:"FG-002", product:"Women's T-Shirt", buyer:"Zara", qty:2100, cartons:105, by:"Sophea Keo", note:"Allocated to SH-2026-002" },
+  { id:"FGT-005", date:"2026-03-02", type:"Ship Out", fgId:"FG-004", product:"Men's Polo Shirt", buyer:"H&M", qty:400, cartons:20, by:"Sophea Keo", note:"Loaded to SH-2026-001 partial" },
+  { id:"FGT-006", date:"2026-03-02", type:"Ship Out", fgId:"FG-005", product:"Women's T-Shirt", buyer:"Zara", qty:900, cartons:45, by:"Sophea Keo", note:"Air freight BKK-BCN" },
+];
+
+// ── ENHANCED SHIPMENTS DATA ────────────────────────────────────
+const INIT_SHIPMENTS = [
+  { id:"SH-2026-001", buyer:"H&M", wo:"WO-2026-001", style:"Men's Polo Shirt", qty:2000, cartons:100, grossWt:450, cbm:3.2, method:"Sea Freight", vessel:"MSC CARGO", bl:"MSCBL20260318", port:"Sihanoukville", destPort:"Hamburg", etd:"2026-03-18", eta:"2026-04-10", status:"Scheduled", forwarder:"DHL Global", invoiceNo:"INV-2026-001", invoiceAmt:17000, incoterm:"FOB" },
+  { id:"SH-2026-002", buyer:"Zara", wo:"WO-2026-002", style:"Women's T-Shirt", qty:3000, cartons:150, grossWt:300, cbm:2.1, method:"Air Freight", vessel:"BKK-BCN QR612", bl:"AWB7241234", port:"Phnom Penh Int'l", destPort:"Barcelona", etd:"2026-03-13", eta:"2026-03-15", status:"Confirmed", forwarder:"Panalpina", invoiceNo:"INV-2026-002", invoiceAmt:15600, incoterm:"CIF" },
+  { id:"SH-2026-003", buyer:"Nike", wo:"WO-2026-004", style:"Sports Jersey", qty:800, cartons:40, grossWt:180, cbm:1.4, method:"Sea Freight", vessel:"EVERGREEN", bl:"—", port:"Sihanoukville", destPort:"Los Angeles", etd:"2026-03-20", eta:"2026-04-15", status:"Pending", forwarder:"Expeditors", invoiceNo:"INV-2026-003", invoiceAmt:6400, incoterm:"FOB" },
+];
 const PERMISSION_TYPES = ["System Access","Module Access","Data Export","Report Access","Override Authority","Special Operation","Admin Privilege","Temporary Elevation"];
 const INITIAL_PERMISSIONS = [
   { id:"PR-001", worker:"Malis Heng", dept:"Sewing", position:"Machine Operator", type:"Module Access", module:"Quality", fromDate:"2026-03-06", toDate:"2026-03-20", reason:"Requested to view defect reports for Line A1 improvement project", status:"Approved", enteredBy:"Sophea Keo", enteredAt:"2026-03-05 08:00", note:"Read-only access approved for 2 weeks." },
@@ -1724,6 +1772,906 @@ function ProductionFlowPage({ onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// ── WH RAW MATERIAL PAGE ─────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function WHRawMaterialPage({ onBack }) {
+  const [transactions, setTransactions] = useState(INIT_WH_RAW_TRANSACTIONS);
+  const [materials, setMaterials]       = useState(DATA.materials.map(m => ({ ...m })));
+  const [tab, setTab]   = useState("stock");   // stock | transactions | receive | issue
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("All");
+  const [showForm, setShowForm] = useState(null); // "receive" | "issue" | "adjust"
+  const [form, setForm] = useState({});
+  const [saved, setSaved] = useState(false);
+
+  const typeColor = { Receive:"green", Issue:"amber", Adjust:"rose" };
+
+  const filteredTx = transactions.filter(t => {
+    const q = search.toLowerCase();
+    return (filterType === "All" || t.type === filterType) &&
+        (!q || t.material.toLowerCase().includes(q) || t.id.toLowerCase().includes(q) || t.ref.toLowerCase().includes(q));
+  });
+
+  const totalValue = materials.reduce((s, m) => s + m.stock * m.cost, 0);
+  const lowCount   = materials.filter(m => m.stock < m.reorder).length;
+
+  const openForm = (type) => {
+    setForm({ type, code:"", material:"", qty:"", unit:"", ref:"", supplier:"", location:"", note:"", date:new Date().toISOString().slice(0,10) });
+    setShowForm(type); setSaved(false);
+  };
+
+  const submitForm = () => {
+    const qty = Number(form.qty);
+    if (!form.code || !qty) return;
+    const id = `${form.type==="Receive"?"GRN":form.type==="Issue"?"ISS":"ADJ"}-${String(transactions.length+1).padStart(3,"0")}`;
+    const tx = { ...form, id, qty: form.type==="Issue"||form.type==="Adjust"?-Math.abs(qty):qty, receivedBy:"Sophea Keo" };
+    setTransactions(ts => [tx, ...ts]);
+    setMaterials(ms => ms.map(m => {
+      if (m.code !== form.code) return m;
+      const delta = form.type === "Receive" ? qty : form.type === "Issue" ? -qty : Number(form.qty);
+      return { ...m, stock: Math.max(0, m.stock + delta) };
+    }));
+    setSaved(true); setTimeout(() => { setShowForm(null); setSaved(false); }, 1400);
+  };
+
+  const selMat = materials.find(m => m.code === form.code);
+
+  return (
+      <div>
+        {/* Form modal */}
+        {showForm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.78)", backdropFilter:"blur(10px)" }}>
+              <div className="relative w-full max-w-lg rounded-3xl overflow-hidden"
+                   style={{ background:"linear-gradient(145deg,rgba(28,26,18,0.99),rgba(18,20,16,0.99))", border:"1px solid rgba(52,211,153,0.35)" }}>
+                <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-emerald-400/70 to-emerald-300/30 rounded-b-full"/>
+                <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background:"rgba(52,211,153,0.12)", border:"1px solid rgba(52,211,153,0.35)" }}>
+                      {showForm==="Receive"?"📥":showForm==="Issue"?"📤":"🔧"}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white/90">{showForm} Material</h3>
+                      <p className="text-[10px] text-white/30 uppercase tracking-widest">WH Raw Material · Transaction</p>
+                    </div>
+                  </div>
+                  <button onClick={()=>setShowForm(null)} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                </div>
+                {saved ? (
+                    <div className="flex flex-col items-center py-12"><div className="text-4xl mb-3">✅</div><p className="text-sm font-semibold text-green-400">Transaction Saved</p></div>
+                ) : (
+                    <div className="px-6 pb-6 space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Date" required><input type="date" className={inputCls} value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ colorScheme:"dark" }}/></FormField>
+                        <FormField label="Material" required>
+                          <div className="relative">
+                            <select className={selectCls} value={form.code} onChange={e=>{ const m=materials.find(x=>x.code===e.target.value); setForm(f=>({...f,code:e.target.value,material:m?.name||"",unit:m?.unit||"",supplier:m?.supplier||""})); }}>
+                              <option value="">Select…</option>
+                              {materials.map(m=><option key={m.code} value={m.code}>{m.code} — {m.name}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                          </div>
+                        </FormField>
+                      </div>
+                      {selMat && (
+                          <div className="flex items-center gap-3 px-3 py-2 rounded-xl" style={{ background:"rgba(52,211,153,0.06)", border:"1px solid rgba(52,211,153,0.2)" }}>
+                            <span className="text-[10px] text-white/40">Current stock:</span>
+                            <span className="text-xs font-bold text-green-400">{selMat.stock.toLocaleString()} {selMat.unit}</span>
+                            {selMat.stock < selMat.reorder && <span className="text-[10px] text-rose-400 font-semibold">⚠ Below reorder ({selMat.reorder})</span>}
+                          </div>
+                      )}
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label={showForm==="Adjust"?"Qty (+ add / - remove)":"Qty"} required>
+                          <input type="number" className={inputCls} placeholder={showForm==="Issue"?"e.g. 500":showForm==="Adjust"?"-30 or +50":"e.g. 1000"} value={form.qty} onChange={e=>setForm(f=>({...f,qty:e.target.value}))}/>
+                        </FormField>
+                        <FormField label="Reference (PO / WO)"><input type="text" className={inputCls} placeholder={showForm==="Receive"?"PO number":"WO number"} value={form.ref} onChange={e=>setForm(f=>({...f,ref:e.target.value}))}/></FormField>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Location"><input type="text" className={inputCls} placeholder="e.g. Rack A1" value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value}))}/></FormField>
+                        <FormField label="Supplier / Issued To"><input type="text" className={inputCls} value={form.supplier} onChange={e=>setForm(f=>({...f,supplier:e.target.value}))}/></FormField>
+                      </div>
+                      <FormField label="Note"><input type="text" className={inputCls} placeholder="Optional note…" value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))}/></FormField>
+                      <div className="flex gap-3 pt-1">
+                        <button onClick={()=>setShowForm(null)} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                        <button onClick={submitForm} disabled={!form.code||!form.qty} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>
+                          {showForm==="Receive"?"📥 Receive Stock":showForm==="Issue"?"📤 Issue Stock":"🔧 Adjust Stock"}
+                        </button>
+                      </div>
+                    </div>
+                )}
+              </div>
+            </div>
+        )}
+
+        <PageHeader title="WH Raw Material" subtitle="Warehouse · Input · Stock Management" icon="📦" onBack={onBack} color="teal"
+                    actions={
+                      <div className="flex gap-2">
+                        <button onClick={()=>openForm("Receive")} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>📥 Receive</button>
+                        <button onClick={()=>openForm("Issue")}   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold" style={{ background:"linear-gradient(135deg,rgba(251,191,36,0.25),rgba(251,191,36,0.1))", border:"1px solid rgba(251,191,36,0.4)", color:"#fbbf24" }}>📤 Issue</button>
+                        <button onClick={()=>openForm("Adjust")}  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold" style={{ background:"linear-gradient(135deg,rgba(251,113,133,0.2),rgba(251,113,133,0.08))", border:"1px solid rgba(251,113,133,0.35)", color:"#fb7185" }}>🔧 Adjust</button>
+                      </div>
+                    }/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Materials" value={materials.length} icon="🧵" color="teal"/>
+          <StatCard label="Low Stock" value={lowCount} icon="⚠️" color={lowCount>0?"rose":"green"}/>
+          <StatCard label="Total Value" value={`$${totalValue.toLocaleString()}`} icon="💰" color="amber"/>
+          <StatCard label="Transactions" value={transactions.length} icon="📋" color="blue"/>
+        </div>
+
+        {/* Tab switcher */}
+        <div className="flex gap-1.5 mb-4 p-1 rounded-xl w-fit" style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          {[{v:"stock",l:"📦 Stock Levels"},{v:"transactions",l:"📋 Transactions"}].map(t=>(
+              <button key={t.v} onClick={()=>setTab(t.v)} className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${tab===t.v?"bg-teal-400/20 border border-teal-400/40 text-teal-300":"text-white/40 hover:text-white/60"}`}>{t.l}</button>
+          ))}
+        </div>
+
+        {tab==="stock" && (
+            <GlassCard color="teal">
+              <p className="text-[10px] text-teal-400/60 font-semibold uppercase tracking-widest mb-4">Current Stock Levels</p>
+              <div className="space-y-3">
+                {materials.map(m => {
+                  const pct = Math.min(Math.round(m.stock / Math.max(m.reorder * 3, m.stock) * 100), 100);
+                  const col = m.stock < m.reorder ? "#fb7185" : m.stock < m.reorder * 1.5 ? "#fbbf24" : "#2dd4bf";
+                  return (
+                      <div key={m.code} className="rounded-xl p-3" style={{ background:"rgba(255,255,255,0.04)", border:`1px solid ${m.stock<m.reorder?"rgba(251,113,133,0.25)":"rgba(255,255,255,0.07)"}` }}>
+                        <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[10px] text-teal-300">{m.code}</span>
+                            <span className="text-xs font-semibold text-white/85">{m.name}</span>
+                            {m.stock < m.reorder && <span className="px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-rose-400/20 text-rose-300 border border-rose-400/30">Low Stock</span>}
+                          </div>
+                          <div className="flex items-center gap-3 text-xs">
+                            <span className="text-white/40">Reorder: <span className="text-white/60">{m.reorder.toLocaleString()}</span></span>
+                            <span className="font-bold" style={{ color:col }}>{m.stock.toLocaleString()} {m.unit}</span>
+                            <span className="text-white/30">${(m.stock * m.cost).toLocaleString()} val</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex-1 h-2 rounded-full bg-white/10">
+                            <div className="h-full rounded-full transition-all" style={{ width:`${pct}%`, background:col }}/>
+                          </div>
+                          <span className="text-[10px] text-white/30 shrink-0">Supplier: {m.supplier}</span>
+                        </div>
+                      </div>
+                  );
+                })}
+              </div>
+            </GlassCard>
+        )}
+
+        {tab==="transactions" && (
+            <div>
+              <div className="rounded-2xl p-3 mb-4 flex flex-wrap items-center gap-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+                <SearchBar value={search} onChange={setSearch} placeholder="Search material, ID, reference…"/>
+                <FilterPills options={["All","Receive","Issue","Adjust"].map(v=>({label:v,value:v}))} value={filterType} onChange={setFilterType}/>
+                <span className="ml-auto text-[10px] text-white/30"><span className="text-white/50 font-medium">{filteredTx.length}</span> records</span>
+              </div>
+              <GlassCard color="teal">
+                <div className="space-y-2">
+                  {filteredTx.map(tx => {
+                    const tc = typeColor[tx.type]||"gray"; const a = ACCENT[tc];
+                    const isNeg = tx.qty < 0;
+                    return (
+                        <div key={tx.id} className="flex items-start gap-3 p-3 rounded-xl transition-colors hover:bg-white/5"
+                             style={{ background:"rgba(255,255,255,0.03)", border:`1px solid ${a.border}` }}>
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>
+                            {tx.type==="Receive"?"📥":tx.type==="Issue"?"📤":"🔧"}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                              <span className="font-mono text-[10px] text-white/30">{tx.id}</span>
+                              <Badge color={tc}>{tx.type}</Badge>
+                              <span className="text-xs font-semibold text-white/80">{tx.material}</span>
+                            </div>
+                            <div className="flex flex-wrap gap-3 text-[10px] text-white/40">
+                              <span>📅 {tx.date}</span>
+                              <span>Ref: <span className="text-white/60">{tx.ref}</span></span>
+                              <span>Location: {tx.location}</span>
+                              {tx.note && <span className="text-white/30 italic">{tx.note}</span>}
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-sm font-bold" style={{ color: tx.qty > 0 ? "#34d399" : "#fb7185" }}>
+                              {tx.qty > 0 ? "+" : ""}{tx.qty.toLocaleString()} {tx.unit}
+                            </p>
+                            <p className="text-[10px] text-white/30 mt-0.5">{tx.receivedBy}</p>
+                          </div>
+                        </div>
+                    );
+                  })}
+                  {filteredTx.length === 0 && <div className="text-center py-10 text-white/20">No transactions found</div>}
+                </div>
+              </GlassCard>
+            </div>
+        )}
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── PRODUCTION OUTPUT PAGE ───────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function ProductionOutputPage({ onBack }) {
+  const [outputs, setOutputs] = useState(INIT_PROD_OUTPUTS);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({});
+  const [saved, setSaved] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filterShift, setFilterShift] = useState("All");
+  const [filterDate, setFilterDate] = useState("All");
+
+  const allDates = [...new Set(outputs.map(o => o.date))].sort((a,b)=>b.localeCompare(a));
+
+  const filtered = outputs.filter(o => {
+    const q = search.toLowerCase();
+    return (filterShift==="All" || o.shift===filterShift)
+        && (filterDate==="All" || o.date===filterDate)
+        && (!q || o.line.toLowerCase().includes(q) || o.product.toLowerCase().includes(q) || o.wo.toLowerCase().includes(q) || o.supervisor.toLowerCase().includes(q));
+  });
+
+  const totalOutput   = filtered.reduce((s,o) => s + o.output, 0);
+  const totalGood     = filtered.reduce((s,o) => s + o.goodPcs, 0);
+  const totalDefects  = filtered.reduce((s,o) => s + o.defects, 0);
+  const avgEff        = filtered.length > 0 ? Math.round(filtered.reduce((s,o) => s + (o.output/o.target*100), 0) / filtered.length) : 0;
+
+  const openForm = () => {
+    setForm({ date:new Date().toISOString().slice(0,10), shift:"Morning", line:"", wo:"", product:"", target:"", output:"", defects:"", rework:"", supervisor:"", note:"" });
+    setShowForm(true); setSaved(false);
+  };
+
+  const submitForm = () => {
+    const output = Number(form.output); const defects = Number(form.defects||0); const rework = Number(form.rework||0);
+    if (!form.line || !output) return;
+    const newOut = { ...form, id:`OUT-${String(outputs.length+1).padStart(3,"0")}`, output, target:Number(form.target), defects, rework, goodPcs:output-defects+rework, operator:"Sophea Keo" };
+    setOutputs(os => [newOut, ...os]);
+    setSaved(true); setTimeout(() => { setShowForm(false); setSaved(false); }, 1400);
+  };
+
+  const effCol = (v) => v>=95?"#34d399":v>=85?"#60a5fa":v>=70?"#fbbf24":"#fb7185";
+
+  return (
+      <div>
+        {showForm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.78)", backdropFilter:"blur(10px)" }}>
+              <div className="relative w-full max-w-lg rounded-3xl overflow-hidden"
+                   style={{ background:"linear-gradient(145deg,rgba(28,26,18,0.99),rgba(18,20,16,0.99))", border:"1px solid rgba(52,211,153,0.35)" }}>
+                <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-emerald-400/70 to-emerald-300/30 rounded-b-full"/>
+                <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background:"rgba(52,211,153,0.12)", border:"1px solid rgba(52,211,153,0.35)" }}>📊</div>
+                    <div><h3 className="text-sm font-bold text-white/90">Log Production Output</h3><p className="text-[10px] text-white/30 uppercase tracking-widest">End of Shift Entry</p></div>
+                  </div>
+                  <button onClick={()=>setShowForm(false)} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                </div>
+                {saved ? (
+                    <div className="flex flex-col items-center py-12"><div className="text-4xl mb-3">✅</div><p className="text-sm font-semibold text-green-400">Output Logged</p></div>
+                ) : (
+                    <div className="px-6 pb-6 space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Date" required><input type="date" className={inputCls} value={form.date} onChange={e=>setForm(f=>({...f,date:e.target.value}))} style={{ colorScheme:"dark" }}/></FormField>
+                        <FormField label="Shift" required>
+                          <div className="relative">
+                            <select className={selectCls} value={form.shift} onChange={e=>setForm(f=>({...f,shift:e.target.value}))}>
+                              {["Morning","Afternoon","Night"].map(s=><option key={s} value={s}>{s}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                          </div>
+                        </FormField>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Line" required>
+                          <div className="relative">
+                            <select className={selectCls} value={form.line} onChange={e=>setForm(f=>({...f,line:e.target.value}))}>
+                              <option value="">Select line…</option>
+                              {DATA.productionLines.map(l=><option key={l.id} value={l.name}>{l.name} ({l.dept})</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                          </div>
+                        </FormField>
+                        <FormField label="Work Order">
+                          <div className="relative">
+                            <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,product:wo?.product||"",target:wo?.qty||"",supervisor:DATA.productionLines.find(l=>l.name===f.line)?.supervisor||""})); }}>
+                              <option value="">Select WO…</option>
+                              {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id} — {w.product}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                          </div>
+                        </FormField>
+                      </div>
+                      <div className="grid grid-cols-3 gap-3">
+                        <FormField label="Target (pcs)"><input type="number" className={inputCls} value={form.target} onChange={e=>setForm(f=>({...f,target:e.target.value}))}/></FormField>
+                        <FormField label="Output (pcs)" required><input type="number" className={inputCls} value={form.output} onChange={e=>setForm(f=>({...f,output:e.target.value}))}/></FormField>
+                        <FormField label="Defects"><input type="number" className={inputCls} value={form.defects} onChange={e=>setForm(f=>({...f,defects:e.target.value}))}/></FormField>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Rework (pcs)"><input type="number" className={inputCls} value={form.rework} onChange={e=>setForm(f=>({...f,rework:e.target.value}))}/></FormField>
+                        <FormField label="Supervisor"><input type="text" className={inputCls} value={form.supervisor} onChange={e=>setForm(f=>({...f,supervisor:e.target.value}))}/></FormField>
+                      </div>
+                      {form.output && form.target && (
+                          <div className="flex items-center gap-3 px-3 py-2 rounded-xl" style={{ background:"rgba(52,211,153,0.06)", border:"1px solid rgba(52,211,153,0.2)" }}>
+                            <span className="text-[10px] text-white/40">Efficiency:</span>
+                            <span className="text-sm font-bold" style={{ color:effCol(Math.round(Number(form.output)/Number(form.target)*100)) }}>
+                      {Math.round(Number(form.output)/Number(form.target)*100)}%
+                    </span>
+                            <span className="text-[10px] text-white/40 ml-2">Good pcs:</span>
+                            <span className="text-xs font-semibold text-green-400">{Math.max(0,Number(form.output)-Number(form.defects||0)+Number(form.rework||0))}</span>
+                          </div>
+                      )}
+                      <FormField label="Note"><input type="text" className={inputCls} placeholder="Downtime reason, special note…" value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))}/></FormField>
+                      <div className="flex gap-3 pt-1">
+                        <button onClick={()=>setShowForm(false)} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5 transition-all">Cancel</button>
+                        <button onClick={submitForm} disabled={!form.line||!form.output} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>📊 Log Output</button>
+                      </div>
+                    </div>
+                )}
+              </div>
+            </div>
+        )}
+
+        <PageHeader title="Production Output" subtitle="Factory Output · End-of-Shift Log" icon="📊" onBack={onBack} color="green"
+                    actions={<button onClick={openForm} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>+ Log Output</button>}/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Output" value={totalOutput.toLocaleString()} icon="👕" color="green" sub="filtered"/>
+          <StatCard label="Good Pcs" value={totalGood.toLocaleString()} icon="✅" color="teal"/>
+          <StatCard label="Defects" value={totalDefects.toLocaleString()} icon="⚠️" color={totalDefects>50?"rose":"amber"}/>
+          <StatCard label="Avg Efficiency" value={`${avgEff}%`} icon="📈" color={avgEff>=90?"green":avgEff>=80?"blue":"amber"}/>
+        </div>
+
+        <div className="rounded-2xl p-3 mb-4 flex flex-wrap items-center gap-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search line, product, WO, supervisor…"/>
+          <FilterPills options={["All","Morning","Afternoon","Night"].map(v=>({label:v,value:v}))} value={filterShift} onChange={setFilterShift}/>
+          <FilterSelect value={filterDate} onChange={setFilterDate} options={allDates} allLabel="All Dates"/>
+          <span className="ml-auto text-[10px] text-white/30"><span className="text-white/50 font-medium">{filtered.length}</span> records</span>
+        </div>
+
+        <div className="space-y-2">
+          {filtered.map(o => {
+            const eff = o.target > 0 ? Math.round(o.output / o.target * 100) : 0;
+            const a = eff>=95?ACCENT.green:eff>=80?ACCENT.blue:eff>=65?ACCENT.amber:ACCENT.rose;
+            return (
+                <div key={o.id} className="relative rounded-2xl overflow-hidden" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))", border:`1px solid ${a.border}` }}>
+                  <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${a.bar}`}/>
+                  <div className="px-4 py-3">
+                    <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[10px] text-white/30">{o.id}</span>
+                            <Badge color="blue">{o.shift}</Badge>
+                            <span className="text-xs font-bold text-white/90">{o.line}</span>
+                          </div>
+                          <span className="text-[11px] text-white/45 mt-0.5">{o.product} · <span className="font-mono">{o.wo}</span> · {o.date}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 text-right">
+                        <div><p className="text-[10px] text-white/30">Output / Target</p><p className="text-xs font-bold text-white/80">{o.output.toLocaleString()} / {o.target.toLocaleString()}</p></div>
+                        <div><p className="text-[10px] text-white/30">Good pcs</p><p className="text-xs font-bold text-green-400">{o.goodPcs.toLocaleString()}</p></div>
+                        <div><p className="text-[10px] text-white/30">Defects</p><p className="text-xs font-bold text-rose-400">{o.defects}</p></div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold" style={{ color:a.text }}>{eff}%</p>
+                          <p className="text-[9px] text-white/25">efficiency</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 h-1.5 rounded-full bg-white/10">
+                        <div className="h-full rounded-full transition-all" style={{ width:`${Math.min(eff,100)}%`, background:a.text }}/>
+                      </div>
+                      <span className="text-[10px] text-white/30 shrink-0">Supervisor: {o.supervisor}</span>
+                      {o.note && <span className="text-[10px] text-white/25 italic shrink-0">⚠ {o.note}</span>}
+                    </div>
+                  </div>
+                </div>
+            );
+          })}
+          {filtered.length === 0 && <div className="text-center py-12"><p className="text-3xl mb-2">📊</p><p className="text-sm text-white/30">No output records found</p></div>}
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── WH FINISHED GOODS PAGE ───────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function WHFinishedGoodsPage({ onBack }) {
+  const [fgStock, setFgStock]   = useState(INIT_FG_STOCK);
+  const [fgTx, setFgTx]         = useState(INIT_FG_TRANSACTIONS);
+  const [tab, setTab]            = useState("stock");
+  const [search, setSearch]      = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [showStockIn, setShowStockIn]   = useState(false);
+  const [form, setForm]  = useState({});
+  const [saved, setSaved] = useState(false);
+
+  const statuses = [...new Set(fgStock.map(f=>f.status))];
+  const filtered = fgStock.filter(f => {
+    const q = search.toLowerCase();
+    return (filterStatus==="All" || f.status===filterStatus)
+        && (!q || f.product.toLowerCase().includes(q) || f.buyer.toLowerCase().includes(q) || f.wo.toLowerCase().includes(q) || f.id.toLowerCase().includes(q));
+  });
+
+  const totalQty     = fgStock.filter(f=>f.status!=="Shipped").reduce((s,f)=>s+f.qty,0);
+  const totalCartons = fgStock.filter(f=>f.status!=="Shipped").reduce((s,f)=>s+f.cartons,0);
+  const readyQty     = fgStock.filter(f=>f.status==="Ready to Ship").reduce((s,f)=>s+f.qty,0);
+  const shippedQty   = fgStock.filter(f=>f.status==="Shipped").reduce((s,f)=>s+f.qty,0);
+
+  const statusColor = { "Ready to Ship":"green", "Allocated":"blue", "On Hold":"rose", "Shipped":"gray" };
+
+  const openStockIn = () => {
+    setForm({ wo:"", product:"", buyer:"", style:"", color:"", size:"Assorted", qty:"", cartons:"", location:"FG-Zone-A", qcStatus:"Passed", note:"", packedDate:new Date().toISOString().slice(0,10) });
+    setShowStockIn(true); setSaved(false);
+  };
+
+  const submitStockIn = () => {
+    if (!form.wo || !form.qty) return;
+    const newFG = { ...form, id:`FG-${String(fgStock.length+1).padStart(3,"0")}`, qty:Number(form.qty), cartons:Number(form.cartons||0), status:"Ready to Ship" };
+    const newTx = { id:`FGT-${String(fgTx.length+1).padStart(3,"0")}`, date:form.packedDate, type:"Stock In", fgId:newFG.id, product:form.product, buyer:form.buyer, qty:Number(form.qty), cartons:Number(form.cartons||0), by:"Kosal Vong", note:form.note };
+    setFgStock(fs => [newFG, ...fs]);
+    setFgTx(ts => [newTx, ...ts]);
+    setSaved(true); setTimeout(() => { setShowStockIn(false); setSaved(false); }, 1400);
+  };
+
+  return (
+      <div>
+        {showStockIn && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.78)", backdropFilter:"blur(10px)" }}>
+              <div className="relative w-full max-w-lg rounded-3xl overflow-hidden"
+                   style={{ background:"linear-gradient(145deg,rgba(28,26,18,0.99),rgba(18,20,16,0.99))", border:"1px solid rgba(96,165,250,0.35)" }}>
+                <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-blue-400/70 to-blue-300/30 rounded-b-full"/>
+                <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background:"rgba(96,165,250,0.12)", border:"1px solid rgba(96,165,250,0.35)" }}>📥</div>
+                    <div><h3 className="text-sm font-bold text-white/90">Stock In — Finished Goods</h3><p className="text-[10px] text-white/30 uppercase tracking-widest">From Packing Line</p></div>
+                  </div>
+                  <button onClick={()=>setShowStockIn(false)} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                </div>
+                {saved ? (
+                    <div className="flex flex-col items-center py-12"><div className="text-4xl mb-3">✅</div><p className="text-sm font-semibold text-green-400">FG Stock Received</p></div>
+                ) : (
+                    <div className="px-6 pb-6 space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Work Order" required>
+                          <div className="relative">
+                            <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,product:wo?.product||"",buyer:wo?.buyer||""})); }}>
+                              <option value="">Select WO…</option>
+                              {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                          </div>
+                        </FormField>
+                        <FormField label="Packed Date"><input type="date" className={inputCls} value={form.packedDate} onChange={e=>setForm(f=>({...f,packedDate:e.target.value}))} style={{ colorScheme:"dark" }}/></FormField>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Product"><input type="text" className={inputCls} value={form.product} onChange={e=>setForm(f=>({...f,product:e.target.value}))}/></FormField>
+                        <FormField label="Buyer"><input type="text" className={inputCls} value={form.buyer} onChange={e=>setForm(f=>({...f,buyer:e.target.value}))}/></FormField>
+                      </div>
+                      <div className="grid grid-cols-3 gap-3">
+                        <FormField label="Qty (pcs)" required><input type="number" className={inputCls} value={form.qty} onChange={e=>setForm(f=>({...f,qty:e.target.value}))}/></FormField>
+                        <FormField label="Cartons"><input type="number" className={inputCls} value={form.cartons} onChange={e=>setForm(f=>({...f,cartons:e.target.value}))}/></FormField>
+                        <FormField label="QC Status">
+                          <div className="relative">
+                            <select className={selectCls} value={form.qcStatus} onChange={e=>setForm(f=>({...f,qcStatus:e.target.value}))}>
+                              {["Passed","Fail - Rework","Fail - Reject"].map(s=><option key={s} value={s}>{s}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                          </div>
+                        </FormField>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <FormField label="Color"><input type="text" className={inputCls} value={form.color} onChange={e=>setForm(f=>({...f,color:e.target.value}))}/></FormField>
+                        <FormField label="Zone / Location"><input type="text" className={inputCls} value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value}))}/></FormField>
+                      </div>
+                      <FormField label="Note"><input type="text" className={inputCls} value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))}/></FormField>
+                      <div className="flex gap-3 pt-1">
+                        <button onClick={()=>setShowStockIn(false)} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5">Cancel</button>
+                        <button onClick={submitStockIn} disabled={!form.wo||!form.qty} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25" style={{ background:"linear-gradient(135deg,rgba(96,165,250,0.25),rgba(96,165,250,0.1))", border:"1px solid rgba(96,165,250,0.4)", color:"#60a5fa" }}>📥 Stock In</button>
+                      </div>
+                    </div>
+                )}
+              </div>
+            </div>
+        )}
+
+        <PageHeader title="WH Finished Goods" subtitle="Warehouse · Finished Goods · Output Storage" icon="🏬" onBack={onBack} color="blue"
+                    actions={<button onClick={openStockIn} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(96,165,250,0.25),rgba(96,165,250,0.1))", border:"1px solid rgba(96,165,250,0.4)", color:"#60a5fa" }}>📥 Stock In</button>}/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="In Warehouse" value={totalQty.toLocaleString()} icon="📦" color="blue" sub="pcs (excl. shipped)"/>
+          <StatCard label="Ready to Ship" value={readyQty.toLocaleString()} icon="✅" color="green" sub="pcs"/>
+          <StatCard label="Total Cartons" value={totalCartons.toLocaleString()} icon="🗃️" color="amber"/>
+          <StatCard label="Shipped YTD" value={shippedQty.toLocaleString()} icon="🚢" color="teal" sub="pcs"/>
+        </div>
+
+        {/* Tab */}
+        <div className="flex gap-1.5 mb-4 p-1 rounded-xl w-fit" style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          {[{v:"stock",l:"📦 FG Stock"},{v:"movements",l:"📋 Movements"}].map(t=>(
+              <button key={t.v} onClick={()=>setTab(t.v)} className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${tab===t.v?"bg-blue-400/20 border border-blue-400/40 text-blue-300":"text-white/40 hover:text-white/60"}`}>{t.l}</button>
+          ))}
+        </div>
+
+        {tab==="stock" && (
+            <div>
+              <div className="rounded-2xl p-3 mb-4 flex flex-wrap items-center gap-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+                <SearchBar value={search} onChange={setSearch} placeholder="Search product, buyer, WO, FG ID…"/>
+                <FilterPills options={["All","Ready to Ship","Allocated","On Hold","Shipped"].map(v=>({label:v,value:v}))} value={filterStatus} onChange={setFilterStatus}/>
+              </div>
+              <div className="space-y-2">
+                {filtered.map(fg => {
+                  const sc = statusColor[fg.status]||"gray"; const a = ACCENT[sc];
+                  const qcOk = fg.qcStatus === "Passed";
+                  return (
+                      <div key={fg.id} className="relative rounded-2xl overflow-hidden" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))", border:`1px solid ${a.border}` }}>
+                        <div className={`absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r ${a.bar}`}/>
+                        <div className="px-4 py-3">
+                          <div className="flex items-center justify-between gap-3 flex-wrap">
+                            <div>
+                              <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                                <span className="font-mono text-[10px] text-white/30">{fg.id}</span>
+                                <span className="font-mono text-[10px] text-white/40">{fg.wo}</span>
+                                <StatusBadge status={fg.status}/>
+                                <Badge color={qcOk?"green":"rose"}>{fg.qcStatus}</Badge>
+                              </div>
+                              <p className="text-sm font-bold text-white/90">{fg.product}</p>
+                              <p className="text-[11px] text-white/40 mt-0.5">{fg.buyer} · {fg.color} · {fg.size} · {fg.location}</p>
+                            </div>
+                            <div className="flex items-center gap-6 text-right shrink-0">
+                              <div><p className="text-[10px] text-white/30">Qty</p><p className="text-lg font-bold" style={{ color:a.text }}>{fg.qty.toLocaleString()}</p><p className="text-[9px] text-white/25">pcs</p></div>
+                              <div><p className="text-[10px] text-white/30">Cartons</p><p className="text-base font-bold text-white/70">{fg.cartons}</p></div>
+                              <div><p className="text-[10px] text-white/30">Packed</p><p className="text-[11px] text-white/55">{fg.packedDate}</p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  );
+                })}
+                {filtered.length === 0 && <div className="text-center py-12 text-white/20">No stock found</div>}
+              </div>
+            </div>
+        )}
+
+        {tab==="movements" && (
+            <GlassCard color="blue">
+              <p className="text-[10px] text-blue-400/60 font-semibold uppercase tracking-widest mb-4">FG Movement Transactions</p>
+              <div className="space-y-2">
+                {fgTx.map(tx => {
+                  const tc = tx.type==="Stock In"?"green":tx.type==="Ship Out"?"teal":tx.type==="Allocate"?"blue":"amber";
+                  const a = ACCENT[tc];
+                  return (
+                      <div key={tx.id} className="flex items-start gap-3 p-3 rounded-xl" style={{ background:"rgba(255,255,255,0.03)", border:`1px solid ${a.border}` }}>
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ background:a.bg, border:`1px solid ${a.border}` }}>
+                          {tx.type==="Stock In"?"📥":tx.type==="Ship Out"?"🚢":tx.type==="Allocate"?"📋":"🔧"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                            <span className="font-mono text-[10px] text-white/30">{tx.id}</span>
+                            <Badge color={tc}>{tx.type}</Badge>
+                            <span className="text-xs font-semibold text-white/80">{tx.product}</span>
+                            <span className="text-[10px] text-white/40">{tx.buyer}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-3 text-[10px] text-white/40">
+                            <span>📅 {tx.date}</span>
+                            <span>Ref: <span className="text-white/60">{tx.fgId}</span></span>
+                            <span>By: {tx.by}</span>
+                            {tx.note && <span className="italic text-white/30">{tx.note}</span>}
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-sm font-bold" style={{ color:a.text }}>{tx.qty.toLocaleString()} pcs</p>
+                          <p className="text-[10px] text-white/30">{tx.cartons} ctns</p>
+                        </div>
+                      </div>
+                  );
+                })}
+              </div>
+            </GlassCard>
+        )}
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ── SHIPPING MANAGEMENT PAGE ─────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+function ShippingManagementPage({ onBack }) {
+  const [shipments, setShipments] = useState(INIT_SHIPMENTS);
+  const [showForm, setShowForm]   = useState(false);
+  const [editShip, setEditShip]   = useState(null);
+  const [form, setForm]           = useState({});
+  const [saved, setSaved]         = useState(false);
+  const [search, setSearch]       = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [filterMethod, setFilterMethod] = useState("All");
+  const [activeShip, setActiveShip]     = useState(null);
+
+  const filtered = shipments.filter(s => {
+    const q = search.toLowerCase();
+    return (filterStatus==="All"||s.status===filterStatus)
+        && (filterMethod==="All"||s.method===filterMethod)
+        && (!q||s.id.toLowerCase().includes(q)||s.buyer.toLowerCase().includes(q)||s.style.toLowerCase().includes(q)||s.vessel.toLowerCase().includes(q));
+  });
+
+  const totalQty  = shipments.reduce((s,x)=>s+x.qty,0);
+  const totalInv  = shipments.reduce((s,x)=>s+x.invoiceAmt,0);
+  const confirmed = shipments.filter(s=>s.status==="Confirmed").length;
+  const scheduled = shipments.filter(s=>s.status==="Scheduled").length;
+
+  const blankForm = () => ({
+    buyer:"", wo:"", style:"", qty:"", cartons:"", grossWt:"", cbm:"",
+    method:"Sea Freight", vessel:"", bl:"", port:"Sihanoukville", destPort:"",
+    etd:"", eta:"", status:"Pending", forwarder:"", invoiceNo:"", invoiceAmt:"", incoterm:"FOB", note:""
+  });
+
+  const openAdd = () => { setForm(blankForm()); setEditShip(null); setShowForm(true); setSaved(false); };
+  const openEdit = (s) => { setForm({...s}); setEditShip(s.id); setShowForm(true); setSaved(false); };
+
+  const submitForm = () => {
+    if (!form.buyer || !form.qty) return;
+    if (editShip) {
+      setShipments(ss => ss.map(s => s.id===editShip ? {...s,...form,qty:Number(form.qty),cartons:Number(form.cartons||0),grossWt:Number(form.grossWt||0),cbm:Number(form.cbm||0),invoiceAmt:Number(form.invoiceAmt||0)} : s));
+    } else {
+      const newId = `SH-2026-${String(shipments.length+1).padStart(3,"0")}`;
+      setShipments(ss => [{...form,id:newId,qty:Number(form.qty),cartons:Number(form.cartons||0),grossWt:Number(form.grossWt||0),cbm:Number(form.cbm||0),invoiceAmt:Number(form.invoiceAmt||0)}, ...ss]);
+    }
+    setSaved(true); setTimeout(() => { setShowForm(false); setSaved(false); }, 1400);
+  };
+
+  const changeStatus = (id, status) => setShipments(ss => ss.map(s => s.id===id ? {...s,status} : s));
+
+  const statusColor = { Confirmed:"green", Scheduled:"blue", Pending:"amber", "In Transit":"cyan", Delivered:"green", Cancelled:"rose" };
+  const methodIcon  = { "Sea Freight":"🚢", "Air Freight":"✈️" };
+  const incotermColor = { FOB:"blue", CIF:"amber", EXW:"violet", DDP:"teal" };
+
+  return (
+      <div>
+        {/* Detail panel */}
+        {activeShip && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.75)", backdropFilter:"blur(10px)" }}>
+              <div className="relative w-full max-w-xl rounded-3xl overflow-hidden max-h-[88vh] overflow-y-auto"
+                   style={{ background:"linear-gradient(145deg,rgba(22,24,18,0.99),rgba(14,16,12,0.99))", border:"1px solid rgba(34,211,238,0.35)" }}>
+                <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-cyan-400/70 to-cyan-300/30 rounded-b-full"/>
+                <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xl" style={{ background:"rgba(34,211,238,0.12)", border:"1px solid rgba(34,211,238,0.35)" }}>🚢</div>
+                    <div><h3 className="text-sm font-bold text-white/90">{activeShip.id}</h3><p className="text-[10px] text-white/30 uppercase tracking-widest">Shipment Detail</p></div>
+                  </div>
+                  <button onClick={()=>setActiveShip(null)} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                </div>
+                <div className="px-6 pb-6 space-y-4">
+                  {/* Status change */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] text-white/30 uppercase tracking-widest mr-1">Status:</span>
+                    {["Pending","Confirmed","Scheduled","In Transit","Delivered","Cancelled"].map(s=>(
+                        <button key={s} onClick={()=>{changeStatus(activeShip.id,s);setActiveShip(a=>({...a,status:s}));}}
+                                className={`px-2.5 py-1 rounded-lg text-[10px] font-medium border transition-all ${activeShip.status===s?"bg-cyan-400/25 border-cyan-400/40 text-cyan-300":"bg-white/5 border-white/8 text-white/25 hover:bg-white/10 hover:text-white/50"}`}>{s}</button>
+                    ))}
+                  </div>
+                  {/* Info grid */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      {l:"Buyer",v:activeShip.buyer},{l:"Style",v:activeShip.style},{l:"Work Order",v:activeShip.wo},{l:"Qty",v:`${activeShip.qty.toLocaleString()} pcs`},
+                      {l:"Cartons",v:activeShip.cartons},{l:"Gross Weight",v:`${activeShip.grossWt} kg`},{l:"CBM",v:`${activeShip.cbm} m³`},{l:"Method",v:activeShip.method},
+                      {l:"Vessel / Flight",v:activeShip.vessel},{l:"B/L or AWB",v:activeShip.bl||"—"},{l:"Port of Loading",v:activeShip.port},{l:"Destination",v:activeShip.destPort},
+                      {l:"ETD",v:activeShip.etd},{l:"ETA",v:activeShip.eta},{l:"Forwarder",v:activeShip.forwarder},{l:"Incoterm",v:activeShip.incoterm},
+                      {l:"Invoice No.",v:activeShip.invoiceNo},{l:"Invoice Amount",v:`$${Number(activeShip.invoiceAmt).toLocaleString()}`},
+                    ].map((r,i)=>(
+                        <div key={i} className="px-3 py-2 rounded-xl" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                          <p className="text-[9px] text-white/30 uppercase tracking-widest">{r.l}</p>
+                          <p className="text-xs text-white/75 font-medium mt-0.5">{r.v||"—"}</p>
+                        </div>
+                    ))}
+                  </div>
+                  <button onClick={()=>{setActiveShip(null);openEdit(activeShip);}} className="w-full py-2.5 rounded-xl text-xs font-semibold" style={{ background:"rgba(34,211,238,0.1)", border:"1px solid rgba(34,211,238,0.3)", color:"#22d3ee" }}>✏️ Edit Shipment</button>
+                </div>
+              </div>
+            </div>
+        )}
+
+        {/* Add/Edit form */}
+        {showForm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background:"rgba(0,0,0,0.78)", backdropFilter:"blur(10px)" }}>
+              <div className="relative w-full max-w-2xl rounded-3xl overflow-hidden max-h-[92vh] overflow-y-auto"
+                   style={{ background:"linear-gradient(145deg,rgba(28,26,18,0.99),rgba(18,20,16,0.99))", border:"1px solid rgba(34,211,238,0.35)" }}>
+                <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-cyan-400/70 to-cyan-300/30 rounded-b-full"/>
+                <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background:"rgba(34,211,238,0.12)", border:"1px solid rgba(34,211,238,0.35)" }}>🚢</div>
+                    <div><h3 className="text-sm font-bold text-white/90">{editShip?"Edit Shipment":"New Shipment"}</h3><p className="text-[10px] text-white/30 uppercase tracking-widest">Shipping Management</p></div>
+                  </div>
+                  <button onClick={()=>setShowForm(false)} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
+                </div>
+                {saved ? (
+                    <div className="flex flex-col items-center py-12"><div className="text-4xl mb-3">✅</div><p className="text-sm font-semibold text-cyan-400">Shipment {editShip?"Updated":"Created"}</p></div>
+                ) : (
+                    <div className="px-6 pb-6 space-y-4">
+                      {/* Buyer & cargo */}
+                      <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                        <p className="text-[9px] text-cyan-400/50 font-semibold uppercase tracking-widest mb-3">Cargo Details</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <FormField label="Buyer" required>
+                            <div className="relative">
+                              <select className={selectCls} value={form.buyer} onChange={e=>setForm(f=>({...f,buyer:e.target.value}))}>
+                                <option value="">Select buyer…</option>
+                                {DATA.buyers.map(b=><option key={b.id} value={b.name}>{b.name}</option>)}
+                              </select>
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                            </div>
+                          </FormField>
+                          <FormField label="Work Order">
+                            <div className="relative">
+                              <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,style:wo?.product||""})); }}>
+                                <option value="">Select WO…</option>
+                                {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id}</option>)}
+                              </select>
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                            </div>
+                          </FormField>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 mt-3">
+                          <FormField label="Style / Product"><input type="text" className={inputCls} value={form.style} onChange={e=>setForm(f=>({...f,style:e.target.value}))}/></FormField>
+                          <FormField label="Incoterm">
+                            <div className="relative">
+                              <select className={selectCls} value={form.incoterm} onChange={e=>setForm(f=>({...f,incoterm:e.target.value}))}>
+                                {["FOB","CIF","EXW","DDP","FCA"].map(t=><option key={t} value={t}>{t}</option>)}
+                              </select>
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                            </div>
+                          </FormField>
+                        </div>
+                        <div className="grid grid-cols-4 gap-3 mt-3">
+                          <FormField label="Qty (pcs)" required><input type="number" className={inputCls} value={form.qty} onChange={e=>setForm(f=>({...f,qty:e.target.value}))}/></FormField>
+                          <FormField label="Cartons"><input type="number" className={inputCls} value={form.cartons} onChange={e=>setForm(f=>({...f,cartons:e.target.value}))}/></FormField>
+                          <FormField label="Gross Wt (kg)"><input type="number" className={inputCls} value={form.grossWt} onChange={e=>setForm(f=>({...f,grossWt:e.target.value}))}/></FormField>
+                          <FormField label="CBM"><input type="number" className={inputCls} value={form.cbm} onChange={e=>setForm(f=>({...f,cbm:e.target.value}))}/></FormField>
+                        </div>
+                      </div>
+                      {/* Logistics */}
+                      <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                        <p className="text-[9px] text-blue-400/50 font-semibold uppercase tracking-widest mb-3">Logistics</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <FormField label="Method">
+                            <div className="relative">
+                              <select className={selectCls} value={form.method} onChange={e=>setForm(f=>({...f,method:e.target.value}))}>
+                                {["Sea Freight","Air Freight","Road","Express"].map(m=><option key={m} value={m}>{m}</option>)}
+                              </select>
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
+                            </div>
+                          </FormField>
+                          <FormField label="Forwarder"><input type="text" className={inputCls} value={form.forwarder} onChange={e=>setForm(f=>({...f,forwarder:e.target.value}))}/></FormField>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 mt-3">
+                          <FormField label="Vessel / Flight No."><input type="text" className={inputCls} value={form.vessel} onChange={e=>setForm(f=>({...f,vessel:e.target.value}))}/></FormField>
+                          <FormField label="B/L or AWB No."><input type="text" className={inputCls} value={form.bl} onChange={e=>setForm(f=>({...f,bl:e.target.value}))}/></FormField>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 mt-3">
+                          <FormField label="Port of Loading"><input type="text" className={inputCls} value={form.port} onChange={e=>setForm(f=>({...f,port:e.target.value}))}/></FormField>
+                          <FormField label="Destination Port"><input type="text" className={inputCls} value={form.destPort} onChange={e=>setForm(f=>({...f,destPort:e.target.value}))}/></FormField>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 mt-3">
+                          <FormField label="ETD"><input type="date" className={inputCls} value={form.etd} onChange={e=>setForm(f=>({...f,etd:e.target.value}))} style={{ colorScheme:"dark" }}/></FormField>
+                          <FormField label="ETA"><input type="date" className={inputCls} value={form.eta} onChange={e=>setForm(f=>({...f,eta:e.target.value}))} style={{ colorScheme:"dark" }}/></FormField>
+                        </div>
+                      </div>
+                      {/* Finance */}
+                      <div className="rounded-xl px-4 py-3" style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                        <p className="text-[9px] text-amber-400/50 font-semibold uppercase tracking-widest mb-3">Invoice & Status</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <FormField label="Invoice No."><input type="text" className={inputCls} value={form.invoiceNo} onChange={e=>setForm(f=>({...f,invoiceNo:e.target.value}))}/></FormField>
+                          <FormField label="Invoice Amount ($)"><input type="number" className={inputCls} value={form.invoiceAmt} onChange={e=>setForm(f=>({...f,invoiceAmt:e.target.value}))}/></FormField>
+                        </div>
+                        <div className="mt-3">
+                          <FormField label="Status">
+                            <div className="flex gap-2 flex-wrap">
+                              {["Pending","Confirmed","Scheduled","In Transit","Delivered"].map(s=>(
+                                  <button key={s} onClick={()=>setForm(f=>({...f,status:s}))}
+                                          className={`px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all ${form.status===s?"bg-cyan-400/25 border-cyan-400/40 text-cyan-300":"bg-white/5 border-white/10 text-white/35 hover:bg-white/8"}`}>{s}</button>
+                              ))}
+                            </div>
+                          </FormField>
+                        </div>
+                      </div>
+                      <div className="flex gap-3 pt-1">
+                        <button onClick={()=>setShowForm(false)} className="flex-1 py-2.5 rounded-xl text-xs text-white/35 border border-white/10 hover:bg-white/5">Cancel</button>
+                        <button onClick={submitForm} disabled={!form.buyer||!form.qty} className="flex-grow-[2] py-2.5 rounded-xl text-xs font-semibold disabled:opacity-25" style={{ background:"linear-gradient(135deg,rgba(34,211,238,0.25),rgba(34,211,238,0.1))", border:"1px solid rgba(34,211,238,0.4)", color:"#22d3ee" }}>
+                          {editShip?"💾 Save Changes":"🚢 Create Shipment"}
+                        </button>
+                      </div>
+                    </div>
+                )}
+              </div>
+            </div>
+        )}
+
+        <PageHeader title="Shipping Management" subtitle="Logistics · Export · Booking · Tracking" icon="🚢" onBack={onBack} color="cyan"
+                    actions={<button onClick={openAdd} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(34,211,238,0.25),rgba(34,211,238,0.1))", border:"1px solid rgba(34,211,238,0.4)", color:"#22d3ee" }}>+ New Shipment</button>}/>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <StatCard label="Total Shipments" value={shipments.length} icon="🚢" color="cyan"/>
+          <StatCard label="Confirmed" value={confirmed} icon="✅" color="green"/>
+          <StatCard label="Scheduled" value={scheduled} icon="📅" color="blue"/>
+          <StatCard label="Invoice Value" value={`$${totalInv.toLocaleString()}`} icon="💵" color="amber"/>
+        </div>
+
+        {/* Filter toolbar */}
+        <div className="rounded-2xl p-3 mb-4 space-y-2" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search ID, buyer, style, vessel…"/>
+          <div className="flex flex-wrap gap-2 items-center">
+            <FilterPills options={["All","Pending","Confirmed","Scheduled","In Transit","Delivered"].map(v=>({label:v,value:v}))} value={filterStatus} onChange={setFilterStatus}/>
+            <FilterSelect value={filterMethod} onChange={setFilterMethod} options={["Sea Freight","Air Freight","Road","Express"]} allLabel="All Methods"/>
+            <span className="ml-auto text-[10px] text-white/25"><span className="text-white/50">{filtered.length}</span> shipments</span>
+          </div>
+        </div>
+
+        {/* Shipment cards */}
+        <div className="space-y-3">
+          {filtered.map(s => {
+            const sc = statusColor[s.status]||"gray"; const a = ACCENT[sc];
+            const mi = methodIcon[s.method]||"📦";
+            return (
+                <div key={s.id} className="relative rounded-2xl overflow-hidden group cursor-pointer hover:-translate-y-0.5 transition-all"
+                     style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))", border:`1px solid ${a.border}` }}
+                     onClick={()=>setActiveShip(s)}>
+                  <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.bar}`}/>
+                  <div className="px-5 py-4">
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      {/* Left: id + buyer + style */}
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <span className="font-mono text-[11px] text-cyan-300">{s.id}</span>
+                          <StatusBadge status={s.status}/>
+                          <Badge color={incotermColor[s.incoterm]||"gray"}>{s.incoterm}</Badge>
+                        </div>
+                        <p className="text-sm font-bold text-white/90">{s.buyer}</p>
+                        <p className="text-[11px] text-white/45 mt-0.5">{s.style} · <span className="font-mono">{s.wo}</span></p>
+                      </div>
+                      {/* Center: transport */}
+                      <div className="flex items-center gap-4">
+                        <div className="text-center">
+                          <p className="text-[10px] text-white/30">Port</p>
+                          <p className="text-[11px] text-white/60 font-semibold">{s.port}</p>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-lg">{mi}</span>
+                          <div className="flex items-center gap-1">
+                            <div className="w-8 h-px bg-white/20"/>
+                            <div className="w-1.5 h-1.5 rounded-full" style={{ background:a.text }}/>
+                            <div className="w-8 h-px bg-white/20"/>
+                          </div>
+                          <span className="text-[9px] text-white/25">{s.method}</span>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-[10px] text-white/30">Dest</p>
+                          <p className="text-[11px] text-white/60 font-semibold">{s.destPort}</p>
+                        </div>
+                      </div>
+                      {/* Right: dates + qty */}
+                      <div className="text-right shrink-0">
+                        <div className="flex items-center gap-4 mb-2">
+                          <div><p className="text-[9px] text-white/25">ETD</p><p className="text-[11px] text-white/65">{s.etd}</p></div>
+                          <div><p className="text-[9px] text-white/25">ETA</p><p className="text-[11px] text-white/65">{s.eta}</p></div>
+                        </div>
+                        <p className="text-base font-bold" style={{ color:a.text }}>{s.qty.toLocaleString()} pcs</p>
+                        <p className="text-[10px] text-white/30">{s.cartons} ctns · ${Number(s.invoiceAmt).toLocaleString()}</p>
+                      </div>
+                    </div>
+                    {/* Vessel / BL row */}
+                    <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/6 text-[10px] text-white/30 flex-wrap">
+                      <span>🛳 {s.vessel||"—"}</span>
+                      <span>📄 B/L: {s.bl||"—"}</span>
+                      <span>🏢 {s.forwarder||"—"}</span>
+                      <span className="ml-auto text-white/20 group-hover:text-white/50 transition-colors">Tap for details / edit →</span>
+                    </div>
+                  </div>
+                </div>
+            );
+          })}
+          {filtered.length === 0 && <div className="text-center py-12"><p className="text-3xl mb-2">🚢</p><p className="text-sm text-white/30">No shipments found</p></div>}
+        </div>
+      </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
 // MENU COMPONENTS
 // ═══════════════════════════════════════════════════════════════
 function MenuButton({ title, iconPath, onClick, badge, color="white" }) {
@@ -1769,8 +2717,10 @@ function Group({ label, color="amber", children }) {
 function QuickAlerts({ onNav }) {
   const alerts = [
     { icon:"⚠️", text:"WO-2026-004 Sports Jersey is delayed", color:"rose", page:"work-orders" },
-    { icon:"📦", text:"Elastic Band 2cm stock below reorder point", color:"amber", page:"materials" },
+    { icon:"📦", text:"Elastic Band 2cm stock below reorder point", color:"amber", page:"wh-raw" },
     { icon:"🔴", text:"2 Critical defects open on Line B2", color:"rose", page:"defects" },
+    { icon:"🏬", text:"Sports Jersey FG on hold — awaiting rework clearance", color:"amber", page:"wh-fg" },
+    { icon:"🚢", text:"SH-2026-002 Zara air freight confirmed — ETD Mar 13", color:"green", page:"shipping-mgmt" },
     { icon:"⏳", text:"2 permission requests pending review", color:"amber", page:"permissions" },
     { icon:"📈", text:"View full KPI executive summary report", color:"green", page:"report-kpi" },
   ];
@@ -1829,6 +2779,10 @@ export default function SECFactory() {
     payroll:             <PayrollPage onBack={back}/>,
     reports:             <ReportsPage onBack={back}/>,
     "production-flow":   <ProductionFlowPage onBack={back}/>,
+    "wh-raw":            <WHRawMaterialPage onBack={back}/>,
+    "prod-output":       <ProductionOutputPage onBack={back}/>,
+    "wh-fg":             <WHFinishedGoodsPage onBack={back}/>,
+    "shipping-mgmt":     <ShippingManagementPage onBack={back}/>,
     "report-production": <ProductionReportPage onBack={back}/>,
     "report-quality":    <QualityReportPage onBack={back}/>,
     "report-hr":         <HRReportPage onBack={back}/>,
@@ -1973,6 +2927,7 @@ export default function SECFactory() {
                       <Group label="Monitoring" color="green">
                         <MenuButton title="Real-time" iconPath={I("monitor-eye")} onClick={()=>nav("realtime")}/>
                         <MenuButton title="TV Display" iconPath={I("television-play")} onClick={()=>nav("tv")}/>
+                        <MenuButton title="Output Log" iconPath={I("chart-bar-stacked")} onClick={()=>nav("prod-output")}/>
                       </Group>
                       <Group label="Reports" color="green">
                         <MenuButton title="Prod. Report" iconPath={I("chart-bar")} onClick={()=>nav("report-production")}/>
@@ -2004,6 +2959,21 @@ export default function SECFactory() {
                       </Group>
                       <Group label="Reports" color="violet">
                         <MenuButton title="HR Report" iconPath={I("chart-bar")} onClick={()=>nav("report-hr")}/>
+                      </Group>
+                    </Section>
+
+                    {/* Warehouse */}
+                    <Section title="Warehouse" icon="🏬" color="teal">
+                      <Group label="Raw Materials" color="teal">
+                        <MenuButton title="WH Raw Mat." iconPath={I("package-variant-closed")} onClick={()=>nav("wh-raw")}/>
+                        <MenuButton title="Materials" iconPath={I("layers")} onClick={()=>nav("materials")}/>
+                      </Group>
+                      <Group label="Production Output" color="green">
+                        <MenuButton title="Prod. Output" iconPath={I("chart-bar-stacked")} onClick={()=>nav("prod-output")}/>
+                      </Group>
+                      <Group label="Finished Goods" color="blue">
+                        <MenuButton title="WH Fin. Goods" iconPath={I("warehouse")} onClick={()=>nav("wh-fg")}/>
+                        <MenuButton title="Shipping" iconPath={I("ferry")} onClick={()=>nav("shipping-mgmt")}/>
                       </Group>
                     </Section>
 

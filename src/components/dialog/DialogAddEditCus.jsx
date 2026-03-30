@@ -392,7 +392,7 @@ function DialogAddEditCus({
                 return wrap(
                     <Autocomplete
                         multiple
-                        options={resolvedOptions}
+                        options={[...resolvedOptions.sort((a, b) => a.label.localeCompare(b.label))]}
                         disableCloseOnSelect
                         loading={isLoading}
                         getOptionKey={(opt) => opt.value}

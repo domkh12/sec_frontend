@@ -44,7 +44,9 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
                     return response.status === 200 && !result.isError;
                 },
             }),
-            providesTags: [{ type: "DeptStats", id: "LIST" }],
+            providesTags: [
+                { type: "DeptStats", id: "LIST" }
+            ],
         }),
 
         getDeptLookup: builder.query({
@@ -68,6 +70,7 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:(result, error, arg) => [
                 { type: "Department", id: "LIST" },
                 { type: "DeptLookup", id: "LIST" },
+                { type: "DeptStats", id: "LIST" }
             ],
         }),
 
@@ -82,6 +85,7 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 {type: "Department", id: "LIST"},
                 { type: "DeptLookup", id: "LIST" },
+                { type: "DeptStats", id: "LIST" }
             ],
         }),
 
@@ -96,6 +100,7 @@ export const departmentApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [
                 { type: "Department", id: "LIST" },
                 { type: "DeptLookup", id: "LIST" },
+                { type: "DeptStats", id: "LIST" }
             ],
         }),
 

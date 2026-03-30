@@ -8,8 +8,8 @@ const initialState = productAdapter.getInitialState();
 export const productApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProduct: builder.query({
-            query: ({ pageNo = 1, pageSize = 20 }) => ({
-                url: `/products?pageNo=${pageNo}&pageSize=${pageSize}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
+                url: `/products?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -45,7 +45,9 @@ export const productApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "Product", id: "LIST" }],
+            invalidatesTags: [
+                { type: "Product", id: "LIST" }
+            ],
         }),
 
         updateProduct: builder.mutation({
@@ -70,10 +72,22 @@ export const productApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [{ type: "Product", id: "LIST" }],
         }),
 
+        getProductStats: builder.query({
+            query: () => ({
+                url: `/products/stats`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "ProductStats", id: "LIST" }],
+        }),
+
+
     }),
 });
 
 export const {
+    useGetProductStatsQuery,
     useUpdateProductMutation,
     useDeleteProductMutation,
     useCreateProductMutation,

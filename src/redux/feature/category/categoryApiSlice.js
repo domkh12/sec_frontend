@@ -57,7 +57,8 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, arg) => [
                 { type: "Category", id: "LIST" },
-                { type: "Product", id: "LIST" }
+                { type: "Product", id: "LIST" },
+                { type: "CategoryLookup", id: "LIST" }
             ],
         }),
 
@@ -69,7 +70,10 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
                     ...initialCategoryData,
                 },
             }),
-            invalidatesTags: [{type: "Category", id: "LIST"}],
+            invalidatesTags: [
+                {type: "Category", id: "LIST"},
+                { type: "CategoryLookup", id: "LIST" }
+            ],
         }),
 
         deleteCategory: builder.mutation({
@@ -80,7 +84,10 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
                     id,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "Category", id: "LIST" }],
+            invalidatesTags: (result, error, arg) => [
+                { type: "Category", id: "LIST" },
+                { type: "CategoryLookup", id: "LIST" }
+            ],
         }),
 
     }),

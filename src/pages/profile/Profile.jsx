@@ -15,6 +15,7 @@ import BackButton from "../../components/ui/BackButton.jsx";
 import {useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSlice.js";
 import {setAlertProfile, setIsOpenSnackbarProfile} from "../../redux/feature/auth/authSlice.js";
 import useFileUpload from "../../hook/useFileUpload.jsx";
+import useAuth from "../../hook/useAuth.jsx";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
@@ -46,6 +47,7 @@ const fieldSx = {
 // ── Component ──────────────────────────────────────────────────────────────────
 function Profile() {
     const user     = useSelector((state) => state.auth.profile);
+    const {isManager, isAdmin} = useAuth();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isOpenSnackbar = useSelector((state) => state.auth.isOpenSnackbarProfile);
@@ -107,7 +109,7 @@ function Profile() {
     return (
         <>
         <CardList>
-            <BackButton onClick={() => navigate("/admin")} />
+            <BackButton onClick={() => isManager ? navigate("/manager") : isAdmin ? navigate("/admin") : navigate("/")}/>
 
             {/* ── 1. Identity Card ─────────────────────────────────────────────── */}
             <CardGlassBlur2>

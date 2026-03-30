@@ -8,11 +8,12 @@ import {ROLES} from "./config/roles.js";
 import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
-import FileManager from "./pages/file/FileManager.jsx";
-import SizeList from "./pages/size/SizeList.jsx";
-import ColorList from "./pages/color/ColorList.jsx";
 
 // Lazy load everything else
+const FileManager = lazy(() => import("./pages/file/FileManager.jsx"));
+const PurchaseList = lazy(() => import("./pages/purchaseOrder/PurchaseList.jsx"));
+const SizeList = lazy(() => import("./pages/size/SizeList.jsx"));
+const ColorList = lazy(() => import("./pages/color/ColorList.jsx"));
 const LayoutManager = lazy(() => import("./pages/layout/LayoutManager.jsx"));
 const LayoutAdmin = lazy(() => import("./pages/layout/LayoutAdmin.jsx"));
 const LayoutTvOperator = lazy(() => import("./pages/layout/LayoutTvOperator.jsx"));
@@ -78,9 +79,14 @@ function App() {
                               <Route path="categories" element={<CategoryList/>}/>
                               <Route path="sizes" element={<SizeList/>} />
                               <Route path="colors" element={<ColorList/>} />
+                              <Route path="purchase-orders" element={<PurchaseList/>}/>
                               <Route path="buyers">
                                   <Route index element={<BuyerList/>}/>
                                   <Route path=":id/file-manager" element={<FileManager/>}/>
+                              </Route>
+                              <Route path="tv">
+                                  <Route index element={<LayoutTvOperator/>}/>
+                                  <Route path=":name" element={<TvDashboardDisplay/>}/>
                               </Route>
                           </Route>
                       </Route>

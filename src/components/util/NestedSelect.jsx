@@ -222,7 +222,7 @@ const NestedSelect = ({
                         <Typography variant="body2">{"No Options"}</Typography>
                     </MenuItem>
                 ) : (
-                    options.map((option) => (
+                    [...options].sort((a, b) => a.name.localeCompare(b.name)).map((option) => (
                         <MenuItem
                             key={scopedKey(0, option.id)}
                             onMouseEnter={(e) => handleHover(0, e.currentTarget, option)}
