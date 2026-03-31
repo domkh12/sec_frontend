@@ -29,7 +29,32 @@ const theme = createTheme({
                     textTransform: "none"
                 }
             },
-        }
+        },
+        MuiCssBaseline: {
+            styleOverrides: {
+                "*": {
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "rgba(255,255,255,0.35) transparent", // Firefox
+                },
+                "*::-webkit-scrollbar": {
+                    width: "4px",
+                    height: "4px",
+                },
+                "*::-webkit-scrollbar-track": {
+                    background: "transparent",
+                },
+                "*::-webkit-scrollbar-thumb": {
+                    background: "rgba(255,255,255,0.35)",
+                    borderRadius: "100px",
+                },
+                "*::-webkit-scrollbar-thumb:hover": {
+                    background: "rgba(255,255,255,0.65)",
+                },
+                "*::-webkit-scrollbar-corner": {
+                    background: "transparent",
+                },
+            },
+        },
     },
     breakpoints: {
         values: {

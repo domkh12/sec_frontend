@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import {BrowserRouter} from "react-router-dom";
 import './config/i18n';
-import {ThemeProvider} from "@mui/material";
+import {CssBaseline, ThemeProvider} from "@mui/material";
 import theme from './config/theme';
 import {Provider} from "react-redux";
 import store from "./redux/app/store.js";
@@ -19,6 +19,7 @@ createRoot(document.getElementById('root')).render(
       >
           <Provider store={store}>
               <ThemeProvider theme={theme}>
+                  <CssBaseline />
                   <App />
               </ThemeProvider>
           </Provider>

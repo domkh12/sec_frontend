@@ -33,6 +33,7 @@ import { FaFilePen } from "react-icons/fa6";
 import useDebounce from "../../hook/useDebounce.jsx";
 import useAuth from "../../hook/useAuth.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
+import {useGetSubCategoryQuery} from "../../redux/feature/category/subCategoryApiSlice.js";
 
 function ProductList() {
     const {t} = useTranslation();
@@ -71,6 +72,7 @@ function ProductList() {
                                         pageNo: filterValue.pageNo,
                                         pageSize: filterValue.pageSize,
                                         search: searchFilter,
+                                        status: filterValue.status
                                     });
     const {data: colorData}         = useGetColorQuery({
                                         pageNo: 1,
@@ -81,8 +83,11 @@ function ProductList() {
                                         pageSize: 999
                                     });
     const {data: productStats,
-        isLoading:
-        isLoadingStatProduct}       = useGetProductStatsQuery();
+           isLoading:
+           isLoadingStatProduct}     = useGetProductStatsQuery();
+    const {data: subCategoryData}    = useGetSubCategoryQuery({
+                                        pageNo: 1,
+                                        pageSize: 99});
 
     // -- Handler ----------------------------------------------------------------
     const handleChangePage = (event, newPage) => {
@@ -114,8 +119,8 @@ function ProductList() {
                     id: productDataForUpdate.id,
                     styleNo: values.styleNo,
                     subCategoryId:  values.subCategory.childId,
-                    color:     values.color,
-                    size:      values.size,
+                    colorId:     values.color,
+                    sizeId:      values.size,
                 }).unwrap();
                 dispatch(setAlertProduct({type: "success", message: "Update successfully"}));
                 dispatch(setProductDataForUpdate(null));
@@ -145,9 +150,9 @@ function ProductList() {
         dispatch(setProductDataForUpdate({
             id: row.id,
             styleNo: row.styleNo,
-            subCategoryId: row.subCategoryId,
-            color: row.color,
-            size: row.size,
+            subCategory: {parentId: row.categoryId, childId: row.subCategoryId},
+            color: row.colorId,
+            size: row.sizeId,
         }));
     };
 
@@ -173,8 +178,7 @@ function ProductList() {
     };
 
     const handleFilterChange = (key, value) => {
-        console.log(key, value);
-        if (key === "all") {
+        if (value === "all") {
            return dispatch(setFilterProduct({
                ...filterValue,
                [key]: ""
@@ -282,8 +286,49 @@ function ProductList() {
     const filterConfig = [
         {
             id: "size",
-            label: "size",
+            label: t("table.size"),
             width: isMd ? 150 : "100%",
+            options: [
+                {value: "all", label: t("filter.all")},
+                ...(sizeData?.ids?.map(id => ({
+                    value: sizeData.entities[id].id,
+                    label: sizeData.entities[id].size
+                })) || [])
+            ]
+        },
+        {
+            id: "color",
+            label: t("table.color"),
+            width: isMd ? 150 : "100%",
+            options: [
+                {value: "all", label: t("filter.all")},
+                ...(colorData?.ids?.map(id => ({
+                    value: colorData.entities[id].id,
+                    label: colorData.entities[id].color
+                })) || [])
+            ]
+        },
+        {
+            id: "subCategory",
+            label: t("table.subCategory"),
+            width: isMd ? 150 : "100%",
+            options: [
+                {value: "all", label: t("filter.all")},
+                ...(subCategoryData?.ids?.map(id => ({
+                    value: subCategoryData.entities[id].id,
+                    label: subCategoryData.entities[id].name
+                })) || [])
+            ]
+        },
+        {
+            id: "status",
+            label: t("table.status"),
+            width: isMd ? 150 : "100%",
+            options: [
+                {value: "all", label: t("filter.all")},
+                { value: "Active", label: "Active" },
+                { value: "Draft", label: "Draft" },
+            ],
         }
     ]
 
@@ -348,9 +393,9 @@ function ProductList() {
                     <StatCards
                         isLoading={isLoadingStatProduct}
                         cards={[
-                            { label: "Total Styles",  value: productStats.totalStyleNo,  color: "violet", icon: <FaTshirt /> },
-                            { label: "Active",      value: productStats.totalActive,   color: "emerald", icon: <FaCircleCheck/>},
-                            { label: "Draft",  value: productStats.totalDraft,   color: "amber", icon: <FaFilePen/> },
+                            { label: "Total Styles",  value: productStats?.totalStyleNo,  color: "violet", icon: <FaTshirt /> },
+                            { label: "Active",      value: productStats?.totalActive,   color: "emerald", icon: <FaCircleCheck/>},
+                            { label: "Draft",  value: productStats?.totalDraft,   color: "amber", icon: <FaFilePen/> },
                         ]}
                     />
                 </div>

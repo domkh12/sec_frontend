@@ -8,8 +8,8 @@ const initialState = productAdapter.getInitialState();
 export const productApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProduct: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
-                url: `/products?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", status = "" }) => ({
+                url: `/products?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

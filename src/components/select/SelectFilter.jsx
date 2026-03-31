@@ -117,6 +117,7 @@ function SelectFilter({
         PaperProps: {
             sx: {
                 mt: 0.75,
+                maxHeight: 300,
                 borderRadius: "12px",
                 background: "rgba(15, 23, 42, 0.75)",
                 backdropFilter: "blur(24px) saturate(180%)",

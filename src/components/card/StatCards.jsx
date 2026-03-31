@@ -68,7 +68,6 @@ function StatCard({ label, value, color = "sky", icon }) {
 }
 
 function StatCards({ cards = [], isLoading, skeleton }) {
-    console.log(cards.length)
     return (
         <div className="flex justify-between flex-col md:flex-row  gap-3 my-3">
             {

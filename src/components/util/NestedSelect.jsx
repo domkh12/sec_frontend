@@ -33,7 +33,7 @@ const scopedKey = (depth, id) => `${depth}-${id}`;
 /**
  * A single level of the cascading sub-menu.
  */
-const SubMenu = ({ options, anchorEl, onHover, onSelect, depth }) => {
+const SubMenu = ({ options, anchorEl, onHover, onSelect, depth, childId }) => {
     if (!anchorEl) return null;
 
     const glassMenuSx = {
@@ -46,7 +46,11 @@ const SubMenu = ({ options, anchorEl, onHover, onSelect, depth }) => {
             borderRadius: '8px',
             color: '#eee',
             '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' },
+
         },
+        "& .Mui-selected": {
+            backgroundColor: 'rgba(255,255,255,0.1)',
+        }
     };
 
     return (
@@ -65,6 +69,7 @@ const SubMenu = ({ options, anchorEl, onHover, onSelect, depth }) => {
             <Box sx={{ pointerEvents: 'auto' }}>
                 {options.map((option) => (
                     <MenuItem
+                        selected={childId === option?.id}
                         key={scopedKey(depth, option.id)}
                         onMouseEnter={(e) => onHover(depth, e.currentTarget, option)}
                         onClick={() => onSelect(depth, option.id)}
@@ -174,6 +179,9 @@ const NestedSelect = ({
             color: '#eee',
             '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' },
         },
+        "& .Mui-selected": {
+            backgroundColor: 'rgba(255,255,255,0.1)',
+        }
     };
 
     return (
@@ -214,6 +222,14 @@ const NestedSelect = ({
                         width: rootAnchor ? rootAnchor.clientWidth : 'auto',
                     },
                 }}
+                sx={{
+                    "& .Mui-selected": {
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        "&:hover": {
+                            backgroundColor: 'rgba(255,255,255,0.1)',
+                        }
+                    }
+                }}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
             >
@@ -224,10 +240,11 @@ const NestedSelect = ({
                 ) : (
                     [...options].sort((a, b) => a.name.localeCompare(b.name)).map((option) => (
                         <MenuItem
+                            selected={value?.parentId === option.id}
                             key={scopedKey(0, option.id)}
                             onMouseEnter={(e) => handleHover(0, e.currentTarget, option)}
                             onClick={() => handleRootSelect(option)}
-                            sx={{ justifyContent: 'space-between' }}
+                            sx={{ justifyContent: 'space-between'}}
                         >
                             {option.name}
                             {option.children?.length > 0 && (
@@ -249,6 +266,7 @@ const NestedSelect = ({
                         anchorEl={sm.anchorEl}
                         onHover={handleHover}
                         onSelect={handleSelect}
+                        childId={value?.childId}
                     />
                 ) : null
             )}

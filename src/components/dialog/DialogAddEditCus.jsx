@@ -391,6 +391,7 @@ function DialogAddEditCus({
             case "autocomplete-checkbox":
                 return wrap(
                     <Autocomplete
+                        size="medium"
                         multiple
                         options={[...resolvedOptions.sort((a, b) => a.label.localeCompare(b.label))]}
                         disableCloseOnSelect
@@ -422,9 +423,23 @@ function DialogAddEditCus({
                                         color: "rgba(255,255,255,0.45)",
                                         fontSize: "0.875rem",
                                     },
-
                                 },
                             },
+                        }}
+                        sx={{
+                            "& .MuiAutocomplete-tag": {
+                                margin: "0px",
+                                my: "2px",
+                                mr: "5px",
+                                color: "rgba(255,255,255,0.85)",
+                                border: "1px solid rgba(255,255,255,0.12)",
+                                borderRadius: "16px",
+                                background: "rgba(255,255,255,0.06)",
+                            },
+                            "& .MuiSvgIcon-root": {
+                                color: "rgba(255,255,255,0.65) !important",
+                                "&:hover": { color: "rgba(255,255,255,0.45)" },
+                            }
                         }}
                         renderOption={(props, option, { selected }) => {
                             const { key, ...optionProps } = props;
