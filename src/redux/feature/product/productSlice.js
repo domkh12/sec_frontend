@@ -14,7 +14,10 @@ const productSlice = createSlice({
             pageNo: 1,
             pageSize: 20,
             search: "",
-            status: [""]
+            status: "",
+            subCategory: "",
+            color: "",
+            size: "",
         }
     },
     reducers: {

@@ -17,8 +17,7 @@ const userSlice = createSlice({
             role: "",
             status: "",
             department: "",
-        }
-
+        },
     },
     reducers: {
         setIdBlockUser: (state, action) => {

@@ -34,7 +34,7 @@ const MenuTesting = lazy(() => import("./pages/menu/MenuTesing.jsx"));
 
 function App() {
   return (
-    <Suspense fallback={<LoadingComponent/>}>
+      <Suspense fallback={<div className="bg-main h-screen"><LoadingComponent/></div>}>
         <Routes>
           {/* Testing routes */}
           <Route path="/admin-menu-testing" element={<MenuTesting/>}/>

@@ -36,19 +36,19 @@ function PersistLogin() {
     let content;
     if (!persist) {
         // persist: no
-        content = <Paper><Outlet /></Paper>;
+        content = <Outlet />;
     } else if(isLoading){
         // content = <LoadingOneComponent />;
-        content = (<LoadingComponent/>)
+        content = (<div className="bg-main h-screen"><LoadingComponent/></div>)
     } else if (isError) {
         localStorage.removeItem("isRemember");
         // content = <Error401Component />;
         content = <Unauthorize/>
     } else if (isSuccess && trueSuccess) {
         // persist: yes , token: yes
-        content =  <Paper><Outlet /></Paper>;
+        content =  <Outlet />;
     } else if (token && isUninitialized) {
-        content = <Paper><Outlet /></Paper>;
+        content = <Outlet />;
     }
 
     return content;

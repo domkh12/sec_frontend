@@ -8,7 +8,7 @@ function RequireAuth({ allowedRoles }) {
     const { roles } = useAuth();
     const content = (
         roles.some(role => allowedRoles.includes(role))
-            ? <Paper><Outlet/></Paper>
+            ? <Outlet/>
             : <Navigate to="/unauthorize" state={{ from : location }} replace/>
     )
 

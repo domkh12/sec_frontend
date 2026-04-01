@@ -57,13 +57,34 @@ function MenuAdmin(){
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('Production')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Monitoring')}</Typography>
-                    <MenuButton
-                        title={`${t('TV Display')}`}
-                        iconPath={"/images/smart-tv.png"}
-                        onClick={() => navigate("tv")}
-                    />
+
+                <div className="flex flex-wrap justify-center items-start gap-5">
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Monitoring')}</Typography>
+                        <MenuButton
+                            title={`${t('TV Display')}`}
+                            iconPath={"/images/smart-tv.png"}
+                            onClick={() => navigate("tv")}
+                        />
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
+                        <MenuButton
+                            title={`${t('Processing Time')}`}
+                            iconPath={"/images/iteration.png"}
+                            onClick={() => navigate("tv")}
+                        />
+                        <MenuButton
+                            title={`${t('Work Orders')}`}
+                            iconPath={"/images/work-order.png"}
+                            onClick={() => navigate("tv")}
+                        />
+                        <MenuButton
+                            title={`${t('Schedule')}`}
+                            iconPath={"/images/timetable.png"}
+                            onClick={() => navigate("tv")}
+                        />
+                    </div>
                 </div>
             </div>
 

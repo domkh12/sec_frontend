@@ -1,12 +1,24 @@
 services:
-  sec_website:
+  sec_website_blue:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sec_website
-    image: sec_website
+    container_name: sec_website_blue
+    image: sec_website_blue
     ports:
       - "8766:80"
+    restart: unless-stopped
+    networks:
+      - sec-net
+
+  sec_website_green:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sec_website_green
+    image: sec_website_green
+    ports:
+      - "8767:80"
     restart: unless-stopped
     networks:
       - sec-net
