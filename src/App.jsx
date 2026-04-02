@@ -9,7 +9,11 @@ import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 
+
+
 // Lazy load everything else
+const WipSewingOutput = lazy(() => import("./pages/workOrder/WipSewingOutput.jsx"));
+const WorkOrderStatusMenu = lazy(() => import("./pages/workOrder/WorkOrderStatusMenu"));
 const FileManager = lazy(() => import("./pages/file/FileManager.jsx"));
 const PurchaseList = lazy(() => import("./pages/purchaseOrder/PurchaseList.jsx"));
 const SizeList = lazy(() => import("./pages/size/SizeList.jsx"));
@@ -87,6 +91,10 @@ function App() {
                               <Route path="tv">
                                   <Route index element={<LayoutTvOperator/>}/>
                                   <Route path=":name" element={<TvDashboardDisplay/>}/>
+                              </Route>
+                              <Route path="production-status">
+                                  <Route index element={<WorkOrderStatusMenu />}/>
+                                  <Route path="sewing-output" element={<WipSewingOutput />}/>
                               </Route>
                           </Route>
                       </Route>

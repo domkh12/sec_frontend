@@ -66,6 +66,11 @@ function MenuAdmin(){
                             iconPath={"/images/smart-tv.png"}
                             onClick={() => navigate("tv")}
                         />
+                        <MenuButton
+                            title={`${t('Production Status')}`}
+                            iconPath={"/images/productivity.png"}
+                            onClick={() => navigate("production-status")}
+                        />
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
