@@ -3,7 +3,9 @@ import {useNavigate} from "react-router-dom";
 import {Typography} from "@mui/material";
 
 function WorkOrderStatusMenu() {
+    // -- Hook ------------------------------------------
     const navigate = useNavigate();
+
     return (
         <div className="card-glass">
             <BackButton onClick={() => navigate("/admin")}/>

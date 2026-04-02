@@ -3,6 +3,7 @@ import Logo from "../../components/util/Logo.jsx";
 import { CircularProgress, Typography, useTheme } from "@mui/material";
 import { useGetTvGeneralDataQuery } from "../../redux/feature/tv/tvApiSlice.js";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
+import NumberFlow from "@number-flow/react";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const ALL_HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
@@ -277,6 +278,7 @@ export default function TvGeneralDisplay() {
     const pad     = (n) => String(n).padStart(2, "0");
     const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     const dateStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
+    const [h, m, s] = timeStr.split(":").map(Number);
 
     if (isLoading) return <CircularProgress />;
     if (!isSuccess || computedRows.length === 0) return null;
@@ -318,7 +320,13 @@ export default function TvGeneralDisplay() {
                             <div className="text-xl font-bold">{dateStr}</div>
                             <div className="text-red-500 text-3xl font-bold tracking-widest"
                                  style={{ fontVariantNumeric: "tabular-nums" }}>
-                                {timeStr}
+                                <span>
+                                  <NumberFlow value={h} format={{ minimumIntegerDigits: 2 }} />
+                                  :
+                                  <NumberFlow value={m} format={{ minimumIntegerDigits: 2 }} />
+                                  :
+                                  <NumberFlow value={s} format={{ minimumIntegerDigits: 2 }} />
+                                </span>
                             </div>
                         </div>
                     </div>

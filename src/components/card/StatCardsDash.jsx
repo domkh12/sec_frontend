@@ -4,7 +4,7 @@ import {useState} from "react";
 import NumberFlow from '@number-flow/react'
 
 function StatCardsDash() {
-    const [value, setValue] = useState(42)
+
     return(
         <Paper sx={{
             width: "100%",
@@ -21,7 +21,9 @@ function StatCardsDash() {
                 <p>Total Output</p>
             </div>
             <div className="flex justify-center items-center pt-5">
-                <NumberFlow value={100} />
+                <NumberFlow value={90}
+                            className="text-4xl font-bold "
+                />
             </div>
         </Paper>
     )
