@@ -1,9 +1,6 @@
 import {createTheme} from "@mui/material";
 
 const theme = createTheme({
-    palette: {
-        mode: 'light',
-    },
     typography: {
         fontFamily: [
             'Battambang',
@@ -32,6 +29,9 @@ const theme = createTheme({
         },
         MuiCssBaseline: {
             styleOverrides: {
+                body: {
+                    backgroundColor: "#0a0f2c", // dark blue background
+                },
                 "*": {
                     scrollbarWidth: "thin",
                     scrollbarColor: "rgba(255,255,255,0.35) transparent", // Firefox
@@ -97,6 +97,19 @@ export const searchTextField = {
     "& .MuiInputAdornment-root .MuiSvgIcon-root": {
         fontSize: "1.2rem",
     },
+};
+
+export const CARD_THEMES = {
+    emerald: { gradient: "linear-gradient(149deg,#5DCAA5 0%,#0F6E56 100%)", text: "#E1F5EE", dot: "rgba(255,255,255,0.18)" },
+    ocean:   { gradient: "linear-gradient(149deg,#85B7EB 0%,#185FA5 100%)", text: "#E6F1FB", dot: "rgba(255,255,255,0.18)" },
+    sunset:  { gradient: "linear-gradient(149deg,#F0997B 0%,#993C1D 100%)", text: "#FAECE7", dot: "rgba(255,255,255,0.18)" },
+    violet:  { gradient: "linear-gradient(149deg,#AFA9EC 0%,#3C3489 100%)", text: "#EEEDFE", dot: "rgba(255,255,255,0.18)" },
+    rose:    { gradient: "linear-gradient(149deg,#ED93B1 0%,#72243E 100%)", text: "#FBEAF0", dot: "rgba(255,255,255,0.18)" },
+    amber:   { gradient: "linear-gradient(149deg,#EF9F27 0%,#633806 100%)", text: "#FAEEDA", dot: "rgba(255,255,255,0.18)" },
+    lime:    { gradient: "linear-gradient(149deg,#97C459 0%,#27500A 100%)", text: "#EAF3DE", dot: "rgba(255,255,255,0.18)" },
+    crimson: { gradient: "linear-gradient(149deg,#F09595 0%,#791F1F 100%)", text: "#FCEBEB", dot: "rgba(255,255,255,0.18)" },
+    slate:   { gradient: "linear-gradient(149deg,#B4B2A9 0%,#444441 100%)", text: "#F1EFE8", dot: "rgba(255,255,255,0.18)" },
+    indigo:  { gradient: "linear-gradient(149deg,#7F77DD 0%,#26215C 100%)", text: "#EEEDFE", dot: "rgba(255,255,255,0.18)" },
 };
 
 export default theme;

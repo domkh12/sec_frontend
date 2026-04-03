@@ -8,6 +8,7 @@ import {ROLES} from "./config/roles.js";
 import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
+import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
 
 
 
@@ -89,7 +90,7 @@ function App() {
                                   <Route path=":id/file-manager" element={<FileManager/>}/>
                               </Route>
                               <Route path="tv">
-                                  <Route index element={<LayoutTvOperator/>}/>
+                                  <Route index element={<MenuTvViewer/>}/>
                                   <Route path=":name" element={<TvDashboardDisplay/>}/>
                               </Route>
                               <Route path="production-status">
@@ -100,8 +101,8 @@ function App() {
                       </Route>
 
                       <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_VIEWER]}/>}>
-                          <Route path="/tv">
-                              <Route index element={<LayoutTvOperator/>}/>
+                          <Route path="/tv" element={<LayoutTvOperator/>}>
+                              <Route index element={<MenuTvViewer/>}/>
                               <Route path=":name" element={<TvDashboardDisplay/>}/>
                               <Route path="profile" element={<Profile/>}/>
                           </Route>

@@ -5,7 +5,6 @@ import TVLineDisplay from "./TVLineDisplay.jsx";
 function TvDashboardDisplay(){
     const {name} = useParams();
     let content;
-
     if (name === "General"){
         content = (<TvGeneralDisplay/>);
     }else{
