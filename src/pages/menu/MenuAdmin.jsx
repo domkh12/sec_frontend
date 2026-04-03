@@ -76,18 +76,21 @@ function MenuAdmin(){
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
                         <MenuButton
                             title={`${t('Processing Time')}`}
-                            iconPath={"/images/iteration.png"}
-                            onClick={() => navigate("tv")}
+                            // iconPath={"/images/iteration.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
                         />
                         <MenuButton
                             title={`${t('Work Orders')}`}
-                            iconPath={"/images/work-order.png"}
-                            onClick={() => navigate("tv")}
+                            // iconPath={"/images/work-order.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
                         />
                         <MenuButton
                             title={`${t('Schedule')}`}
-                            iconPath={"/images/timetable.png"}
-                            onClick={() => navigate("tv")}
+                            // iconPath={"/images/timetable.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
                         />
                     </div>
                 </div>
@@ -100,8 +103,9 @@ function MenuAdmin(){
                     <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('po.transaction')}</Typography>
                     <MenuButton
                         title={`${t('Purchase Order')}`}
-                        iconPath={"/images/order-fulfillment.png"}
-                        onClick={() => navigate("purchase-orders")}
+                        // iconPath={"/images/order-fulfillment.png"}
+                        iconPath={"/images/coming-soon.png"}
+                        onClick={() => navigate("#")}
                     />
                 </div>
             </div>
