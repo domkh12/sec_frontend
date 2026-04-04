@@ -8,12 +8,9 @@ import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
-import {useState} from "react";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 import useDebounce from "../../hook/useDebounce.jsx";
-import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 import {
-    setFilterProductionLine,
     setProductionLineDataForUpdate
 } from "../../redux/feature/productionLine/productionLineSlice.js";
 import {
@@ -147,7 +144,7 @@ function CategoryList(){
 
     const handleFilterChange = (key, value) => {
         if (value === "all") {
-            return dispatch(setFilterProductionLine({
+            return dispatch(setFilterCategory({
                 ...filterValue,
                 [key]: "",
             }));
@@ -156,7 +153,7 @@ function CategoryList(){
             ...filterValue,
             [key]: value,
         }
-        dispatch(setFilterProductionLine(newFilter));
+        dispatch(setFilterCategory(newFilter));
     }
 
     const initialValues ={

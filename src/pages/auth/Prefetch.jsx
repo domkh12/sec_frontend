@@ -13,7 +13,7 @@ function Prefetch() {
             dispatch(setProfile(profileData));
         }
     }, [dispatch, profileData]);
-    return <Paper elevation={0}><Outlet /></Paper>;
+    return <Outlet />;
 }
 
 export default Prefetch;

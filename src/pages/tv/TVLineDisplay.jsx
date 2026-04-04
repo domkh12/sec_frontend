@@ -4,6 +4,7 @@ import {useGetTvDataQuery} from "../../redux/feature/tv/tvApiSlice.js";
 import {Backdrop} from "@mui/material";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import dayjs from "dayjs";
+import NumberFlow from "@number-flow/react";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const hourKeys = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
@@ -20,7 +21,7 @@ function TVLineDisplay() {
     const {data: data, isLoading, isSuccess, refetch} = useGetTvDataQuery({name}, {
         pollingInterval: 300000,
     });
-
+    const [h, m, s] = currentTime.split(":").map(Number);
     const {
         messages,
         loading,
@@ -285,7 +286,15 @@ function TVLineDisplay() {
                         </span>
                         <span>Worker {data.worker}</span>
                     </div>
-                    <div style={{ textAlign: "right", fontSize: "28px", fontWeight: "900" }}>{currentTime}</div>
+                    <div style={{ textAlign: "right", fontSize: "28px", fontWeight: "900" }}>
+                        <span>
+                          <NumberFlow value={h} format={{ minimumIntegerDigits: 2 }} />
+                          :
+                          <NumberFlow value={m} format={{ minimumIntegerDigits: 2 }} />
+                          :
+                          <NumberFlow value={s} format={{ minimumIntegerDigits: 2 }} />
+                        </span>
+                    </div>
                 </div>
 
                 {/* Info rows */}

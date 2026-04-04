@@ -72,7 +72,10 @@ function ProductList() {
                                         pageNo: filterValue.pageNo,
                                         pageSize: filterValue.pageSize,
                                         search: searchFilter,
-                                        status: filterValue.status
+                                        status: filterValue.status,
+                                        sizeId: filterValue.size,
+                                        colorId: filterValue.color,
+                                        subCategoryId: filterValue.subCategory,
                                     });
     const {data: colorData}         = useGetColorQuery({
                                         pageNo: 1,
@@ -88,6 +91,7 @@ function ProductList() {
     const {data: subCategoryData}    = useGetSubCategoryQuery({
                                         pageNo: 1,
                                         pageSize: 99});
+    console.log({subCategoryData});
 
     // -- Handler ----------------------------------------------------------------
     const handleChangePage = (event, newPage) => {
@@ -410,6 +414,14 @@ function ProductList() {
                     searchPlaceholderText={`${t("table.styleNo")}`}
                     handleFilterChange={handleFilterChange}
                     filterConfig={filterConfig}
+                    onClearAllFilters={() => dispatch(setFilterProduct({
+                        ...filterValue,
+                        search: "",
+                        status: "",
+                        size: "",
+                        color: "",
+                        subCategory: "",
+                    }))}
                 />
             </div>
             <DialogAddEditCus

@@ -8,8 +8,13 @@ import {ROLES} from "./config/roles.js";
 import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
+import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
+
+
 
 // Lazy load everything else
+const WipSewingOutput = lazy(() => import("./pages/workOrder/WipSewingOutput.jsx"));
+const WorkOrderStatusMenu = lazy(() => import("./pages/workOrder/WorkOrderStatusMenu"));
 const FileManager = lazy(() => import("./pages/file/FileManager.jsx"));
 const PurchaseList = lazy(() => import("./pages/purchaseOrder/PurchaseList.jsx"));
 const SizeList = lazy(() => import("./pages/size/SizeList.jsx"));
@@ -34,7 +39,7 @@ const MenuTesting = lazy(() => import("./pages/menu/MenuTesing.jsx"));
 
 function App() {
   return (
-    <Suspense fallback={<LoadingComponent/>}>
+      <Suspense fallback={<div className="bg-main h-screen"><LoadingComponent/></div>}>
         <Routes>
           {/* Testing routes */}
           <Route path="/admin-menu-testing" element={<MenuTesting/>}/>
@@ -85,15 +90,19 @@ function App() {
                                   <Route path=":id/file-manager" element={<FileManager/>}/>
                               </Route>
                               <Route path="tv">
-                                  <Route index element={<LayoutTvOperator/>}/>
+                                  <Route index element={<MenuTvViewer/>}/>
                                   <Route path=":name" element={<TvDashboardDisplay/>}/>
+                              </Route>
+                              <Route path="production-status">
+                                  <Route index element={<WorkOrderStatusMenu />}/>
+                                  <Route path="sewing-output" element={<WipSewingOutput />}/>
                               </Route>
                           </Route>
                       </Route>
 
                       <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_VIEWER]}/>}>
-                          <Route path="/tv">
-                              <Route index element={<LayoutTvOperator/>}/>
+                          <Route path="/tv" element={<LayoutTvOperator/>}>
+                              <Route index element={<MenuTvViewer/>}/>
                               <Route path=":name" element={<TvDashboardDisplay/>}/>
                               <Route path="profile" element={<Profile/>}/>
                           </Route>

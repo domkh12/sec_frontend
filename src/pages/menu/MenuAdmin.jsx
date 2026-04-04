@@ -57,13 +57,48 @@ function MenuAdmin(){
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('Production')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Monitoring')}</Typography>
-                    <MenuButton
-                        title={`${t('TV Display')}`}
-                        iconPath={"/images/smart-tv.png"}
-                        onClick={() => navigate("tv")}
-                    />
+
+                <div className="flex flex-wrap justify-center items-start gap-5">
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Monitoring')}</Typography>
+                        <MenuButton
+                            title={`${t('TV Display')}`}
+                            iconPath={"/images/smart-tv.png"}
+                            onClick={() => navigate("tv")}
+                        />
+                        <MenuButton
+                            title={`${t('Production Status')}`}
+                            iconPath={"/images/productivity.png"}
+                            onClick={() => navigate("production-status")}
+                        />
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
+                        <MenuButton
+                            title={`${t('Processing Time')}`}
+                            // iconPath={"/images/iteration.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
+                            title={`${t('Work Orders')}`}
+                            // iconPath={"/images/work-order.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
+                            title={`${t('Schedule')}`}
+                            // iconPath={"/images/timetable.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
+                            title={`${t('QR Generator')}`}
+                            // iconPath={"/images/qr-white.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -74,8 +109,9 @@ function MenuAdmin(){
                     <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('po.transaction')}</Typography>
                     <MenuButton
                         title={`${t('Purchase Order')}`}
-                        iconPath={"/images/order-fulfillment.png"}
-                        onClick={() => navigate("purchase-orders")}
+                        // iconPath={"/images/order-fulfillment.png"}
+                        iconPath={"/images/coming-soon.png"}
+                        onClick={() => navigate("#")}
                     />
                 </div>
             </div>

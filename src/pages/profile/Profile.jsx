@@ -8,7 +8,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {Button, Stack, Typography, Box, Avatar, Divider, TextField, Snackbar, Alert} from "@mui/material";
-import CardList from "../../components/ui/CardList.jsx";
 import CardGlassBlur2 from "../../components/ui/CardGlassBlur2.jsx";
 import InputFileUpload from "../../components/ui/InputFileUpload.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
@@ -108,11 +107,11 @@ function Profile() {
 
     return (
         <>
-        <CardList>
+        <div className="card-glass">
             <BackButton onClick={() => isManager ? navigate("/manager") : isAdmin ? navigate("/admin") : navigate("/")}/>
 
             {/* ── 1. Identity Card ─────────────────────────────────────────────── */}
-            <CardGlassBlur2>
+            <div className="card-glass">
                 {/* Role badge */}
                 <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
                     <Typography
@@ -178,7 +177,7 @@ function Profile() {
                         </Box>
                     ))}
                 </Box>
-            </CardGlassBlur2>
+            </div>
 
             {/* ── 2. Photo Upload Card ─────────────────────────────────────────── */}
             <CardGlassBlur2>
@@ -305,7 +304,7 @@ function Profile() {
                     )}
                 </Formik>
             </CardGlassBlur2>
-        </CardList>
+        </div>
         <Snackbar
             open={isOpenSnackbar}
             autoHideDuration={6000}

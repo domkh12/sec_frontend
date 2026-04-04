@@ -4,6 +4,7 @@ import {
   setCredentials,
   setQrCodeUrl,
 } from "./authSlice";
+import {jwtDecode} from "jwt-decode";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -42,10 +43,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           const { accessToken } = data;
-          console.log(accessToken)
-          const { uuid } = data;
           dispatch(setCredentials({ accessToken }));
-          // dispatch(setUuid(uuid));
         } catch (error) {
           console.log(error);
         }

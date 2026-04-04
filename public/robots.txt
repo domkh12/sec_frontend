@@ -9,9 +9,9 @@ Disallow: /tv
 Disallow: /tv/*
 Disallow: /unauthorize
 Disallow: /admin-menu-testing
+Disallow: /login
 
 # Allow only public routes
 Allow: /
-Allow: /login
 
 Sitemap: https://sec-mega.site/sitemap.xml

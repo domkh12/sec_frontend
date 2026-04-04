@@ -3,10 +3,15 @@ import Logo from "../../components/util/Logo.jsx";
 import { CircularProgress, Typography, useTheme } from "@mui/material";
 import { useGetTvGeneralDataQuery } from "../../redux/feature/tv/tvApiSlice.js";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
+import NumberFlow from "@number-flow/react";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
-const HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
-const HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+const ALL_HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
+const ALL_HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+
+const isSaturday  = new Date().getDay() === 6;
+const HOUR_KEYS   = isSaturday ? ALL_HOUR_KEYS.slice(0, 8)   : ALL_HOUR_KEYS;
+const HOUR_LABELS = isSaturday ? ALL_HOUR_LABELS.slice(0, 8) : ALL_HOUR_LABELS;
 
 // ─── Frontend calculation ─────────────────────────────────────────────────────
 function calcRow(row) {
@@ -76,6 +81,8 @@ function FinishCell({ pct }) {
 
 // ─── DataTable ────────────────────────────────────────────────────────────────
 function DataTable({ rows, total }) {
+    const isSaturdays = new Date().getDay() === 4;
+    console.log("isSaturdays", isSaturdays);
     // Use border-separate + border-spacing-0 to prevent 1px border collapse on zoom/scale
     // This is the key fix for Android TV box border disappearing on zoom
 
@@ -85,9 +92,9 @@ function DataTable({ rows, total }) {
     const renderRow = (row, idx, isTotal) => {
         const rowBg = isTotal ? "bg-yellow-300" : idx % 2 === 0 ? "bg-white" : "bg-blue-50";
         const fw    = isTotal ? "font-bold" : "font-normal";
-
+        const randomKey = `row-${idx}`;
         return (
-            <tr key={row.line || "total"} className={rowBg}>
+            <tr key={row.line || randomKey} className={rowBg}>
                 {/* Line */}
                 <td className={`${tdCls} text-blue-900 font-bold text-3xl text-left pl-1`}>
                     {row.line}
@@ -271,6 +278,7 @@ export default function TvGeneralDisplay() {
     const pad     = (n) => String(n).padStart(2, "0");
     const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     const dateStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
+    const [h, m, s] = timeStr.split(":").map(Number);
 
     if (isLoading) return <CircularProgress />;
     if (!isSuccess || computedRows.length === 0) return null;
@@ -312,7 +320,13 @@ export default function TvGeneralDisplay() {
                             <div className="text-xl font-bold">{dateStr}</div>
                             <div className="text-red-500 text-3xl font-bold tracking-widest"
                                  style={{ fontVariantNumeric: "tabular-nums" }}>
-                                {timeStr}
+                                <span>
+                                  <NumberFlow value={h} format={{ minimumIntegerDigits: 2 }} />
+                                  :
+                                  <NumberFlow value={m} format={{ minimumIntegerDigits: 2 }} />
+                                  :
+                                  <NumberFlow value={s} format={{ minimumIntegerDigits: 2 }} />
+                                </span>
                             </div>
                         </div>
                     </div>
