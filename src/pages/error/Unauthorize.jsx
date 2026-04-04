@@ -20,7 +20,7 @@ function Unauthorize(){
     }, []);
     return(<div className="flex flex-col gap-10 justify-center items-center h-screen">
         <img src={"/images/unauthorized-access.png"} alt={"not found image"} className="w-1/5 h-auto"/>
-        <Typography variant="h5">Sorry, you are not authorized to access this page.</Typography>
+        <Typography variant="h5" sx={{color: "white"}}>Sorry, you are not authorized to access this page.</Typography>
         <Button variant="contained" onClick={() => navigate("/login")}>Back</Button>
     </div>)
 }

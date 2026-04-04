@@ -65,7 +65,7 @@ function StatCardsDash({
                     style={{ color: t.text }}
                     className="flex flex-col justify-start items-start pt-5 px-3"
                 >
-                    <p className="text-nowrap">{title}</p>
+                    <p className="text-nowrap tracking-wide">{title}</p>
                     <div >
                         <NumberFlow value={value} className="text-4xl font-bold" />
                         <span className="ml-2">{unit}</span>

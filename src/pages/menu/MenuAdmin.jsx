@@ -92,6 +92,12 @@ function MenuAdmin(){
                             iconPath={"/images/coming-soon.png"}
                             onClick={() => navigate("#")}
                         />
+                        <MenuButton
+                            title={`${t('QR Generator')}`}
+                            // iconPath={"/images/qr-white.png"}
+                            iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("#")}
+                        />
                     </div>
                 </div>
             </div>
