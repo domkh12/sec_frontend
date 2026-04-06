@@ -343,8 +343,7 @@ const TableRowMemo = memo(function TableRowMemo({
                                             <FolderRoundedIcon fontSize="small" sx={{ color: "#10b981" }} />
                                         </Button>
                                     </Tooltip>
-                                    )
-                                }
+                                )}
                                 {onDelete && (
                                     <Tooltip title={tDelete}>
                                         <Button onClick={handleDelete} sx={deleteBtnSx}>

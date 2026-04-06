@@ -2,7 +2,7 @@
 
 @font-face {
     font-family: 'Battambang';
-    src: url('.././fonts/Battambang-Regular.ttf') format('truetype');
+    src: url('/fonts/Battambang-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
@@ -50,3 +50,4 @@ body{
     hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_12px_40px_rgba(0,0,0,0.3)]
     active:translate-y-0 active:scale-95 active:bg-white/15
 }
+

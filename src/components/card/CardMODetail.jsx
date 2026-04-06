@@ -1,10 +1,12 @@
 import { FaArrowAltCircleDown } from "react-icons/fa";
 import { FaArrowAltCircleUp } from "react-icons/fa";
 import { IoIosColorPalette } from "react-icons/io";
-
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import { FaArrowDown } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
 function CardMODetail() {
     return(
-        <div className="text-white border border-white/50 rounded-2xl w-full pb-10">
+        <div className="text-white border border-white/50 rounded-2xl w-full pb-10 overflow-hidden">
             <div className="flex justify-between items-center px-4 py-3 border-b border-white/50">
                 <p>MMO262995 <br/>
                 <span className="text-gray-400">Buyer1</span>
@@ -29,10 +31,7 @@ function CardMODetail() {
                         style={{ fill: "url(#icon-grad)" }}
                     />
                     <p>Input  <br/><span className="font-bold text-xl" style={{
-                        background: "linear-gradient(149deg,#F0997B 0%,#993C1D 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
+                        color: "#F0997B"
                     }}>1000</span></p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -47,10 +46,7 @@ function CardMODetail() {
                     <FaArrowAltCircleUp className="text-4xl" style={{ fill: "url(#icon-grad-up)" }} />
                     <p>Output <br/>
                         <span className="font-bold text-xl" style={{
-                            background: "linear-gradient(149deg, #5DCAA5 0%, #0F6E56 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
+                            color: "#5DCAA5"
                         }}>1000</span>
                     </p>
                 </div>
@@ -59,6 +55,62 @@ function CardMODetail() {
                 <IoIosColorPalette/>
                 <p className="text-sm text-gray-400">7 Color . 4 Size</p>
             </div>
+            <TableContainer>
+                <Table sx={{ minWidth: 400}} size="small" aria-label="a dense table">
+                    <TableHead>
+                       <TableRow sx={{backgroundColor:"#6a6a6a"}}>
+                           <TableCell sx={{color:"white"}}>Color</TableCell>
+                           <TableCell sx={{color:"white"}}>S</TableCell>
+                           <TableCell sx={{color:"white"}}>M</TableCell>
+                           <TableCell sx={{color:"white"}}>L</TableCell>
+                           <TableCell sx={{color:"white"}}>XL</TableCell>
+                           <TableCell sx={{color:"white"}}>XXL</TableCell>
+                           <TableCell sx={{color:"white"}}>XXXL</TableCell>
+                           <TableCell sx={{color:"white"}}>Total</TableCell>
+                       </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell sx={{color: "white"}}>Red</TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <span className="text-[#F0997B]">100</span><br/>
+                                <span className="text-[#5DCAA5]">100</span>
+                            </TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <span className="text-[#F0997B]">100</span><br/>
+                                <span className="text-[#5DCAA5]">100</span>
+                            </TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <span className="text-[#F0997B]">100</span><br/>
+                                <span className="text-[#5DCAA5]">100</span>
+                            </TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <span className="text-[#F0997B]">100</span><br/>
+                                <span className="text-[#5DCAA5]">100</span>
+                            </TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <span className="text-[#F0997B]">100</span><br/>
+                                <span className="text-[#5DCAA5]">100</span>
+                            </TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <span className="text-[#F0997B]">100</span><br/>
+                                <span className="text-[#5DCAA5]">100</span>
+                            </TableCell>
+                            <TableCell sx={{color: "white"}}>
+                                <div className="flex items-center gap-1 text-[#F0997B]">
+                                <FaArrowDown/>
+                                <span >600</span><br/>
+                                </div>
+                                <div className="flex items-center gap-1 text-[#5DCAA5]">
+                                    <FaArrowUp/>
+                                    <span className="text-[#5DCAA5]">600</span>
+                                </div>
+
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     )
 }

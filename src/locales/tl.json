@@ -118,7 +118,13 @@
     "file": "File",
     "color": "Kulay",
     "size": "Laki",
-    "styleNo": "Style No."
+    "styleNo": "Style No.",
+    "code": "Code",
+    "material": "Materyales",
+    "unit": "Yunit",
+    "stock": "Stock",
+    "costPerUnit": "Gastos/Yunit",
+    "supplier": "Supplier"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

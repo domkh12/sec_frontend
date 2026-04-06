@@ -118,7 +118,13 @@
     "file": "File",
     "color": "Color",
     "size": "Size",
-    "styleNo": "Style No"
+    "styleNo": "Style No",
+    "code": "Code",
+    "material": "Material",
+    "unit": "Unit",
+    "stock": "Stock",
+    "costPerUnit": "Cost/Unit",
+    "supplier": "Supplier"
   },
   "factory": {
     "structure": "Factory Structure"

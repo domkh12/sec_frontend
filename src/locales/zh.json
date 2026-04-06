@@ -118,7 +118,13 @@
     "file": "文件",
     "color": "颜色",
     "size": "尺寸",
-    "styleNo": "款号"
+    "styleNo": "款号",
+    "code": "代码",
+    "material": "材料",
+    "unit": "单位",
+    "stock": "库存",
+    "costPerUnit": "成本/单位",
+    "supplier": "供应商"
   },
   "factory": {
     "structure": "工厂结构"

@@ -103,6 +103,26 @@ function MenuAdmin(){
             </div>
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
+                <Typography variant="h6" sx={{color: yellow[600]}}>{t('Warehouse')}</Typography>
+                <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
+                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Raw Materials')}</Typography>
+                    <MenuButton
+                        title={`${t('WH Raw Materials')}`}
+                        // iconPath={"/images/order-fulfillment.png"}
+                        iconPath={"/images/coming-soon.png"}
+                        onClick={() => navigate("#")}
+                    />
+                    <MenuButton
+                        title={`${t('Materials')}`}
+                        // iconPath={"/images/order-fulfillment.png"}
+                        iconPath={"/images/material.png"}
+                        onClick={() => navigate("materials")}
+                    />
+                </div>
+            </div>
+
+            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('purchaseOrder')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
