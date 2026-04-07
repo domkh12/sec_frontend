@@ -12,9 +12,17 @@ const materialSlice = createSlice({
             pageNo: 1,
             pageSize: 20,
             search: "",
-        }
+        },
+        isFullScreenDialogStockIn: false,
+        isFullScreenDialogStockOut: false,
     },
     reducers: {
+        setIsFullScreenDialogStockOut: (state, action) => {
+            state.isFullScreenDialogStockOut = action.payload;
+        },
+        setIsFullScreenDialogStockIn: (state, action) => {
+            state.isFullScreenDialogStockIn = action.payload;
+        },
         setFilterMaterial: (state, action) => {
             state.filter = action.payload;
         },
@@ -37,6 +45,8 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setIsFullScreenDialogStockOut,
+    setIsFullScreenDialogStockIn,
     setFilterMaterial,
     setIsOpenDeleteMaterialDialog,
     setAlertMaterial,

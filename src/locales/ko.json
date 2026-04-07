@@ -124,7 +124,9 @@
     "unit": "단위",
     "stock": "재고",
     "costPerUnit": "비용/단위",
-    "supplier": "공급업체"
+    "supplier": "공급업체",
+    "image": "이미지",
+    "balance": "잔액"
   },
   "factory": {
     "structure": "공장 구조"

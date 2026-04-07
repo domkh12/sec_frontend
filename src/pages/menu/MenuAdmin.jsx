@@ -110,13 +110,7 @@ function MenuAdmin(){
                     <MenuButton
                         title={`${t('WH Raw Materials')}`}
                         // iconPath={"/images/order-fulfillment.png"}
-                        iconPath={"/images/coming-soon.png"}
-                        onClick={() => navigate("#")}
-                    />
-                    <MenuButton
-                        title={`${t('Materials')}`}
-                        // iconPath={"/images/order-fulfillment.png"}
-                        iconPath={"/images/material.png"}
+                        iconPath={"/images/warehouse.png"}
                         onClick={() => navigate("materials")}
                     />
                 </div>

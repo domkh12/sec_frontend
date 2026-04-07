@@ -124,7 +124,9 @@
     "unit": "ឯកតា",
     "stock": "ស្តុក",
     "costPerUnit": "តម្លៃ/ឯកតា",
-    "supplier": "អ្នកផ្គត់ផ្គង់"
+    "supplier": "អ្នកផ្គត់ផ្គង់",
+    "image": "រូបភាព",
+    "balance": "សមតុល្យ"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"
@@ -139,7 +141,11 @@
     "active_status": "ស្ថានភាពប្រតិបត្តិការ",
     "activeOrder": "ការបញ្ជាទិញសកម្ម",
     "totalBuyers": "អ្នកទិញសរុប",
-    "totalPcs": "ចំនួនសរុប"
+    "totalPcs": "ចំនួនសរុប",
+    "totalMaterial": "សម្ភារៈសរុប",
+    "totalStockIn": "ស្តុកចូលសរុប",
+    "totalStockOut": "ស្តុកចេញសរុប",
+    "balance": "សមតុល្យ"
   },
   "purchaseOrder": "ការបញ្ជាទិញ",
   "po": {

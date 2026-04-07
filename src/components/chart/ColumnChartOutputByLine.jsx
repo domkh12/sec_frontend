@@ -101,7 +101,7 @@ function ColumnChartOutputByLine() {
                                     display:inline-block;
                                     flex-shrink:0;
                                 "></span>
-                                <span style="font-size:13px; color:#4b5563; font-family:inherit;">${mo.mo}</span>
+                                <span style="font-size:13px; color:#000; font-family:inherit;">${mo.mo}</span>
                             </div>
                             <span style="font-size:13px; font-weight:700; color:#111827; margin-left:24px; font-family:inherit;">${mo.qty}</span>
                         </div>
@@ -119,12 +119,12 @@ function ColumnChartOutputByLine() {
                         ">
                             <!-- Header -->
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                                <span style="font-size:13px; color:#9ca3af; font-weight:500; letter-spacing:0.03em;">
+                                <span style="font-size:13px; color:#000; font-weight:500; letter-spacing:0.03em;">
                                     ${d.x}
                                 </span>
                                 <span style="
                                     background:${color};
-                                    color:#fff;
+                                    color:#000;
                                     font-size:11px;
                                     font-weight:700;
                                     padding:3px 12px;
@@ -136,8 +136,8 @@ function ColumnChartOutputByLine() {
 
                             <!-- Total pcs -->
                             <div style="margin-bottom:12px; line-height:1;">
-                                <span style="font-size:34px; font-weight:800; color:#111827; font-family:inherit;">${d.y}</span>
-                                <span style="font-size:13px; color:#9ca3af; margin-left:5px; font-family:inherit;">pcs total</span>
+                                <span style="font-size:34px; font-weight:800; color:#000; font-family:inherit;">${d.y}</span>
+                                <span style="font-size:13px; color:#000; margin-left:5px; font-family:inherit;">pcs total</span>
                             </div>
 
                             <!-- MO breakdown header -->
@@ -145,7 +145,7 @@ function ColumnChartOutputByLine() {
                                 font-size:10px;
                                 font-weight:700;
                                 letter-spacing:0.1em;
-                                color:#9ca3af;
+                                color:#000;
                                 margin-bottom:2px;
                                 font-family:inherit;
                             ">

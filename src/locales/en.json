@@ -124,7 +124,9 @@
     "unit": "Unit",
     "stock": "Stock",
     "costPerUnit": "Cost/Unit",
-    "supplier": "Supplier"
+    "supplier": "Supplier",
+    "image": "Image",
+    "balance": "Balance"
   },
   "factory": {
     "structure": "Factory Structure"
@@ -139,7 +141,11 @@
     "active_status": "Active Status",
     "activeOrder": "Active Orders",
     "totalBuyers": "Total Buyers",
-    "totalPcs": "Total Pcs"
+    "totalPcs": "Total Pcs",
+    "totalMaterial": "Total Materials",
+    "totalStockIn": "Total Stock In",
+    "totalStockOut": "Total Stock Out",
+    "balance": "Balance"
   },
   "purchaseOrder": "Purchase Order",
   "po": {

@@ -10,6 +10,8 @@ import { DatePicker } from "@mui/x-date-pickers";
 import PasswordField from "../ui/PasswordField.jsx";
 import NestedSelect from "../util/NestedSelect.jsx";
 import {CheckBox, CheckBoxOutlineBlank} from "@mui/icons-material";
+import VisuallyHiddenInput from "../input/VisuallyHiddenInput.jsx";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 function DialogAddEditCus({
                               title,
@@ -346,6 +348,21 @@ function DialogAddEditCus({
                         getOptionLabel={(opt) => opt.label ?? ""}
                         value={resolvedOptions.find((o) => o.value === values[field.name]) || null}
                         onChange={(_, selected) => setFieldValue(field.name, selected?.value ?? "")}
+                        sx={{
+                            "& .MuiAutocomplete-endAdornment": {
+                                "& .MuiAutocomplete-clearIndicator": {
+                                    color: "rgba(255,255,255,0.65)",
+                                    "&:hover": { color: "rgba(255,255,255,0.45)" },
+                                },
+                                "& .MuiAutocomplete-loadingIndicator": {
+                                    color: "rgba(147,197,253,0.7)",
+                                },
+                                "& .MuiAutocomplete-popupIndicator": {
+                                    color: "rgba(255,255,255,0.65)",
+                                    "&:hover": { color: "rgba(255,255,255,0.45)" },
+                                }
+                            }
+                        }}
                         componentsProps={{
                             paper: {
                                 sx: {
@@ -503,6 +520,60 @@ function DialogAddEditCus({
                         }}
                     />
                 );
+            case "image":
+                return wrap(
+                    <>
+                    <div className="w-full h-56 overflow-hidden rounded-lg">
+                        <Button
+                            component="label"
+                            variant="contained"
+                            sx={{
+                                height: "224px",
+                                width: "100%",
+                                padding: 0,
+                                position: "relative",
+                                background: "transparent",
+                                border: errors[field.name] ? "1.6px dashed rgba(255,0,0,0.5)" : "1.6px dashed rgba(255,255,255,0.2)",
+                                borderRadius: "16px",
+                                overflow: "hidden",
+                            }}
+                        >
+                            {values[field.name] && !errors[field.name] ? (
+                                    <img
+                                        src={URL.createObjectURL(values[field.name])}
+                                        alt="Preview"
+                                        className="object-contain object-center w-full h-full"
+                                    />
+                                ) : (
+                                <div className={`flex items-center justify-center gap-2 w-full h-full ${errors[field.name] ? "text-red-500" : "text-white/60"}`}>
+                                    <CloudUploadIcon/>
+                                        Upload files
+                                </div>
+                            )}
+
+                            {/* Hidden input */}
+                            <input
+                                type="file"
+                                accept="image/*"
+                                name={field.name}
+                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                aria-label="Upload image"
+                                onChange={(event) =>
+                                    setFieldValue(field.name, event.target.files[0])
+                                }
+                            />
+                        </Button>
+                    </div>
+                        {
+                            errors[field.name] && (
+                                <div className="text-red-500 text-xs mt-1">
+                                    {errors[field.name]}
+                                </div>
+                            )
+                        }
+
+                    </>
+                )
 
             default:
                 return null;

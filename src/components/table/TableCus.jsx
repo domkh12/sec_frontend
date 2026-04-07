@@ -12,6 +12,7 @@ import KeyOffIcon from '@mui/icons-material/KeyOff';
 import KeyIcon from '@mui/icons-material/Key';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import RowTableComponent from "./RowTableComponent.jsx";
 
 // ── Stable style objects (defined OUTSIDE component — never recreated) ──────
 const cellSx = {
@@ -264,231 +265,6 @@ const ActiveFilterChips = memo(function ActiveFilterChips({ filterConfig=[], fil
     );
 });
 
-// ── Memoized single row ───────────────────────────────────────────────────────
-const TableRowMemo = memo(function TableRowMemo({
-                                                    id, idx, entity, columns, collapseColumns,
-                                                    onView, onEdit, onDelete, onBlock,
-                                                    tView, tEdit, tDelete,tFile, handleFile, onDeleteSub, tDeleteSub, tBlock, tUnblock, onUnblock, isCollapseRow, collapseDataKey
-                                                }) {
-    const [open, setOpen] = useState(false); // ← local state
-
-    const rowSx = useMemo(() => ({
-        background: idx % 2 === 0 ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.02)",
-        transition: "background 0.15s ease",
-        "&:hover": { background: "rgba(96,165,250,0.14)" },
-    }), [idx]);
-
-    const handleView    = useCallback(() => onView?.(entity),    [onView,    entity]);
-    const handleEdit    = useCallback(() => onEdit?.(entity),    [onEdit,    entity]);
-    const handleDelete  = useCallback(() => onDelete?.(entity),  [onDelete,  entity]);
-    const handleDeleteSub = useCallback((subRow) => {
-        onDeleteSub?.(subRow);
-    }, [onDeleteSub]);
-    const handleBlock   = useCallback(() => onBlock?.(entity),   [onBlock,   entity]);
-    const handleUnblock = useCallback(() => onUnblock?.(entity), [onUnblock, entity]);
-    const handleFileClick = useCallback(() => handleFile?.(entity), [handleFile, entity]);
-
-    const isBlocked = entity.status?.toUpperCase() === "BLOCKED";
-
-    const colSpan = columns.length + (isCollapseRow ? 1 : 0);
-
-    return (
-        <>
-            <TableRow sx={rowSx}>
-                {isCollapseRow && (
-                    <TableCell sx={{ ...cellSx, width: 40, padding: "0 6px" }}>
-                        <IconButton size="small" onClick={() => setOpen((p) => !p)}>
-                            {open ? <KeyboardArrowUp className={"text-white"} /> : <KeyboardArrowDownIcon className={"text-white"}/>}
-                        </IconButton>
-                    </TableCell>
-                )}
-                {columns.map((col) => (
-                    <TableCell key={col.id} align={col.align} style={{ minWidth: col.minWidth }} sx={cellSx}>
-                        {col.id === "action" ? (
-                            <Box sx={actionBoxSx}>
-                                {onView && (
-                                    <Tooltip title={tView}>
-                                        <Button onClick={handleView} sx={viewBtnSx}>
-                                            <Visibility sx={{ fontSize: 15 }} />
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                                {onEdit && (
-                                    <Tooltip title={tEdit}>
-                                        <Button onClick={handleEdit} sx={editBtnSx}>
-                                            <Edit sx={{ fontSize: 15 }} />
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                                {isBlocked ? (
-                                    onUnblock && (
-                                        <Tooltip title={tUnblock}>
-                                            <Button onClick={handleUnblock} sx={unblockBtnSx}>
-                                                <KeyIcon fontSize="small" />
-                                            </Button>
-                                        </Tooltip>
-                                    )
-                                ) : (
-                                    onBlock && (
-                                        <Tooltip title={tBlock}>
-                                            <Button onClick={handleBlock} sx={blockBtnSx}>
-                                                <KeyOffIcon fontSize="small" sx={{ color: "#fca5a5" }} />
-                                            </Button>
-                                        </Tooltip>
-                                    )
-                                )}
-                                { handleFile && (
-                                    <Tooltip title={tFile}>
-                                        <Button onClick={handleFileClick} sx={fileBtnSx}>
-                                            <FolderRoundedIcon fontSize="small" sx={{ color: "#10b981" }} />
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                                {onDelete && (
-                                    <Tooltip title={tDelete}>
-                                        <Button onClick={handleDelete} sx={deleteBtnSx}>
-                                            <Delete sx={{ fontSize: 15 }} />
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                            </Box>
-                        ) : col.id === "status" ? (
-                            <Box sx={statusBoxSx}>
-                                <Box sx={{ ...baseStatusSx, ...(STATUS_STYLES[entity[col.id]?.toUpperCase()] ?? STATUS_DEFAULT) }}>
-                                    {entity[col.id] || "—"}
-                                </Box>
-                            </Box>
-                        ) : (
-                            entity[col.id] ?? "—"
-                        )}
-                    </TableCell>
-                ))}
-            </TableRow>
-
-            {/* ── Collapse row ── */}
-            {isCollapseRow && collapseColumns?.length > 0 && (
-                <TableRow>
-                    <TableCell
-                        colSpan={colSpan}
-                        sx={{ p: 0, border: open ? "1px solid rgba(255,255,255,0.08)" : "none" }}
-                    >
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{
-                                p: 1.5,
-                            }}>
-                                <Table size="small" >
-                                    <TableBody>
-                                        {isCollapseRow && collapseColumns?.length > 0 && (
-                                            <TableRow>
-                                                <TableCell
-                                                    colSpan={colSpan}
-                                                    sx={{ borderRadius: "16px", border: "none" }}
-                                                >
-                                                    <Collapse in={open} timeout="auto" unmountOnExit>
-                                                        <Box sx={{background: "rgba(255,255,255,0.04)"}}>
-                                                            <Table size="small" >
-                                                                <TableHead>
-                                                                    <TableRow>
-                                                                        {collapseColumns.map((col) => (
-                                                                            <TableCell key={col.id} align={col.align ?? "left"} sx={headerCellSx}>
-                                                                                {col.label}
-                                                                            </TableCell>
-                                                                        ))}
-                                                                    </TableRow>
-                                                                </TableHead>
-                                                                <TableBody>
-                                                                    {(collapseDataKey ? entity[collapseDataKey] : [])?.map((row, i) => (
-                                                                        <TableRow
-                                                                            key={i}
-                                                                            sx={{
-                                                                                background: i % 2 === 0 ? "rgba(255,255,255,0.04)" : "transparent",
-                                                                                "&:hover": { background: "rgba(96,165,250,0.1)" },
-                                                                            }}
-                                                                        >
-                                                                            {collapseColumns.map((col) => (
-                                                                                <TableCell key={col.id} align={col.align ?? "left"} sx={cellSx}>
-                                                                                    {col.id === "action" ? (
-                                                                                        <Box sx={actionBoxSx}>
-                                                                                            {onView && (
-                                                                                                <Tooltip title={tView}>
-                                                                                                    <Button onClick={handleView} sx={viewBtnSx}>
-                                                                                                        <Visibility sx={{ fontSize: 15 }} />
-                                                                                                    </Button>
-                                                                                                </Tooltip>
-                                                                                            )}
-                                                                                            {onEdit && (
-                                                                                                <Tooltip title={tEdit}>
-                                                                                                    <Button onClick={handleEdit} sx={editBtnSx}>
-                                                                                                        <Edit sx={{ fontSize: 15 }} />
-                                                                                                    </Button>
-                                                                                                </Tooltip>
-                                                                                            )}
-                                                                                            {isBlocked ? (
-                                                                                                onUnblock && (
-                                                                                                    <Tooltip title={tUnblock}>
-                                                                                                        <Button onClick={handleUnblock} sx={unblockBtnSx}>
-                                                                                                            <KeyIcon fontSize="small" />
-                                                                                                        </Button>
-                                                                                                    </Tooltip>
-                                                                                                )
-                                                                                            ) : (
-                                                                                                onBlock && (
-                                                                                                    <Tooltip title={tBlock}>
-                                                                                                        <Button onClick={handleBlock} sx={blockBtnSx}>
-                                                                                                            <KeyOffIcon fontSize="small" sx={{ color: "#fca5a5" }} />
-                                                                                                        </Button>
-                                                                                                    </Tooltip>
-                                                                                                )
-                                                                                            )}
-                                                                                            {onDelete && (
-                                                                                                <Tooltip title={tDelete}>
-                                                                                                    <Button onClick={() => handleDeleteSub(row)} sx={deleteBtnSx}>
-                                                                                                        <Delete sx={{ fontSize: 15 }} />
-                                                                                                    </Button>
-                                                                                                </Tooltip>
-                                                                                            )}
-                                                                                        </Box>
-                                                                                    ) : col.id === "status" ? (
-                                                                                        <Box sx={statusBoxSx}>
-                                                                                            <Box sx={{ ...baseStatusSx, ...(STATUS_STYLES[row[col.id]?.toUpperCase()] ?? STATUS_DEFAULT) }}>
-                                                                                                {row[col.id] || "—"}
-                                                                                            </Box>
-                                                                                        </Box>
-                                                                                    ) : (
-                                                                                        row[col.id] ?? "—"
-                                                                                    )}
-                                                                                </TableCell>
-                                                                            ))}
-                                                                        </TableRow>
-                                                                    ))}
-                                                                    {/* Empty state inside collapse */}
-                                                                    {(!collapseDataKey || !entity[collapseDataKey]?.length) && (
-                                                                        <TableRow>
-                                                                            <TableCell colSpan={collapseColumns.length} align="center" sx={cellSx}>
-                                                                                <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.35)" }}>
-                                                                                    <DataNotFound/>
-                                                                                </Typography>
-                                                                            </TableCell>
-                                                                        </TableRow>
-                                                                    )}
-                                                                </TableBody>
-                                                            </Table>
-                                                        </Box>
-                                                    </Collapse>
-                                                </TableCell>
-                                            </TableRow>
-                                        )}
-                                    </TableBody>
-                                </Table>
-                            </Box>
-                        </Collapse>
-                    </TableCell>
-                </TableRow>
-            )}
-        </>
-    );
-});
-
 // ── Skeleton rows for loading state ───────────────────────────────────────────
 const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5, collapseColumns }) {
     return (
@@ -548,7 +324,7 @@ const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5, collaps
     );
 });
 // ── Main component ────────────────────────────────────────────────────────────
-function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey, handleFile }) {
+function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey, handleFile, onStockIn, onStockOut }) {
     const { t } = useTranslation();
     const { ids, entities, totalElements, pageSize, pageNo } = data;
 
@@ -559,6 +335,8 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
     const tBlock = useMemo(() => t('table.block'), [t]);
     const tUnblock = useMemo(() => t('table.unblock'), [t]);
     const tFile = useMemo(() => t('table.file'), [t]);
+    const tStockIn = useMemo(() => t('table.stockIn'), [t]);
+    const tStockOut = useMemo(() => t('table.stockOut'), [t]);
 
     const tableContent = useMemo(() => {
         if (isFetching) {
@@ -579,7 +357,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
         }
 
         return ids.map((id, idx) => (
-            <TableRowMemo
+            <RowTableComponent
                 key={id}
                 id={id}
                 idx={idx}
@@ -602,9 +380,13 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                 tDeleteSub={tDeleteSub}
                 tFile={tFile}
                 handleFile={handleFile}
+                onStockIn={onStockIn}
+                onStockOut={onStockOut}
+                tStockIn={tStockIn}
+                tStockOut={tStockOut}
             />
         ));
-    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, collapseColumns, collapseDataKey, handleFile, tFile]);
+    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, collapseColumns, collapseDataKey, handleFile, tFile, onStockIn, onStockOut, tStockIn, tStockOut]);
 
     return (
         <div className="rounded-xl overflow-hidden" style={wrapperStyle}>
