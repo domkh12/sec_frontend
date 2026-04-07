@@ -521,6 +521,7 @@ function DialogAddEditCus({
                     />
                 );
             case "image":
+                console.log(errors[field.name])
                 return wrap(
                     <>
                     <div className="w-full h-56 overflow-hidden rounded-lg">

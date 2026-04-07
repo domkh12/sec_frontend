@@ -15,8 +15,12 @@ const materialSlice = createSlice({
         },
         isFullScreenDialogStockIn: false,
         isFullScreenDialogStockOut: false,
+        stockInData: null,
     },
     reducers: {
+        setStockInData: (state, action) => {
+            state.stockInData = action.payload;
+        },
         setIsFullScreenDialogStockOut: (state, action) => {
             state.isFullScreenDialogStockOut = action.payload;
         },
@@ -45,6 +49,7 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setStockInData,
     setIsFullScreenDialogStockOut,
     setIsFullScreenDialogStockIn,
     setFilterMaterial,

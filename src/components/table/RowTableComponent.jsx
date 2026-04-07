@@ -242,7 +242,7 @@ function RowTableComponent({
                             ) : col.id === "image" ? (
                                 <>
                                 <Box onClick={() => setImagePreview(true)} sx={{width: "full", height: "60px", overflow: "hidden", cursor: "pointer"}}>
-                                    <img src={entity[col.id]} alt={entity.name} className="object-contain object-center w-full h-full" />
+                                    <img src={entity[col.id] || "/images/placeholder.png"} alt={entity.name} className="object-contain object-center w-full h-full" />
                                 </Box>
                                 <Dialog
                                     open={!!imagePreview}
@@ -258,14 +258,14 @@ function RowTableComponent({
                                         },
                                     }}
                                 >
-                                    <DialogActions >
+                                    <DialogActions>
                                         <IconButton onClick={() => setImagePreview(null)} color="primary">
                                            <ClearRoundedIcon/>
                                         </IconButton>
                                     </DialogActions>
                                     <DialogContent>
                                         <img
-                                            src={entity[col.id]}
+                                            src={entity[col.id] || "/images/placeholder.png"}
                                             alt="preview"
                                             className="object-contain object-center w-full h-full rounded-lg"
                                         />

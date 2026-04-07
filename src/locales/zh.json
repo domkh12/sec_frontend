@@ -126,7 +126,9 @@
     "costPerUnit": "成本/单位",
     "supplier": "供应商",
     "image": "图片",
-    "balance": "余额"
+    "balance": "余额",
+    "stockIn": "入库",
+    "stockOut": "出库"
   },
   "factory": {
     "structure": "工厂结构"

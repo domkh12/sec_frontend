@@ -126,7 +126,9 @@
     "costPerUnit": "តម្លៃ/ឯកតា",
     "supplier": "អ្នកផ្គត់ផ្គង់",
     "image": "រូបភាព",
-    "balance": "សមតុល្យ"
+    "balance": "សមតុល្យ",
+    "stockIn": "ស្តុកចូល",
+    "stockOut": "ស្តុកចេញ"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"

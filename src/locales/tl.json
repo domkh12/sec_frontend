@@ -126,7 +126,9 @@
     "costPerUnit": "Gastos/Yunit",
     "supplier": "Supplier",
     "image": "Larawan",
-    "balance": "Balanse"
+    "balance": "Balanse",
+    "stockIn": "Stock In",
+    "stockOut": "Stock Out"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"

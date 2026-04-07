@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     setIsFullScreenDialogStockOut
 } from "../../redux/feature/material/materialSlice.js";
+import {useTranslation} from "react-i18next";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -17,7 +18,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function FullScreenDialogStockOut() {
     const dispatch = useDispatch();
-    const open = useSelector((state) => state.material.isFullScreenDialogStockOut);
+    const {t} = useTranslation();
+    // -- Selector ----------------------------------------------------------------------
+    const open = useSelector((s) => s.material.isFullScreenDialogStockOut);
 
     const handleClose = () => {
         dispatch(setIsFullScreenDialogStockOut(false));
@@ -45,10 +48,13 @@ export default function FullScreenDialogStockOut() {
                             <CloseIcon />
                         </IconButton>
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            Stock Out
+                            {t("table.stockOut")}
                         </Typography>
                     </Toolbar>
                 </AppBar>
+                <div className="p-5">
+
+                </div>
 
             </Dialog>
         </>

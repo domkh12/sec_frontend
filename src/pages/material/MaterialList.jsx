@@ -13,7 +13,7 @@ import {
     setMaterialDataForUpdate,
     setFilterMaterial, setIsOpenDeleteMaterialDialog,
     setIsOpenDialogAddOrEditMaterial, setIsOpenSnackbarMaterial, setIsFullScreenDialogStockIn,
-    setIsFullScreenDialogStockOut
+    setIsFullScreenDialogStockOut, setStockInData
 } from "../../redux/feature/material/materialSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
@@ -84,14 +84,15 @@ function MaterialList() {
         code: Yup.string().required(t("validation.required")),
         name: Yup.string().required(t("validation.required")),
         image: Yup.mixed()
-            .test("fileType", "Only JPG/PNG allowed", (value) => {
-                if (!value) return false;
-                if (typeof value === "string") return true;
+            .nullable()
+            .optional()
+            .test("fileType", "Only JPG/PNG/WEBP allowed", (value) => {
+                if (!value || typeof value === "string") return true; // skip if empty or URL string
 
                 return ["image/jpeg", "image/png", "image/webp"].includes(value.type);
             })
             .test("fileSize", "File too large (max 2MB)", (value) => {
-                if (!value || typeof value === "string") return true;
+                if (!value || typeof value === "string") return true; // skip if empty or URL string
 
                 return value.size <= 2 * 1024 * 1024;
             }),
@@ -150,18 +151,6 @@ function MaterialList() {
             name: "image",
             label: "table.image",
             type: "image",
-            onChange: (e) => {
-                const file = e.target.files[0];
-                console.log(file);
-                // if (file) {
-                //     const reader = new FileReader();
-                //     reader.onloadend = () => {
-                //         dispatch(setMaterialDataForUpdate({
-                //             ...materialDataForUpdate,
-                //         }))
-                //     }
-                // }
-            }
         }
     ];
 
@@ -169,7 +158,7 @@ function MaterialList() {
         code: "",
         name: "",
         unit: "",
-        image: null,
+        image: "",
     }
 
     const handleEdit = (row) => {
@@ -184,7 +173,7 @@ function MaterialList() {
 
     const handleStockIn = (row) => {
         dispatch(setIsFullScreenDialogStockIn(true));
-        console.log(row)
+        dispatch(setStockInData(row));
     }
 
     const handleStockOut = (row) => {

@@ -126,7 +126,9 @@
     "costPerUnit": "Cost/Unit",
     "supplier": "Supplier",
     "image": "Image",
-    "balance": "Balance"
+    "balance": "Balance",
+    "stockIn": "Stock In",
+    "stockOut": "Stock Out"
   },
   "factory": {
     "structure": "Factory Structure"
