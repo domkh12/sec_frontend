@@ -40,7 +40,7 @@ function ColumnChartOutputByLine() {
                 bar: {
                     horizontal: false,
                     columnWidth: '55%',
-                    borderRadius: 14,
+                    borderRadius: 8,
                     borderRadiusApplication: 'end',
                     distributed: true,    // 👈 each bar gets its own color
                     dataLabels: {
