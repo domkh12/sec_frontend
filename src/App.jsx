@@ -10,9 +10,8 @@ import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
 
-
-
 // Lazy load everything else
+const MaterialList = lazy(() => import("./pages/material/MaterialList.jsx"));
 const WipSewingOutput = lazy(() => import("./pages/workOrder/WipSewingOutput.jsx"));
 const WorkOrderStatusMenu = lazy(() => import("./pages/workOrder/WorkOrderStatusMenu"));
 const FileManager = lazy(() => import("./pages/file/FileManager.jsx"));
@@ -97,6 +96,7 @@ function App() {
                                   <Route index element={<WorkOrderStatusMenu />}/>
                                   <Route path="sewing-output" element={<WipSewingOutput />}/>
                               </Route>
+                              <Route path="materials" element={<MaterialList/>}/>
                           </Route>
                       </Route>
 

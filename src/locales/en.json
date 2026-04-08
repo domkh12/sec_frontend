@@ -118,7 +118,17 @@
     "file": "File",
     "color": "Color",
     "size": "Size",
-    "styleNo": "Style No"
+    "styleNo": "Style No",
+    "code": "Code",
+    "material": "Material",
+    "unit": "Unit",
+    "stock": "Stock",
+    "costPerUnit": "Cost/Unit",
+    "supplier": "Supplier",
+    "image": "Image",
+    "balance": "Balance",
+    "stockIn": "Stock In",
+    "stockOut": "Stock Out"
   },
   "factory": {
     "structure": "Factory Structure"
@@ -133,7 +143,11 @@
     "active_status": "Active Status",
     "activeOrder": "Active Orders",
     "totalBuyers": "Total Buyers",
-    "totalPcs": "Total Pcs"
+    "totalPcs": "Total Pcs",
+    "totalMaterial": "Total Materials",
+    "totalStockIn": "Total Stock In",
+    "totalStockOut": "Total Stock Out",
+    "balance": "Balance"
   },
   "purchaseOrder": "Purchase Order",
   "po": {

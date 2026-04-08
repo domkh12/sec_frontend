@@ -118,7 +118,17 @@
     "file": "파일",
     "color": "색상",
     "size": "사이즈",
-    "styleNo": "스타일 번호"
+    "styleNo": "스타일 번호",
+    "code": "코드",
+    "material": "자재",
+    "unit": "단위",
+    "stock": "재고",
+    "costPerUnit": "비용/단위",
+    "supplier": "공급업체",
+    "image": "이미지",
+    "balance": "잔액",
+    "stockIn": "입고",
+    "stockOut": "출고"
   },
   "factory": {
     "structure": "공장 구조"

@@ -118,7 +118,17 @@
     "file": "File",
     "color": "Kulay",
     "size": "Laki",
-    "styleNo": "Style No."
+    "styleNo": "Style No.",
+    "code": "Code",
+    "material": "Materyales",
+    "unit": "Yunit",
+    "stock": "Stock",
+    "costPerUnit": "Gastos/Yunit",
+    "supplier": "Supplier",
+    "image": "Larawan",
+    "balance": "Balanse",
+    "stockIn": "Stock In",
+    "stockOut": "Stock Out"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
@@ -133,7 +143,11 @@
     "active_status": "Katayuan ng Operasyon",
     "activeOrder": "Aktibong Mga Order",
     "totalBuyers": "Kabuuang Bumibili",
-    "totalPcs": "Kabuuang Piraso"
+    "totalPcs": "Kabuuang Piraso",
+    "totalMaterial": "Kabuuang Materyales",
+    "totalStockIn": "Kabuuang Stock In",
+    "totalStockOut": "Kabuuang Stock Out",
+    "balance": "Balanse"
   },
   "purchaseOrder": "Purchase Order",
   "po": {

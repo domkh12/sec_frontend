@@ -13,6 +13,7 @@ import categoryReducer from "../feature/category/categorySlice.js"
 import buyerReducer from "../feature/buyer/buyerSlice.js"
 import sizeReducer from "../feature/size/sizeSlice.js"
 import colorReducer from "../feature/color/colorSlice.js"
+import materialReducer from "../feature/material/materialSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -28,7 +29,8 @@ const store = configureStore({
     category: categoryReducer,
     buyer: buyerReducer,
     size: sizeReducer,
-    color: colorReducer
+    color: colorReducer,
+    material: materialReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -56,7 +56,7 @@ function StatCard({ label, value, color = "sky", icon }) {
             {/* Icon badge */}
             <div className={`absolute right-3 top-3 w-7 h-7 rounded-lg border flex items-center justify-center ${c.badge}`}>
                 {icon
-                    ? <span className={`w-3.5 h-3.5 flex items-center justify-center ${c.icon}`}>{icon}</span>
+                    ? <span className={`w-7 h-7 flex items-center justify-center ${c.icon}`}>{icon}</span>
                     : <DefaultIcon className={`w-3.5 h-3.5 ${c.icon}`} />
                 }
             </div>

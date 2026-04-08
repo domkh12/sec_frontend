@@ -14,4 +14,6 @@ Disallow: /login
 # Allow only public routes
 Allow: /
 
+Crawl-delay: 10
+
 Sitemap: https://sec-mega.site/sitemap.xml

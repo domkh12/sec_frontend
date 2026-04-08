@@ -118,7 +118,17 @@
     "file": "文件",
     "color": "颜色",
     "size": "尺寸",
-    "styleNo": "款号"
+    "styleNo": "款号",
+    "code": "代码",
+    "material": "材料",
+    "unit": "单位",
+    "stock": "库存",
+    "costPerUnit": "成本/单位",
+    "supplier": "供应商",
+    "image": "图片",
+    "balance": "余额",
+    "stockIn": "入库",
+    "stockOut": "出库"
   },
   "factory": {
     "structure": "工厂结构"
@@ -133,7 +143,11 @@
     "active_status": "运行状态",
     "activeOrder": "活跃订单",
     "totalBuyers": "买家总数",
-    "totalPcs": "总件数"
+    "totalPcs": "总件数",
+    "totalMaterial": "材料总数",
+    "totalStockIn": "入库总数",
+    "totalStockOut": "出库总数",
+    "balance": "余额"
   },
   "purchaseOrder": "采购订单",
   "po": {

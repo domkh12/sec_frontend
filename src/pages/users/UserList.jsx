@@ -96,7 +96,7 @@ function UserList(){
     const handleChangeRowsPerPage = (event, newValue) => {
         dispatch(setFilterUser({
             ...filterValue,
-            pageSize: parseInt(event.target.value, 10),
+            pageSize: event.target.value,
             pageNo: 1
         }));
     };
