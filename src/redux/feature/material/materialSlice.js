@@ -13,11 +13,19 @@ const materialSlice = createSlice({
             pageSize: 20,
             search: "",
         },
+        filterStockIn: {
+            pageNo: 1,
+            pageSize: 20,
+            search: "",
+        },
         isFullScreenDialogStockIn: false,
         isFullScreenDialogStockOut: false,
         stockInData: null,
     },
     reducers: {
+        setFilterStockIn: (state, action) => {
+            state.filterStockIn = action.payload;
+        },
         setStockInData: (state, action) => {
             state.stockInData = action.payload;
         },
@@ -49,6 +57,7 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setFilterStockIn,
     setStockInData,
     setIsFullScreenDialogStockOut,
     setIsFullScreenDialogStockIn,

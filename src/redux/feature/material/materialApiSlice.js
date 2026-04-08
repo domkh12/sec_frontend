@@ -71,6 +71,36 @@ export const materialApiSlice = apiSlice.injectEndpoints({
             providesTags: [{ type: "MaterialLookup", id: "LIST" }],
         }),
 
+        getStockIn: builder.query({
+            query: ({materialId, pageNo = 1, pageSize = 20}) => ({
+                url: `/materials/${materialId}/stock-in?pageNo=${pageNo}&pageSize=${pageSize}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            transformResponse: (responseData) => {
+                const loadedStockIn = responseData.content.map((stockIn) => {
+                    stockIn.id = stockIn.id;
+                    return stockIn;
+                });
+                return {
+                    ...materialAdapter.setAll(initialState, loadedStockIn),
+                    totalPages: responseData.page.totalPages,
+                    totalElements: responseData.page.totalElements,
+                    pageNo: responseData.page.number,
+                    pageSize: responseData.page.size,
+                };
+            },
+            providesTags: (result, error, arg) => {
+                if (result?.ids) {
+                    return [
+                        { type: "MaterialStockIn", id: "LIST" },
+                        ...result.ids.map((id) => ({ type: "Material", id })),
+                    ];
+                } else return [{ type: "MaterialStockIn", id: "LIST" }];
+            },
+        }),
+
         createMaterial: builder.mutation({
             query: (initialState) => ({
                 url: "/materials",
@@ -83,6 +113,20 @@ export const materialApiSlice = apiSlice.injectEndpoints({
                 { type: "Material", id: "LIST" },
                 { type: "MaterialLookup", id: "LIST" },
                 { type: "MaterialStats", id: "LIST" }
+            ],
+        }),
+
+        stockIn: builder.mutation({
+            query: (initialState) => ({
+                url: "/materials/stock-in",
+                method: "POST",
+                body: {
+                    ...initialState,
+                },
+            }),
+            invalidatesTags:(result, error, arg) => [
+                { type: "Material", id: "LIST" },
+                { type: "MaterialStockIn", id: "LIST" },
             ],
         }),
 
@@ -134,6 +178,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetStockInQuery,
+    useStockInMutation,
     useGetMaterialFilesQuery,
     useUploadMaterialFileMutation,
     useGetMaterialStatsQuery,

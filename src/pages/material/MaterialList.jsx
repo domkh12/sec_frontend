@@ -21,9 +21,6 @@ import Seo from "../../components/seo/Seo.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import StatCards from "../../components/card/StatCards.jsx";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
@@ -237,6 +234,18 @@ function MaterialList() {
         {
             id: "unit",
             label: t("table.unit"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "totalInput",
+            label: t("table.stockIn"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "totalOutput",
+            label: t("table.stockOut"),
             minWidth: 130,
             align: "left",
         },
