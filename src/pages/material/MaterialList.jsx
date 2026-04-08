@@ -33,9 +33,11 @@ import { BiSolidArchiveIn } from "react-icons/bi";
 import { BiSolidArchive } from "react-icons/bi";
 import FullScreenDialogStockIn from "../../components/dialog/FullScreenDialogStockIn.jsx";
 import FullScreenDialogStockOut from "../../components/dialog/FullScreenDialogStockOut.jsx";
+import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 
 function MaterialList() {
     const {t} = useTranslation();
+    const isMd = useBreakpoints();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -105,7 +107,7 @@ function MaterialList() {
             const res = await uploadFile(formData).unwrap();
             imageUri = res.uri;
         }
-        console.log(values)
+
         try {
             if (materialDataForUpdate) {
                 await updateMaterial({
@@ -210,6 +212,20 @@ function MaterialList() {
             search: "",
         }))
     }
+
+    const filterConfig = [
+        {
+            id: 'status',
+            label: t("table.status"),
+            width: isMd ? 150 : "100%",
+            options: [
+                { value: 'all', label: t('filter.all') },
+                { value: 'AVAILABLE', label: t('AVAILABLE') },
+                { value: 'LOW_STOCK', label: t('LOW_STOCK') },
+                { value: 'OUT_OF_STOCK', label: t('OUT_OF_STOCK') }
+            ]
+        },
+    ]
 
     const columns = [
         {
@@ -322,10 +338,11 @@ function MaterialList() {
                     filterValue={filterValue}
                     isFetching={isFetching}
                     handleFilterChange={handleFilterChange}
-                    searchPlaceholderText={`${t('table.material')}`}
+                    searchPlaceholderText={`${t('table.code')}/${t('table.material')}`}
                     onClearAllFilters={handleClearAllFilters}
                     onStockIn={handleStockIn}
                     onStockOut={handleStockOut}
+                    filterConfig={filterConfig}
                 />
             </div>
             {

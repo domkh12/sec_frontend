@@ -72,8 +72,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
         }),
 
         getStockIn: builder.query({
-            query: ({materialId, pageNo = 1, pageSize = 20}) => ({
-                url: `/materials/${materialId}/stock-in?pageNo=${pageNo}&pageSize=${pageSize}`,
+            query: ({materialId, pageNo = 1, pageSize = 20, search = ""}) => ({
+                url: `/materials/${materialId}/stock-in?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
