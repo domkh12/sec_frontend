@@ -128,13 +128,23 @@
     "image": "图片",
     "balance": "余额",
     "stockIn": "入库",
-    "stockOut": "出库"
+    "stockOut": "出库",
+    "nameKh": "名称（高棉语）",
+    "nameEn": "名称（英语）"
   },
   "factory": {
     "structure": "工厂结构"
   },
   "filter": {
     "all": "全部"
+  },
+  "material": {
+    "information": "材料信息",
+    "stockInForm": "入库表单",
+    "stockInHistory": "入库历史",
+    "image": "材料图片",
+    "stockOutForm": "出库表单",
+    "stockOutHistory": "出库历史"
   },
   "stats": {
     "total_departments": "部门总数",
@@ -149,6 +159,7 @@
     "totalStockOut": "出库总数",
     "balance": "余额"
   },
+  "style": "款式",
   "purchaseOrder": "采购订单",
   "po": {
     "transaction": "采购订单交易"

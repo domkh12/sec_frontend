@@ -41,13 +41,6 @@ function MenuAdmin(){
                         <MenuButton title={`${t('manage.shift')}`} iconPath={"/images/coming-soon.png"} onClick={() => navigate("/admin")}/>
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("product.title")}</Typography>
-                        <MenuButton title={`${t("product.title")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
-                        <MenuButton title={`${t("product.productCategory")}`} iconPath={"/images/product-categories.png"} onClick={() => navigate("categories")}/>
-                        <MenuButton title={`${t("table.color")}`} iconPath={"/images/color-wheel.png"} onClick={() => navigate("colors")}/>
-                        <MenuButton title={`${t("table.size")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>
-                    </div>
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("other")}</Typography>
                         <MenuButton title={`${t("table.buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("buyers")}/>
                     </div>
@@ -73,6 +66,13 @@ function MenuAdmin(){
                         />
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("style")}</Typography>
+                        <MenuButton title={`${t("style")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
+                        <MenuButton title={`${t("product.productCategory")}`} iconPath={"/images/product-categories.png"} onClick={() => navigate("categories")}/>
+                        <MenuButton title={`${t("table.color")}`} iconPath={"/images/color-wheel.png"} onClick={() => navigate("colors")}/>
+                        <MenuButton title={`${t("table.size")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
                         <MenuButton
                             title={`${t('Processing Time')}`}
@@ -82,9 +82,9 @@ function MenuAdmin(){
                         />
                         <MenuButton
                             title={`${t('Work Orders')}`}
-                            // iconPath={"/images/work-order.png"}
-                            iconPath={"/images/coming-soon.png"}
-                            onClick={() => navigate("#")}
+                            iconPath={"/images/work-order.png"}
+                            // iconPath={"/images/coming-soon.png"}
+                            onClick={() => navigate("work-orders")}
                         />
                         <MenuButton
                             title={`${t('Schedule')}`}

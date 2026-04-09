@@ -128,13 +128,23 @@
     "image": "Larawan",
     "balance": "Balanse",
     "stockIn": "Stock In",
-    "stockOut": "Stock Out"
+    "stockOut": "Stock Out",
+    "nameKh": "Pangalan (Khmer)",
+    "nameEn": "Pangalan (English)"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
   },
   "filter": {
     "all": "Lahat"
+  },
+  "material": {
+    "information": "Impormasyon ng Materyales",
+    "stockInForm": "Form ng Stock In",
+    "stockInHistory": "Kasaysayan ng Stock In",
+    "image": "Larawan ng Materyales",
+    "stockOutForm": "Form ng Stock Out",
+    "stockOutHistory": "Kasaysayan ng Stock Out"
   },
   "stats": {
     "total_departments": "Kabuuan ng mga Departamento",
@@ -149,6 +159,7 @@
     "totalStockOut": "Kabuuang Stock Out",
     "balance": "Balanse"
   },
+  "style": "Style",
   "purchaseOrder": "Purchase Order",
   "po": {
     "transaction": "Transaksyon ng PO"

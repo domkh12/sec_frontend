@@ -128,13 +128,23 @@
     "image": "Image",
     "balance": "Balance",
     "stockIn": "Stock In",
-    "stockOut": "Stock Out"
+    "stockOut": "Stock Out",
+    "nameKh": "Name (Khmer)",
+    "nameEn": "Name (English)"
   },
   "factory": {
     "structure": "Factory Structure"
   },
   "filter": {
     "all": "All"
+  },
+  "material": {
+    "information": "Material Information",
+    "stockInForm": "Stock In Form",
+    "stockInHistory": "Stock In History",
+    "image": "Material Image",
+    "stockOutForm": "Stock Out Form",
+    "stockOutHistory": "Stock Out History"
   },
   "stats": {
     "total_departments": "Total Departments",
@@ -153,5 +163,6 @@
   "po": {
     "transaction": "PO Transaction"
   },
+  "style": "Style",
   "other": "Other"
 }

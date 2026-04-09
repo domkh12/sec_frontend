@@ -521,7 +521,7 @@ function DialogAddEditCus({
                     />
                 );
             case "image":
-                console.log(errors[field.name])
+                console.log(values[field.name])
                 return wrap(
                     <>
                     <div className="w-full h-56 overflow-hidden rounded-lg">
@@ -541,7 +541,9 @@ function DialogAddEditCus({
                         >
                             {values[field.name] && !errors[field.name] ? (
                                     <img
-                                        src={URL.createObjectURL(values[field.name])}
+                                        src={values[field.name] instanceof File || values[field.name] instanceof Blob
+                                            ? URL.createObjectURL(values[field.name])
+                                            : values[field.name]}
                                         alt="Preview"
                                         className="object-contain object-center w-full h-full"
                                     />

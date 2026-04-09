@@ -128,13 +128,23 @@
     "image": "이미지",
     "balance": "잔액",
     "stockIn": "입고",
-    "stockOut": "출고"
+    "stockOut": "출고",
+    "nameKh": "이름 (크메르어)",
+    "nameEn": "이름 (영어)"
   },
   "factory": {
     "structure": "공장 구조"
   },
   "filter": {
     "all": "전체"
+  },
+  "material": {
+    "information": "자재 정보",
+    "stockInForm": "입고 양식",
+    "stockInHistory": "입고 내역",
+    "image": "자재 이미지",
+    "stockOutForm": "출고 양식",
+    "stockOutHistory": "출고 내역"
   },
   "stats": {
     "total_departments": "총 부서 수",
@@ -145,6 +155,7 @@
     "totalBuyers": "총 구매자",
     "totalPcs": "총 개수"
   },
+  "style": "스타일",
   "purchaseOrder": "구매 주문",
   "po": {
     "transaction": "구매 주문 거래"

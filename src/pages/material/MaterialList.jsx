@@ -13,7 +13,7 @@ import {
     setMaterialDataForUpdate,
     setFilterMaterial, setIsOpenDeleteMaterialDialog,
     setIsOpenDialogAddOrEditMaterial, setIsOpenSnackbarMaterial, setIsFullScreenDialogStockIn,
-    setIsFullScreenDialogStockOut, setStockInData
+    setIsFullScreenDialogStockOut, setStockInData, setStockOutData
 } from "../../redux/feature/material/materialSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
@@ -57,6 +57,7 @@ function MaterialList() {
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
         search: debounceSearch,
+        status: filterValue.status
     });
 
     const handleChangePage = (event, newPage) => {
@@ -161,8 +162,14 @@ function MaterialList() {
     }
 
     const handleEdit = (row) => {
-        // dispatch(setIsOpenDialogAddOrEditMaterial(true));
-        // dispatch(setMaterialDataForUpdate(row));
+        dispatch(setIsOpenDialogAddOrEditMaterial(true));
+        dispatch(setMaterialDataForUpdate({
+            id: row.id,
+            code: row.code,
+            name: row.name,
+            unit: row.unit,
+            image: row.image,
+        }));
     };
 
     const handleDeleteOpen = (row) => {
@@ -174,10 +181,9 @@ function MaterialList() {
         dispatch(setIsFullScreenDialogStockIn(true));
         dispatch(setStockInData(row));
     }
-
     const handleStockOut = (row) => {
         dispatch(setIsFullScreenDialogStockOut(true));
-        console.log(row)
+        dispatch(setStockOutData(row));
     }
 
     const handleFilterChange = (key, value) => {
@@ -307,21 +313,21 @@ function MaterialList() {
                         },
                         {
                             label: t("stats.totalStockIn"),
-                            value: materialStats?.totalMaterial || 0,
+                            value: materialStats?.totalStockIn || 0,
                             color: "blue",
                             icon: <BiSolidArchiveOut />
                         },
                         {
                             label: t("stats.totalStockOut"),
                             // Sums all lines from the current data list
-                            value: materialStats?.activeOrder || 0,
+                            value: materialStats?.totalStockOut || 0,
                             color: "violet",
                             icon: <BiSolidArchiveIn />
                         },
                         {
                             label: t("stats.balance"),
                             // Sums all workers from the current data list
-                            value: materialStats?.totalPcs || 0,
+                            value: materialStats?.totalBalance || 0,
                             color: "emerald",
                             icon: <BiSolidArchive/>
                         },

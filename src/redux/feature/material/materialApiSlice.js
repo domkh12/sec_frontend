@@ -8,8 +8,8 @@ const initialState = materialAdapter.getInitialState();
 export const materialApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getMaterial: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
-                url: `/materials?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", status = "" }) => ({
+                url: `/materials?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -45,7 +45,7 @@ export const materialApiSlice = apiSlice.injectEndpoints({
                 },
             }),
             providesTags: [
-                { type: "Materialstats", id: "LIST" }
+                { type: "MaterialStats", id: "LIST" }
             ],
         }),
 
@@ -95,9 +95,39 @@ export const materialApiSlice = apiSlice.injectEndpoints({
                 if (result?.ids) {
                     return [
                         { type: "MaterialStockIn", id: "LIST" },
-                        ...result.ids.map((id) => ({ type: "Material", id })),
+                        ...result.ids.map((id) => ({ type: "MaterialStockIn", id })),
                     ];
                 } else return [{ type: "MaterialStockIn", id: "LIST" }];
+            },
+        }),
+
+        getStockOut: builder.query({
+            query: ({materialId, pageNo = 1, pageSize = 20, search = ""}) => ({
+                url: `/materials/${materialId}/stock-out?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            transformResponse: (responseData) => {
+                const loadedStockOut = responseData.content.map((stockOut) => {
+                    stockOut.id = stockOut.id;
+                    return stockOut;
+                });
+                return {
+                    ...materialAdapter.setAll(initialState, loadedStockOut),
+                    totalPages: responseData.page.totalPages,
+                    totalElements: responseData.page.totalElements,
+                    pageNo: responseData.page.number,
+                    pageSize: responseData.page.size,
+                };
+            },
+            providesTags: (result, error, arg) => {
+                if (result?.ids) {
+                    return [
+                        { type: "MaterialStockOut", id: "LIST" },
+                        ...result.ids.map((id) => ({ type: "MaterialStockOut", id })),
+                    ];
+                } else return [{ type: "MaterialStockOut", id: "LIST" }];
             },
         }),
 
@@ -130,6 +160,20 @@ export const materialApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        stockOut: builder.mutation({
+            query: (initialState) => ({
+                url: "/materials/stock-out",
+                method: "POST",
+                body: {
+                    ...initialState,
+                },
+            }),
+            invalidatesTags:(result, error, arg) => [
+                { type: "Material", id: "LIST" },
+                { type: "MaterialStockOut", id: "LIST" },
+            ],
+        }),
+
         updateMaterial: builder.mutation({
             query: ({id, ...initialMaterialData}) => ({
                 url: `/materials/${id}`,
@@ -141,7 +185,7 @@ export const materialApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 {type: "Material", id: "LIST"},
                 { type: "MaterialLookup", id: "LIST" },
-                { type: "Materialstats", id: "LIST" }
+                { type: "MaterialStats", id: "LIST" }
             ],
         }),
 
@@ -178,6 +222,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useStockOutMutation,
+    useGetStockOutQuery,
     useGetStockInQuery,
     useStockInMutation,
     useGetMaterialFilesQuery,

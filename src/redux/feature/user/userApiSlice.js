@@ -8,7 +8,7 @@ const initialState = userAdapter.getInitialState();
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getUser: builder.query({
-            query: ({ pageNo = 1, pageSize = 5, search, roleId, departmentId, status }) => ({
+            query: ({ pageNo = 1, pageSize = 5, search = "", roleId = "", departmentId = "", status = "" }) => ({
                 url: `/users?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&roleId=${roleId}&departmentId=${departmentId}&status=${status}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;

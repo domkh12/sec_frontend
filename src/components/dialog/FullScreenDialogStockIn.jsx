@@ -162,7 +162,7 @@ export default function FullScreenDialogStockIn() {
                     {/* MATERIAL INFO */}
                     <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4">
                         <Typography variant="h6">
-                            Material Information
+                            {t('material.information')}
                         </Typography>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,7 +176,7 @@ export default function FullScreenDialogStockIn() {
                     {/* STOCK IN FORM */}
                     <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4">
                         <Typography variant="h6">
-                            Stock In Form
+                            {t('material.stockInForm')}
                         </Typography>
                         <Formik
                             initialValues={{
@@ -246,7 +246,7 @@ export default function FullScreenDialogStockIn() {
                 {/* RIGHT SIDE IMAGE */}
                 <div className="bg-white shadow rounded-2xl p-5 flex flex-col items-center justify-center">
                     <Typography variant="subtitle1" className="mb-4">
-                        Material Image
+                        {t('material.image')}
                     </Typography>
 
                     <img
@@ -262,7 +262,7 @@ export default function FullScreenDialogStockIn() {
             {/* STOCK HISTORY TABLE */}
             <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4 mx-5 mb-10">
                 <Typography variant="h6">
-                    Stock In History
+                    {t('material.stockInHistory')}
                 </Typography>
                 <div style={{ position: "relative", display: "inline-block" }}>
                     <button onClick={() => setOpenDate(!openDate)}>Date</button>

@@ -159,6 +159,8 @@ function UserList(){
                     employeeId: values.employeeId,
                     firstName: values.firstName,
                     lastName: values.lastName,
+                    nameEn: values.nameEn,
+                    nameKh: values.nameKh,
                     email: values.email,
                     phoneNumber: values.phoneNumber,
                     username: values.username,
@@ -175,6 +177,8 @@ function UserList(){
                     employeeId: values.employeeId,
                     firstName: values.firstName,
                     lastName: values.lastName,
+                    nameEn: values.nameEn,
+                    nameKh: values.nameKh,
                     email: values.email,
                     phoneNumber: values.phoneNumber,
                     username: values.username,
@@ -199,6 +203,8 @@ function UserList(){
         { name: "employeeId", label: "table.employeeId", type: "text"},
         { name: "firstName",     label: "table.firstName",     type: "text" },
         { name: "lastName",     label: "table.lastName",     type: "text" },
+        { name: "nameEn", label: "table.nameEn", type: "text"},
+        { name: "nameKh", label: "table.nameKh", type: "text"},
         { name: "email",     label: "table.email",     type: "email" },
         { name: "phoneNumber",     label: "table.phoneNumber",     type: "text" },
         { name: "username", label: "table.username", type: "text"},
@@ -280,6 +286,8 @@ function UserList(){
         employeeId: "",
         firstName: "",
         lastName: "",
+        nameEn: "",
+        nameKh: "",
         email: "",
         phoneNumber: "",
         username: "",
@@ -305,7 +313,9 @@ function UserList(){
                 parentId: row.departmentId,
                 childId: row.lineId
             },
-            position: row.position
+            position: row.position,
+            nameEn: row.nameEn,
+            nameKh: row.nameKh,
         }));
     };
 
@@ -354,6 +364,18 @@ function UserList(){
         {
             id: "lastName",
             label: t("table.lastName"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "nameEn",
+            label: t("table.nameEn"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "nameKh",
+            label: t("table.nameKh"),
             minWidth: 130,
             align: "left",
         },

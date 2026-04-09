@@ -128,13 +128,23 @@
     "image": "រូបភាព",
     "balance": "សមតុល្យ",
     "stockIn": "ស្តុកចូល",
-    "stockOut": "ស្តុកចេញ"
+    "stockOut": "ស្តុកចេញ",
+    "nameKh": "ឈ្មោះ (ខ្មែរ)",
+    "nameEn": "ឈ្មោះ (អង់គ្លេស)"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"
   },
   "filter": {
     "all": "ទាំងអស់"
+  },
+  "material": {
+    "information": "ព័ត៌មានសម្ភារៈ",
+    "stockInForm": "បែបបទស្តុកចូល",
+    "stockInHistory": "ប្រវត្តិចូលស្តុក",
+    "image": "រូបភាពសម្ភារៈ",
+    "stockOutForm": "ទម្រង់ស្តុកចេញ",
+    "stockOutHistory": "ប្រវត្តិស្តុកចេញ"
   },
   "stats": {
     "total_departments": "ដេប៉ាតឺម៉ង់សរុប",
@@ -149,6 +159,7 @@
     "totalStockOut": "ស្តុកចេញសរុប",
     "balance": "សមតុល្យ"
   },
+  "style": "ម៉ូដែល",
   "purchaseOrder": "ការបញ្ជាទិញ",
   "po": {
     "transaction": "ប្រតិបត្តិការបញ្ជាទិញ"

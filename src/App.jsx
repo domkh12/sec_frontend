@@ -9,6 +9,7 @@ import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
+import WorkOrderList from "./pages/workOrder/WorkOrderList.jsx";
 
 // Lazy load everything else
 const MaterialList = lazy(() => import("./pages/material/MaterialList.jsx"));
@@ -97,6 +98,7 @@ function App() {
                                   <Route path="sewing-output" element={<WipSewingOutput />}/>
                               </Route>
                               <Route path="materials" element={<MaterialList/>}/>
+                              <Route path="work-orders" element={<WorkOrderList/>}/>
                           </Route>
                       </Route>
 
