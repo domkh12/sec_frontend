@@ -28,32 +28,64 @@ import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {
-    useCreateWorkOrderMutation,
+    useCreateWorkOrderMutation, useGetWorkOrderQuery,
     useUpdateWorkOrderMutation
 } from "../../redux/feature/workOrder/workOrderApiSlice.js";
 import {setAlertWorkOrder} from "../../redux/feature/workOrder/workOrderSlice.js";
 import dayjs from "dayjs";
+import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
+import {useGetProductQuery} from "../../redux/feature/product/productApiSlice.js";
+import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
 
 function WorkOrderList() {
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const buyerDataForUpdate = useSelector((state) => state.buyer.buyerDataForUpdate);
-    const isOpen = useSelector((state) => state.buyer.isOpenDialogAddOrEditBuyer);
-    const isOpenSnackbar = useSelector((state) => state.buyer.isOpenSnackbarBuyer);
-    const alertBuyer = useSelector((state) => state.buyer.alertBuyer);
-    const isOpenDeleteDialog = useSelector((state) => state.buyer.isOpenDeleteBuyerDialog);
+
+    // -- Selector -------------------------------------------------------------------------------------------------
+    const buyerDataForUpdate    = useSelector((state) => state.buyer.buyerDataForUpdate);
+    const isOpen                = useSelector((state) => state.buyer.isOpenDialogAddOrEditBuyer);
+    const isOpenSnackbar        = useSelector((state) => state.buyer.isOpenSnackbarBuyer);
+    const alertBuyer            = useSelector((state) => state.buyer.alertBuyer);
+    const isOpenDeleteDialog    = useSelector((state) => state.buyer.isOpenDeleteBuyerDialog);
+    const filterValue           = useSelector((state) => state.workOrder.filter);
+
+    // -- Mutation -------------------------------------------------------------------------------------------------
     const[createWorkOrder, {isLoading: isLoadingCreateBuyer}] = useCreateWorkOrderMutation();
     const [updateWorkOrder, {isLoading: isLoadingUpdateBuyer}] = useUpdateWorkOrderMutation();
-    const filterValue = useSelector((state) => state.workOrder.filter);
-    const debounceSearch = useDebounce(filterValue.search, 500);
     const [deleteBuyer, {isLoading: isLoadingDeleteBuyer}] = useDeleteBuyerMutation();
+    // -- Debounce -------------------------------------------------------------------------------------------------
+    const debounceSearch = useDebounce(filterValue.search, 500);
+
+    // -- Query ----------------------------------------------------------------------------------------------------
     const {data: buyerStats} = useGetBuyerStatsQuery();
-    const {data: buyerData, isLoading, isSuccess, isFetching} = useGetBuyerQuery({
+    const {data: buyerData} = useGetBuyerQuery({
         pageNo: 1,
-        pageSize: 999
+        pageSize: 1000
     });
+    const {data: colorData} = useGetColorQuery({
+        pageNo: 1,
+        pageSize: 1000
+    });
+    const {data: styleData} = useGetProductQuery({
+        pageNo: 1,
+        pageSize: 1000
+    })
+    const {data: sizeData} = useGetSizeQuery({
+        pageNo: 1,
+        pageSize: 1000
+    })
+    const {data: workOrderData, isLoading, isSuccess, isFetching} = useGetWorkOrderQuery({
+        pageNo: filterValue.pageNo,
+        pageSize: filterValue.pageSize,
+        search: debounceSearch
+    });
+
+    console.log(workOrderData);
+
+
+    // -- Handler --------------------------------------------------------------------------------------------------
 
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterBuyer({
@@ -75,10 +107,6 @@ function WorkOrderList() {
         dispatch(setBuyerDataForUpdate(null));
     }
 
-    const validationSchema = Yup.object().shape({
-        // name: Yup.string().required(t("validation.required"))
-    });
-
     const handleSubmit = async (values, {resetForm}) => {
         try {
             console.log(values);
@@ -91,6 +119,7 @@ function WorkOrderList() {
                 startDate: startDate,
                 endDate: endDate,
                 buyerId: values.buyer,
+
             })
             // if (buyerDataForUpdate) {
             //     await updateWorkOrder({
@@ -117,33 +146,6 @@ function WorkOrderList() {
             dispatch(setIsOpenSnackbarBuyer(true));
         }
     };
-
-    const fields = [
-        { name: "mo",     label: "table.mo",     type: "text" },
-        { name: "qty",     label: "table.qty",     type: "number" },
-        { name: "style",     label: "table.style",     type: "text" },
-        { name: "startDate",     label: "table.startDate",     type: "date" },
-        { name: "endDate",     label: "table.endDate",     type: "date" },
-        { name: "buyer",
-          label: "table.buyer",
-          type: "autocomplete",
-            fetchOptions: async () => {
-                return Object.values(buyerData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.name,
-                }));
-            },
-        },
-    ];
-
-    const initialValues ={
-        mo: "",
-        qty: "",
-        style: "",
-        startDate: null,
-        endDate: null,
-        buyer: "",
-    }
 
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditBuyer(true));
@@ -189,6 +191,72 @@ function WorkOrderList() {
         }))
     }
 
+    const validationSchema = Yup.object().shape({
+        // name: Yup.string().required(t("validation.required"))
+    });
+
+    const fields = [
+        { name: "mo",     label: "table.mo",     type: "text" },
+        {
+            name: "style",
+            label: "table.style",
+            type: "autocomplete",
+            fetchOptions: async () => {
+                return Object.values(styleData?.entities ?? {}).map((dept) => ({
+                    value: dept.id,
+                    label: dept.styleNo,
+                }));
+            },
+        },
+        {
+            name: "size",
+            label: "table.size",
+            type: "autocomplete",
+            fetchOptions: async () => {
+                return Object.values(sizeData?.entities ?? {}).map((dept) => ({
+                    value: dept.id,
+                    label: dept.size,
+                }));
+            },
+        },
+        {
+            name: "color",
+            label: "table.color",
+            type: "autocomplete",
+            fetchOptions: async () => {
+                return Object.values(colorData?.entities ?? {}).map((dept) => ({
+                    value: dept.id,
+                    label: dept.color,
+                }));
+            },
+        },
+        { name: "qty",     label: "table.qty",     type: "number" },
+        { name: "startDate",     label: "table.startDate",     type: "date" },
+        { name: "endDate",     label: "table.endDate",     type: "date" },
+        { name: "buyer",
+          label: "table.buyer",
+          type: "autocomplete",
+            fetchOptions: async () => {
+                return Object.values(buyerData?.entities ?? {}).map((dept) => ({
+                    value: dept.id,
+                    label: dept.name,
+                }));
+            },
+        },
+
+    ];
+
+    const initialValues ={
+        mo: "",
+        qty: "",
+        style: "",
+        startDate: null,
+        endDate: null,
+        buyer: "",
+    }
+
+
+
     const columns = [
         {
             id: "mo",
@@ -210,7 +278,7 @@ function WorkOrderList() {
         },
         {
             id: "qty",
-            label: t("table.workOrderQty"),
+            label: t("table.qty"),
             minWidth: 130,
             align: "left",
         },
@@ -278,7 +346,7 @@ function WorkOrderList() {
                 </div>
                 <TableCus
                     columns={columns}
-                    data={buyerData}
+                    data={workOrderData}
                     handleChangePage={handleChangePage}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                     onEdit={handleEdit}
