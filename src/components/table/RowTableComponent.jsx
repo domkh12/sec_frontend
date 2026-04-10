@@ -64,7 +64,7 @@ function RowTableComponent({
             BLOCKED:      { background: "rgba(239,68,68,0.15)",   border: "1px solid rgba(239,68,68,0.45)",   color: "#fca5a5" },
             OUT_OF_STOCK: { background: "rgba(239,68,68,0.15)",   border: "1px solid rgba(239,68,68,0.45)",   color: "#fca5a5" },
             LOW_STOCK:    { background: "rgba(234,179,8,0.15)",   border: "1px solid rgba(234,179,8,0.45)",   color: "#fde047" },
-            AVAILABLE:    { background: "rgba(34,197,94,0.15)",   border: "1px solid rgba(34,197,94,0.45)",   color: "#86efac" },
+            OK:    { background: "rgba(34,197,94,0.15)",   border: "1px solid rgba(34,197,94,0.45)",   color: "#86efac" },
         };
         const STATUS_DEFAULT = { background: "rgba(148,163,184,0.15)", border: "1px solid rgba(148,163,184,0.35)", color: "#cbd5e1" };
 

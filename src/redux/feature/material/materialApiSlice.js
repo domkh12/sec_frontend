@@ -157,6 +157,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:(result, error, arg) => [
                 { type: "Material", id: "LIST" },
                 { type: "MaterialStockIn", id: "LIST" },
+                { type: "MaterialLookup", id: "LIST" },
+                { type: "MaterialStats", id: "LIST" }
             ],
         }),
 
@@ -171,6 +173,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
             invalidatesTags:(result, error, arg) => [
                 { type: "Material", id: "LIST" },
                 { type: "MaterialStockOut", id: "LIST" },
+                { type: "MaterialLookup", id: "LIST" },
+                { type: "MaterialStats", id: "LIST" }
             ],
         }),
 

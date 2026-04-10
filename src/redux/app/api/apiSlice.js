@@ -80,7 +80,8 @@ export const apiSlice = createApi({
     "Material",
     "MaterialStockIn",
     "MaterialStockOut",
-    "MaterialStats"
+    "MaterialStats",
+    "WorkOrder"
   ],
   endpoints: (builder) => ({}),
 });

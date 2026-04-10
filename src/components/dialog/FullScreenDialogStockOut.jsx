@@ -337,7 +337,7 @@ export default function FullScreenDialogStockOut() {
                         </Table>
                     </TableContainer>
                     {
-                        totalElements && (
+                        totalElements > 0 && (
                             <TablePagination
                                 rowsPerPageOptions={[20, 50, 100, 1000]}
                                 component="div"

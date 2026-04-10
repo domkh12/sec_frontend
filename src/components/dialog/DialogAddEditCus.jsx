@@ -515,7 +515,17 @@ function DialogAddEditCus({
                                 error: !!(errors[field.name] && touched[field.name]),
                                 helperText:
                                     errors[field.name] && touched[field.name] ? errors[field.name] : null,
-                                sx: glassInputSx,
+                                sx: {
+                                    ...glassInputSx,
+                                    "& .MuiPickersInputBase-root": {
+                                        color: "rgba(255,255,255,0.85)",
+                                        border: "1px solid rgba(255,255,255,0.28)",
+                                        borderRadius: "10px",
+                                        "& .MuiSvgIcon-root": {
+                                            color: "rgba(255,255,255,0.65)",
+                                        }
+                                    }
+                                },
                             },
                         }}
                     />

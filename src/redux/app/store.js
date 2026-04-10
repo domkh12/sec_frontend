@@ -14,6 +14,7 @@ import buyerReducer from "../feature/buyer/buyerSlice.js"
 import sizeReducer from "../feature/size/sizeSlice.js"
 import colorReducer from "../feature/color/colorSlice.js"
 import materialReducer from "../feature/material/materialSlice.js"
+import workOrderReducer from "../feature/workOrder/workOrderSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -30,7 +31,8 @@ const store = configureStore({
     buyer: buyerReducer,
     size: sizeReducer,
     color: colorReducer,
-    material: materialReducer
+    material: materialReducer,
+    workOrder: workOrderReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

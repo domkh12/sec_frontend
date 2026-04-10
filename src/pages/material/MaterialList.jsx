@@ -102,7 +102,7 @@ function MaterialList() {
 
     const handleSubmit = async (values, {resetForm}) => {
         let imageUri = null;
-        if (values.image) {
+        if (values.image && typeof values.image !== "string") {
             const formData = new FormData();
             formData.append("file", values.image);
             const res = await uploadFile(formData).unwrap();
@@ -113,7 +113,10 @@ function MaterialList() {
             if (materialDataForUpdate) {
                 await updateMaterial({
                     id: materialDataForUpdate.id,
+                    code: values.code,
                     name: values.name,
+                    image: imageUri ? imageUri : null,
+                    unit: values.unit,
                 }).unwrap();
                 dispatch(setAlertMaterial({type: "success", message: "Update successfully"}));
                 dispatch(setMaterialDataForUpdate(null));
@@ -172,9 +175,9 @@ function MaterialList() {
         }));
     };
 
-    const handleDeleteOpen = (row) => {
-        // dispatch(setIsOpenDeleteMaterialDialog(true));
-        // setId(row.id);
+    const handleDeleteOpen = async (row) => {
+        dispatch(setIsOpenDeleteMaterialDialog(true));
+        setId(row.id);
     };
 
     const handleStockIn = (row) => {
@@ -226,7 +229,7 @@ function MaterialList() {
             width: isMd ? 150 : "100%",
             options: [
                 { value: 'all', label: t('filter.all') },
-                { value: 'AVAILABLE', label: t('AVAILABLE') },
+                { value: 'OK', label: t('OK') },
                 { value: 'LOW_STOCK', label: t('LOW_STOCK') },
                 { value: 'OUT_OF_STOCK', label: t('OUT_OF_STOCK') }
             ]
@@ -312,25 +315,18 @@ function MaterialList() {
                             icon: <FaBoxesStacked/>
                         },
                         {
-                            label: t("stats.totalStockIn"),
-                            value: materialStats?.totalStockIn || 0,
-                            color: "blue",
+                            label: t("stats.lowStockAlert"),
+                            value: materialStats?.totalLowStock || 0,
+                            color: "amber",
                             icon: <BiSolidArchiveOut />
                         },
                         {
-                            label: t("stats.totalStockOut"),
+                            label: t("stats.outOfStock"),
                             // Sums all lines from the current data list
-                            value: materialStats?.totalStockOut || 0,
-                            color: "violet",
+                            value: materialStats?.totalOutOfStock || 0,
+                            color: "red",
                             icon: <BiSolidArchiveIn />
-                        },
-                        {
-                            label: t("stats.balance"),
-                            // Sums all workers from the current data list
-                            value: materialStats?.totalBalance || 0,
-                            color: "emerald",
-                            icon: <BiSolidArchive/>
-                        },
+                        }
                     ]} />
                 </div>
                 <TableCus

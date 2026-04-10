@@ -112,7 +112,7 @@ const SelectUserWithSearch = ({ value, onChange, status = "ACTIVE" }) => {
                                 {selected.nameEn || selected.nameEn}
                             </Typography>
                             <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: -0.5 }}>
-                                ID: {selected.id}
+                                ID: {selected.id} • {selected.line || 'N/A'}
                             </Typography>
                         </Box>
                     </Box>
@@ -164,9 +164,9 @@ const SelectUserWithSearch = ({ value, onChange, status = "ACTIVE" }) => {
                                     {initials(emp.avatar || emp.avatar)}
                                 </Avatar>
                                 <Box sx={{ flex: 1 }}>
-                                    <Typography variant="body2" fontWeight={500}>{emp.firstName || emp.firstName}</Typography>
+                                    <Typography variant="body2" fontWeight={500}>{emp.nameEn || emp.nameEn}</Typography>
                                     <Typography variant="caption" color="text.secondary">
-                                        {emp.employeeId} • {emp.nameEn || 'N/A'}
+                                        {emp.employeeId} • {emp.line || 'N/A'}
                                     </Typography>
                                 </Box>
                                 {isSelected && <CheckIcon fontSize="small" color="primary" />}

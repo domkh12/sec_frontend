@@ -71,6 +71,7 @@ function MenuAdmin(){
                         <MenuButton title={`${t("product.productCategory")}`} iconPath={"/images/product-categories.png"} onClick={() => navigate("categories")}/>
                         <MenuButton title={`${t("table.color")}`} iconPath={"/images/color-wheel.png"} onClick={() => navigate("colors")}/>
                         <MenuButton title={`${t("table.size")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>
+                        <MenuButton title={`${t("table.defectType")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>

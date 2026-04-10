@@ -307,7 +307,7 @@ export default function FullScreenDialogStockIn() {
                     </Table>
                 </TableContainer>
                 {
-                    totalElements && (
+                    totalElements > 0 && (
                         <TablePagination
                             rowsPerPageOptions={[20, 50, 100, 1000]}
                             component="div"
@@ -317,7 +317,6 @@ export default function FullScreenDialogStockIn() {
                             page={pageNo}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
-                            // sx={paginationSx}
                         />
                     )
                 }

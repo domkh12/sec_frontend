@@ -130,7 +130,12 @@
     "stockIn": "Stock In",
     "stockOut": "Stock Out",
     "nameKh": "Pangalan (Khmer)",
-    "nameEn": "Pangalan (English)"
+    "nameEn": "Pangalan (English)",
+    "mo": "MO",
+    "qty": "Dami",
+    "style": "Style",
+    "startDate": "Petsa ng Simula",
+    "endDate": "Petsa ng Pagtatapos"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
@@ -157,7 +162,9 @@
     "totalMaterial": "Kabuuang Materyales",
     "totalStockIn": "Kabuuang Stock In",
     "totalStockOut": "Kabuuang Stock Out",
-    "balance": "Balanse"
+    "balance": "Balanse",
+    "outOfStock": "Walang Stock",
+    "lowStockAlert": "Babala sa Mababang Stock"
   },
   "style": "Style",
   "purchaseOrder": "Purchase Order",

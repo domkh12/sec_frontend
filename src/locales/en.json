@@ -130,7 +130,12 @@
     "stockIn": "Stock In",
     "stockOut": "Stock Out",
     "nameKh": "Name (Khmer)",
-    "nameEn": "Name (English)"
+    "nameEn": "Name (English)",
+    "mo": "MO",
+    "qty": "Qty",
+    "style": "Style",
+    "startDate": "Start Date",
+    "endDate": "End Date"
   },
   "factory": {
     "structure": "Factory Structure"
@@ -157,7 +162,9 @@
     "totalMaterial": "Total Materials",
     "totalStockIn": "Total Stock In",
     "totalStockOut": "Total Stock Out",
-    "balance": "Balance"
+    "balance": "Balance",
+    "outOfStock": "Out of Stock",
+    "lowStockAlert": "Low Stock Alert"
   },
   "purchaseOrder": "Purchase Order",
   "po": {

@@ -130,7 +130,12 @@
     "stockIn": "입고",
     "stockOut": "출고",
     "nameKh": "이름 (크메르어)",
-    "nameEn": "이름 (영어)"
+    "nameEn": "이름 (영어)",
+    "mo": "MO",
+    "qty": "수량",
+    "style": "스타일",
+    "startDate": "시작 날짜",
+    "endDate": "종료 날짜"
   },
   "factory": {
     "structure": "공장 구조"
@@ -153,7 +158,9 @@
     "active_status": "가동 상태",
     "activeOrder": "활성 주문",
     "totalBuyers": "총 구매자",
-    "totalPcs": "총 개수"
+    "totalPcs": "총 개수",
+    "outOfStock": "재고 없음",
+    "lowStockAlert": "낮은 재고 경고"
   },
   "style": "스타일",
   "purchaseOrder": "구매 주문",

@@ -130,7 +130,12 @@
     "stockIn": "ស្តុកចូល",
     "stockOut": "ស្តុកចេញ",
     "nameKh": "ឈ្មោះ (ខ្មែរ)",
-    "nameEn": "ឈ្មោះ (អង់គ្លេស)"
+    "nameEn": "ឈ្មោះ (អង់គ្លេស)",
+    "mo": "MO",
+    "qty": "បរិមាណ",
+    "style": "ម៉ូដែល",
+    "startDate": "កាលបរិច្ឆេទចាប់ផ្តើម",
+    "endDate": "កាលបរិច្ឆេទបញ្ចប់"
   },
   "factory": {
     "structure": "រចនាសម្ព័ន្ធរោងចក្រ"
@@ -157,7 +162,9 @@
     "totalMaterial": "សម្ភារៈសរុប",
     "totalStockIn": "ស្តុកចូលសរុប",
     "totalStockOut": "ស្តុកចេញសរុប",
-    "balance": "សមតុល្យ"
+    "balance": "សមតុល្យ",
+    "outOfStock": "អស់ស្តុក",
+    "lowStockAlert": "ការព្រមានស្តុកទាប"
   },
   "style": "ម៉ូដែល",
   "purchaseOrder": "ការបញ្ជាទិញ",

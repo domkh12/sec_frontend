@@ -157,7 +157,14 @@
     "totalMaterial": "材料总数",
     "totalStockIn": "入库总数",
     "totalStockOut": "出库总数",
-    "balance": "余额"
+    "balance": "余额",
+    "outOfStock": "缺货",
+    "lowStockAlert": "低库存警报",
+    "mo": "MO",
+    "qty": "数量",
+    "style": "款式",
+    "startDate": "开始日期",
+    "endDate": "结束日期"
   },
   "style": "款式",
   "purchaseOrder": "采购订单",
