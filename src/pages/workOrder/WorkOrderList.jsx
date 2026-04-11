@@ -119,6 +119,9 @@ function WorkOrderList() {
                 startDate: startDate,
                 endDate: endDate,
                 buyerId: values.buyer,
+                sizeIds: values.size,
+                colorId: values.color,
+
 
             })
             // if (buyerDataForUpdate) {
@@ -211,7 +214,7 @@ function WorkOrderList() {
         {
             name: "size",
             label: "table.size",
-            type: "autocomplete",
+            type: "autocomplete-checkbox",
             fetchOptions: async () => {
                 return Object.values(sizeData?.entities ?? {}).map((dept) => ({
                     value: dept.id,
@@ -253,6 +256,7 @@ function WorkOrderList() {
         startDate: null,
         endDate: null,
         buyer: "",
+        colors: [],
     }
 
 
