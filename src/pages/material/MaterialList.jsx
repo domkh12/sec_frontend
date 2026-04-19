@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
     useCreateMaterialMutation,
-    useDeleteMaterialMutation, useGetMaterialStatsQuery,
+    useDeleteMaterialMutation, useGetMaterialReportExcelMutation, useGetMaterialStatsQuery,
     useUpdateMaterialMutation
 } from "../../redux/feature/material/materialApiSlice.js";
 import useDebounce from "../../hook/useDebounce.jsx";
@@ -30,7 +30,6 @@ import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
 import { FaBoxesStacked } from "react-icons/fa6";
 import { BiSolidArchiveOut } from "react-icons/bi";
 import { BiSolidArchiveIn } from "react-icons/bi";
-import { BiSolidArchive } from "react-icons/bi";
 import FullScreenDialogStockIn from "../../components/dialog/FullScreenDialogStockIn.jsx";
 import FullScreenDialogStockOut from "../../components/dialog/FullScreenDialogStockOut.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
@@ -52,6 +51,7 @@ function MaterialList() {
     const filterValue = useSelector((state) => state.material.filter);
     const debounceSearch = useDebounce(filterValue.search, 500);
     const [deleteMaterial, {isLoading: isLoadingDeleteMaterial}] = useDeleteMaterialMutation();
+    const [materialReportExcel] = useGetMaterialReportExcelMutation();
     const {data: materialStats} = useGetMaterialStatsQuery();
     const {data: materialData, isLoading, isSuccess, isFetching} = useGetMaterialQuery({
         pageNo: filterValue.pageNo,
@@ -234,6 +234,31 @@ function MaterialList() {
                 { value: 'OUT_OF_STOCK', label: t('OUT_OF_STOCK') }
             ]
         },
+        {
+            id: 'excel',
+            onClick: async () => {
+                const res = await materialReportExcel().unwrap();
+
+                // Create blob
+                const blob = new Blob([res], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+
+                // Create URL
+                const url = window.URL.createObjectURL(blob);
+
+                // Create <a> and trigger download
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "material-report.xlsx"; // file name
+                document.body.appendChild(link);
+                link.click();
+
+                // Cleanup
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            }
+        }
     ]
 
     const columns = [

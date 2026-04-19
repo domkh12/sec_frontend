@@ -188,7 +188,7 @@ function TVLineInput() {
     const [updateTvData] = useUpdateTvDataMutation();
     const [createTvData] = useCreateTvDataMutation();
     const [saveError, setSaveError] = useState(null);
-    const { t } = useTranslation();
+    const isSaturday = localStorage.getItem("isSaturday") === "true" || false;
     const {isAdmin, isHrManager} = useAuth();
     const [showSuccess, setShowSuccess] = useState(false);
     const navigate = useNavigate();
@@ -198,6 +198,10 @@ function TVLineInput() {
         connectionState,
         isConnected
     } = useWebsocketServer(`/topic/messages/tv-data-update`);
+
+    const {
+        sendMessage
+    } = useWebsocketServer(`/topic/messages/isSaturday`);
 
     // ─── WebSocket refetch ────────────────────────────────────────────────────
     useEffect(() => {
@@ -318,14 +322,17 @@ function TVLineInput() {
                         <Form className="pb-8">
                             <div>
                                 <Box maxWidth={1280} mx="auto">
-                                    <BackButton onClick={() => navigate(`${isAdmin ? "/admin/tv-menu" : "/manager/tv-menu"}`)}/>
+                                    <BackButton
+                                        onClick={() => navigate(`${isAdmin ? "/admin/tv-menu" : "/manager/tv-menu"}`)}/>
                                     {/* Page title */}
                                     <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
                                         <Box>
-                                            <Typography variant="caption" color="white" letterSpacing={3} display="block">
+                                            <Typography variant="caption" color="white" letterSpacing={3}
+                                                        display="block">
                                                 PRODUCTION MANAGEMENT
                                             </Typography>
-                                            <Typography variant="h5" fontWeight={900} color="primary.main" letterSpacing={1}>
+                                            <Typography variant="h5" fontWeight={900} color="primary.main"
+                                                        letterSpacing={1}>
                                                 LINE {values.line}&nbsp;
                                                 <Box component="span" color="error.main">INPUT</Box>
                                             </Typography>
@@ -333,72 +340,75 @@ function TVLineInput() {
                                     </Stack>
 
                                     {/* SECTION 1 — Order Information */}
-                                    <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-                                        <SectionHeader icon={<AssignmentIcon />} title="Order Information" color="success.main" />
-                                            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                                            {orderFields.map(({ key, label, type }) => (
-                                                    <TextField
-                                                        fullWidth
-                                                        name={key}
-                                                        label={label}
-                                                        type={type}
-                                                        size="small"
-                                                        value={values[key]}
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        error={errors[key] && touched[key]}
-                                                        helperText={
-                                                            errors[key] && touched[key] ? errors[key] : null
-                                                        }
-                                                        inputProps={{ style: { fontWeight: 700 } }}
-                                                        sx={type === "number" ? noSpinSx : {}}
-                                                    />
+                                    <Paper elevation={2} sx={{p: 3, mb: 3, borderRadius: 2}}>
+                                        <SectionHeader icon={<AssignmentIcon/>} title="Order Information"
+                                                       color="success.main"/>
+                                        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                            {orderFields.map(({key, label, type}) => (
+                                                <TextField
+                                                    fullWidth
+                                                    name={key}
+                                                    key={key}
+                                                    label={label}
+                                                    type={type}
+                                                    size="small"
+                                                    value={values[key]}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={errors[key] && touched[key]}
+                                                    helperText={
+                                                        errors[key] && touched[key] ? errors[key] : null
+                                                    }
+                                                    inputProps={{style: {fontWeight: 700}}}
+                                                    sx={type === "number" ? noSpinSx : {}}
+                                                />
                                             ))}
 
                                             {/* Start Date */}
-                                                <DatePicker
-                                                    label="Start Date"
-                                                    value={values.startDate}
-                                                    onChange={(val) => setFieldValue("startDate", val)}
-                                                    slotProps={{
-                                                        textField: {
-                                                            fullWidth: true,
-                                                            size: "small",
-                                                            error: !!(errors.startDate && touched.startDate),
-                                                            helperText: errors.startDate && touched.startDate ? errors.startDate : null,
-                                                            inputProps: { style: { fontWeight: 700 } },
-                                                        },
-                                                    }}
-                                                />
+                                            <DatePicker
+                                                label="Start Date"
+                                                value={values.startDate}
+                                                onChange={(val) => setFieldValue("startDate", val)}
+                                                slotProps={{
+                                                    textField: {
+                                                        fullWidth: true,
+                                                        size: "small",
+                                                        error: !!(errors.startDate && touched.startDate),
+                                                        helperText: errors.startDate && touched.startDate ? errors.startDate : null,
+                                                        inputProps: {style: {fontWeight: 700}},
+                                                    },
+                                                }}
+                                            />
 
                                             {/* Finish Date */}
-                                                <DatePicker
-                                                    label="Finish Date"
-                                                    value={values.finishDate}
-                                                    onChange={(val) => setFieldValue("finishDate", val)}
-                                                    minDate={values.startDate ?? undefined}
-                                                    slotProps={{
-                                                        textField: {
-                                                            fullWidth: true,
-                                                            size: "small",
-                                                            error: !!(errors.finishDate && touched.finishDate),
-                                                            helperText: errors.finishDate && touched.finishDate ? errors.finishDate : null,
-                                                            inputProps: { style: { fontWeight: 700 } },
-                                                        },
-                                                    }}
-                                                />
-                                            </div>
+                                            <DatePicker
+                                                label="Finish Date"
+                                                value={values.finishDate}
+                                                onChange={(val) => setFieldValue("finishDate", val)}
+                                                minDate={values.startDate ?? undefined}
+                                                slotProps={{
+                                                    textField: {
+                                                        fullWidth: true,
+                                                        size: "small",
+                                                        error: !!(errors.finishDate && touched.finishDate),
+                                                        helperText: errors.finishDate && touched.finishDate ? errors.finishDate : null,
+                                                        inputProps: {style: {fontWeight: 700}},
+                                                    },
+                                                }}
+                                            />
+                                        </div>
                                     </Paper>
 
                                     {/* SECTION 2 — Target Settings */}
-                                    <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-                                        <SectionHeader icon={<AccessTimeIcon />} title="Target Settings" color="primary.main" />
+                                    <Paper elevation={2} sx={{p: 3, mb: 3, borderRadius: 2}}>
+                                        <SectionHeader icon={<AccessTimeIcon/>} title="Target Settings"
+                                                       color="primary.main"/>
                                         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             {/* Line & Worker */}
                                             {[
-                                                { key:"line",   label:"Line",   hint:"Line number"  },
-                                                { key:"worker", label:"Worker", hint:"Worker count" },
-                                            ].map(({ key, label, hint }) => (
+                                                {key: "line", label: "Line", hint: "Line number"},
+                                                {key: "worker", label: "Worker", hint: "Worker count"},
+                                            ].map(({key, label, hint}) => (
                                                 <Box key={key} display="flex" flexDirection="column" gap={0.5}>
                                                     <TextField
                                                         name={key}
@@ -411,18 +421,19 @@ function TVLineInput() {
                                                         helperText={
                                                             errors[key] && touched[key] ? errors[key] : null
                                                         }
-                                                        inputProps={{ style: { fontWeight: 700 } }}
+                                                        inputProps={{style: {fontWeight: 700}}}
                                                     />
-                                                    <Typography variant="caption" color="text.disabled">{hint}</Typography>
+                                                    <Typography variant="caption"
+                                                                color="text.disabled">{hint}</Typography>
                                                 </Box>
                                             ))}
 
                                             {/* Numeric target fields */}
                                             {[
-                                                { key:"wHour", label:"W.Hour", hint:"Working hours" },
-                                                { key:"hTarg", label:"H.Targ", hint:"Hourly target" },
-                                                { key:"input", label:"Input",  hint:"Input count"   },
-                                            ].map(({ key, label, hint }) => (
+                                                {key: "wHour", label: "W.Hour", hint: "Working hours"},
+                                                {key: "hTarg", label: "H.Targ", hint: "Hourly target"},
+                                                {key: "input", label: "Input", hint: "Input count"},
+                                            ].map(({key, label, hint}) => (
                                                 <Box key={key} display="flex" flexDirection="column" gap={0.5}>
                                                     <TextField
                                                         name={key}
@@ -436,63 +447,84 @@ function TVLineInput() {
                                                         helperText={
                                                             errors[key] && touched[key] ? errors[key] : null
                                                         }
-                                                        sx={{...noSpinSx }}
+                                                        sx={{...noSpinSx}}
                                                     />
-                                                    <Typography variant="caption" color="text.disabled">{hint}</Typography>
+                                                    <Typography variant="caption"
+                                                                color="text.disabled">{hint}</Typography>
                                                 </Box>
                                             ))}
                                             <div></div>
-                                            <CalcField label="Today Qty" value={todayQty} color="primary" />
-                                            <CalcField label="Now.Tar"   value={nowTarCalc} color="primary" />
-                                            <CalcField label="Dif Qty"   value={difQty} color={difQty < 0 ? "error" : "success"} />
+                                            <CalcField label="Today Qty" value={todayQty} color="primary"/>
+                                            <CalcField label="Now.Tar" value={nowTarCalc} color="primary"/>
+                                            <CalcField label="Dif Qty" value={difQty}
+                                                       color={difQty < 0 ? "error" : "success"}/>
                                         </div>
                                     </Paper>
 
                                     {/* SECTION 3 — Hourly Data */}
-                                    <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-                                        <SectionHeader icon={<TodayIcon />} title="Hourly Data" color="warning.dark" />
-                                        <Box sx={{ overflowX: "auto" }}>
-                                            <Table size="small" sx={{ minWidth: 1000 }}>
+                                    <Paper elevation={2} sx={{p: 3, mb: 3, borderRadius: 2}}>
+                                        <SectionHeader icon={<TodayIcon/>} title="Hourly Data" color="warning.dark"/>
+                                        <Box sx={{overflowX: "auto"}}>
+                                            <Table size="small" sx={{minWidth: 1000}}>
                                                 <TableHead>
                                                     <TableRow>
                                                         <TableCell align="center">Date</TableCell>
-                                                        <TableCell align="center" sx={{ backgroundColor: "#0d47a1 !important" }}>D.Targ</TableCell>
+                                                        <TableCell align="center"
+                                                                   sx={{backgroundColor: "#0d47a1 !important"}}>D.Targ</TableCell>
                                                         {HOUR_KEYS.map(k => (
-                                                            <TableCell key={k} align="center">{HOUR_LABELS[k]}</TableCell>
+                                                            <TableCell key={k}
+                                                                       align="center">{HOUR_LABELS[k]}</TableCell>
                                                         ))}
-                                                        <TableCell align="center" sx={{ backgroundColor: "#0d47a1 !important" }}>Total</TableCell>
-                                                        <TableCell align="center" sx={{ backgroundColor: "#0d47a1 !important" }}>Rate%</TableCell>
+                                                        <TableCell align="center"
+                                                                   sx={{backgroundColor: "#0d47a1 !important"}}>Total</TableCell>
+                                                        <TableCell align="center"
+                                                                   sx={{backgroundColor: "#0d47a1 !important"}}>Rate%</TableCell>
                                                     </TableRow>
                                                 </TableHead>
 
                                                 <TableBody>
                                                     {rows.map((row, ri) => {
-                                                        const { total, rateValue, rate } = calcRow(row, todayQty);
-                                                        const isToday  = !!row.isToday;
+                                                        const {total, rateValue, rate} = calcRow(row, todayQty);
+                                                        const isToday = !!row.isToday;
                                                         const isDefect = !!row.isDefect;
-                                                        const rowBg    = isToday ? "#e3f2fd" : isDefect ? "#fff8f8" : "#fafafa";
+                                                        const rowBg = isToday ? "#e3f2fd" : isDefect ? "#fff8f8" : "#fafafa";
 
                                                         return (
-                                                            <TableRow key={ri} sx={{ backgroundColor: rowBg, "&:hover": { filter: "brightness(0.97)" } }}>
+                                                            <TableRow key={ri} sx={{
+                                                                backgroundColor: rowBg,
+                                                                "&:hover": {filter: "brightness(0.97)"}
+                                                            }}>
 
                                                                 {/* Date */}
                                                                 <TableCell align="center">
-                                                                    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0.5}>
-                                                                        <Typography fontWeight={700} color={isToday ? "primary.main" : "text.secondary"} fontSize={14}>
+                                                                    <Stack direction="row" justifyContent="center"
+                                                                           alignItems="center" spacing={0.5}>
+                                                                        <Typography fontWeight={700}
+                                                                                    color={isToday ? "primary.main" : "text.secondary"}
+                                                                                    fontSize={14}>
                                                                             {row.date}
                                                                         </Typography>
-                                                                        {isToday && <Chip label="TODAY" size="small" color="primary" sx={{ fontSize: 10, height: 18 }} />}
+                                                                        {isToday && <Chip label="TODAY" size="small"
+                                                                                          color="primary" sx={{
+                                                                            fontSize: 10,
+                                                                            height: 18
+                                                                        }}/>}
                                                                     </Stack>
                                                                 </TableCell>
 
                                                                 {/* D.Targ */}
-                                                                <TableCell align="center" sx={{ backgroundColor: isToday ? "#bbdefb" : isDefect ? "#fff8f8" : "#f5f5f5" }}>
+                                                                <TableCell align="center"
+                                                                           sx={{backgroundColor: isToday ? "#bbdefb" : isDefect ? "#fff8f8" : "#f5f5f5"}}>
                                                                     {isDefect ? (
                                                                         <Typography color="text.disabled">—</Typography>
                                                                     ) : isToday ? (
-                                                                        <NumField value={row.dTarg} onChange={(v) => updateRow(ri, "dTarg", v)} highlight />
+                                                                        <NumField value={row.dTarg}
+                                                                                  onChange={(v) => updateRow(ri, "dTarg", v)}
+                                                                                  highlight/>
                                                                     ) : (
-                                                                        <Typography fontWeight={700} color="text.secondary" fontSize={14}>{row.dTarg || "—"}</Typography>
+                                                                        <Typography fontWeight={700}
+                                                                                    color="text.secondary"
+                                                                                    fontSize={14}>{row.dTarg || "—"}</Typography>
                                                                     )}
                                                                 </TableCell>
 
@@ -507,7 +539,8 @@ function TVLineInput() {
                                                                                 defect={isDefect}
                                                                             />
                                                                         ) : (
-                                                                            <Typography fontWeight={700} fontSize={14} color="text.primary">
+                                                                            <Typography fontWeight={700} fontSize={14}
+                                                                                        color="text.primary">
                                                                                 {row[k] || "—"}
                                                                             </Typography>
                                                                         )}
@@ -515,26 +548,41 @@ function TVLineInput() {
                                                                 ))}
 
                                                                 {/* Total */}
-                                                                <TableCell align="center" sx={{ backgroundColor: isToday ? "#bbdefb" : "#f5f5f5" }}>
-                                                                    <Typography fontWeight={900} color="primary.main" fontSize={15}>{total || "—"}</Typography>
+                                                                <TableCell align="center"
+                                                                           sx={{backgroundColor: isToday ? "#bbdefb" : "#f5f5f5"}}>
+                                                                    <Typography fontWeight={900} color="primary.main"
+                                                                                fontSize={15}>{total || "—"}</Typography>
                                                                 </TableCell>
 
                                                                 {/* Rate% */}
-                                                                <TableCell align="center" sx={{ position: "relative", overflow: "hidden", minWidth: 80, backgroundColor: isToday ? "#bbdefb" : "#f5f5f5" }}>
+                                                                <TableCell align="center" sx={{
+                                                                    position: "relative",
+                                                                    overflow: "hidden",
+                                                                    minWidth: 80,
+                                                                    backgroundColor: isToday ? "#bbdefb" : "#f5f5f5"
+                                                                }}>
                                                                     {!isDefect && (
                                                                         <Box sx={{
-                                                                            position: "absolute", top: 0, left: 0,
-                                                                            height: "100%", width: `${Math.min(rateValue, 100)}%`,
+                                                                            position: "absolute",
+                                                                            top: 0,
+                                                                            left: 0,
+                                                                            height: "100%",
+                                                                            width: `${Math.min(rateValue, 100)}%`,
                                                                             backgroundColor: getRateHex(rateValue),
-                                                                            opacity: 0.15, transition: "width 0.4s ease",
-                                                                        }} />
+                                                                            opacity: 0.15,
+                                                                            transition: "width 0.4s ease",
+                                                                        }}/>
                                                                     )}
                                                                     <Chip
                                                                         label={rate}
                                                                         size="small"
                                                                         color={getRateColor(rateValue)}
                                                                         variant={isDefect ? "outlined" : "filled"}
-                                                                        sx={{ fontWeight: 900, fontSize: 13, position: "relative" }}
+                                                                        sx={{
+                                                                            fontWeight: 900,
+                                                                            fontSize: 13,
+                                                                            position: "relative"
+                                                                        }}
                                                                     />
                                                                 </TableCell>
                                                             </TableRow>
@@ -550,7 +598,7 @@ function TVLineInput() {
                                         <Alert
                                             severity="success"
                                             onClose={() => setShowSuccess(false)}
-                                            sx={{ mb: 2, fontWeight: 600 }}
+                                            sx={{mb: 2, fontWeight: 600}}
                                         >
                                             Data saved successfully!
                                         </Alert>
@@ -560,35 +608,47 @@ function TVLineInput() {
                                         <Alert
                                             severity="error"
                                             onClose={() => setSaveError(null)}
-                                            sx={{ mb: 2, fontWeight: 600 }}
+                                            sx={{mb: 2, fontWeight: 600}}
                                         >
                                             {saveError}
                                         </Alert>
                                     </Collapse>
+                                    <div className="flex justify-between items-center">
+                                        <label  className="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" className="sr-only peer" value="" checked={isSaturday} onChange={(e) => {
+                                                sendMessage({isUpdate: e.target.checked})
+                                                localStorage.setItem("isSaturday", e.target.checked);
+                                            }}/>
+                                            <div
+                                                className="group peer bg-white rounded-full duration-300 w-16 h-8 ring-2 ring-red-500 after:duration-300 after:bg-red-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-6 after:w-6 after:top-1 after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-8 peer-hover:after:scale-95"
+                                            ></div>
+                                        </label>
+                                        {/* Actions */}
+                                        <Stack direction="row" justifyContent="flex-end" spacing={2}>
 
-                                    {/* Actions */}
-                                    <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                                        <Button
-                                            variant="outlined"
-                                            color="primary"
-                                            startIcon={<AddIcon />}
-                                            sx={{ fontWeight: 700, color: "white", borderColor: "white" }}
-                                            onClick={handleCreateTvData}
-                                        >
-                                            Create new row
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            startIcon={<SaveIcon />}
-                                            type="submit"
-                                            sx={{ fontWeight: 700 }}
-                                        >
-                                            Save Data
-                                        </Button>
-                                    </Stack>
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                startIcon={<AddIcon/>}
+                                                sx={{fontWeight: 700, color: "white", borderColor: "white"}}
+                                                onClick={handleCreateTvData}
+                                            >
+                                                Create new row
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                startIcon={<SaveIcon/>}
+                                                type="submit"
+                                                sx={{fontWeight: 700}}
+                                            >
+                                                Save Data
+                                            </Button>
+                                        </Stack>
+                                    </div>
 
                                 </Box>
+
                             </div>
                         </Form>
                     );

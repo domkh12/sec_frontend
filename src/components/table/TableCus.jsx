@@ -4,15 +4,13 @@ import {
     IconButton,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import {Edit, Visibility, Delete, Search, FilterListOff, KeyboardArrowUp} from "@mui/icons-material";
+import {Search, FilterListOff} from "@mui/icons-material";
 import DataNotFound from "../error/DataNotFound.jsx";
-import {memo, useMemo, useCallback, useState} from "react";
+import {memo, useMemo, useCallback} from "react";
 import SelectFilter from "../select/SelectFilter.jsx";
-import KeyOffIcon from '@mui/icons-material/KeyOff';
-import KeyIcon from '@mui/icons-material/Key';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import RowTableComponent from "./RowTableComponent.jsx";
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
+import {green} from "@mui/material/colors";
 
 // ── Stable style objects (defined OUTSIDE component — never recreated) ──────
 const cellSx = {
@@ -61,36 +59,6 @@ const wrapperStyle = {
     border: "1px solid rgba(255,255,255,0.18)",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 32px rgba(0,0,0,0.3)",
 };
-const actionBoxSx = { display: "flex", justifyContent: "center", gap: 0.75 };
-const statusBoxSx = { display: "flex", justifyContent: "center" };
-
-const viewBtnSx = {
-    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
-    background: "rgba(56,189,248,0.25)", border: "1px solid rgba(56,189,248,0.6)", color: "#7dd3fc",
-    "&:hover": { background: "rgba(56,189,248,0.42)", boxShadow: "0 0 14px rgba(56,189,248,0.5)", transform: "translateY(-1px)" },
-    transition: "all 0.15s ease",
-};
-const editBtnSx = {
-    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
-    background: "rgba(96,165,250,0.25)", border: "1px solid rgba(96,165,250,0.6)", color: "#93c5fd",
-    "&:hover": { background: "rgba(96,165,250,0.42)", boxShadow: "0 0 14px rgba(96,165,250,0.5)", transform: "translateY(-1px)" },
-    transition: "all 0.15s ease",
-};
-const deleteBtnSx = {
-    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
-    background: "rgba(239,68,68,0.22)", border: "1px solid rgba(239,68,68,0.55)", color: "#fca5a5",
-    "&:hover": { background: "rgba(239,68,68,0.4)", boxShadow: "0 0 14px rgba(239,68,68,0.45)", transform: "translateY(-1px)" },
-    transition: "all 0.15s ease",
-};
-
-const STATUS_STYLES = {
-    ACTIVE:   { background: "rgba(34,197,94,0.15)",   border: "1px solid rgba(34,197,94,0.45)",   color: "#86efac" },
-    INACTIVE: { background: "rgba(148,163,184,0.15)", border: "1px solid rgba(148,163,184,0.35)", color: "#cbd5e1" },
-    BLOCKED:  { background: "rgba(239,68,68,0.15)",   border: "1px solid rgba(239,68,68,0.45)",   color: "#fca5a5" },
-};
-const STATUS_DEFAULT = { background: "rgba(148,163,184,0.15)", border: "1px solid rgba(148,163,184,0.35)", color: "#cbd5e1" };
-
-const baseStatusSx = { px: 1.5, py: 0.3, borderRadius: "20px", fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.04em" };
 const searchTextField = {
     width: "100%",
     "& .MuiInputBase-input": {
@@ -160,27 +128,6 @@ const clearAllBtnSx = {
     display: "flex",
     alignItems: "center",
     gap: 0.5,
-};
-
-const blockBtnSx = {
-    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
-    background: "rgba(251,191,36,0.22)", border: "1px solid rgba(251,191,36,0.55)", color: "#fbbf24",
-    "&:hover": { background: "rgba(251,191,36,0.4)", boxShadow: "0 0 14px rgba(251,191,36,0.45)", transform: "translateY(-1px)" },
-    transition: "all 0.15s ease",
-};
-
-const fileBtnSx = {
-    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
-    background: "rgba(16,185,129,0.22)", border: "1px solid rgba(16,185,129,0.55)", color: "#10b981",
-    "&:hover": { background: "rgba(16,185,129,0.4)", boxShadow: "0 0 14px rgba(16,185,129,0.45)", transform: "translateY(-1px)" },
-    transition: "all 0.15s ease",
-};
-
-const unblockBtnSx = {
-    minWidth: 0, width: 30, height: 30, padding: 0, borderRadius: "7px",
-    background: "rgba(34,197,94,0.22)", border: "1px solid rgba(34,197,94,0.55)", color: "#86efac",
-    "&:hover": { background: "rgba(34,197,94,0.4)", boxShadow: "0 0 14px rgba(34,197,94,0.45)", transform: "translateY(-1px)" },
-    transition: "all 0.15s ease",
 };
 
 // Skeleton styles
@@ -425,6 +372,16 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                                 }
                             }}
                         />
+                        {
+                            filterConfig?.map((filter) => (
+                                filter.id === "excel" && (
+                                        <Button key={filter.id} onClick={filter.onClick} variant="contained" sx={{bgcolor: green[600], minWidth: 100}} startIcon={<PiMicrosoftExcelLogoFill/>}>
+                                            Excel
+                                        </Button>
+                                    )
+                            ))
+                        }
+
                     </div>
 
                     {/* ── Active filter chips ── */}

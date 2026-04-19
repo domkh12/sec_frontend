@@ -3,14 +3,16 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    useDeleteBuyerMutation, useGetBuyerQuery, useGetBuyerStatsQuery,
+    useUpdateWorkOrderMutation
+} from "../../redux/feature/workOrder/workOrderApiSlice.js";
+import {
+    useDeleteBuyerMutation,
+    useGetBuyerStatsQuery
 } from "../../redux/feature/buyer/buyerApiSlice.js";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {
     setAlertBuyer,
-    setBuyerDataForUpdate,
-    setFilterBuyer, setIsOpenDeleteBuyerDialog,
-    setIsOpenDialogAddOrEditBuyer, setIsOpenSnackbarBuyer
+    setFilterBuyer, setIsOpenDeleteBuyerDialog, setIsOpenSnackbarBuyer
 } from "../../redux/feature/buyer/buyerSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
@@ -25,40 +27,34 @@ import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
+import {useGetOperationLookupQuery} from "../../redux/feature/operation/operationApiSlice.js";
 import {
-    useCreateWorkOrderMutation, useGetWorkOrderQuery,
-    useUpdateWorkOrderMutation
-} from "../../redux/feature/workOrder/workOrderApiSlice.js";
+    useCreateProcessingTimeMutation,
+    useGetProcessingTimeQuery
+} from "../../redux/feature/processingTime/processingTimeApiSlice.js";
 import {
-    setAlertWorkOrder, setFilterWorkOrder, setIsOpenDeleteWorkOrderDialog,
-    setIsOpenDialogAddOrEditWorkOrder,
-    setIsOpenSnackbarWorkOrder, setWorkOrderDataForUpdate
-} from "../../redux/feature/workOrder/workOrderSlice.js";
-import dayjs from "dayjs";
-import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
-import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
-import {useGetProcessingTimeLookupQuery} from "../../redux/feature/processingTime/processingTimeApiSlice.js";
-import useAuth from "../../hook/useAuth.jsx";
+    setAlertProcessingTime, setFilterProcessingTime,
+    setIsOpenDeleteProcessingTimeDialog,
+    setIsOpenDialogAddOrEditProcessingTime,
+    setIsOpenSnackbarProcessingTime, setProcessingTimeDataForUpdate
+} from "../../redux/feature/processingTime/processingTimeSlice.js";
 
-function WorkOrderList() {
+function ProcessingTimeList() {
+    const {t} = useTranslation();
     const [id, setId] = useState(null);
-
-    // -- Hook  ----------------------------------------------------------------------------------------------------
-    const {isAdmin, isManager} = useAuth();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {t} = useTranslation();
 
     // -- Selector -------------------------------------------------------------------------------------------------
-    const buyerDataForUpdate    = useSelector((state) => state.workOrder.workOrderDataForUpdate);
-    const isOpen                = useSelector((state) => state.workOrder.isOpenDialogAddOrEditWorkOrder);
-    const isOpenSnackbar        = useSelector((state) => state.workOrder.isOpenSnackbarWorkOrder);
-    const alertBuyer            = useSelector((state) => state.workOrder.alertWorkOrder);
-    const isOpenDeleteDialog    = useSelector((state) => state.workOrder.isOpenDeleteWorkOrderDialog);
-    const filterValue           = useSelector((state) => state.workOrder.filter);
+    const buyerDataForUpdate    = useSelector((state) => state.processingTime.processingTimeDataForUpdate);
+    const isOpen                = useSelector((state) => state.processingTime.isOpenDialogAddOrEditProcessingTime);
+    const isOpenSnackbar        = useSelector((state) => state.processingTime.isOpenSnackbarProcessingTime);
+    const alertBuyer            = useSelector((state) => state.processingTime.alertProcessingTime);
+    const isOpenDeleteDialog    = useSelector((state) => state.processingTime.isOpenDeleteProcessingTimeDialog);
+    const filterValue           = useSelector((state) => state.processingTime.filter);
 
     // -- Mutation -------------------------------------------------------------------------------------------------
-    const[createWorkOrder, {isLoading: isLoadingCreateBuyer}] = useCreateWorkOrderMutation();
+    const[createProcessingTime, {isLoading: isLoadingCreateProcessingTime}] = useCreateProcessingTimeMutation();
     const [updateWorkOrder, {isLoading: isLoadingUpdateBuyer}] = useUpdateWorkOrderMutation();
     const [deleteBuyer, {isLoading: isLoadingDeleteBuyer}] = useDeleteBuyerMutation();
     // -- Debounce -------------------------------------------------------------------------------------------------
@@ -66,36 +62,24 @@ function WorkOrderList() {
 
     // -- Query ----------------------------------------------------------------------------------------------------
     const {data: buyerStats} = useGetBuyerStatsQuery();
-    const {data: buyerData} = useGetBuyerQuery({
-        pageNo: 1,
-        pageSize: 1000
-    });
-    const {data: colorData} = useGetColorQuery({
-        pageNo: 1,
-        pageSize: 1000
-    });
-    const {data: sizeData} = useGetSizeQuery({
-        pageNo: 1,
-        pageSize: 1000
-    })
-    const {data: workOrderData, isLoading, isSuccess, isFetching} = useGetWorkOrderQuery({
+    const {data: operationData} = useGetOperationLookupQuery();
+
+    const {data: processingTimeData, isLoading, isSuccess, isFetching} = useGetProcessingTimeQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
         search: debounceSearch
     });
 
-
     // -- Handler --------------------------------------------------------------------------------------------------
-
     const handleChangePage = (event, newPage) => {
-        dispatch(setFilterWorkOrder({
+        dispatch(setFilterProcessingTime({
             ...filterValue,
             pageNo: newPage + 1,
         }));
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setFilterWorkOrder({
+        dispatch(setFilterProcessingTime({
             ...filterValue,
             pageSize: event.target.value,
             pageNo: 1,
@@ -103,47 +87,55 @@ function WorkOrderList() {
     };
 
     const handleClose = () => {
-        dispatch(setIsOpenDialogAddOrEditWorkOrder(false));
-        dispatch(setWorkOrderDataForUpdate(null));
+        dispatch(setIsOpenDialogAddOrEditProcessingTime(false));
+        dispatch(setProcessingTimeDataForUpdate(null));
     }
 
     const handleSubmit = async (values, {resetForm}) => {
         try {
-            const startDate = dayjs(values.startDate).format("YYYY-MM-DD");
-            const endDate = dayjs(values.endDate).format("YYYY-MM-DD");
+            let operation = []
+            for (let i = 0; i < values.process.length; i++) {
+                operation.push({
+                    operationId: values.process[i].id,
+                    orderingNumber: values.process[i].index,
+                })
+            }
 
             if (buyerDataForUpdate) {
                 await updateWorkOrder({
                     id: buyerDataForUpdate.id,
                     name: values.name,
                 }).unwrap();
-                dispatch(setAlertBuyer({type: "success", message: "Update successfully"}));
-                dispatch(setWorkOrderDataForUpdate(null));
+                dispatch(setAlertProcessingTime({type: "success", message: t('updateSuccess')}));
+                dispatch(setProcessingTimeDataForUpdate(null));
             }else {
-                await createWorkOrder({
-                    mo: values.mo,
-                    qty: values.qty,
+                await createProcessingTime({
                     style: values.style,
-                    startDate: startDate,
-                    endDate: endDate,
-                    buyerId: values.buyer,
-                    sizeIds: values.size,
-                    colorId: values.color,
+                    operation: operation
                 }).unwrap();
-                dispatch(setAlertWorkOrder({type: "success", message: "Create successfully"}));
+                dispatch(setAlertProcessingTime({type: "success", message: t('createSuccess')}));
             }
-            dispatch(setIsOpenSnackbarWorkOrder(true));
-            dispatch(setIsOpenDialogAddOrEditWorkOrder(false));
+            dispatch(setIsOpenSnackbarProcessingTime(true));
+            dispatch(setIsOpenDialogAddOrEditProcessingTime(false));
             resetForm();
         } catch (error) {
-            dispatch(setAlertBuyer({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarBuyer(true));
+            dispatch(setAlertProcessingTime({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarProcessingTime(true));
         }
     };
 
     const handleEdit = (row) => {
-        dispatch(setIsOpenDialogAddOrEditBuyer(true));
-        dispatch(setBuyerDataForUpdate(row));
+        console.log(row);
+        dispatch(setIsOpenDialogAddOrEditProcessingTime(true));
+        dispatch(setProcessingTimeDataForUpdate({
+            id: row.id,
+            style: row.style,
+            process: row.operation.map((item) => ({
+                id: item.operationId,
+                index: item.orderingNumber,
+                _key: item.id,
+            }))
+        }));
     };
 
     const handleDeleteOpen = (row) => {
@@ -166,6 +158,7 @@ function WorkOrderList() {
     }
 
     const handleDelete = async () => {
+        console.log(id);
         try {
             await deleteBuyer({id: id}).unwrap();
             dispatch(setIsOpenDeleteBuyerDialog(false));
@@ -185,67 +178,34 @@ function WorkOrderList() {
     }
 
     const validationSchema = Yup.object().shape({
-        // name: Yup.string().required(t("validation.required"))
+        style: Yup.string().required(t("validation.required")),
+        process: Yup.array().min(1, "Please add at least one step").required(t("validation.required"))
     });
 
     const fields = [
-        { name: "mo",     label: "table.mo",     type: "text" },
-        { name: "style",     label: "style",     type: "text" },
         {
-            name: "size",
-            label: "table.size",
-            type: "autocomplete-checkbox",
-            fetchOptions: async () => {
-                return Object.values(sizeData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.size,
-                }));
-            },
+            name: "style",
+            label: "table.style",
+            type: "text",
         },
         {
-            name: "color",
-            label: "table.color",
-            type: "autocomplete",
-            fetchOptions: async () => {
-                return Object.values(colorData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.color,
-                }));
-            },
-        },
-        { name: "qty",     label: "table.qty",     type: "number" },
-        { name: "startDate",     label: "table.startDate",     type: "date" },
-        { name: "endDate",     label: "table.endDate",     type: "date" },
-        { name: "buyer",
-          label: "table.buyer",
-          type: "autocomplete",
-            fetchOptions: async () => {
-                return Object.values(buyerData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.name,
-                }));
-            },
-        },
-
+            name: "process",
+            label: "process",
+            type: "steps",
+            fullWidth: true,
+            options: operationData?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            })) || [],
+        }
     ];
 
     const initialValues ={
-        mo: "",
-        qty: "",
         style: "",
-        startDate: null,
-        endDate: null,
-        buyer: "",
-        colors: [],
+        process: []
     }
 
     const columns = [
-        {
-            id: "mo",
-            label: t("table.mo"),
-            minWidth: 50,
-            align: "left",
-        },
         {
             id: "style",
             label: t("table.style"),
@@ -253,32 +213,15 @@ function WorkOrderList() {
             align: "left",
         },
         {
-            id: "buyer",
-            label: t("table.buyer"),
+            id: "operation",
+            label: t("process"),
             minWidth: 130,
             align: "left",
+            arrayKey: "operationName"
         },
         {
-            id: "qty",
-            label: t("table.qty"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "startDate",
-            label: t("table.startDate"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "endDate",
-            label: t("table.endDate"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "status",
-            label: t("table.status"),
+            id: "createdAt",
+            label: t("table.createdAt"),
             minWidth: 130,
             align: "left",
         },
@@ -296,47 +239,39 @@ function WorkOrderList() {
 
     if (isSuccess) content = (
         <div className="pb-10">
-            <Seo title="Work Order List"/>
+            <Seo title="Processing Time List"/>
             <div className="card-glass">
                 <div className="flex justify-between items-center">
-                    <BackButton onClick={() => navigate(`${isAdmin ? "/admin" : isManager ? "/manager" : "/"}`)}/>
-                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditWorkOrder(true))}/>
+                    <BackButton onClick={() => navigate("/admin")}/>
+                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProcessingTime(true))}/>
                 </div>
                 <div>
                     <StatCards cards={[
                         {
-                            label: t("totalMO"),
+                            label: t("stats.totalBuyers"),
                             value: buyerStats?.totalBuyer || 0,
                             color: "blue",
                             icon: <ApartmentIcon/>
                         },
                         {
-                            label: t("totalWorkQty"),
-                            // Sums all workers from the current data list
-                            value: buyerStats?.totalPcs || 0,
-                            color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
-                        },
-                        {
-                            label: t("totalOutputQty"),
-                            // Sums all workers from the current data list
-                            value: buyerStats?.totalPcs || 0,
-                            color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
-                        },
-                        {
-                            label: t("activeWorkOrder"),
+                            label: t("stats.activeOrder"),
                             // Sums all lines from the current data list
                             value: buyerStats?.activeOrder || 0,
                             color: "violet",
                             icon: <PrecisionManufacturingIcon fontSize="small"/>
                         },
-
+                        {
+                            label: t("stats.totalPcs"),
+                            // Sums all workers from the current data list
+                            value: buyerStats?.totalPcs || 0,
+                            color: "emerald",
+                            icon: <PeopleAltRoundedIcon fontSize="small"/>
+                        },
                     ]} />
                 </div>
                 <TableCus
                     columns={columns}
-                    data={workOrderData}
+                    data={processingTimeData}
                     handleChangePage={handleChangePage}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                     onEdit={handleEdit}
@@ -345,7 +280,7 @@ function WorkOrderList() {
                     filterValue={filterValue}
                     isFetching={isFetching}
                     handleFilterChange={handleFilterChange}
-                    searchPlaceholderText={`${t('MO')}`}
+                    searchPlaceholderText={`${t('processingTime')}`}
                     onClearAllFilters={handleClearAllFilters}
                 />
             </div>
@@ -353,25 +288,25 @@ function WorkOrderList() {
                 isOpen && (
                     <DialogAddEditCus
                         fields={fields}
-                        title={buyerDataForUpdate ? "Update Work order" : "Create Work order"}
+                        title={buyerDataForUpdate ? "Update Processing Time" : "Create Processing Time"}
                         isOpen={isOpen}
                         onClose={handleClose}
                         isUpdate={!!buyerDataForUpdate}
                         validationSchema={validationSchema}
                         handleSubmit={handleSubmit}
                         initialValues={buyerDataForUpdate ? buyerDataForUpdate : initialValues}
-                        isSubmitting={isLoadingCreateBuyer || isLoadingUpdateBuyer}
+                        isSubmitting={isLoadingCreateProcessingTime || isLoadingUpdateBuyer}
                     />
                 )
             }
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
-                onClose={() => dispatch(setIsOpenSnackbarWorkOrder(false))}
+                onClose={() => dispatch(setIsOpenSnackbarProcessingTime(false))}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert
-                    onClose={() => dispatch(setIsOpenSnackbarWorkOrder(false))}
+                    onClose={() => dispatch(setIsOpenSnackbarProcessingTime(false))}
                     severity={alertBuyer.type}
                     variant="filled"
                     sx={{ width: '100%' }}
@@ -379,11 +314,11 @@ function WorkOrderList() {
                     {alertBuyer.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteWorkOrderDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteBuyer}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteProcessingTimeDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteBuyer}/>
         </div>
     )
 
     return content;
 }
 
-export default WorkOrderList;
+export default ProcessingTimeList;

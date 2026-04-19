@@ -9,9 +9,14 @@ import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
-import WorkOrderList from "./pages/workOrder/WorkOrderList.jsx";
+import QrScan from "./pages/qrScan/QrScan.jsx";
+import QrGenerator from "./pages/qrGenerator/QrGenerator.jsx";
+
 
 // Lazy load everything else
+const WorkOrderList = lazy(() => import("./pages/workOrder/WorkOrderList.jsx"));
+const DefectTypeList = lazy(() => import("./pages/defectType/DefectTypeList.jsx"));
+const ProcessingTimeList = lazy(() => import("./pages/processingTime/ProcessingTimeList.jsx"));
 const MaterialList = lazy(() => import("./pages/material/MaterialList.jsx"));
 const WipSewingOutput = lazy(() => import("./pages/workOrder/WipSewingOutput.jsx"));
 const WorkOrderStatusMenu = lazy(() => import("./pages/workOrder/WorkOrderStatusMenu"));
@@ -65,6 +70,17 @@ function App() {
                               </Route>
                               <Route path="products" element={<ProductList/>}/>
                               <Route path="profile" element={<Profile/>}/>
+                              <Route path="tv">
+                                  <Route index element={<MenuTvViewer/>}/>
+                                  <Route path=":name" element={<TvDashboardDisplay/>}/>
+                              </Route>
+                              <Route path="production-status">
+                                  <Route index element={<WorkOrderStatusMenu />}/>
+                                  <Route path="sewing-output" element={<WipSewingOutput />}/>
+                              </Route>
+                              <Route path="work-orders" element={<WorkOrderList/>}/>
+                              <Route path="qr-scan" element={<QrScan/>} />
+                              <Route path="qr-generator" element={<QrGenerator/>} />
                           </Route>
                       </Route>
 
@@ -99,6 +115,9 @@ function App() {
                               </Route>
                               <Route path="materials" element={<MaterialList/>}/>
                               <Route path="work-orders" element={<WorkOrderList/>}/>
+                              <Route path="defect-types" element={<DefectTypeList/>} />
+                              <Route path="qr-scan" element={<QrScan/>} />
+                              <Route path="qr-generator" element={<QrGenerator/>} />
                           </Route>
                       </Route>
 

@@ -81,7 +81,14 @@ export const apiSlice = createApi({
     "MaterialStockIn",
     "MaterialStockOut",
     "MaterialStats",
-    "WorkOrder"
+    "WorkOrder",
+    "DefectType",
+    "Operation",
+    "ProcessingTime",
+    "ProcessingTimeLookup",
+    "WorkOrderLookup",
+    "SizeLookup",
+    "StyleByMo"
   ],
   endpoints: (builder) => ({}),
 });

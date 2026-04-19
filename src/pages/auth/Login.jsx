@@ -116,7 +116,9 @@ function Login() {
 
         } catch (error) {
             console.log(error);
-            if (error.status === "FETCH_ERROR") {
+            if (error.status === "FETCH_ERROR"){
+                setErrorMsg("Server is not responding!");
+            }else if (error.status === 500) {
                 setErrorMsg("Something went wrong!");
             } else if (error.status === 400) {
                 setErrorMsg("Email or Password is incorrect.");

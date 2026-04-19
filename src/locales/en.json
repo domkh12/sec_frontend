@@ -135,7 +135,8 @@
     "qty": "Qty",
     "style": "Style",
     "startDate": "Start Date",
-    "endDate": "End Date"
+    "endDate": "End Date",
+    "defectType": "Defect Type"
   },
   "factory": {
     "structure": "Factory Structure"
@@ -171,5 +172,14 @@
     "transaction": "PO Transaction"
   },
   "style": "Style",
-  "other": "Other"
+  "other": "Other",
+  "addNew": "Add New",
+  "updateSuccess": "Update successfully",
+  "createSuccess": "Create successfully",
+  "deleteSuccess": "Delete successfully",
+  "addStep": "Add Step",
+  "process": "Process",
+  "noStepYet": "Didn't have step yet, please click",
+  "remove": "Remove",
+  "step": "Step"
 }

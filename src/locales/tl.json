@@ -135,7 +135,8 @@
     "qty": "Dami",
     "style": "Style",
     "startDate": "Petsa ng Simula",
-    "endDate": "Petsa ng Pagtatapos"
+    "endDate": "Petsa ng Pagtatapos",
+    "defectType": "Uri ng Depekto"
   },
   "factory": {
     "structure": "Istraktura ng Pabrika"
@@ -171,5 +172,14 @@
   "po": {
     "transaction": "Transaksyon ng PO"
   },
-  "other": "Iba pa"
+  "other": "Iba pa",
+  "updateSuccess": "Matagumpay na na-update",
+  "createSuccess": "Matagumpay na nagawa",
+  "deleteSuccess": "Matagumpay na natanggal",
+  "addNew": "Magdagdag ng Bago",
+  "addStep": "Magdagdag ng Hakbang",
+  "process": "Proseso",
+  "noStepYet": "Wala pang hakbang, mangyaring i-click",
+  "remove": "Alisin",
+  "step": "Hakbang"
 }

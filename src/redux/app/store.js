@@ -15,6 +15,9 @@ import sizeReducer from "../feature/size/sizeSlice.js"
 import colorReducer from "../feature/color/colorSlice.js"
 import materialReducer from "../feature/material/materialSlice.js"
 import workOrderReducer from "../feature/workOrder/workOrderSlice.js"
+import defectTypeReducer from "../feature/defect-type/defectTypeSlice.js"
+import operationReducer from "../feature/operation/operationSlice.js"
+import processingTimeReducer from "../feature/processingTime/processingTimeSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -32,7 +35,10 @@ const store = configureStore({
     size: sizeReducer,
     color: colorReducer,
     material: materialReducer,
-    workOrder: workOrderReducer
+    workOrder: workOrderReducer,
+    defectType: defectTypeReducer,
+    operation: operationReducer,
+    processingTime: processingTimeReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

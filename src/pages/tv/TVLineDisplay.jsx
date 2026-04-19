@@ -9,7 +9,16 @@ import NumberFlow from "@number-flow/react";
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const hourKeys = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
 
+
 function TVLineDisplay() {
+    const ALL_HOUR_KEYS = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
+    const ALL_HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+
+    const isSaturday = localStorage.getItem("isSaturday") === "true";
+
+    const hourKeys = isSaturday ? ALL_HOUR_KEYS.slice(0, 8) : ALL_HOUR_KEYS;
+    const hourLabels = isSaturday ? ALL_HOUR_LABELS.slice(0, 8) : ALL_HOUR_LABELS;
+
     const [currentTime, setCurrentTime] = useState("");
     const [showControls, setShowControls] = useState(false);
     const [zoom, setZoom] = useState(1);
@@ -29,6 +38,16 @@ function TVLineDisplay() {
         isConnected
     } = useWebsocketServer(`/topic/messages/tv-data-update`);
 
+    const {
+        messages: messageIsSaturday,
+    } = useWebsocketServer(`/topic/messages/isSaturday`);
+
+    useEffect(() => {
+        if (messageIsSaturday.isUpdate !== undefined){
+            localStorage.setItem("isSaturday", messageIsSaturday.isUpdate);
+        }
+    }, [messageIsSaturday]);
+
     // ─── Build hourly rows from dailyRecords (last 3 days) + defect row ───────
     const hourRowsRaw = useMemo(() => {
         const records = data?.dailyRecords ?? [];
@@ -46,32 +65,55 @@ function TVLineDisplay() {
 
         const todayDate = sorted[0]?.date ?? null;
 
-        const dataRows = sorted.map((record) => ({
-            date:    record.date,
-            dTarg:   record.dTarg ?? null,
-            h8:      record.h8    ?? null,
-            h9:      record.h9    ?? null,
-            h10:     record.h10   ?? null,
-            h11:     record.h11   ?? null,
-            h13:     record.h13   ?? null,
-            h14:     record.h14   ?? null,
-            h15:     record.h15   ?? null,
-            h16:     record.h16   ?? null,
-            h17:     record.h17   ?? null,
-            h18:     record.h18   ?? null,
-            isToday: record.isToday ?? record.date === todayDate,
-        }));
+        const dataRows = sorted.map((record) => {
+            const row = {
+                date: record.date,
+                dTarg: record.dTarg ?? null,
+                isToday: record.isToday ?? record.date === todayDate,
+            };
+
+            hourKeys.forEach((k) => {
+                row[k] = record[k] ?? null;
+            });
+
+            return row;
+        });
+
+        // const dataRows = sorted.map((record) => ({
+        //     date:    record.date,
+        //     dTarg:   record.dTarg ?? null,
+        //     h8:      record.h8    ?? null,
+        //     h9:      record.h9    ?? null,
+        //     h10:     record.h10   ?? null,
+        //     h11:     record.h11   ?? null,
+        //     h13:     record.h13   ?? null,
+        //     h14:     record.h14   ?? null,
+        //     h15:     record.h15   ?? null,
+        //     h16:     record.h16   ?? null,
+        //     h17:     record.h17   ?? null,
+        //     h18:     record.h18   ?? null,
+        //     isToday: record.isToday ?? record.date === todayDate,
+        // }));
 
         const defects = data?.defects ?? {};
+        // const defectRow = {
+        //     date: "Defect", dTarg: null,
+        //     h8:  defects.h8  ?? null, h9:  defects.h9  ?? null,
+        //     h10: defects.h10 ?? null, h11: defects.h11 ?? null,
+        //     h13: defects.h13 ?? null, h14: defects.h14 ?? null,
+        //     h15: defects.h15 ?? null, h16: defects.h16 ?? null,
+        //     h17: defects.h17 ?? null, h18: defects.h18 ?? null,
+        //     isDefect: true,
+        // };
         const defectRow = {
-            date: "Defect", dTarg: null,
-            h8:  defects.h8  ?? null, h9:  defects.h9  ?? null,
-            h10: defects.h10 ?? null, h11: defects.h11 ?? null,
-            h13: defects.h13 ?? null, h14: defects.h14 ?? null,
-            h15: defects.h15 ?? null, h16: defects.h16 ?? null,
-            h17: defects.h17 ?? null, h18: defects.h18 ?? null,
+            date: "Defect",
+            dTarg: null,
             isDefect: true,
         };
+
+        hourKeys.forEach((k) => {
+            defectRow[k] = defects[k] ?? null;
+        });
 
         return [...dataRows, defectRow];
     }, [data]);
@@ -118,7 +160,7 @@ function TVLineDisplay() {
 
     // ─── WebSocket refetch ────────────────────────────────────────────────────
     useEffect(() => {
-        if (messages.isUpdate === true) {
+        if (messages.isUpdate === true || messageIsSaturday.isUpdate !== undefined) {
             refetch();
         }
     }, [messages]);
@@ -191,20 +233,30 @@ function TVLineDisplay() {
     };
 
     const columnsHour = [
-        { id: "date",  label: "Date"  },
-        { id: "h8",    label: "8:00"  },
-        { id: "h9",    label: "9:00"  },
-        { id: "h10",   label: "10:00" },
-        { id: "h11",   label: "11:00" },
-        { id: "h13",   label: "13:00" },
-        { id: "h14",   label: "14:00" },
-        { id: "h15",   label: "15:00" },
-        { id: "h16",   label: "16:00" },
-        { id: "h17",   label: "17:00" },
-        { id: "h18",   label: "18:00" },
+        { id: "date", label: "Date" },
+        ...hourKeys.map((key, i) => ({
+            id: key,
+            label: hourLabels[i],
+        })),
         { id: "total", label: "Total" },
         { id: "rate",  label: "Rate%" },
     ];
+
+    // const columnsHour = [
+    //     { id: "date",  label: "Date"  },
+    //     { id: "h8",    label: "8:00"  },
+    //     { id: "h9",    label: "9:00"  },
+    //     { id: "h10",   label: "10:00" },
+    //     { id: "h11",   label: "11:00" },
+    //     { id: "h13",   label: "13:00" },
+    //     { id: "h14",   label: "14:00" },
+    //     { id: "h15",   label: "15:00" },
+    //     { id: "h16",   label: "16:00" },
+    //     { id: "h17",   label: "17:00" },
+    //     { id: "h18",   label: "18:00" },
+    //     { id: "total", label: "Total" },
+    //     { id: "rate",  label: "Rate%" },
+    // ];
 
     const getRateColor = (rate) => {
         if (rate >= 90) return "#1565c0";

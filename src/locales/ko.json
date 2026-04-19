@@ -135,7 +135,8 @@
     "qty": "수량",
     "style": "스타일",
     "startDate": "시작 날짜",
-    "endDate": "종료 날짜"
+    "endDate": "종료 날짜",
+    "defectType": "결함 유형"
   },
   "factory": {
     "structure": "공장 구조"
@@ -167,5 +168,14 @@
   "po": {
     "transaction": "구매 주문 거래"
   },
-  "other": "기타"
+  "other": "기타",
+  "updateSuccess": "업데이트 성공",
+  "createSuccess": "생성 성공",
+  "deleteSuccess": "삭제 성공",
+  "addNew": "새로 추가",
+  "addStep": "단계 추가",
+  "process": "프로세스",
+  "noStepYet": "아직 단계가 없습니다. 클릭해 주세요",
+  "remove": "제거",
+  "step": "단계"
 }

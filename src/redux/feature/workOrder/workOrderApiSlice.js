@@ -71,6 +71,13 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
             providesTags: [{ type: "WorkOrderLookup", id: "LIST" }],
         }),
 
+        getStyleByMo: builder.mutation({
+            query: ({mo}) => ({
+                url: `/work-orders/style/${mo}`,
+
+            }),
+        }),
+
         createWorkOrder: builder.mutation({
             query: (initialState) => ({
                 url: "/work-orders",
@@ -101,20 +108,6 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
-        uploadWorkOrderFile: builder.mutation({
-            query: ({id, ...initialWorkOrderData}) => ({
-                url: `/work-orders/${id}/file-upload`,
-                method: "PUT",
-                body: {
-                    ...initialWorkOrderData,
-                },
-            }),
-            invalidatesTags: [
-                {type: "WorkOrder", id: "LIST"},
-                { type: "WorkOrderFile", id: "LIST" }
-            ],
-        }),
-
         deleteWorkOrder: builder.mutation({
             query: ({ id }) => ({
                 url: `/work-orders/${id}`,
@@ -134,7 +127,7 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetWorkOrderFilesQuery,
+    useGetStyleByMoMutation,
     useUploadWorkOrderFileMutation,
     useGetWorkOrderStatsQuery,
     useGetWorkOrderLookupQuery,

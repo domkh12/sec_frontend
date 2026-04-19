@@ -275,6 +275,10 @@ function RowTableComponent({
                                     </DialogContent>
                                 </Dialog>
                                 </>
+                            ) : Array.isArray(entity[col.id]) ? (
+                                entity[col.id]
+                                    .map(item => typeof item === "object" ? (col.arrayKey ? item[col.arrayKey] : JSON.stringify(item)) : item)
+                                    .join(", ")
                             ) : (
                                 entity[col.id] ?? "—"
                             )}

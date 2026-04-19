@@ -5,16 +5,10 @@ import { useGetTvGeneralDataQuery } from "../../redux/feature/tv/tvApiSlice.js";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import NumberFlow from "@number-flow/react";
 
-// ─── Hour keys ────────────────────────────────────────────────────────────────
-const ALL_HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
-const ALL_HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"];
 
-const isSaturday  = new Date().getDay() === 6;
-const HOUR_KEYS   = isSaturday ? ALL_HOUR_KEYS.slice(0, 8)   : ALL_HOUR_KEYS;
-const HOUR_LABELS = isSaturday ? ALL_HOUR_LABELS.slice(0, 8) : ALL_HOUR_LABELS;
 
 // ─── Frontend calculation ─────────────────────────────────────────────────────
-function calcRow(row) {
+function calcRow(row, HOUR_KEYS) {
     const finish = HOUR_KEYS.reduce(
         (sum, k) => sum + (typeof row[k] === "number" ? row[k] : 0), 0
     );
@@ -29,7 +23,7 @@ function calcRow(row) {
 }
 
 // ─── Compute TOTAL row ────────────────────────────────────────────────────────
-function buildTotal(rows) {
+function buildTotal(rows, HOUR_KEYS) {
     const totalWorker  = rows.reduce((s, r) => s + (r.worker  ?? 0), 0);
     const totalTarH    = rows.reduce((s, r) => s + (r.tarH    ?? 0), 0);
     const totalTarDay  = rows.reduce((s, r) => s + (r.tarDay  ?? 0), 0);
@@ -80,9 +74,8 @@ function FinishCell({ pct }) {
 }
 
 // ─── DataTable ────────────────────────────────────────────────────────────────
-function DataTable({ rows, total }) {
-    const isSaturdays = new Date().getDay() === 4;
-    console.log("isSaturdays", isSaturdays);
+function DataTable({ rows, total, HOUR_KEYS, HOUR_LABELS }) {
+
     // Use border-separate + border-spacing-0 to prevent 1px border collapse on zoom/scale
     // This is the key fix for Android TV box border disappearing on zoom
 
@@ -213,10 +206,26 @@ export default function TvGeneralDisplay() {
     const containerRef = useRef(null);
     const popupRef     = useRef(null);
     const theme        = useTheme();
+    // ─── Hour keys ────────────────────────────────────────────────────────────────
+    const ALL_HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
+    const ALL_HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+
+    const isSaturday = localStorage.getItem("isSaturday") === "true";
+    const HOUR_KEYS   = isSaturday ? ALL_HOUR_KEYS.slice(0, 8)   : ALL_HOUR_KEYS;
+    const HOUR_LABELS = isSaturday ? ALL_HOUR_LABELS.slice(0, 8) : ALL_HOUR_LABELS;
 
     const { messages, loading, connectionState, isConnected } = useWebsocketServer(
         `/topic/messages/tv-data-update`
     );
+    const {
+        messages: messageIsSaturday,
+    } = useWebsocketServer(`/topic/messages/isSaturday`);
+
+    useEffect(() => {
+        if (messageIsSaturday.isUpdate !== undefined){
+            localStorage.setItem("isSaturday", messageIsSaturday.isUpdate);
+        }
+    }, [messageIsSaturday]);
 
     const { data: tvGeneralData, isLoading, isSuccess, refetch } = useGetTvGeneralDataQuery(undefined, {
         pollingInterval: 300000,
@@ -227,10 +236,10 @@ export default function TvGeneralDisplay() {
     }, [messages]);
 
     const computedRows = isSuccess && Array.isArray(tvGeneralData)
-        ? tvGeneralData.map(calcRow)
+        ? tvGeneralData.map(row => calcRow(row, HOUR_KEYS))
         : [];
 
-    const total = computedRows.length > 0 ? buildTotal(computedRows) : null;
+    const total = computedRows.length > 0 ? buildTotal(computedRows, HOUR_KEYS) : null;
 
     // Clock
     useEffect(() => {
@@ -332,7 +341,7 @@ export default function TvGeneralDisplay() {
                     </div>
 
                     {/* ── Table ── */}
-                    <DataTable rows={computedRows} total={total} />
+                    <DataTable rows={computedRows} total={total} HOUR_KEYS={HOUR_KEYS} HOUR_LABELS={HOUR_LABELS}/>
 
                 </div>
             </div>

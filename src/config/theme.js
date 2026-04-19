@@ -1,6 +1,12 @@
 import {createTheme} from "@mui/material";
 
 const theme = createTheme({
+    palette: {
+      primary: {
+          main: '#092D74',
+      }
+    },
+
     typography: {
         fontFamily: [
             'Battambang',
@@ -96,6 +102,37 @@ export const searchTextField = {
     },
     "& .MuiInputAdornment-root .MuiSvgIcon-root": {
         fontSize: "1.2rem",
+    },
+};
+
+export const textFieldStyle = {
+    "& .MuiInputBase-input": {
+        color: "#fff",
+    },
+
+    "& .MuiOutlinedInput-root": {
+        borderRadius: "12px",
+
+        // default border
+        "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#fff",
+        },
+
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#888",
+        },
+
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#1976d2",
+        },
+    },
+
+    "& .MuiFormLabel-root": {
+        color: "rgba(255,255,255,0.65)",
+    },
+
+    "& .MuiSvgIcon-root": {
+        color: "rgba(255,255,255,0.65)",
     },
 };
 

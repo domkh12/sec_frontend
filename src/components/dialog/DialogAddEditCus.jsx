@@ -1,6 +1,6 @@
 import {
     Button, Dialog, DialogTitle, DialogContent, DialogActions,
-    TextField, MenuItem, CircularProgress, GlobalStyles
+    TextField, MenuItem, CircularProgress, GlobalStyles, FormControl, InputLabel, Select, IconButton, Tooltip
 } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -12,6 +12,7 @@ import NestedSelect from "../util/NestedSelect.jsx";
 import {CheckBox, CheckBoxOutlineBlank} from "@mui/icons-material";
 import VisuallyHiddenInput from "../input/VisuallyHiddenInput.jsx";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
 
 function DialogAddEditCus({
                               title,
@@ -249,7 +250,7 @@ function DialogAddEditCus({
                     <circle cx="5.5" cy="5.5" r="5" stroke="currentColor" strokeWidth="1" />
                     <path d="M5.5 3v5M3 5.5h5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
                 </svg>
-                {field.addNew.label ?? t("add.new")}
+                {field.addNew.label ?? t("addNew")}
             </button>
         ) : null;
 
@@ -260,6 +261,32 @@ function DialogAddEditCus({
                 {addNewLink}
             </div>
         );
+
+        const stepOptions = field.options ?? [];
+        const stepValues = values[field.name] ?? [];
+
+        const addStep = () => {
+            setFieldValue(field.name, [
+                ...stepValues,
+                { _key: Date.now(), id: "", index: stepValues.length + 1 },
+            ]);
+        };
+
+        const removeStep = (_key) => {
+            const filtered = stepValues.filter((s) => s._key !== _key);
+            // Re-number indexes after removal
+            setFieldValue(
+                field.name,
+                filtered.map((s, i) => ({ ...s, index: i + 1 }))
+            );
+        };
+
+        const updateStep = (index, id) => {
+            setFieldValue(
+                field.name,
+                stepValues.map((s) => (s.index === index ? { ...s, id } : s))
+            );
+        };
 
         switch (field.type) {
             case "text":
@@ -274,7 +301,6 @@ function DialogAddEditCus({
                         value={values[field.name]}
                     />
                 );
-
             case "password":
                 return wrap(
                     <PasswordField
@@ -285,7 +311,6 @@ function DialogAddEditCus({
                         onBlur={handleBlur}
                     />
                 );
-
             case "select":
                 return wrap(
                     <TextField
@@ -338,7 +363,6 @@ function DialogAddEditCus({
                         )}
                     </TextField>
                 );
-
             case "autocomplete":
                 return wrap(
                     <Autocomplete
@@ -422,6 +446,11 @@ function DialogAddEditCus({
                                 selected.map((item) => item.value
                             ))
                         }
+                        renderTags={(value) => (
+                            <div style={{ marginLeft: '8px', color: 'rgba(255,255,255,0.85)', fontSize: '0.875rem' }}>
+                                {value.map((option) => option.label).join(", ")}
+                            </div>
+                        )}
                         componentsProps={{
                             paper: {
                                 sx: {
@@ -492,7 +521,6 @@ function DialogAddEditCus({
                         onSelect={(value) => {setFieldValue(field.name, value)}}
                     />
                 );
-
             case "date":
                 return wrap(
                     <DatePicker
@@ -587,7 +615,203 @@ function DialogAddEditCus({
 
                     </>
                 )
+            case "steps":
 
+                return (
+                    <div
+                        key={field.name}
+                        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+                    >
+                        {/* Header row */}
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <span
+                                style={{
+                                    color: "rgba(255,255,255,0.6)",
+                                    fontSize: "0.8rem",
+                                    fontWeight: 500,
+                                    letterSpacing: "0.03em",
+                                }}
+                            >
+                                {t(field.label)}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={addStep}
+                                style={{
+                                    background: "linear-gradient(135deg, rgba(96,165,250,0.85), rgba(59,130,246,0.75))",
+                                    border: "1px solid rgba(147,197,253,0.3)",
+                                    borderRadius: "7px",
+                                    color: "rgba(255,255,255,0.92)",
+                                    fontSize: "0.75rem",
+                                    fontWeight: 600,
+                                    padding: "4px 10px",
+                                    cursor: "pointer",
+                                    display: "inline-flex",
+                                    alignItems: "center",
+                                    gap: "5px",
+                                    letterSpacing: "0.02em",
+                                    transition: "all 0.18s ease",
+                                    boxShadow: "0 2px 8px rgba(59,130,246,0.25)",
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = "translateY(-1px)";
+                                    e.currentTarget.style.boxShadow = "0 4px 14px rgba(59,130,246,0.4)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = "translateY(0)";
+                                    e.currentTarget.style.boxShadow = "0 2px 8px rgba(59,130,246,0.25)";
+                                }}
+                            >
+                                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                    <circle cx="5.5" cy="5.5" r="5" stroke="currentColor" strokeWidth="1" />
+                                    <path d="M5.5 3v5M3 5.5h5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                                </svg>
+                                {t("addStep") ?? "+ Add Step"}
+                            </button>
+                        </div>
+
+                        {/* Empty state */}
+                        {stepValues.length === 0 ? (
+                            <div
+                                style={{
+                                    border: "1.5px dashed rgba(255,255,255,0.18)",
+                                    borderRadius: "12px",
+                                    padding: "28px 20px",
+                                    textAlign: "center",
+                                    color: "rgba(255,255,255,0.35)",
+                                    fontSize: "0.82rem",
+                                    background: "rgba(255,255,255,0.02)",
+                                    cursor: "pointer",
+                                    transition: "border-color 0.2s ease, background 0.2s ease",
+                                }}
+                                onClick={addStep}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderColor = "rgba(147,197,253,0.35)";
+                                    e.currentTarget.style.background = "rgba(147,197,253,0.04)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
+                                    e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                                }}
+                            >
+                                <div style={{ marginBottom: "6px", fontSize: "1.4rem", opacity: 0.4 }}>☰</div>
+                                {t("noStepYet") ?? "Didn't have step yet, please click"}{" "}
+                                <span
+                                    style={{
+                                        color: "rgba(147,197,253,0.8)",
+                                        fontWeight: 600,
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {t("addStep")}
+                                </span>
+                            </div>
+                        ) : (
+                            /* Step rows */
+                            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                                {stepValues?.map((step, index) => (
+                                    <div
+                                        key={step._key}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "10px",
+                                            background: "rgba(255,255,255,0.04)",
+                                            border: "1px solid rgba(255,255,255,0.1)",
+                                            borderRadius: "10px",
+                                            padding: "8px 10px",
+                                            transition: "border-color 0.18s ease",
+                                        }}
+                                        onMouseEnter={(e) =>
+                                            (e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)")
+                                        }
+                                        onMouseLeave={(e) =>
+                                            (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")
+                                        }
+                                    >
+                                        {/* Step number badge */}
+                                        <div className="w-7 h-7 p-4 flex items-center justify-center rounded-full bg-blue-500 text-white text-xs font-medium">
+                                            {step.index}
+                                        </div>
+                                        <FormControl sx={{ m: 1,
+                                                            "& .MuiFormLabel-root": {
+                                                                color: "rgba(255,255,255,0.65)",
+                                                            },
+                                                            "& .MuiSvgIcon-root": {
+                                                                color: "rgba(255,255,255,0.65)",
+                                                            }
+                                                        }}
+                                                     fullWidth
+                                                     size="small"
+                                        >
+                                            <InputLabel id="demo-select-small-label">{t('step')}</InputLabel>
+                                            <Select
+                                                labelId="demo-select-small-label"
+                                                id="demo-select-small"
+                                                value={step.id}
+                                                label="Step"
+                                                onChange={(e) => updateStep(step.index, e.target.value)}
+                                                variant="outlined"
+                                                size="small"
+                                                fullWidth
+                                                sx={{
+                                                    color: "rgba(255,255,255,0.85)",
+
+                                                    "& .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#fff",
+                                                    },
+                                                }}
+                                             >
+                                                {
+                                                    stepOptions.length > 0 ? (
+                                                        stepOptions.map((opt) => (
+                                                            <MenuItem value={opt.value}>{opt.label}</MenuItem>
+                                                        ))
+                                                    ): (
+                                                        <MenuItem value="">
+                                                            <em>None</em>
+                                                        </MenuItem>
+                                                    )
+                                                }
+                                            </Select>
+                                        </FormControl>
+
+                                        {/* Remove button */}
+                                        <Tooltip title={t('remove')}>
+                                            <IconButton
+                                                onClick={() => removeStep(step._key)}
+                                                sx={{
+                                                    color: "#fff"
+                                                }}
+                                            >
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Validation error */}
+                        {errors[field.name] && touched[field.name] && (
+                            <div style={{ color: "rgba(255, 0, 0, 1)", fontSize: "0.72rem", paddingLeft: "2px" }}>
+                                {errors[field.name]}
+                            </div>
+                        )}
+                    </div>
+                );
             default:
                 return null;
         }

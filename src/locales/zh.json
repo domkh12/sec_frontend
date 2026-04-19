@@ -130,7 +130,8 @@
     "stockIn": "入库",
     "stockOut": "出库",
     "nameKh": "名称（高棉语）",
-    "nameEn": "名称（英语）"
+    "nameEn": "名称（英语）",
+    "defectType": "缺陷类型"
   },
   "factory": {
     "structure": "工厂结构"
@@ -171,5 +172,14 @@
   "po": {
     "transaction": "采购订单交易"
   },
-  "other": "其他"
+  "other": "其他",
+  "updateSuccess": "更新成功",
+  "createSuccess": "创建成功",
+  "deleteSuccess": "删除成功",
+  "addNew": "添加新",
+  "addStep": "添加步骤",
+  "process": "流程",
+  "noStepYet": "暂无步骤，请点击",
+  "remove": "删除",
+  "step": "步骤"
 }
