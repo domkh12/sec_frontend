@@ -117,21 +117,10 @@ export default function FullScreenDialogStockOut() {
             }).unwrap();
             handleClose();
         }catch (error) {
-            console.log(error);
-
-            let displayMessage = "Something went wrong";
-
-            // // Check if description is the array we see in your log
-            // if (Array.isArray(error?.data?.description)) {
-            //     // Map the reasons into a single string (e.g., "Requester ID cannot be null")
-            //     displayMessage = error.data.description.map(err => err.reason).join(", ");
-            // } else if (typeof error?.data?.description === 'string') {
-            //     displayMessage = error.data.description;
-            // }
 
             dispatch(setAlertMaterialStockOut({
                 type: "error",
-                message: displayMessage
+                message: error?.data?.error?.description || "Something went wrong"
             }));
 
             dispatch(setIsOpenSnackbarMaterialStockOut(true));

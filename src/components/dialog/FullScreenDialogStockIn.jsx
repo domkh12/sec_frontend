@@ -19,8 +19,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import {
+    setAlertMaterialStockIn,
     setFilterStockIn,
-    setIsFullScreenDialogStockIn,
+    setIsFullScreenDialogStockIn, setIsOpenSnackbarMaterialStockIn,
     setStockInData
 } from "../../redux/feature/material/materialSlice.js";
 import { useTranslation } from "react-i18next";
@@ -102,11 +103,20 @@ export default function FullScreenDialogStockIn() {
             alert("Please input quantity");
             return;
         }
-        await stockIn({
-            materialId: stockData?.id,
-            qtyInput: values.qty,
-            dateInput: value.format("YYYY-MM-DDTHH:mm:ss")
-        }).unwrap();
+        try {
+            await stockIn({
+                materialId: stockData?.id,
+                qtyInput: values.qty,
+                dateInput: value.format("YYYY-MM-DDTHH:mm:ss")
+            }).unwrap();
+        }catch (error) {
+            console.log(error);
+            dispatch(setAlertMaterialStockIn({
+                type: "error",
+                message: error?.data?.error?.description || "Something went wrong"
+            }));
+            dispatch(setIsOpenSnackbarMaterialStockIn(true));
+        }
 
         handleClose();
     };

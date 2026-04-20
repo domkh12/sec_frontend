@@ -5,7 +5,7 @@ import {
 import { Autocomplete } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import { useRef, useState, useEffect, useMemo } from "react";
+import {useRef, useState, useEffect, useMemo, memo} from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import PasswordField from "../ui/PasswordField.jsx";
 import NestedSelect from "../util/NestedSelect.jsx";
@@ -13,6 +13,111 @@ import {CheckBox, CheckBoxOutlineBlank} from "@mui/icons-material";
 import VisuallyHiddenInput from "../input/VisuallyHiddenInput.jsx";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
+
+const glassInputSx = {
+    "& .MuiOutlinedInput-root": {
+        borderRadius: "10px",
+        backgroundColor: "rgba(255,255,255,0.06)",
+        backdropFilter: "blur(8px)",
+        color: "rgba(255,255,255,0.92)",
+        fontSize: "0.875rem",
+        transition: "all 0.2s ease",
+        "& fieldset": {
+            borderColor: "rgba(255,255,255,0.18)",
+            borderWidth: "1px",
+        },
+        "&:hover fieldset": {
+            borderColor: "rgba(255,255,255,0.38)",
+        },
+        "&.Mui-focused": {
+            backgroundColor: "rgba(255,255,255,0.1)",
+            boxShadow: "0 0 0 3px rgba(147,197,253,0.15), inset 0 1px 0 rgba(255,255,255,0.12)",
+            "& fieldset": {
+                borderColor: "rgba(147,197,253,0.6)",
+                borderWidth: "1.5px",
+            },
+        },
+        "&.Mui-error fieldset": {
+            borderColor: "rgba(252,165,165,0.7)",
+        },
+    },
+    "& .MuiInputLabel-root": {
+        color: "rgba(255,255,255,0.5)",
+        fontSize: "0.875rem",
+        "&.Mui-focused": { color: "rgba(147,197,253,0.9)" },
+        "&.Mui-error": { color: "rgba(252,165,165,0.8)" },
+    },
+    "& .MuiFormHelperText-root": {
+        color: "rgba(252,165,165,0.8)",
+        fontSize: "0.72rem",
+    },
+    "& .MuiSelect-icon": { color: "rgba(255,255,255,0.45)" },
+    "& .MuiMenuItem-root": { fontSize: "0.875rem" },
+};
+
+// Shared dialog paper / backdrop styles (reused for nested dialog too)
+const dialogPaperSx = {
+    "& .MuiDialog-paper": {
+        borderRadius: "18px",
+        width: "min(680px, 95vw)",
+        padding: "6px",
+        background: "rgba(15,23,42,0.55)",
+        backdropFilter: "blur(28px) saturate(180%)",
+        WebkitBackdropFilter: "blur(28px) saturate(180%)",
+        border: "1px solid rgba(255,255,255,0.14)",
+        boxShadow: `
+                inset 0 1px 0 rgba(255,255,255,0.18),
+                inset 0 -1px 0 rgba(255,255,255,0.05),
+                0 32px 80px rgba(0,0,0,0.55),
+                0 8px 24px rgba(0,0,0,0.3)
+            `,
+        overflow: "hidden",
+        "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: "10%",
+            right: "10%",
+            height: "1px",
+            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
+            borderRadius: "1px",
+        },
+    },
+};
+
+const dialogTitleSx = {
+    fontWeight: 600,
+    fontSize: "1rem",
+    color: "rgba(255,255,255,0.92)",
+    letterSpacing: "0.01em",
+    pb: 0.5,
+    px: 2.5,
+    pt: 2,
+    display: "flex",
+    alignItems: "center",
+    gap: 1,
+    "&::before": {
+        content: '""',
+        display: "inline-block",
+        width: "3px",
+        height: "18px",
+        borderRadius: "2px",
+        background: "linear-gradient(180deg, rgba(147,197,253,0.9), rgba(99,179,237,0.5))",
+        flexShrink: 0,
+    },
+};
+
+const dividerStyle = {
+    margin: "10px 20px 0",
+    height: "1px",
+    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+};
+
+const bottomDividerStyle = {
+    margin: "0 20px 10px",
+    height: "1px",
+    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
+};
 
 function DialogAddEditCus({
                               title,
@@ -29,7 +134,7 @@ function DialogAddEditCus({
     const formikRef = useRef(null);
     const [dynamicOptions, setDynamicOptions] = useState({});
     const [loadingFields, setLoadingFields] = useState({});
-
+    console.log("dynamicOptions", dynamicOptions);
     // Nested "Add New" dialog state
     const [addNewDialog, setAddNewDialog] = useState({
         open: false,
@@ -97,111 +202,6 @@ function DialogAddEditCus({
         }
 
         setAddNewDialog({ open: false, field: null });
-    };
-
-    const glassInputSx = {
-        "& .MuiOutlinedInput-root": {
-            borderRadius: "10px",
-            backgroundColor: "rgba(255,255,255,0.06)",
-            backdropFilter: "blur(8px)",
-            color: "rgba(255,255,255,0.92)",
-            fontSize: "0.875rem",
-            transition: "all 0.2s ease",
-            "& fieldset": {
-                borderColor: "rgba(255,255,255,0.18)",
-                borderWidth: "1px",
-            },
-            "&:hover fieldset": {
-                borderColor: "rgba(255,255,255,0.38)",
-            },
-            "&.Mui-focused": {
-                backgroundColor: "rgba(255,255,255,0.1)",
-                boxShadow: "0 0 0 3px rgba(147,197,253,0.15), inset 0 1px 0 rgba(255,255,255,0.12)",
-                "& fieldset": {
-                    borderColor: "rgba(147,197,253,0.6)",
-                    borderWidth: "1.5px",
-                },
-            },
-            "&.Mui-error fieldset": {
-                borderColor: "rgba(252,165,165,0.7)",
-            },
-        },
-        "& .MuiInputLabel-root": {
-            color: "rgba(255,255,255,0.5)",
-            fontSize: "0.875rem",
-            "&.Mui-focused": { color: "rgba(147,197,253,0.9)" },
-            "&.Mui-error": { color: "rgba(252,165,165,0.8)" },
-        },
-        "& .MuiFormHelperText-root": {
-            color: "rgba(252,165,165,0.8)",
-            fontSize: "0.72rem",
-        },
-        "& .MuiSelect-icon": { color: "rgba(255,255,255,0.45)" },
-        "& .MuiMenuItem-root": { fontSize: "0.875rem" },
-    };
-
-    // Shared dialog paper / backdrop styles (reused for nested dialog too)
-    const dialogPaperSx = {
-        "& .MuiDialog-paper": {
-            borderRadius: "18px",
-            width: "min(680px, 95vw)",
-            padding: "6px",
-            background: "rgba(15,23,42,0.55)",
-            backdropFilter: "blur(28px) saturate(180%)",
-            WebkitBackdropFilter: "blur(28px) saturate(180%)",
-            border: "1px solid rgba(255,255,255,0.14)",
-            boxShadow: `
-                inset 0 1px 0 rgba(255,255,255,0.18),
-                inset 0 -1px 0 rgba(255,255,255,0.05),
-                0 32px 80px rgba(0,0,0,0.55),
-                0 8px 24px rgba(0,0,0,0.3)
-            `,
-            overflow: "hidden",
-            "&::before": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: "10%",
-                right: "10%",
-                height: "1px",
-                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
-                borderRadius: "1px",
-            },
-        },
-    };
-
-    const dialogTitleSx = {
-        fontWeight: 600,
-        fontSize: "1rem",
-        color: "rgba(255,255,255,0.92)",
-        letterSpacing: "0.01em",
-        pb: 0.5,
-        px: 2.5,
-        pt: 2,
-        display: "flex",
-        alignItems: "center",
-        gap: 1,
-        "&::before": {
-            content: '""',
-            display: "inline-block",
-            width: "3px",
-            height: "18px",
-            borderRadius: "2px",
-            background: "linear-gradient(180deg, rgba(147,197,253,0.9), rgba(99,179,237,0.5))",
-            flexShrink: 0,
-        },
-    };
-
-    const dividerStyle = {
-        margin: "10px 20px 0",
-        height: "1px",
-        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
-    };
-
-    const bottomDividerStyle = {
-        margin: "0 20px 10px",
-        height: "1px",
-        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
     };
 
     const renderField = ({ values, errors, touched, handleChange, handleBlur, setFieldValue }, field) => {
@@ -1130,3 +1130,5 @@ function DialogAddEditCus({
 }
 
 export default DialogAddEditCus;
+// const memoizedDialogAddEditCus = memo(DialogAddEditCus);
+// export default memoizedDialogAddEditCus;

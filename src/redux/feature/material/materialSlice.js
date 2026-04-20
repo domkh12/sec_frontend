@@ -7,9 +7,11 @@ const materialSlice = createSlice({
         materialDataForUpdate: null,
         isOpenSnackbarMaterial: false,
         isOpenSnackbarMaterialStockOut: false,
+        isOpenSnackbarMaterialStockIn: false,
         isOpenDeleteMaterialDialog: false,
         alertMaterial: {type: "success", message: ""},
         alertMaterialStockOut: {type: "success", message: ""},
+        alertMaterialStockIn: {type: "success", message: ""},
         filter: {
             pageNo: 1,
             pageSize: 20,
@@ -32,6 +34,12 @@ const materialSlice = createSlice({
         stockOutData: null,
     },
     reducers: {
+        setIsOpenSnackbarMaterialStockIn: (state, action) => {
+            state.isOpenSnackbarMaterialStockIn = action.payload;
+        },
+        setAlertMaterialStockIn: (state, action) => {
+            state.alertMaterialStockIn = action.payload;
+        },
         setStockOutData: (state, action) => {
             state.stockOutData = action.payload;
         },
@@ -78,6 +86,8 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setIsOpenSnackbarMaterialStockIn,
+    setAlertMaterialStockIn,
     setAlertMaterialStockOut,
     setIsOpenSnackbarMaterialStockOut,
     setStockOutData,

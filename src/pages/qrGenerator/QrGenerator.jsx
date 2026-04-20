@@ -50,24 +50,16 @@ function QrGenerator() {
         const url  = URL.createObjectURL(res)
        setUrl(url);
     }
+
     const handlePrint = useReactToPrint({
         contentRef,
-        onBeforePrint: () => {
-            return new Promise((resolve) => {
-                promiseResolveRef.current = resolve;
-                setIsPrinting(true);
-            });
-        },
-        onAfterPrint: () => {
-            // Reset the Promise resolve so we can print again
-            promiseResolveRef.current = null;
-            setIsPrinting(false);
+        pageStyle: `
+        @page {
+            margin-top: 18mm;
+            margin-left: 0mm;
         }
+    `,
     });
-    // const handlePrint = useReactToPrint(
-    //     { contentRef }
-    //
-    // );
 
     // -- useEffect --------------------------------------------------------------------------------------
     useEffect(() => {
@@ -116,60 +108,57 @@ function QrGenerator() {
                             <div className="col-span-2 flex items-start justify-center">
                                 <div
                                     ref={contentRef}
-                                    className="w-[300px] p-5 bg-white text-black font-sans"
+                                    className="h-[264px] w-[188px] p-2 bg-white text-black font-sans"
                                 >
                                     {/* Header: Compact Logo */}
-                                    <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center justify-between">
                                         <img
                                             src="/images/sec_logo.png"
                                             alt="SEC"
-                                            className="h-6 object-contain"
+                                            className="h-3 object-contain"
                                         />
                                         <span className="font-black text-xs tracking-widest text-gray-400">BDL-1</span>
                                     </div>
 
                                     {/* QR Code Section - Maximized */}
-                                    <div className="flex flex-col items-center justify-center mb-6">
-                                        <div className=" bg-gray-50 rounded-xl border border-gray-100">
+                                    <div className="flex flex-col items-center justify-center">
                                             {url !== null ? (
                                                 <img
                                                     src={url}
                                                     alt="qrCode"
-                                                    className="w-64 h-64" // Increased size
+                                                    className="w-32 h-32" // Increased size
                                                 />
                                             ) : (
-                                                <Skeleton variant="rectangular" width={250} height={250}/>
+                                                <Skeleton variant="rectangular" width={96} height={96}/>
                                             )}
-
-                                        </div>
                                     </div>
 
                                     {/* Info Section - Tightly organized below */}
                                     <div className="space-y-3">
 
                                         {/* Style Section - Full Width */}
-                                        <div className="bg-gray-100 p-3 rounded-lg">
-                                            <p className="text-[9px] uppercase font-bold text-gray-500 mb-0.5">Style</p>
-                                            <p className="text-lg font-black leading-tight break-words uppercase">
+                                        <div>
+                                            {/*<p className="text-[9px] uppercase font-bold text-gray-500 mb-0.5">Style</p>*/}
+                                            <p className="text-sm font-black leading-tight break-words uppercase">
                                                 {values.style}
                                             </p>
                                         </div>
 
                                         {/* MO & Specs Grid */}
                                         <div className="grid grid-cols-3 gap-2">
-                                            <div className="col-span-2 border-r border-gray-200 pr-2">
-                                                <p className="text-[9px] uppercase font-bold text-gray-500">MO</p>
-                                                <p className="font-bold text-sm">{values.mo}</p>
+                                            <div className="col-span-2 border-r border-black pr-2">
+                                                {/*<p className="text-[9px] uppercase font-bold text-gray-500">MO</p>*/}
+                                                <p className="font-bold text-sm mt-2">{values.mo}</p>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-[9px] uppercase font-bold text-gray-500">Size</p>
-                                                <p className="font-black text-xl">{values.size}</p>
+                                            <div className="text-center">
+                                                {/*<p className="text-[9px] uppercase font-bold text-gray-500">Size</p>*/}
+                                                <p className="font-black text-lg mt-1">{values.size}</p>
                                             </div>
                                         </div>
 
                                         {/* Qty Badge */}
                                         <div
-                                            className="border-t border-gray-200 pt-2 flex justify-between items-center">
+                                            className="border-t border-black pt-2 flex justify-between items-center">
                                             <span
                                                 className="text-[9px] uppercase font-bold text-gray-500">Quantity</span>
                                             <span className="text-xl font-black">{values.qty} PCS</span>
