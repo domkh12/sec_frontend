@@ -33,25 +33,32 @@ import { BiSolidArchiveIn } from "react-icons/bi";
 import FullScreenDialogStockIn from "../../components/dialog/FullScreenDialogStockIn.jsx";
 import FullScreenDialogStockOut from "../../components/dialog/FullScreenDialogStockOut.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
+import {UNITS} from "../../config/units.js";
+import useAuth from "../../hook/useAuth.jsx";
 
 function MaterialList() {
-    const {t} = useTranslation();
-    const isMd = useBreakpoints();
     const [id, setId] = useState(null);
+
+    // -- Hook --------------------------------------------------------------------------------------
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const materialDataForUpdate = useSelector((state) => state.material.materialDataForUpdate);
-    const isOpen = useSelector((state) => state.material.isOpenDialogAddOrEditMaterial);
-    const isOpenSnackbar = useSelector((state) => state.material.isOpenSnackbarMaterial);
-    const alertMaterial = useSelector((state) => state.material.alertMaterial);
-    const isOpenDeleteDialog = useSelector((state) => state.material.isOpenDeleteMaterialDialog);
+    const {isAdmin, isManager, isWarehouse} = useAuth();
+    const {t} = useTranslation();
+    const isMd = useBreakpoints();
+
+    // -- Selector ----------------------------------------------------------------------------------
+    const materialDataForUpdate   = useSelector((state) => state.material.materialDataForUpdate);
+    const isOpen                  = useSelector((state) => state.material.isOpenDialogAddOrEditMaterial);
+    const isOpenSnackbar          = useSelector((state) => state.material.isOpenSnackbarMaterial);
+    const alertMaterial           = useSelector((state) => state.material.alertMaterial);
+    const isOpenDeleteDialog      = useSelector((state) => state.material.isOpenDeleteMaterialDialog);
     const[createMaterial, {isLoading: isLoadingCreateMaterial}] = useCreateMaterialMutation();
     const [updateMaterial, {isLoading: isLoadingUpdateMaterial}] = useUpdateMaterialMutation();
     const [uploadFile, {isLoading: isLoadingUploadFile}] = useUploadFileMutation();
     const filterValue = useSelector((state) => state.material.filter);
     const debounceSearch = useDebounce(filterValue.search, 500);
     const [deleteMaterial, {isLoading: isLoadingDeleteMaterial}] = useDeleteMaterialMutation();
-    const [materialReportExcel] = useGetMaterialReportExcelMutation();
+    const [materialReportExcel, {isLoading: isLoadingGetReportMaterial}] = useGetMaterialReportExcelMutation();
     const {data: materialStats} = useGetMaterialStatsQuery();
     const {data: materialData, isLoading, isSuccess, isFetching} = useGetMaterialQuery({
         pageNo: filterValue.pageNo,
@@ -105,8 +112,16 @@ function MaterialList() {
         if (values.image && typeof values.image !== "string") {
             const formData = new FormData();
             formData.append("file", values.image);
-            const res = await uploadFile(formData).unwrap();
-            imageUri = res.uri;
+            try{
+                const res = await uploadFile(formData).unwrap();
+                imageUri = res.uri;
+            }catch (error) {
+                console.log(error);
+                dispatch(setAlertMaterial({type: "error", message: error.data.error.description}));
+                dispatch(setIsOpenSnackbarMaterial(true));
+                return;
+            }
+
         }
 
         try {
@@ -118,7 +133,7 @@ function MaterialList() {
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
                 }).unwrap();
-                dispatch(setAlertMaterial({type: "success", message: "Update successfully"}));
+                dispatch(setAlertMaterial({type: "success", message: t("updateSuccess")}));
                 dispatch(setMaterialDataForUpdate(null));
             }else {
                 await createMaterial({
@@ -127,7 +142,7 @@ function MaterialList() {
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
                 }).unwrap();
-                dispatch(setAlertMaterial({type: "success", message: "Create successfully"}));
+                dispatch(setAlertMaterial({type: "success", message: t("createSuccess")}));
             }
             dispatch(setIsOpenSnackbarMaterial(true));
             dispatch(setIsOpenDialogAddOrEditMaterial(false));
@@ -144,11 +159,10 @@ function MaterialList() {
         {   name: "unit",
             label: "table.unit",
             type: "autocomplete",
-            options: [
-                { value: "PCS", label: "Pcs" },
-                { value: "KG", label: "Kg" },
-                { value: "Meter", label: "M" },
-            ],
+            options: UNITS.map((unit) => ({
+                value: unit.value,
+                label: unit.label,
+            })),
         },
         {
             name: "image",
@@ -236,6 +250,7 @@ function MaterialList() {
         },
         {
             id: 'excel',
+            isLoading: isLoadingGetReportMaterial,
             onClick: async () => {
                 const res = await materialReportExcel().unwrap();
 
@@ -247,10 +262,9 @@ function MaterialList() {
                 // Create URL
                 const url = window.URL.createObjectURL(blob);
 
-                // Create <a> and trigger download
                 const link = document.createElement("a");
                 link.href = url;
-                link.download = "material-report.xlsx"; // file name
+                link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
                 document.body.appendChild(link);
                 link.click();
 
@@ -258,6 +272,10 @@ function MaterialList() {
                 link.remove();
                 window.URL.revokeObjectURL(url);
             }
+        },
+        {
+            id: "unit",
+            label: t("unit")
         }
     ]
 
@@ -328,7 +346,7 @@ function MaterialList() {
             <Seo title="Material List"/>
             <div className="card-glass">
                 <div className="flex justify-between items-center">
-                    <BackButton onClick={() => navigate("/admin")}/>
+                    <BackButton onClick={() => navigate(`${isAdmin ? "/admin" : isManager ? "/manager" : isWarehouse ? "/warehouse" : "/"}`)}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditMaterial(true))}/>
                 </div>
                 <div>

@@ -7,6 +7,7 @@ function useAuth() {
     let isManager = false;
     let isAdmin = false;
     let isViewer = false;
+    let isWarehouse = false;
     let status = ["MANAGER"];
     if (token) {
         const decoded = jwtDecode(token);
@@ -17,15 +18,17 @@ function useAuth() {
         isManager = scope.includes("ROLE_MANAGER");
         isAdmin = scope.includes("ROLE_ADMIN");
         isViewer = scope.includes("ROLE_VIEWER");
+        isWarehouse = scope.includes("ROLE_WAREHOUSE");
 
         if (isViewer) status = "Viewer";
         if (isAdmin) status = "Admin";
         if (isManager) status = "MANAGER";
+        if (isWarehouse) status = "WAREHOUSE";
 
-        return { username, roles, status, isManager, isAdmin, isViewer };
+        return { username, roles, status, isManager, isAdmin, isViewer, isWarehouse };
     }
 
-    return { username: "", roles: [], isManager, isAdmin, isViewer, status };
+    return { username: "", roles: [], isManager, isAdmin, isViewer, isWarehouse, status };
 }
 
 export default useAuth;

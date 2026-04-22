@@ -43,7 +43,6 @@
     "unavailable": "Unavailable","active": "Active",
     "inactive": "Inactive",
     "blocked": "Blocked"
-
   },
   "profile": {
     "title": "Profile",
@@ -181,5 +180,6 @@
   "process": "Process",
   "noStepYet": "Didn't have step yet, please click",
   "remove": "Remove",
-  "step": "Step"
+  "step": "Step",
+  "unit": "Unit"
 }

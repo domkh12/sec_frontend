@@ -28,12 +28,17 @@ import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import {useState} from "react";
-import {DayPicker} from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import {useGetStockInQuery, useStockInMutation} from "../../redux/feature/material/materialApiSlice.js";
+import {
+    useGetMaterialStockInExcelMutation,
+    useGetStockInQuery,
+    useStockInMutation
+} from "../../redux/feature/material/materialApiSlice.js";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
-import {setFilterUser} from "../../redux/feature/user/userSlice.js";
+import {green} from "@mui/material/colors";
+import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
+import NumberField from "../ui/NumberField.jsx";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -55,6 +60,7 @@ export default function FullScreenDialogStockIn() {
 
     // -- Mutation -----------------------------------------------------------------------------
     const [stockIn, {isLoading, isSuccess}] = useStockInMutation();
+    const [reportStockInExcel, {isLoading: isLoadingStockInExcel}] = useGetMaterialStockInExcelMutation();
 
     // -- Queries ------------------------------------------------------------------------------
     const { data: stockInData } = useGetStockInQuery(
@@ -120,6 +126,29 @@ export default function FullScreenDialogStockIn() {
 
         handleClose();
     };
+
+    const handleExportExcel = async () => {
+        const res = await reportStockInExcel().unwrap();
+
+        // Create blob
+        const blob = new Blob([res], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        // Create URL
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    }
+
     const { ids, entities, totalElements, pageSize, pageNo } = stockInData || {};
     let tableContent;
 
@@ -131,7 +160,7 @@ export default function FullScreenDialogStockIn() {
                 <TableCell sx={{
                     color: "green",
                     fontWeight: "semibold",
-                }}>+ {entities[id]?.qtyInput}</TableCell>
+                }}>+ {entities[id]?.qtyInput} {entities[id]?.unit}</TableCell>
                 <TableCell>{entities[id]?.user}</TableCell>
 
             </TableRow>
@@ -206,18 +235,7 @@ export default function FullScreenDialogStockIn() {
                               }) => (
                                 <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                                    {/* QTY */}
-                                    <TextField
-                                        label="Quantity"
-                                        name="qty"
-                                        type="number"
-                                        value={values.qty}
-                                        onChange={handleChange}
-                                        fullWidth
-                                        size="small"
-                                        error={touched.qty && Boolean(errors.qty)}
-                                        helperText={touched.qty && errors.qty}
-                                    />
+                                    <NumberField label="Quantity" name="qty" value={values.qty} onChange={(val) => setFieldValue("qty", val)} size="small" min={0.001}/>
 
                                     {/* DATE PICKER FIX */}
                                     <DatePicker
@@ -271,36 +289,14 @@ export default function FullScreenDialogStockIn() {
             </div>
             {/* STOCK HISTORY TABLE */}
             <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4 mx-5 mb-10">
-                <Typography variant="h6">
-                    {t('material.stockInHistory')}
-                </Typography>
-                <div style={{ position: "relative", display: "inline-block" }}>
-                    <button onClick={() => setOpenDate(!openDate)}>Date</button>
-                    <div>
-                        {range?.from && `From: ${dayjs(range.from).format("DD-MM-YYYY")}`}
-                        {range?.to && ` → To: ${dayjs(range.to).format("DD-MM-YYYY")}`}
-                    </div>
-                    {openDate && (
-                        <div style={{
-                            position: "absolute", top: "110%", left: 0,
-                            background: "white", border: "1px solid #ddd",
-                            borderRadius: 8, padding: 12, zIndex: 100,
-                            boxShadow: "0 8px 30px rgba(0,0,0,0.12)"
-                        }}>
-                            <DayPicker
-                                mode="range"
-                                selected={range}
-                                onSelect={(r) => setRange(r)}
-                                numberOfMonths={2}
-                            />
-                            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                                <button onClick={() => { setRange(undefined); }}>Clear</button>
-                                <button onClick={() => setOpenDate(false)}>Apply</button>
-                            </div>
-                        </div>
-                    )}
+                <div className="flex justify-between items-center">
+                    <Typography variant="h6">
+                        {t('material.stockInHistory')}
+                    </Typography>
+                    <Button loading={isLoadingStockInExcel} variant="contained" size="small" sx={{bgcolor: green[600]}} startIcon={<PiMicrosoftExcelLogoFill/>} onClick={handleExportExcel}>
+                        Export
+                    </Button>
                 </div>
-
                 <TableContainer component={Paper} elevation={0}>
                     <Table size="small">
                         <TableHead>

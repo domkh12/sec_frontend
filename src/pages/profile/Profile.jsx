@@ -46,7 +46,7 @@ const fieldSx = {
 // ── Component ──────────────────────────────────────────────────────────────────
 function Profile() {
     const user     = useSelector((state) => state.auth.profile);
-    const {isManager, isAdmin} = useAuth();
+    const {isManager, isAdmin, isWarehouse} = useAuth();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isOpenSnackbar = useSelector((state) => state.auth.isOpenSnackbarProfile);
@@ -108,7 +108,7 @@ function Profile() {
     return (
         <>
         <div className="card-glass">
-            <BackButton onClick={() => isManager ? navigate("/manager") : isAdmin ? navigate("/admin") : navigate("/")}/>
+            <BackButton onClick={() => isManager ? navigate("/manager") : isAdmin ? navigate("/admin") : isWarehouse ? navigate("/warehouse") : navigate("/")}/>
 
             {/* ── 1. Identity Card ─────────────────────────────────────────────── */}
             <div className="card-glass">

@@ -22,7 +22,7 @@ import {
 import * as Yup from "yup";
 import {
     Alert,
-    Button,
+    Button, FormHelperText,
     Paper, Snackbar,
     Table,
     TableBody,
@@ -36,6 +36,9 @@ import {Form, Formik} from "formik";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {DayPicker} from "react-day-picker";
 import SelectUserWithSearch from "../select/SelectUserWithSearch.jsx";
+import NumberField from "../ui/NumberField.jsx";
+import {green} from "@mui/material/colors";
+import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -55,10 +58,10 @@ export default function FullScreenDialogStockOut() {
     const alertMaterialStockOut   = useSelector((s) => s.material.alertMaterialStockOut);
 
     // -- State -------------------------------------------------------------------------------
-    const [value, setValue]    = useState(dayjs());
+    const [value, setValue] = useState(dayjs());
 
     // -- Mutation -----------------------------------------------------------------------------
-    const [stockOut, {isLoading, isSuccess}] = useStockOutMutation();
+    const [stockOut, {isLoading}] = useStockOutMutation();
 
     // -- Queries ------------------------------------------------------------------------------
     const { data: stockInData } = useGetStockOutQuery(
@@ -67,7 +70,7 @@ export default function FullScreenDialogStockOut() {
             pageSize: filterValue?.pageSize,
             materialId: stockData?.id
         },
-        {skip: !stockData?.id}
+        { skip: !stockData?.id }
     );
 
     // -- Validation --------------------------------------------------------------------------
@@ -76,8 +79,13 @@ export default function FullScreenDialogStockOut() {
             .typeError("Quantity must be a number")
             .required("Quantity is required")
             .positive("Must be greater than 0"),
-        // dateInput: Yup.date()
-        //     .required("Date is required")
+        dateInput: Yup.mixed()
+            .required("Date is required")
+            .test("is-valid-date", "Invalid date", (val) => val && dayjs(val).isValid()),
+        employee: Yup.object()
+            .nullable()
+            .required("Employee is required")
+            .test("has-id", "Employee is required", (val) => val && val.id),
     });
 
     // -- Handler ----------------------------------------------------------------------------
@@ -85,16 +93,16 @@ export default function FullScreenDialogStockOut() {
         dispatch(setFilterStockOut({
             ...filterValue,
             pageNo: newPage + 1,
-        }))
-    }
+        }));
+    };
 
-    const handleChangeRowsPerPage = (event, newPage) => {
+    const handleChangeRowsPerPage = (event) => {
         dispatch(setFilterStockOut({
             ...filterValue,
             pageSize: event.target.value,
             pageNo: 1
         }));
-    }
+    };
 
     const handleClose = () => {
         dispatch(setIsFullScreenDialogStockOut(false));
@@ -102,53 +110,44 @@ export default function FullScreenDialogStockOut() {
         setValue(dayjs());
     };
 
-    const handleSubmit = async ({values}) => {
-        console.log(values);
-        if (!values.qty) {
-            alert("Please input quantity");
-            return;
-        }
-        try{
+    const handleSubmit = async (values, { setSubmitting }) => {
+        try {
             await stockOut({
                 materialId: stockData?.id,
                 qtyOutput: values.qty,
-                dateOutput: value.format("YYYY-MM-DDTHH:mm:ss"),
+                dateOutput: dayjs(values.dateInput).format("YYYY-MM-DDTHH:mm:ss"),
                 requesterId: values.employee?.id,
             }).unwrap();
             handleClose();
-        }catch (error) {
-
+        } catch (error) {
             dispatch(setAlertMaterialStockOut({
                 type: "error",
                 message: error?.data?.error?.description || "Something went wrong"
             }));
-
             dispatch(setIsOpenSnackbarMaterialStockOut(true));
+        } finally {
+            setSubmitting(false);
         }
     };
-    const { ids, entities, totalElements, pageSize, pageNo } = stockInData || {};
-    let tableContent;
 
-    tableContent = ids?.length > 0 ? (
+    const { ids, entities, totalElements, pageSize, pageNo } = stockInData || {};
+
+    const tableContent = ids?.length > 0 ? (
         ids.map((id, index) => (
             <TableRow key={id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{entities[id]?.dateOutput}</TableCell>
-                <TableCell sx={{
-                    color: "red",
-                    fontWeight: "semibold",
-                }}>− {entities[id]?.qtyOutput}</TableCell>
+                <TableCell sx={{ color: "red", fontWeight: "semibold" }}>
+                    − {entities[id]?.qtyOutput} {entities[id]?.unit}
+                </TableCell>
                 <TableCell>{entities[id]?.requester}</TableCell>
-
             </TableRow>
         ))
-    ): (
+    ) : (
         <TableRow>
-            <TableCell colSpan={4} align="center">
-                No data available
-            </TableCell>
+            <TableCell colSpan={4} align="center">No data available</TableCell>
         </TableRow>
-    )
+    );
 
     return (
         <Dialog
@@ -180,72 +179,83 @@ export default function FullScreenDialogStockOut() {
                         <Typography variant="h6">
                             {t('material.information')}
                         </Typography>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextField label="Code" value={stockData?.code || ""} disabled fullWidth size="small" />
-                            <TextField label="Name" value={stockData?.name || ""} disabled fullWidth size="small" />
-                            <TextField label="Unit" value={stockData?.unit || ""} disabled fullWidth size="small" />
-                            <TextField label="Balance Stock" value={stockData?.balance || 0} disabled fullWidth size="small" />
+                            <TextField label="Code"          value={stockData?.code    || ""} disabled fullWidth size="small" />
+                            <TextField label="Name"          value={stockData?.name    || ""} disabled fullWidth size="small" />
+                            <TextField label="Unit"          value={stockData?.unit    || ""} disabled fullWidth size="small" />
+                            <TextField label="Balance Stock" value={stockData?.balance || 0}  disabled fullWidth size="small" />
                         </div>
                     </div>
 
-                    {/* STOCK IN FORM */}
+                    {/* STOCK OUT FORM */}
                     <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4">
                         <Typography variant="h6">
                             {t('material.stockOutForm')}
                         </Typography>
+
                         <Formik
                             initialValues={{
-                                qty: "",
-                                dateInput: value,
-                                employee: {}
+                                qty: "",          // null so Yup .required() triggers correctly
+                                dateInput: dayjs(),
+                                employee: null,
                             }}
                             validationSchema={validationSchema}
-                            onSubmit={(values) => handleSubmit({ values })}
+                            onSubmit={handleSubmit}
                         >
-                            {({
-                                  values,
-                                  errors,
-                                  touched,
-                                  handleChange,
-                                  handleSubmit,
-                                  setFieldValue
-                              }) => (
+                            {({ values, errors, touched, handleSubmit, setFieldValue, setFieldTouched }) => (
                                 <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                                    {/* QTY */}
-                                    <TextField
+                                    {/* QUANTITY */}
+                                    <NumberField
                                         label="Quantity"
                                         name="qty"
-                                        type="number"
                                         value={values.qty}
-                                        onChange={handleChange}
-                                        fullWidth
+                                        onChange={(val) => setFieldValue("qty", val)}
+                                        onBlur={() => setFieldTouched("qty", true)}
                                         size="small"
-                                        error={touched.qty && Boolean(errors.qty)}
-                                        helperText={touched.qty && errors.qty}
+                                        min={0.001}
                                     />
+                                    {touched.qty && errors.qty && (
+                                        <FormHelperText error sx={{ mt: -2, ml: 0 }}>
+                                            {errors.qty}
+                                        </FormHelperText>
+                                    )}
 
-                                    {/* DATE PICKER FIX */}
+                                    {/* DATE PICKER */}
                                     <DatePicker
-                                        label="Date of Stock In"
+                                        label="Date of Stock Out"
                                         value={values.dateInput}
                                         onChange={(newValue) => {
                                             setFieldValue("dateInput", newValue);
-                                            setValue(newValue); // keep your local state if needed
+                                            setValue(newValue);
                                         }}
+                                        onClose={() => setFieldTouched("dateInput", true)}
                                         slotProps={{
                                             textField: {
                                                 size: "small",
                                                 fullWidth: true,
+                                                onBlur: () => setFieldTouched("dateInput", true),
                                                 error: touched.dateInput && Boolean(errors.dateInput),
-                                                helperText: touched.dateInput && errors.dateInput
+                                                helperText: touched.dateInput && errors.dateInput,
                                             }
                                         }}
                                     />
-                                    <SelectUserWithSearch onChange={(value) => setFieldValue("employee", value)}/>
 
-                                    {/* BUTTON */}
+                                    {/* EMPLOYEE */}
+                                    <SelectUserWithSearch
+                                        onChange={(val) => {
+                                            setFieldValue("employee", val);
+                                            setFieldTouched("employee", true);
+                                        }}
+                                        error={touched.employee && Boolean(errors.employee)}
+                                    />
+                                    {touched.employee && errors.employee && (
+                                        <FormHelperText error sx={{ mt: -2, ml: 0 }}>
+                                            {errors.employee}
+                                        </FormHelperText>
+                                    )}
+
+                                    {/* SUBMIT */}
                                     <Button
                                         variant="contained"
                                         size="large"
@@ -266,7 +276,6 @@ export default function FullScreenDialogStockOut() {
                     <Typography variant="subtitle1" className="mb-4">
                         {t('material.image')}
                     </Typography>
-
                     <img
                         src={stockData?.image || "/images/placeholder.png"}
                         alt="Material"
@@ -274,88 +283,98 @@ export default function FullScreenDialogStockOut() {
                     />
                 </div>
 
-
-
             </div>
-            {/* STOCK HISTORY TABLE */}
 
-                <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4 mx-5 mb-10">
+            {/* STOCK HISTORY TABLE */}
+            <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4 mx-5 mb-10">
+                <div className="flex justify-between items-center">
                     <Typography variant="h6">
                         {t('material.stockOutHistory')}
                     </Typography>
-                    <div style={{ position: "relative", display: "inline-block" }}>
-                        <button onClick={() => setOpenDate(!openDate)}>Date</button>
-                        <div>
-                            {range?.from && `From: ${dayjs(range.from).format("DD-MM-YYYY")}`}
-                            {range?.to && ` → To: ${dayjs(range.to).format("DD-MM-YYYY")}`}
-                        </div>
-                        {openDate && (
-                            <div style={{
-                                position: "absolute", top: "110%", left: 0,
-                                background: "white", border: "1px solid #ddd",
-                                borderRadius: 8, padding: 12, zIndex: 100,
-                                boxShadow: "0 8px 30px rgba(0,0,0,0.12)"
-                            }}>
-                                <DayPicker
-                                    mode="range"
-                                    selected={range}
-                                    onSelect={(r) => setRange(r)}
-                                    numberOfMonths={2}
-                                />
-                                <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                                    <button onClick={() => { setRange(undefined); }}>Clear</button>
-                                    <button onClick={() => setOpenDate(false)}>Apply</button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <TableContainer component={Paper} elevation={0}>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>#</TableCell>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Quantity</TableCell>
-                                    <TableCell>Employee</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {tableContent}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    {
-                        totalElements > 0 && (
-                            <TablePagination
-                                rowsPerPageOptions={[20, 50, 100, 1000]}
-                                component="div"
-                                count={totalElements || 0}
-                                rowsPerPage={pageSize}
-                                labelRowsPerPage={t("table.rowPerPage")}
-                                page={pageNo}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        )
-                    }
+                    <Button
+                        variant="contained"
+                        size="small"
+                        sx={{ bgcolor: green[600] }}
+                        startIcon={<PiMicrosoftExcelLogoFill />}
+                    >
+                        Export
+                    </Button>
                 </div>
 
-                <Snackbar
-                    open={isOpenSnackbarStockOut}
-                    autoHideDuration={6000}
+                {/* DATE RANGE FILTER */}
+                <div style={{ position: "relative", display: "inline-block" }}>
+                    <button onClick={() => setOpenDate(!openDate)}>Date</button>
+                    <div>
+                        {range?.from && `From: ${dayjs(range.from).format("DD-MM-YYYY")}`}
+                        {range?.to   && ` → To: ${dayjs(range.to).format("DD-MM-YYYY")}`}
+                    </div>
+                    {openDate && (
+                        <div style={{
+                            position: "absolute", top: "110%", left: 0,
+                            background: "white", border: "1px solid #ddd",
+                            borderRadius: 8, padding: 12, zIndex: 100,
+                            boxShadow: "0 8px 30px rgba(0,0,0,0.12)"
+                        }}>
+                            <DayPicker
+                                mode="range"
+                                selected={range}
+                                onSelect={(r) => setRange(r)}
+                                numberOfMonths={2}
+                            />
+                            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                                <button onClick={() => setRange(undefined)}>Clear</button>
+                                <button onClick={() => setOpenDate(false)}>Apply</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <TableContainer component={Paper} elevation={0}>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>#</TableCell>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Quantity</TableCell>
+                                <TableCell>Employee</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {tableContent}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+                {totalElements > 0 && (
+                    <TablePagination
+                        rowsPerPageOptions={[20, 50, 100, 1000]}
+                        component="div"
+                        count={totalElements || 0}
+                        rowsPerPage={pageSize}
+                        labelRowsPerPage={t("table.rowPerPage")}
+                        page={pageNo}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                )}
+            </div>
+
+            {/* SNACKBAR */}
+            <Snackbar
+                open={isOpenSnackbarStockOut}
+                autoHideDuration={6000}
+                onClose={() => dispatch(setIsOpenSnackbarMaterialStockOut(false))}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert
                     onClose={() => dispatch(setIsOpenSnackbarMaterialStockOut(false))}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    severity={alertMaterialStockOut.type}
+                    variant="filled"
+                    sx={{ width: '100%' }}
                 >
-                    <Alert
-                        onClose={() => dispatch(setIsOpenSnackbarMaterialStockOut(false))}
-                        severity={alertMaterialStockOut.type}
-                        variant="filled"
-                        sx={{ width: '100%' }}
-                    >
-                        {alertMaterialStockOut.message}
-                    </Alert>
-                </Snackbar>
+                    {alertMaterialStockOut.message}
+                </Alert>
+            </Snackbar>
 
         </Dialog>
     );

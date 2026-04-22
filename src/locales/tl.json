@@ -181,5 +181,6 @@
   "process": "Proseso",
   "noStepYet": "Wala pang hakbang, mangyaring i-click",
   "remove": "Alisin",
-  "step": "Hakbang"
+  "step": "Hakbang",
+  "unit": "Yunit"
 }

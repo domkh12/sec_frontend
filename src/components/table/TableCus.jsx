@@ -340,21 +340,27 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
             {isFilterActive && (
                 <>
                     <div className="px-4 py-5 flex items-center flex-col md:flex-row gap-2">
-                        {filterConfig?.map((filter) => (
-                            <SelectFilter
-                                key={filter.id}
-                                options={filter.options}
-                                value={filterValue?.[filter.id] || (filter.multiple ? [] : '')}
-                                onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                                label={filter.label}
-                                width={filter.width || 150}
-                                multiple={filter.multiple || false}
-                                disabled={filter.disabled || false}
-                                required={filter.required || false}
-                                error={filter.error || false}
-                                helperText={filter.helperText}
-                            />
-                        ))}
+                        {filterConfig?.map((filter) => {
+                            if (filter.id === "excel") {
+                                return null;
+                            }
+                            return (
+                                <SelectFilter
+                                    key={filter.id}
+                                    options={filter.options}
+                                    value={filterValue?.[filter.id] || (filter.multiple ? [] : '')}
+                                    onChange={(e) => handleFilterChange(filter.id, e.target.value)}
+                                    label={filter.label}
+                                    width={filter.width || 150}
+                                    multiple={filter.multiple || false}
+                                    disabled={filter.disabled || false}
+                                    required={filter.required || false}
+                                    error={filter.error || false}
+                                    helperText={filter.helperText}
+                                />
+                            )
+                        }
+                        )}
                         <TextField
                             size="small"
                             placeholder={searchPlaceholderText}
@@ -375,7 +381,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                         {
                             filterConfig?.map((filter) => (
                                 filter.id === "excel" && (
-                                        <Button key={filter.id} onClick={filter.onClick} variant="contained" sx={{bgcolor: green[600], minWidth: 100}} startIcon={<PiMicrosoftExcelLogoFill/>}>
+                                        <Button loading={filter.isLoading} key={filter.id} onClick={filter.onClick} variant="contained" sx={{bgcolor: green[600], minWidth: 100}} startIcon={<PiMicrosoftExcelLogoFill/>}>
                                             Excel
                                         </Button>
                                     )

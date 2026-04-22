@@ -157,8 +157,6 @@ function UserList(){
                 await updateUser({
                     id: userDataForUpdate.id,
                     employeeId: values.employeeId,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
                     nameEn: values.nameEn,
                     nameKh: values.nameKh,
                     email: values.email,
@@ -175,8 +173,6 @@ function UserList(){
             }else {
                 await createUser({
                     employeeId: values.employeeId,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
                     nameEn: values.nameEn,
                     nameKh: values.nameKh,
                     email: values.email,
@@ -201,8 +197,6 @@ function UserList(){
 
     const fields = [
         { name: "employeeId", label: "table.employeeId", type: "text"},
-        { name: "firstName",     label: "table.firstName",     type: "text" },
-        { name: "lastName",     label: "table.lastName",     type: "text" },
         { name: "nameEn", label: "table.nameEn", type: "text"},
         { name: "nameKh", label: "table.nameKh", type: "text"},
         { name: "email",     label: "table.email",     type: "email" },
@@ -284,8 +278,6 @@ function UserList(){
 
     const initialValues = {
         employeeId: "",
-        firstName: "",
-        lastName: "",
         nameEn: "",
         nameKh: "",
         email: "",
@@ -293,7 +285,7 @@ function UserList(){
         username: "",
         password: "",
         confirmPassword: "",
-        role: "",
+        role: null,
         department: {},
         position: "",
     };
@@ -353,18 +345,6 @@ function UserList(){
             id: "employeeId",
             label: "employeeId",
             minWidth: 50,
-            align: "left",
-        },
-        {
-            id: "firstName",
-            label: t("table.firstName"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "lastName",
-            label: t("table.lastName"),
-            minWidth: 130,
             align: "left",
         },
         {

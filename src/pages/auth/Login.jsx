@@ -56,6 +56,8 @@ function Login() {
                     navigate("/manager");
                 } else if (authData.userRoles === "ROLE_VIEWER") {
                     navigate("/tv");
+                } else if (authData.userRoles === "ROLE_WAREHOUSE") {
+                    navigate("/warehouse");
                 }
             }
         };
@@ -108,6 +110,13 @@ function Login() {
                 } else if (roles.includes(ROLES.ROLE_VIEWER)) {
                     try {
                         navigate("/tv");
+                        saveLoginInfo(roles, username);
+                    } catch (err) {
+                        console.log(err);
+                    }
+                } else if (roles.includes(ROLES.ROLE_WAREHOUSE)) {
+                    try {
+                        navigate("/warehouse");
                         saveLoginInfo(roles, username);
                     } catch (err) {
                         console.log(err);

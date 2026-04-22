@@ -9,11 +9,12 @@ import Unauthorize from "./pages/error/Unauthorize.jsx";
 import NotFound from "./pages/error/NotFound.jsx";
 import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
-import QrScan from "./pages/qrScan/QrScan.jsx";
-import QrGenerator from "./pages/qrGenerator/QrGenerator.jsx";
-
+import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 
 // Lazy load everything else
+const QrScan = lazy(() => import("./pages/qrScan/QrScan.jsx"));
+const QrGenerator = lazy(() => import("./pages/qrGenerator/QrGenerator.jsx"));
+const MenuWarehouse = lazy(() => import("./pages/menu/MenuWarehouse.jsx"));
 const WorkOrderList = lazy(() => import("./pages/workOrder/WorkOrderList.jsx"));
 const DefectTypeList = lazy(() => import("./pages/defectType/DefectTypeList.jsx"));
 const ProcessingTimeList = lazy(() => import("./pages/processingTime/ProcessingTimeList.jsx"));
@@ -58,6 +59,15 @@ function App() {
           <Route element={<PersistLogin/>}>
               <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]}/>}>
                   <Route element={<Prefetch/>}>
+
+                      {/* Warehouse Route */}
+                      <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_WAREHOUSE]}/>}>
+                          <Route path="/warehouse" element={<LayoutWarehouse/>}>
+                              <Route index element={<MenuWarehouse/>}/>
+                              <Route path="materials" element={<MaterialList/>}/>
+                              <Route path="profile" element={<Profile/>}/>
+                          </Route>
+                      </Route>
 
                       {/* Start dash manager */}
                       <Route element={<RequireAuth allowedRoles={[ROLES.ROLE_MANAGER]}/>}>

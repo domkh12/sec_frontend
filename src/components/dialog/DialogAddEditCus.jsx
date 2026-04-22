@@ -209,13 +209,9 @@ function DialogAddEditCus({
         const isLoading = loadingFields[field.name] ?? false;
         const isRequired = requiredFields[field.name] ?? false;
         const commonProps = {
-            label: isRequired ? (
-                <span>
-                    {t(field.label)}
-                    <span style={{ color: "rgba(252,100,100,0.9)", marginLeft: "3px" }}>*</span>
-                </span>
-            ) : t(field.label),
+            label: t(field.label),
             id: field.name,
+            required: isRequired,
             size: "small",
             fullWidth: true,
             error: !!(errors[field.name] && touched[field.name]),
