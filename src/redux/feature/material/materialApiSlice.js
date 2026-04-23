@@ -59,6 +59,16 @@ export const materialApiSlice = apiSlice.injectEndpoints({
            })
         }),
 
+        getMaterialStockOutExcel: builder.mutation({
+            query: () => ({
+                url: `/materials/report-stock-out-excel`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+                responseHandler: (response) => response.blob(),
+            })
+        }),
+
         getMaterialReportExcel: builder.mutation({
             query: () => ({
                 url: `/materials/report-excel`,
@@ -246,6 +256,7 @@ export const materialApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetMaterialStockOutExcelMutation,
     useGetMaterialStockInExcelMutation,
     useGetMaterialReportExcelMutation,
     useStockOutMutation,

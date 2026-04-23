@@ -16,6 +16,7 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import dayjs from "dayjs";
 import {
+    useGetMaterialStockOutExcelMutation,
     useGetStockOutQuery,
     useStockOutMutation
 } from "../../redux/feature/material/materialApiSlice.js";
@@ -62,6 +63,7 @@ export default function FullScreenDialogStockOut() {
 
     // -- Mutation -----------------------------------------------------------------------------
     const [stockOut, {isLoading}] = useStockOutMutation();
+    const [reportStockOutExcel, {isLoading: isLoadingStockOutExcel}] = useGetMaterialStockOutExcelMutation();
 
     // -- Queries ------------------------------------------------------------------------------
     const { data: stockInData } = useGetStockOutQuery(
@@ -129,6 +131,28 @@ export default function FullScreenDialogStockOut() {
             setSubmitting(false);
         }
     };
+
+    const handleExportExcel = async () => {
+        const res = await reportStockOutExcel().unwrap();
+
+        // Create blob
+        const blob = new Blob([res], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        // Create URL
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    }
 
     const { ids, entities, totalElements, pageSize, pageNo } = stockInData || {};
 
@@ -296,37 +320,12 @@ export default function FullScreenDialogStockOut() {
                         size="small"
                         sx={{ bgcolor: green[600] }}
                         startIcon={<PiMicrosoftExcelLogoFill />}
+                        onClick={handleExportExcel}
+                        loading={isLoadingStockOutExcel}
+
                     >
                         Export
                     </Button>
-                </div>
-
-                {/* DATE RANGE FILTER */}
-                <div style={{ position: "relative", display: "inline-block" }}>
-                    <button onClick={() => setOpenDate(!openDate)}>Date</button>
-                    <div>
-                        {range?.from && `From: ${dayjs(range.from).format("DD-MM-YYYY")}`}
-                        {range?.to   && ` → To: ${dayjs(range.to).format("DD-MM-YYYY")}`}
-                    </div>
-                    {openDate && (
-                        <div style={{
-                            position: "absolute", top: "110%", left: 0,
-                            background: "white", border: "1px solid #ddd",
-                            borderRadius: 8, padding: 12, zIndex: 100,
-                            boxShadow: "0 8px 30px rgba(0,0,0,0.12)"
-                        }}>
-                            <DayPicker
-                                mode="range"
-                                selected={range}
-                                onSelect={(r) => setRange(r)}
-                                numberOfMonths={2}
-                            />
-                            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                                <button onClick={() => setRange(undefined)}>Clear</button>
-                                <button onClick={() => setOpenDate(false)}>Apply</button>
-                            </div>
-                        </div>
-                    )}
                 </div>
 
                 <TableContainer component={Paper} elevation={0}>

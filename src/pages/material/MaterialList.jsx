@@ -121,7 +121,6 @@ function MaterialList() {
                 dispatch(setIsOpenSnackbarMaterial(true));
                 return;
             }
-
         }
 
         try {

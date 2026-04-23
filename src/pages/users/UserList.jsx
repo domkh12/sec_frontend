@@ -110,22 +110,10 @@ function UserList(){
         employeeId: Yup.string()
             .required(t("validation.required")),
 
-        firstName: Yup.string()
-            .min(2, t("validation.minLength", { min: 2 }))
-            .required(t("validation.required")),
-
-        lastName: Yup.string()
-            .min(2, t("validation.minLength", { min: 2 }))
-            .required(t("validation.required")),
-
         email: Yup.string()
             .email(t("validation.invalidEmail"))
             .nullable()
             .optional(),
-
-        phoneNumber: Yup.string()
-            .matches(/^[0-9+\s\-()]{7,15}$/, t("validation.invalidPhone"))
-            .required(t("validation.required")),
 
         username: Yup.string()
             .min(2, t("validation.minLength", { min: 2 }))
@@ -159,7 +147,7 @@ function UserList(){
                     employeeId: values.employeeId,
                     nameEn: values.nameEn,
                     nameKh: values.nameKh,
-                    email: values.email,
+                    gender: values.gender,
                     phoneNumber: values.phoneNumber,
                     username: values.username,
                     password: values.password,
@@ -175,7 +163,7 @@ function UserList(){
                     employeeId: values.employeeId,
                     nameEn: values.nameEn,
                     nameKh: values.nameKh,
-                    email: values.email,
+                    gender: values.gender,
                     phoneNumber: values.phoneNumber,
                     username: values.username,
                     password: values.password,
@@ -199,7 +187,7 @@ function UserList(){
         { name: "employeeId", label: "table.employeeId", type: "text"},
         { name: "nameEn", label: "table.nameEn", type: "text"},
         { name: "nameKh", label: "table.nameKh", type: "text"},
-        { name: "email",     label: "table.email",     type: "email" },
+        { name : "gender", label: "gender", type: "text"},
         { name: "phoneNumber",     label: "table.phoneNumber",     type: "text" },
         { name: "username", label: "table.username", type: "text"},
         { name: "password",         label: "table.password",         type: "password", hideOnUpdate: true },
@@ -280,7 +268,7 @@ function UserList(){
         employeeId: "",
         nameEn: "",
         nameKh: "",
-        email: "",
+        gender: "",
         phoneNumber: "",
         username: "",
         password: "",
@@ -297,7 +285,6 @@ function UserList(){
             employeeId: row.employeeId,
             firstName: row.firstName,
             lastName: row.lastName,
-            email: row.email,
             phoneNumber: row.phoneNumber,
             username: row.username,
             role: row.roleId,
@@ -305,6 +292,7 @@ function UserList(){
                 parentId: row.departmentId,
                 childId: row.lineId
             },
+            gender: row.gender,
             position: row.position,
             nameEn: row.nameEn,
             nameKh: row.nameKh,
@@ -358,6 +346,12 @@ function UserList(){
             label: t("table.nameKh"),
             minWidth: 130,
             align: "left",
+        },
+        {
+            id: "gender",
+            label: t("gender"),
+            minWidth: 60,
+            align: "left"
         },
         {
             id: "phoneNumber",
