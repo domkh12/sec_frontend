@@ -54,7 +54,7 @@ export default function FullScreenDialogStockIn() {
     const open          = useSelector((s) => s.material.isFullScreenDialogStockIn);
     const stockData     = useSelector((s) => s.material.stockInData);
     const filterValue   = useSelector((s) => s.material.filterStockIn);
-
+    console.log(stockData);
     // -- State -------------------------------------------------------------------------------
     const [value, setValue]    = useState(dayjs());
 
@@ -128,7 +128,7 @@ export default function FullScreenDialogStockIn() {
     };
 
     const handleExportExcel = async () => {
-        const res = await reportStockInExcel().unwrap();
+        const res = await reportStockInExcel({id: stockData.id}).unwrap();
 
         // Create blob
         const blob = new Blob([res], {
@@ -207,6 +207,8 @@ export default function FullScreenDialogStockIn() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <TextField label="Code" value={stockData?.code || ""} disabled fullWidth size="small" />
                             <TextField label="Name" value={stockData?.name || ""} disabled fullWidth size="small" />
+                            <TextField label="Color" value={stockData?.color || ""} disabled fullWidth size="small" />
+                            <TextField label="Size" value={stockData?.size || ""} disabled fullWidth size="small" />
                             <TextField label="Unit" value={stockData?.unit || ""} disabled fullWidth size="small" />
                             <TextField label="Balance Stock" value={stockData?.balance || 0} disabled fullWidth size="small" />
                         </div>

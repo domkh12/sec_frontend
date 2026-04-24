@@ -280,7 +280,9 @@ function RowTableComponent({
                                     .map(item => typeof item === "object" ? (col.arrayKey ? item[col.arrayKey] : JSON.stringify(item)) : item)
                                     .join(", ")
                             ) : (
-                                entity[col.id] ?? "—"
+                                col.format
+                                    ? col.format(entity[col.id]) ?? "—"
+                                    : entity[col.id] ?? "—"
                             )}
                         </TableCell>
                     ))}

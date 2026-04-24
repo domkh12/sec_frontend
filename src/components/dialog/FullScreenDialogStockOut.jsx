@@ -40,6 +40,7 @@ import SelectUserWithSearch from "../select/SelectUserWithSearch.jsx";
 import NumberField from "../ui/NumberField.jsx";
 import {green} from "@mui/material/colors";
 import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
+import {useGetUserLookupQuery} from "../../redux/feature/user/userApiSlice.js";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -133,7 +134,7 @@ export default function FullScreenDialogStockOut() {
     };
 
     const handleExportExcel = async () => {
-        const res = await reportStockOutExcel().unwrap();
+        const res = await reportStockOutExcel({id: stockData.id}).unwrap();
 
         // Create blob
         const blob = new Blob([res], {
@@ -187,7 +188,7 @@ export default function FullScreenDialogStockOut() {
                         <CloseIcon />
                     </IconButton>
                     <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
-                        {t("table.stockIn")}
+                        {t("table.stockOut")}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -206,6 +207,8 @@ export default function FullScreenDialogStockOut() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <TextField label="Code"          value={stockData?.code    || ""} disabled fullWidth size="small" />
                             <TextField label="Name"          value={stockData?.name    || ""} disabled fullWidth size="small" />
+                            <TextField label="Color"          value={stockData?.color    || ""} disabled fullWidth size="small" />
+                            <TextField label="Size"          value={stockData?.size    || ""} disabled fullWidth size="small" />
                             <TextField label="Unit"          value={stockData?.unit    || ""} disabled fullWidth size="small" />
                             <TextField label="Balance Stock" value={stockData?.balance || 0}  disabled fullWidth size="small" />
                         </div>

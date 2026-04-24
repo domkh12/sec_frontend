@@ -35,6 +35,8 @@ import FullScreenDialogStockOut from "../../components/dialog/FullScreenDialogSt
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 import {UNITS} from "../../config/units.js";
 import useAuth from "../../hook/useAuth.jsx";
+import {useGetSizeLookupQuery} from "../../redux/feature/size/sizeApiSlice.js";
+import {useGetColorLookupQuery} from "../../redux/feature/color/colorApiSlice.js";
 
 function MaterialList() {
     const [id, setId] = useState(null);
@@ -44,7 +46,7 @@ function MaterialList() {
     const dispatch = useDispatch();
     const {isAdmin, isManager, isWarehouse} = useAuth();
     const {t} = useTranslation();
-    const isMd = useBreakpoints();
+    const {isMd} = useBreakpoints();
 
     // -- Selector ----------------------------------------------------------------------------------
     const materialDataForUpdate   = useSelector((state) => state.material.materialDataForUpdate);
@@ -59,13 +61,21 @@ function MaterialList() {
     const debounceSearch = useDebounce(filterValue.search, 500);
     const [deleteMaterial, {isLoading: isLoadingDeleteMaterial}] = useDeleteMaterialMutation();
     const [materialReportExcel, {isLoading: isLoadingGetReportMaterial}] = useGetMaterialReportExcelMutation();
+
+    // -- Query ---------------------------------------------------------------------------------------------------
+    const {data: sizeData} = useGetSizeLookupQuery();
+    const {data: colorData} = useGetColorLookupQuery();
     const {data: materialStats} = useGetMaterialStatsQuery();
     const {data: materialData, isLoading, isSuccess, isFetching} = useGetMaterialQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
         search: debounceSearch,
-        status: filterValue.status
+        status: filterValue.status,
+        unit: filterValue.unit,
+        size: sizeData?.find((size) => size.id === filterValue.size)?.size || "",
+        color: colorData?.find((color) => color.id === filterValue.color)?.color || "",
     });
+
 
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterMaterial({
@@ -105,10 +115,15 @@ function MaterialList() {
             }),
         unit: Yup.string().typeError(t("validation.required"))
             .required(t("validation.required")),
+        size: Yup.string().typeError(t("validation.required"))
+            .required(t("validation.required")),
+        color: Yup.string().typeError(t("validation.required"))
+            .required(t("validation.required")),
     });
 
     const handleSubmit = async (values, {resetForm}) => {
         let imageUri = null;
+
         if (values.image && typeof values.image !== "string") {
             const formData = new FormData();
             formData.append("file", values.image);
@@ -124,6 +139,10 @@ function MaterialList() {
         }
 
         try {
+
+            let size = sizeData.find((size) => size.id === values.size);
+            let color = colorData.find((color) => color.id === values.color);
+
             if (materialDataForUpdate) {
                 await updateMaterial({
                     id: materialDataForUpdate.id,
@@ -131,6 +150,8 @@ function MaterialList() {
                     name: values.name,
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
+                    size: size.size,
+                    color: color.color,
                 }).unwrap();
                 dispatch(setAlertMaterial({type: "success", message: t("updateSuccess")}));
                 dispatch(setMaterialDataForUpdate(null));
@@ -140,6 +161,8 @@ function MaterialList() {
                     name: values.name,
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
+                    size: size.size,
+                    color: color.color,
                 }).unwrap();
                 dispatch(setAlertMaterial({type: "success", message: t("createSuccess")}));
             }
@@ -161,6 +184,24 @@ function MaterialList() {
             options: UNITS.map((unit) => ({
                 value: unit.value,
                 label: unit.label,
+            })),
+        },
+        {
+          name: "size",
+          label: "size",
+          type: "autocomplete",
+          options: sizeData?.map((size) => ({
+            value: size.id,
+            label: size.size,
+          })),
+        },
+        {
+            name: "color",
+            label: "color",
+            type: "autocomplete",
+            options: colorData?.map((color) => ({
+                value: color.id,
+                label: color.color,
             })),
         },
         {
@@ -248,6 +289,33 @@ function MaterialList() {
             ]
         },
         {
+            id: "unit",
+            label: t("unit"),
+            width: isMd ? 150 : "100%",
+            options: UNITS.map((unit) => ({
+                value: unit.value,
+                label: unit.label,
+            }))
+        },
+        {
+            id: "size",
+            label: t("size"),
+            width: isMd ? 150 : "100%",
+            options: sizeData?.map((size) => ({
+                value: size.id,
+                label: size.size,
+            }))
+        },
+        {
+            id: "color",
+            label: t("color"),
+            width: isMd ? 150 : "100%",
+            options: colorData?.map((color) => ({
+                value: color.id,
+                label: color.color,
+            }))
+        },
+        {
             id: 'excel',
             isLoading: isLoadingGetReportMaterial,
             onClick: async () => {
@@ -272,10 +340,6 @@ function MaterialList() {
                 window.URL.revokeObjectURL(url);
             }
         },
-        {
-            id: "unit",
-            label: t("unit")
-        }
     ]
 
     const columns = [
@@ -289,13 +353,25 @@ function MaterialList() {
         {
             id: "code",
             label: t("table.code"),
-            minWidth: 50,
+            minWidth: 100,
             align: "left",
         },
         {
             id: "name",
             label: t("table.material"),
             minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "size",
+            label: t('color'),
+            minWidth: 50,
+            align: "left",
+        },
+        {
+            id: "color",
+            label: t('size'),
+            minWidth: 50,
             align: "left",
         },
         {
@@ -308,17 +384,20 @@ function MaterialList() {
             id: "totalInput",
             label: t("table.stockIn"),
             minWidth: 130,
+            format: (v) => Number(v).toFixed(2),
             align: "left",
         },
         {
             id: "totalOutput",
             label: t("table.stockOut"),
             minWidth: 130,
+            format: (v) => Number(v).toFixed(2),
             align: "left",
         },
         {
             id: "balance",
             label: t("table.balance"),
+            format: (v) => Number(v).toFixed(2),
             minWidth: 130,
             align: "left",
         },

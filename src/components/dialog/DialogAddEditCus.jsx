@@ -134,7 +134,7 @@ function DialogAddEditCus({
     const formikRef = useRef(null);
     const [dynamicOptions, setDynamicOptions] = useState({});
     const [loadingFields, setLoadingFields] = useState({});
-    console.log("dynamicOptions", dynamicOptions);
+
     // Nested "Add New" dialog state
     const [addNewDialog, setAddNewDialog] = useState({
         open: false,

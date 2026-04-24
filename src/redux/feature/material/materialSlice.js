@@ -17,6 +17,8 @@ const materialSlice = createSlice({
             pageSize: 20,
             search: "",
             status: "",
+            color: "",
+            size: "",
         },
         filterStockIn: {
             pageNo: 1,

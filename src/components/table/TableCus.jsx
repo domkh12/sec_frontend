@@ -60,6 +60,7 @@ const wrapperStyle = {
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 32px rgba(0,0,0,0.3)",
 };
 const searchTextField = {
+    minWidth: 200,
     width: "100%",
     "& .MuiInputBase-input": {
         color: "#fff",
@@ -339,7 +340,7 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
         <div className="rounded-xl overflow-hidden" style={wrapperStyle}>
             {isFilterActive && (
                 <>
-                    <div className="px-4 py-5 flex items-center flex-col md:flex-row gap-2">
+                    <div className="px-4 py-5 flex items-center flex-col md:flex-row gap-2 overflow-x-auto">
                         {filterConfig?.map((filter) => {
                             if (filter.id === "excel") {
                                 return null;

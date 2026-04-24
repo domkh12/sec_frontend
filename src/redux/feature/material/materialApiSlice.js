@@ -8,8 +8,8 @@ const initialState = materialAdapter.getInitialState();
 export const materialApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getMaterial: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "", status = "" }) => ({
-                url: `/materials?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", status = "", color = "", size = "", unit = "" }) => ({
+                url: `/materials?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}&color=${color}&size=${size}&unit=${unit}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -50,8 +50,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
         }),
 
         getMaterialStockInExcel: builder.mutation({
-           query: () => ({
-               url: `/materials/report-stock-in-excel`,
+           query: ({id}) => ({
+               url: `/materials/${id}/report-stock-in-excel`,
                validateStatus: (response, result) => {
                    return response.status === 200 && !result.isError;
                },
@@ -60,8 +60,8 @@ export const materialApiSlice = apiSlice.injectEndpoints({
         }),
 
         getMaterialStockOutExcel: builder.mutation({
-            query: () => ({
-                url: `/materials/report-stock-out-excel`,
+            query: ({id}) => ({
+                url: `/materials/${id}/report-stock-out-excel`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

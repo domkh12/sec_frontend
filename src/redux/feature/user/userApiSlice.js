@@ -95,6 +95,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getUserLookup: builder.query({
+            query: () => ({
+                url: `/users/lookup`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "UserLookup", id: "LIST" }],
+        }),
+
         setActive: builder.mutation({
             query: (id) => ({
                 url: `/users/${id}/active`,
@@ -121,12 +131,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url: `/users/${id}/unblock`,
                 method: "POST",
             }),
-        })
+        }),
 
     }),
 });
 
 export const {
+    useGetUserLookupQuery,
     useSetUnblockUserMutation,
     useSetBlockUserMutation,
     useGetUserStatsQuery,
