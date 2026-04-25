@@ -54,12 +54,12 @@ function MenuManager(){
             </div>
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
-                <Typography variant="h6" sx={{color: yellow[600]}}>HR Monitor</Typography>
+                <Typography variant="h6" sx={{color: yellow[600]}}>Operations</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>Quality Control</Typography>
+                    <Typography variant={"body1"} sx={{color: yellow[600]}}>Production Input</Typography>
                     <MenuButton
-                        title="Input Data"
+                        title="Hourly Output"
                         iconPath={"/images/smart-tv.png"}
                         onClick={() => navigate("tv-menu")}
                     />

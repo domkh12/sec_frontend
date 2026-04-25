@@ -57,7 +57,7 @@ function ImageCard({ url, onDelete, fileSize }) {
             {/* ext badge top-left */}
             <div style={{
                 position: "absolute", top: 8, left: 8,
-                background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)",
+                background: "rgba(0,0,0,0.55)",
                 borderRadius: 6, padding: "2px 7px",
                 fontSize: 10, fontWeight: 700, color: "#fff", fontFamily: "monospace",
                 letterSpacing: 0.5,

@@ -82,10 +82,21 @@ export const productionlineApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getProductionLineLookup: builder.query({
+            query: () => ({
+                url: `/production-lines/lookup`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "ProductionLineLookup", id: "LIST" }],
+        })
+
     }),
 });
 
 export const {
+    useGetProductionLineLookupQuery,
     useUpdateProductionLineMutation,
     useDeleteProductionLineMutation,
     useCreateProductionLineMutation,

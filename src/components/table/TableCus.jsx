@@ -19,7 +19,6 @@ const cellSx = {
     color: "#fff",
     fontSize: "0.82rem",
     padding: "10px 14px",
-    backdropFilter: "blur(4px)",
 };
 
 const headerCellSx = {
@@ -27,7 +26,6 @@ const headerCellSx = {
     border: "1px solid rgba(255,255,255,0.15)",
     padding: "12px 14px",
     background: "rgba(255,255,255,0.12)",
-    backdropFilter: "blur(16px)",
     textTransform: "uppercase",
     letterSpacing: "0.08em",
     textAlign: "center",
@@ -38,7 +36,6 @@ const headerCellSx = {
 
 const paginationSx = {
     background: "rgba(255,255,255,0.04)",
-    backdropFilter: "blur(12px)",
     borderTop: "1px solid rgba(255,255,255,0.12)",
     color: "rgba(255,255,255,0.75)",
     fontSize: "0.78rem",
@@ -54,7 +51,7 @@ const paginationSx = {
     "& .MuiInputBase-root": { color: "rgba(255,255,255,0.75)" },
 };
 
-const containerSx = { background: "transparent", backdropFilter: "blur(12px)" };
+const containerSx = { background: "transparent" };
 const wrapperStyle = {
     border: "1px solid rgba(255,255,255,0.18)",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 32px rgba(0,0,0,0.3)",

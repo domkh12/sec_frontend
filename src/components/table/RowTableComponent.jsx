@@ -124,8 +124,7 @@ function RowTableComponent({
             textAlign: "center",
             color: "#fff",
             fontSize: "0.82rem",
-            padding: "10px 14px",
-            backdropFilter: "blur(4px)",
+            padding: "10px 14px"
         };
 
         const headerCellSx = {
@@ -133,7 +132,6 @@ function RowTableComponent({
             border: "1px solid rgba(255,255,255,0.15)",
             padding: "12px 14px",
             background: "rgba(255,255,255,0.12)",
-            backdropFilter: "blur(16px)",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
             textAlign: "center",
@@ -245,7 +243,7 @@ function RowTableComponent({
                             ) : col.id === "image" ? (
                                 <>
                                 <Box onClick={() => setImagePreview(true)} sx={{width: "full", height: "60px", overflow: "hidden", cursor: "pointer"}}>
-                                    <img src={entity[col.id] || "/images/placeholder.png"} alt={entity.name} className="object-contain object-center w-full h-full" />
+                                    <img src={entity[col.id] || "/images/placeholder.png"} alt={entity.name} loading="lazy" decoding="async" className="object-contain object-center w-full h-full" />
                                 </Box>
                                 <Dialog
                                     open={!!imagePreview}

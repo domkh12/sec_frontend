@@ -28,7 +28,6 @@ function DialogConfirmBlock({
                 backdrop: {
                     sx: {
                         backgroundColor: "rgba(2,6,23,0.55)",
-                        backdropFilter: "blur(6px)",
                     },
                 },
             }}
@@ -37,9 +36,7 @@ function DialogConfirmBlock({
                     borderRadius: "18px",
                     width: "380px",
                     padding: "6px",
-                    background: "rgba(15,23,42,0.55)",
-                    backdropFilter: "blur(28px) saturate(180%)",
-                    WebkitBackdropFilter: "blur(28px) saturate(180%)",
+                    background: "rgba(15,23,42,1)",
                     border: "1px solid rgba(255,255,255,0.14)",
                     boxShadow: `
                         inset 0 1px 0 rgba(255,255,255,0.18),
@@ -197,7 +194,6 @@ function DialogConfirmBlock({
                         background: isBlocked
                             ? "linear-gradient(135deg, rgba(34,197,94,0.8) 0%, rgba(22,163,74,0.75) 100%)"
                             : "linear-gradient(135deg, rgba(251,191,36,0.8) 0%, rgba(245,158,11,0.75) 100%)",
-                        backdropFilter: "blur(8px)",
                         border: isBlocked
                             ? "1px solid rgba(134,239,172,0.25)"
                             : "1px solid rgba(251,191,36,0.25)",

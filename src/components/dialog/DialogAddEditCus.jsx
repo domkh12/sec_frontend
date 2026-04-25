@@ -18,7 +18,6 @@ const glassInputSx = {
     "& .MuiOutlinedInput-root": {
         borderRadius: "10px",
         backgroundColor: "rgba(255,255,255,0.06)",
-        backdropFilter: "blur(8px)",
         color: "rgba(255,255,255,0.92)",
         fontSize: "0.875rem",
         transition: "all 0.2s ease",
@@ -61,9 +60,7 @@ const dialogPaperSx = {
         borderRadius: "18px",
         width: "min(680px, 95vw)",
         padding: "6px",
-        background: "rgba(15,23,42,0.55)",
-        backdropFilter: "blur(28px) saturate(180%)",
-        WebkitBackdropFilter: "blur(28px) saturate(180%)",
+        background: "rgba(15,23,42,1)",
         border: "1px solid rgba(255,255,255,0.14)",
         boxShadow: `
                 inset 0 1px 0 rgba(255,255,255,0.18),
@@ -325,7 +322,6 @@ function DialogAddEditCus({
                                 PaperProps: {
                                     sx: {
                                         background: "rgba(15,23,42,0.92)",
-                                        backdropFilter: "blur(20px)",
                                         border: "1px solid rgba(255,255,255,0.12)",
                                         borderRadius: "10px",
                                         boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
@@ -387,7 +383,6 @@ function DialogAddEditCus({
                             paper: {
                                 sx: {
                                     background: "rgba(15,23,42,0.92)",
-                                    backdropFilter: "blur(20px)",
                                     border: "1px solid rgba(255,255,255,0.12)",
                                     borderRadius: "10px",
                                     boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
@@ -451,7 +446,6 @@ function DialogAddEditCus({
                             paper: {
                                 sx: {
                                     background: "rgba(15,23,42,0.92)",
-                                    backdropFilter: "blur(20px)",
                                     border: "1px solid rgba(255,255,255,0.12)",
                                     borderRadius: "10px",
                                     boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
@@ -555,7 +549,6 @@ function DialogAddEditCus({
                     />
                 );
             case "image":
-                console.log(values[field.name])
                 return wrap(
                     <>
                     <div className="w-full h-56 overflow-hidden rounded-lg">
@@ -838,7 +831,6 @@ function DialogAddEditCus({
                     backdrop: {
                         sx: {
                             backgroundColor: "rgba(2,6,23,0.45)",
-                            backdropFilter: "blur(4px)",
                         },
                     },
                 }}
@@ -917,7 +909,6 @@ function DialogAddEditCus({
                                         fontWeight: 500,
                                         px: 2.5,
                                         textTransform: "none",
-                                        backdropFilter: "blur(4px)",
                                         "&:hover": {
                                             borderColor: "rgba(255,255,255,0.38)",
                                             backgroundColor: "rgba(255,255,255,0.06)",
@@ -935,7 +926,6 @@ function DialogAddEditCus({
                                         borderRadius: "9px",
                                         background:
                                             "linear-gradient(135deg, rgba(96,165,250,0.85) 0%, rgba(59,130,246,0.75) 100%)",
-                                        backdropFilter: "blur(8px)",
                                         border: "1px solid rgba(147,197,253,0.3)",
                                         boxShadow:
                                             "0 4px 16px rgba(59,130,246,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
@@ -981,7 +971,6 @@ function DialogAddEditCus({
                     backdrop: {
                         sx: {
                             backgroundColor: "rgba(2,6,23,0.55)",
-                            backdropFilter: "blur(6px)",
                         },
                     },
                 }}
@@ -1059,7 +1048,6 @@ function DialogAddEditCus({
                                         fontWeight: 500,
                                         px: 2.5,
                                         textTransform: "none",
-                                        backdropFilter: "blur(4px)",
                                         "&:hover": {
                                             borderColor: "rgba(255,255,255,0.38)",
                                             backgroundColor: "rgba(255,255,255,0.06)",
@@ -1077,7 +1065,6 @@ function DialogAddEditCus({
                                     sx={{
                                         borderRadius: "9px",
                                         background: "linear-gradient(135deg, rgba(96,165,250,0.85) 0%, rgba(59,130,246,0.75) 100%)",
-                                        backdropFilter: "blur(8px)",
                                         border: "1px solid rgba(147,197,253,0.3)",
                                         boxShadow: "0 4px 16px rgba(59,130,246,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
                                         color: "rgba(255,255,255,0.95)",

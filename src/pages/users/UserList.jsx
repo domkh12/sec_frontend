@@ -210,9 +210,16 @@ function UserList(){
             label: "table.deptAndLine",
             type: "nestedSelect",
             minWidth: 130,
-            options: deptLookupData,
+            options: deptLookupData?.map(dept => ({
+                ...dept,
+                children: dept.children?.map(child => ({
+                    ...child,
+                    name: child.line
+                }))
+            })),
         }
     ];
+    console.log(deptLookupData)
 
     // Add this after your columns definition or in a separate constant
     const filterConfig = [

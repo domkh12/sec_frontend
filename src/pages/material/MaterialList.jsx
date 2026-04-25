@@ -97,127 +97,6 @@ function MaterialList() {
         dispatch(setMaterialDataForUpdate(null));
     }
 
-    const validationSchema = Yup.object().shape({
-        code: Yup.string().required(t("validation.required")),
-        name: Yup.string().required(t("validation.required")),
-        image: Yup.mixed()
-            .nullable()
-            .optional()
-            .test("fileType", "Only JPG/PNG/WEBP allowed", (value) => {
-                if (!value || typeof value === "string") return true; // skip if empty or URL string
-
-                return ["image/jpeg", "image/png", "image/webp"].includes(value.type);
-            })
-            .test("fileSize", "File too large (max 2MB)", (value) => {
-                if (!value || typeof value === "string") return true; // skip if empty or URL string
-
-                return value.size <= 2 * 1024 * 1024;
-            }),
-        unit: Yup.string().typeError(t("validation.required"))
-            .required(t("validation.required")),
-        size: Yup.string().typeError(t("validation.required"))
-            .required(t("validation.required")),
-        color: Yup.string().typeError(t("validation.required"))
-            .required(t("validation.required")),
-    });
-
-    const handleSubmit = async (values, {resetForm}) => {
-        let imageUri = null;
-
-        if (values.image && typeof values.image !== "string") {
-            const formData = new FormData();
-            formData.append("file", values.image);
-            try{
-                const res = await uploadFile(formData).unwrap();
-                imageUri = res.uri;
-            }catch (error) {
-                console.log(error);
-                dispatch(setAlertMaterial({type: "error", message: error.data.error.description}));
-                dispatch(setIsOpenSnackbarMaterial(true));
-                return;
-            }
-        }
-
-        try {
-
-            let size = sizeData.find((size) => size.id === values.size);
-            let color = colorData.find((color) => color.id === values.color);
-
-            if (materialDataForUpdate) {
-                await updateMaterial({
-                    id: materialDataForUpdate.id,
-                    code: values.code,
-                    name: values.name,
-                    image: imageUri ? imageUri : null,
-                    unit: values.unit,
-                    size: size.size,
-                    color: color.color,
-                }).unwrap();
-                dispatch(setAlertMaterial({type: "success", message: t("updateSuccess")}));
-                dispatch(setMaterialDataForUpdate(null));
-            }else {
-                await createMaterial({
-                    code: values.code,
-                    name: values.name,
-                    image: imageUri ? imageUri : null,
-                    unit: values.unit,
-                    size: size.size,
-                    color: color.color,
-                }).unwrap();
-                dispatch(setAlertMaterial({type: "success", message: t("createSuccess")}));
-            }
-            dispatch(setIsOpenSnackbarMaterial(true));
-            dispatch(setIsOpenDialogAddOrEditMaterial(false));
-            resetForm();
-        } catch (error) {
-            dispatch(setAlertMaterial({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarMaterial(true));
-        }
-    };
-
-    const fields = [
-        { name: "code",     label: "table.code",     type: "text" },
-        { name: "name",     label: "table.material",     type: "text" },
-        {   name: "unit",
-            label: "table.unit",
-            type: "autocomplete",
-            options: UNITS.map((unit) => ({
-                value: unit.value,
-                label: unit.label,
-            })),
-        },
-        {
-          name: "size",
-          label: "size",
-          type: "autocomplete",
-          options: sizeData?.map((size) => ({
-            value: size.id,
-            label: size.size,
-          })),
-        },
-        {
-            name: "color",
-            label: "color",
-            type: "autocomplete",
-            options: colorData?.map((color) => ({
-                value: color.id,
-                label: color.color,
-            })),
-        },
-        {
-            name: "image",
-            label: "table.image",
-            type: "image",
-        }
-    ];
-
-    const initialValues ={
-        code: "",
-        name: "",
-        unit: "",
-        image: "",
-    }
-
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditMaterial(true));
         dispatch(setMaterialDataForUpdate({
@@ -274,6 +153,127 @@ function MaterialList() {
         dispatch(setFilterMaterial({
             search: "",
         }))
+    }
+
+    const handleSubmit = async (values, {resetForm}) => {
+        let imageUri = null;
+
+        if (values.image && typeof values.image !== "string") {
+            const formData = new FormData();
+            formData.append("file", values.image);
+            try{
+                const res = await uploadFile(formData).unwrap();
+                imageUri = res.uri;
+            }catch (error) {
+                console.log(error);
+                dispatch(setAlertMaterial({type: "error", message: error.data.error.description}));
+                dispatch(setIsOpenSnackbarMaterial(true));
+                return;
+            }
+        }
+
+        try {
+
+            let size = sizeData.find((size) => size.id === values.size);
+            let color = colorData.find((color) => color.id === values.color);
+
+            if (materialDataForUpdate) {
+                await updateMaterial({
+                    id: materialDataForUpdate.id,
+                    code: values.code,
+                    name: values.name,
+                    image: imageUri ? imageUri : null,
+                    unit: values.unit,
+                    size: size.size,
+                    color: color.color,
+                }).unwrap();
+                dispatch(setAlertMaterial({type: "success", message: t("updateSuccess")}));
+                dispatch(setMaterialDataForUpdate(null));
+            }else {
+                await createMaterial({
+                    code: values.code,
+                    name: values.name,
+                    image: imageUri ? imageUri : null,
+                    unit: values.unit,
+                    size: size.size,
+                    color: color.color,
+                }).unwrap();
+                dispatch(setAlertMaterial({type: "success", message: t("createSuccess")}));
+            }
+            dispatch(setIsOpenSnackbarMaterial(true));
+            dispatch(setIsOpenDialogAddOrEditMaterial(false));
+            resetForm();
+        } catch (error) {
+            dispatch(setAlertMaterial({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarMaterial(true));
+        }
+    };
+
+    const validationSchema = Yup.object().shape({
+        code: Yup.string().required(t("validation.required")),
+        name: Yup.string().required(t("validation.required")),
+        image: Yup.mixed()
+            .nullable()
+            .optional()
+            .test("fileType", "Only JPG/PNG/WEBP allowed", (value) => {
+                if (!value || typeof value === "string") return true; // skip if empty or URL string
+
+                return ["image/jpeg", "image/png", "image/webp"].includes(value.type);
+            })
+            .test("fileSize", "File too large (max 2MB)", (value) => {
+                if (!value || typeof value === "string") return true; // skip if empty or URL string
+
+                return value.size <= 2 * 1024 * 1024;
+            }),
+        unit: Yup.string().typeError(t("validation.required"))
+            .required(t("validation.required")),
+        size: Yup.string().typeError(t("validation.required"))
+            .required(t("validation.required")),
+        color: Yup.string().typeError(t("validation.required"))
+            .required(t("validation.required")),
+    });
+
+    const fields = [
+        { name: "code",     label: "table.code",     type: "text" },
+        { name: "name",     label: "table.material",     type: "text" },
+        {   name: "unit",
+            label: "table.unit",
+            type: "autocomplete",
+            options: UNITS.map((unit) => ({
+                value: unit.value,
+                label: unit.label,
+            })),
+        },
+        {
+          name: "size",
+          label: "size",
+          type: "autocomplete",
+          options: sizeData?.map((size) => ({
+            value: size.id,
+            label: size.size,
+          })),
+        },
+        {
+            name: "color",
+            label: "color",
+            type: "autocomplete",
+            options: colorData?.map((color) => ({
+                value: color.id,
+                label: color.color,
+            })),
+        },
+        {
+            name: "image",
+            label: "table.image",
+            type: "image",
+        }
+    ];
+
+    const initialValues ={
+        code: "",
+        name: "",
+        unit: "",
+        image: "",
     }
 
     const filterConfig = [

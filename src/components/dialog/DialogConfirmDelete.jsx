@@ -17,8 +17,7 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
             slotProps={{
                 backdrop: {
                     sx: {
-                        backgroundColor: "rgba(2,6,23,0.55)",
-                        backdropFilter: "blur(6px)",
+                        backgroundColor: "rgba(2,6,23,0.55)"
                     },
                 },
             }}
@@ -27,9 +26,7 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                     borderRadius: "18px",
                     width: "380px",
                     padding: "6px",
-                    background: "rgba(15,23,42,0.55)",
-                    backdropFilter: "blur(28px) saturate(180%)",
-                    WebkitBackdropFilter: "blur(28px) saturate(180%)",
+                    background: "rgba(15,23,42,1)",
                     border: "1px solid rgba(255,255,255,0.14)",
                     boxShadow: `
                         inset 0 1px 0 rgba(255,255,255,0.18),
@@ -151,7 +148,6 @@ function DialogConfirmDelete({ isOpen = false, onClose, title, handleDelete, isS
                         flex: 1,
                         borderRadius: "9px",
                         background: "linear-gradient(135deg, rgba(239,68,68,0.8) 0%, rgba(220,38,38,0.75) 100%)",
-                        backdropFilter: "blur(8px)",
                         border: "1px solid rgba(252,165,165,0.25)",
                         boxShadow: "0 4px 16px rgba(239,68,68,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
                         color: "rgba(255,255,255,0.95)",

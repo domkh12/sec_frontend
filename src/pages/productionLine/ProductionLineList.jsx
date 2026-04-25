@@ -20,27 +20,37 @@ import {
     setIsOpenDeleteDeptDialog,
     setIsOpenDialogAddOrEditProductionLine,
     setIsOpenSnackbarProductionLine,
-    setPageNoProductionLine,
-    setPageSizeProductionLine,
     setProductionLineDataForUpdate
 } from "../../redux/feature/productionLine/productionLineSlice.js";
+import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
+import {setAlertMaterial, setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
 
 function ProductionLineList(){
-    const {t} = useTranslation();
+    // -- State -----------------------------------------------------------------------------------------
     const [id, setId] = useState(null);
+
+    // -- Selector --------------------------------------------------------------------------------------
+    const productionLineDataForUpdate = useSelector((state) => state.productionLine.productionlineDataForUpdate);
+    const isOpen                      = useSelector((state) => state.productionLine.isOpenDialogAddOrEditProductionLine);
+    const isOpenSnackbar              = useSelector((state) => state.productionLine.isOpenSnackbarProductionLine);
+    const alertDept                   = useSelector((state) => state.productionLine.alertDept);
+    const isOpenDeleteDialog          = useSelector((state) => state.productionLine.isOpenDeleteDeptDialog);
+    const filterValue = useSelector((state) => state.productionLine.filter);
+
+    // -- Hook -----------------------------------------------------------------------------------------
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {isMd} = useBreakpoints();
-    const productionLineDataForUpdate = useSelector((state) => state.productionLine.productionlineDataForUpdate);
-    const isOpen = useSelector((state) => state.productionLine.isOpenDialogAddOrEditProductionLine);
-    const isOpenSnackbar = useSelector((state) => state.productionLine.isOpenSnackbarProductionLine);
-    const alertDept = useSelector((state) => state.productionLine.alertDept);
-    const isOpenDeleteDialog = useSelector((state) => state.productionLine.isOpenDeleteDeptDialog);
+    const {t} = useTranslation();
+    const debounceSearch = useDebounce(filterValue.search, 500);
+
+    // -- Mutation ---------------------------------------------------------------------------------------
     const[createDept, {isLoading: isLoadingCreateDept}] = useCreateProductionLineMutation();
     const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateProductionLineMutation();
     const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteProductionLineMutation();
-    const filterValue = useSelector((state) => state.productionLine.filter);
-    const debounceSearch = useDebounce(filterValue.search, 500);
+    const [uploadFile, {isLoading: isLoadingUploadFile}] = useUploadFileMutation();
+
+    // -- Query -------------------------------------------------------------------------------------------
     const {data: prodData, isLoading, isSuccess, isFetching} = useGetProductionLineQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
@@ -52,7 +62,7 @@ function ProductionLineList(){
         pageSize: 999
     });
     
-
+    // -- Handler ------------------------------------------------------------------------------------------
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterProductionLine({
             ...filterValue,
@@ -73,80 +83,14 @@ function ProductionLineList(){
         dispatch(setProductionLineDataForUpdate(null));
     }
 
-    const validationSchema = Yup.object().shape({
-        line: Yup.string().required(t("validation.required")),
-        deptId: Yup.number().required(t("validation.required")),
-    });
-
-    const handleSubmit = async (values, {resetForm}) => {
-        try {
-            if (productionLineDataForUpdate) {
-                 await updateDept({
-                    id: productionLineDataForUpdate.id,
-                    line: values.line,
-                    deptId: values.deptId,
-                }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Update successfully"}));
-                dispatch(setProductionLineDataForUpdate(null));
-            }else {
-                await createDept({
-                    line: values.line,
-                    deptId: values.deptId
-                }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Create successfully"}));
-            }
-            dispatch(setIsOpenSnackbarProductionLine(true));
-            dispatch(setIsOpenDialogAddOrEditProductionLine(false));
-            resetForm();
-        } catch (error) {
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarProductionLine(true));
-        }
-    };
-
-    const fields = [
-        { name: "line",     label: "product.line",     type: "text" },
-        {
-            id: "deptId",
-            name: "deptId",
-            label: t("department.title"),
-            type: "autocomplete",
-            minWidth: 130,
-            fetchOptions: async () => {
-                return Object.values(deptData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.department,
-                }));
-            },
-        },
-    ];
-
-    const handleFilterChange = (key, value) => {
-        if (value === "all") {
-            return dispatch(setFilterProductionLine({
-                ...filterValue,
-                [key]: "",
-            }));
-        }
-        const newFilter = {
-            ...filterValue,
-            [key]: value,
-        }
-        dispatch(setFilterProductionLine(newFilter));
-    }
-
-    const initialValues ={
-        line: "",
-        deptId: "",
-    }
-
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditProductionLine(true));
         dispatch(setProductionLineDataForUpdate({
-        id: row.id,
-        line: row.line,
-        deptId: row.deptId,
-    }));
+            id: row.id,
+            line: row.line,
+            deptId: row.deptId,
+            image: row.image
+        }));
     };
 
     const handleDeleteOpen = (row) => {
@@ -167,12 +111,102 @@ function ProductionLineList(){
         }
     }
 
+    const handleFilterChange = (key, value) => {
+        if (value === "all") {
+            return dispatch(setFilterProductionLine({
+                ...filterValue,
+                [key]: "",
+            }));
+        }
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterProductionLine(newFilter));
+    }
+
+    const handleSubmit = async (values, {resetForm}) => {
+            let imageUri = null;
+            if (values.image) {
+                const formData = new FormData();
+                formData.append("file", values.image);
+                try{
+                    const res = await uploadFile(formData).unwrap();
+                    console.log(res)
+                    imageUri = res.uri;
+                }catch (error) {
+                    console.log(error);
+                    dispatch(setAlertDept({type: "error", message: error.data.error.description}));
+                    dispatch(setIsOpenSnackbarProductionLine(true));
+                    return;
+                }
+            }
+        try{
+            if (productionLineDataForUpdate) {
+                 await updateDept({
+                    id: productionLineDataForUpdate.id,
+                    line: values.line,
+                    deptId: values.deptId,
+                    image: imageUri
+                }).unwrap();
+                dispatch(setAlertDept({type: "success", message: "Update successfully"}));
+                dispatch(setProductionLineDataForUpdate(null));
+            }else {
+                await createDept({
+                    line: values.line,
+                    deptId: values.deptId,
+                    image: imageUri
+                }).unwrap();
+                dispatch(setAlertDept({type: "success", message: "Create successfully"}));
+            }
+            dispatch(setIsOpenSnackbarProductionLine(true));
+            dispatch(setIsOpenDialogAddOrEditProductionLine(false));
+            resetForm();
+        } catch (error) {
+            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarProductionLine(true));
+        }
+    };
+
+    const validationSchema = Yup.object().shape({
+        line: Yup.string().required(t("validation.required")),
+        deptId: Yup.number().required(t("validation.required")),
+    });
+
+    const fields = [
+        { name: "line",     label: "product.line",     type: "text" },
+        {
+            id: "deptId",
+            name: "deptId",
+            label: t("department.title"),
+            type: "autocomplete",
+            minWidth: 130,
+            fetchOptions: async () => {
+                return Object.values(deptData?.entities ?? {}).map((dept) => ({
+                    value: dept.id,
+                    label: dept.department,
+                }));
+            },
+        },
+        {
+            name: "image",
+            label: "Image",
+            type: "image"
+        }
+    ];
+
+    const initialValues ={
+        line: "",
+        deptId: "",
+        image: ""
+    }
+
     const columns = [
         {
-            id: "id",
-            label: t("id"),
-            minWidth: 50,
-            align: "left",
+            id: "image",
+            label: t('image'),
+            minWidth: 100,
+            align: "left"
         },
         {
             id: "line",
@@ -239,16 +273,7 @@ function ProductionLineList(){
 
     if (isSuccess) content = (
         <div className="pb-10">
-            <div className={`
-                    relative z-10 gap-2
-                    px-5 py-2.5 m-2
-                    rounded-xl overflow-hidden
-                    border border-white/25
-                    bg-white/10
-                    shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
-                    backdrop-blur-md
-                    transition-all duration-200 ease-out
-                `}>
+            <div className={`card-glass`}>
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProductionLine(true))}/>

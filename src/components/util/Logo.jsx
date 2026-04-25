@@ -12,7 +12,7 @@ function Logo(){
     }
     return(
         <button className="flex items-center gap-2 cursor-pointer" onClick={handleNavigate}>
-            <img src={"/images/sec_logo.png"} alt="logo" width="50%" height="100%"/>
+            <img src={"/images/sec_logo.png"} loading="eager" decoding="async" fetchPriority="high" alt="logo" width="50%" height="100%"/>
             <Divider sx={{height: "40px", width: "10px" }} orientation="vertical" variant="middle" />
         </button>
     )

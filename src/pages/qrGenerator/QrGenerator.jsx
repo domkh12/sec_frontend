@@ -208,7 +208,20 @@ function QrGenerator() {
                                     />
 
                                     <NumberField label="Quantity" size="small" value={values.qty}
-                                                 onChange={(val) => setFieldValue("qty", val)} min={1}/>
+                                                 onChange={(val) => setFieldValue("qty", val)} min={1}
+                                                 arrowDisabledSx={{ color: 'rgba(255,255,255,0.3)' }}
+                                                 labelSx={{ color: 'white',
+                                                     '&.Mui-focused': {
+                                                         color: 'rgba(255,255,255,0.8)'
+                                                     }}}
+                                                 arrowSx={{ color: 'white' }}
+                                                 inputSx={{
+                                                     '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white', borderRadius: "10px" },
+                                                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+                                                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+                                                     color: 'white',
+                                                 }}
+                                    />
 
                                     <Button type="submit" variant="contained" fullWidth startIcon={
                                         <QrCode2Icon/>

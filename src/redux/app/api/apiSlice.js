@@ -89,7 +89,8 @@ export const apiSlice = createApi({
     "WorkOrderLookup",
     "SizeLookup",
     "StyleByMo",
-    "UserLookup"
+    "UserLookup",
+    "ProductionLineLookup"
   ],
   endpoints: (builder) => ({}),
 });

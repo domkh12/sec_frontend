@@ -39,7 +39,7 @@ function StatCard({ label, value, color = "sky", icon }) {
     const c = COLOR_MAP[color] ?? COLOR_MAP.sky;
 
     return (
-        <div className="w-full relative overflow-hidden rounded-xl border border-white/15 bg-white/[0.07] backdrop-blur-md px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)] hover:bg-white/[0.11] transition-all duration-200">
+        <div className="w-full relative overflow-hidden rounded-xl border border-white/15 bg-white/[0.07] px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)] hover:bg-white/[0.11] transition-all duration-200">
             {/* Tinted gradient overlay */}
             <div className={`absolute inset-0 bg-gradient-to-br ${c.grad} via-transparent to-transparent pointer-events-none`} />
 

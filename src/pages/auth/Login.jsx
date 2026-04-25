@@ -144,15 +144,8 @@ function Login() {
     };
 
     return (
-        <Box
-            className="bg-main"
-            sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                bgcolor: "#f0f2f5",
-                position: "relative",
-            }}
+        <div
+            className="bg-main flex justify-center items-center relative"
         >
             <Paper
                 elevation={3}
@@ -260,7 +253,7 @@ function Login() {
                     )}
                 </Formik>
             </Paper>
-        </Box>
+        </div>
     );
 }
 

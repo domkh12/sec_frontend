@@ -37,8 +37,7 @@ const SubMenu = ({ options, anchorEl, onHover, onSelect, depth, childId }) => {
     if (!anchorEl) return null;
 
     const glassMenuSx = {
-        background: 'rgba(15,23,42,0.95)',
-        backdropFilter: 'blur(20px)',
+        background: 'rgba(15,23,42,1)',
         border: '1px solid rgba(255,255,255,0.1)',
         borderRadius: '12px',
         '& .MuiMenuItem-root': {
@@ -169,8 +168,7 @@ const NestedSelect = ({
     };
 
     const glassMenuSx = {
-        background: 'rgba(15,23,42,0.95)',
-        backdropFilter: 'blur(20px)',
+        background: 'rgba(15,23,42,1)',
         border: '1px solid rgba(255,255,255,0.1)',
         borderRadius: '12px',
         '& .MuiMenuItem-root': {
@@ -199,7 +197,6 @@ const NestedSelect = ({
                     borderRadius: '10px',
                     padding: '8.5px 14px',
                     color: selectedText ? '#fff' : 'rgba(255,255,255,0.4)',
-                    backdropFilter: 'blur(8px)',
                     '&:hover': {
                         backgroundColor: 'rgba(255,255,255,0.1)',
                         borderColor: 'rgba(255,255,255,0.3)',

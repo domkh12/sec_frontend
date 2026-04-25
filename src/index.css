@@ -11,12 +11,22 @@ body{
     font-family: 'Battambang', sans-serif;
 }
 
-.bg-main{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.627)),url(".././images/bg.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    min-height: 100vh;
+.bg-main {
+  position: relative;
+  min-height: 100vh;
+}
+
+.bg-main::before {
+  content: '';
+  position: fixed;    /* fixed goes on pseudo, not parent */
+  inset: 0;           /* top/right/bottom/left: 0 */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
+                    url(".././images/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;   /* use cover instead of 150% */
+  background-position: center center;
+  z-index: -1;        /* sit behind content */
+  will-change: transform; /* promote to own GPU layer */
 }
 
 .card-glass{
@@ -26,14 +36,13 @@ body{
     border border-white/25
     bg-white/10
     shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
-    backdrop-blur-md
     transition-all duration-200 ease-out
 }
 
 .sub-card-glass{
     @apply relative overflow-hidden rounded-xl
     border border-white/1 bg-white/[0.01]
-    backdrop-blur-md px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)]
+     px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)]
     hover:bg-white/[0.02] transition-all duration-200
 }
 
@@ -44,7 +53,7 @@ body{
     border border-white/25
     bg-white/10
     shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
-    backdrop-blur-md
+    
     transition-all duration-200 ease-out
     hover:bg-white/20 hover:border-white/40 hover:-translate-y-0.5
     hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_12px_40px_rgba(0,0,0,0.3)]

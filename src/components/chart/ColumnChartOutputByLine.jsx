@@ -182,8 +182,6 @@ function ColumnChartOutputByLine() {
                           sx={{
                               /* ✅ Target the root container directly */
                               background: "rgba(255,255,255,0.08)",
-                              backdropFilter: "blur(16px)",
-                              WebkitBackdropFilter: "blur(16px)",
                               border: "1px solid rgba(255,255,255,0.18)",
                               borderRadius: "14px",
                               padding: "5px",
@@ -205,8 +203,6 @@ function ColumnChartOutputByLine() {
 
                               "& .Mui-selected": {
                                   background: "rgba(255,255,255,0.15) !important",
-                                  backdropFilter: "blur(24px)",
-                                  WebkitBackdropFilter: "blur(24px)",
                                   color: "#ffffff !important",
                                   border: "1px solid rgba(255,255,255,0.3)",
                                   borderRadius: "10px",

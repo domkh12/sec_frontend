@@ -9,7 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-function NumberField({ id: idProp, label, error, size = 'medium', ...other }) {
+function NumberField({ id: idProp, label, error, size = 'medium', sx, inputSx, labelSx, arrowSx, arrowDisabledSx, ...other }) {
     let id = React.useId();
     if (idProp) {
         id = idProp;
@@ -78,8 +78,9 @@ function NumberField({ id: idProp, label, error, size = 'medium', ...other }) {
             error={error}
             variant="outlined"
             fullWidth
+            sx={sx}
         >
-            <InputLabel htmlFor={id}>{label}</InputLabel>
+            <InputLabel htmlFor={id} sx={labelSx}>{label}</InputLabel>
             <OutlinedInput
                 id={id}
                 label={label}
@@ -119,6 +120,10 @@ function NumberField({ id: idProp, label, error, size = 'medium', ...other }) {
                             disabled={other.disabled || (other.max !== undefined && parseFloat(rawValue) >= other.max)}
                             onMouseDown={(e) => e.preventDefault()} // prevent input blur
                             onClick={handleIncrement}
+                            sx={{
+                                ...arrowSx,
+                                '&.Mui-disabled': arrowDisabledSx,
+                            }}
                         >
                             <KeyboardArrowUpIcon
                                 fontSize={size}
@@ -131,6 +136,10 @@ function NumberField({ id: idProp, label, error, size = 'medium', ...other }) {
                             disabled={other.disabled || (other.min !== undefined && parseFloat(rawValue) <= other.min)}
                             onMouseDown={(e) => e.preventDefault()} // prevent input blur
                             onClick={handleDecrement}
+                            sx={{
+                                ...arrowSx,
+                                '&.Mui-disabled': arrowDisabledSx,
+                            }}
                         >
                             <KeyboardArrowDownIcon
                                 fontSize={size}
@@ -139,7 +148,7 @@ function NumberField({ id: idProp, label, error, size = 'medium', ...other }) {
                         </IconButton>
                     </InputAdornment>
                 }
-                sx={{ pr: 0 }}
+                sx={{ pr: 0, ...inputSx }}
             />
             {/*<FormHelperText sx={{ ml: 0, '&:empty': { mt: 0 } }}>*/}
             {/*    Enter value from {other.min ?? 1}*/}
@@ -162,6 +171,18 @@ NumberField.propTypes = {
     step: PropTypes.number,
     disabled: PropTypes.bool,
     required: PropTypes.bool,
+    sx: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+        PropTypes.func,
+    ]),
+    inputSx: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.array,
+        PropTypes.func,
+    ]),
+    labelSx: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.func]),
+    arrowSx: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.func]),
 };
 
 export default NumberField;

@@ -22,7 +22,6 @@ function MenuButton({title, onClick, iconPath}) {
         border border-white/25
         bg-white/10
         shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.25)]
-        backdrop-blur-md
         transition-all duration-200 ease-out
         hover:bg-white/20 hover:border-white/40 hover:-translate-y-0.5
         hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),0_12px_40px_rgba(0,0,0,0.3)]
@@ -39,6 +38,8 @@ function MenuButton({title, onClick, iconPath}) {
       <img
         src={iconPath || "/images/coming-soon.png"}
         alt={title}
+        loading={"lazy"}
+        decoding={"async"}
         className="relative w-8 h-8 object-contain drop-shadow-md flex-shrink-0"
       />
 

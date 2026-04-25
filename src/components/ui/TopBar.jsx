@@ -6,7 +6,7 @@ function TopBar({title, backUrl}) {
     const theme = useTheme();
     const navigation = useNavigate();
     return(
-        <nav className="w-full px-4 py-1 bg-gray-200 h-[72px] shadow-lg backdrop-blur-3xl flex items-center justify-between z-50 fixed top-0 left-0">
+        <nav className="w-full px-4 py-1 bg-gray-200 h-[72px] shadow-lg flex items-center justify-between z-50 fixed top-0 left-0">
             <Grid size={4} className="flex justify-between items-center gap-10 py-1 px-4">
                 <Button variant="contained" onClick={() => navigation(backUrl)}>
                     <ArrowLeftTwoToneIcon/>
