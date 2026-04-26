@@ -182,5 +182,9 @@
   "noStepYet": "Wala pang hakbang, mangyaring i-click",
   "remove": "Alisin",
   "step": "Hakbang",
-  "unit": "Yunit"
+  "unit": "Yunit",
+  "totalMO": "Kabuuang Utos sa Pagmamanupaktura",
+  "totalWorkQty": "Kabuuang Dami ng Trabaho",
+  "totalOutputQty": "Kabuuang Dami ng Output",
+  "totalBalance": "Kabuuang Balanse"
 }

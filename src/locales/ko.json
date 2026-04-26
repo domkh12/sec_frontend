@@ -178,5 +178,9 @@
   "noStepYet": "아직 단계가 없습니다. 클릭해 주세요",
   "remove": "제거",
   "step": "단계",
-  "unit": "단위"
+  "unit": "단위",
+  "totalMO": "총 제조 오더",
+  "totalWorkQty": "총 작업 수량",
+  "totalOutputQty": "총 생산 수량",
+  "totalBalance": "총 잔량"
 }

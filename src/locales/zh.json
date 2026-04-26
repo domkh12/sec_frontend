@@ -182,5 +182,9 @@
   "noStepYet": "暂无步骤，请点击",
   "remove": "删除",
   "step": "步骤",
-  "unit": "单位"
+  "unit": "单位",
+  "totalMO": "生产订单总数",
+  "totalWorkQty": "总工作数量",
+  "totalOutputQty": "总产出数量",
+  "totalBalance": "总余额"
 }

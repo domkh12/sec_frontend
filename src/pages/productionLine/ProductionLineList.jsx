@@ -8,14 +8,13 @@ import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { useCreateProductionLineMutation, useDeleteProductionLineMutation, useGetProductionLineQuery, useUpdateProductionLineMutation } from "../../redux/feature/productionLine/productionLineApiSlice.js";
 import { useGetDepartmentQuery } from "../../redux/feature/department/departmentApiSlice.js";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
-import {
-    setAlertDept,
+import {setAlertProductionLine,
     setFilterProductionLine,
     setIsOpenDeleteDeptDialog,
     setIsOpenDialogAddOrEditProductionLine,
@@ -23,7 +22,6 @@ import {
     setProductionLineDataForUpdate
 } from "../../redux/feature/productionLine/productionLineSlice.js";
 import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
-import {setAlertMaterial, setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
 
 function ProductionLineList(){
     // -- State -----------------------------------------------------------------------------------------
@@ -33,7 +31,7 @@ function ProductionLineList(){
     const productionLineDataForUpdate = useSelector((state) => state.productionLine.productionlineDataForUpdate);
     const isOpen                      = useSelector((state) => state.productionLine.isOpenDialogAddOrEditProductionLine);
     const isOpenSnackbar              = useSelector((state) => state.productionLine.isOpenSnackbarProductionLine);
-    const alertDept                   = useSelector((state) => state.productionLine.alertDept);
+    const alertProductionLine         = useSelector((state) => state.productionLine.alertProductionLine);
     const isOpenDeleteDialog          = useSelector((state) => state.productionLine.isOpenDeleteDeptDialog);
     const filterValue = useSelector((state) => state.productionLine.filter);
 
@@ -48,7 +46,7 @@ function ProductionLineList(){
     const[createDept, {isLoading: isLoadingCreateDept}] = useCreateProductionLineMutation();
     const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateProductionLineMutation();
     const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteProductionLineMutation();
-    const [uploadFile, {isLoading: isLoadingUploadFile}] = useUploadFileMutation();
+    const [uploadFile, {isLoading: isLoadingUploadFile, isError: isErrorUploadFile, error: errorUploadFile}] = useUploadFileMutation();
 
     // -- Query -------------------------------------------------------------------------------------------
     const {data: prodData, isLoading, isSuccess, isFetching} = useGetProductionLineQuery({
@@ -102,11 +100,11 @@ function ProductionLineList(){
         try {
             await deleteDept({id: id}).unwrap();
             dispatch(setIsOpenDeleteDeptDialog(false));
-            dispatch(setAlertDept({type: "success", message: "Delete successfully"}));
+            dispatch(setAlertProductionLine({type: "success", message: "Delete successfully"}));
             dispatch(setIsOpenSnackbarProductionLine(true));
         }catch (error) {
             dispatch(setIsOpenDeleteDeptDialog(false));
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
+            dispatch(setAlertProductionLine({type: "error", message: error.data.error.description}));
             dispatch(setIsOpenSnackbarProductionLine(true));
         }
     }
@@ -132,12 +130,17 @@ function ProductionLineList(){
                 formData.append("file", values.image);
                 try{
                     const res = await uploadFile(formData).unwrap();
-                    console.log(res)
                     imageUri = res.uri;
                 }catch (error) {
                     console.log(error);
-                    dispatch(setAlertDept({type: "error", message: error.data.error.description}));
-                    dispatch(setIsOpenSnackbarProductionLine(true));
+                    if (error.status === 413){
+                        console.log("True")
+                        dispatch(setAlertProductionLine({type: "error", message: "File size too large"}));
+                        dispatch(setIsOpenSnackbarProductionLine(true));
+                    }else{
+                        dispatch(setAlertProductionLine({type: "error", message: error?.data?.error?.description}));
+                        dispatch(setIsOpenSnackbarProductionLine(true));
+                    }
                     return;
                 }
             }
@@ -149,7 +152,7 @@ function ProductionLineList(){
                     deptId: values.deptId,
                     image: imageUri
                 }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Update successfully"}));
+                dispatch(setAlertProductionLine({type: "success", message: "Update successfully"}));
                 dispatch(setProductionLineDataForUpdate(null));
             }else {
                 await createDept({
@@ -157,13 +160,13 @@ function ProductionLineList(){
                     deptId: values.deptId,
                     image: imageUri
                 }).unwrap();
-                dispatch(setAlertDept({type: "success", message: "Create successfully"}));
+                dispatch(setAlertProductionLine({type: "success", message: "Create successfully"}));
             }
             dispatch(setIsOpenSnackbarProductionLine(true));
             dispatch(setIsOpenDialogAddOrEditProductionLine(false));
             resetForm();
         } catch (error) {
-            dispatch(setAlertDept({type: "error", message: error.data.error.description}));
+            dispatch(setAlertProductionLine({type: "error", message: error.data.error.description}));
             dispatch(setIsOpenSnackbarProductionLine(true));
         }
     };
@@ -310,11 +313,11 @@ function ProductionLineList(){
             >
                 <Alert
                     onClose={() => dispatch(setIsOpenSnackbarProductionLine(false))}
-                    severity={alertDept.type}
+                    severity={alertProductionLine.type}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {alertDept.message}
+                    {alertProductionLine.message}
                 </Alert>
             </Snackbar>
             <DialogConfirmDelete

@@ -26,7 +26,7 @@ import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {
-    useCreateWorkOrderMutation, useGetWorkOrderQuery,
+    useCreateWorkOrderMutation, useGetWorkOrderQuery, useGetWorkOrderStatsQuery,
     useUpdateWorkOrderMutation
 } from "../../redux/feature/workOrder/workOrderApiSlice.js";
 import {
@@ -37,8 +37,11 @@ import {
 import dayjs from "dayjs";
 import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
-import {useGetProcessingTimeLookupQuery} from "../../redux/feature/processingTime/processingTimeApiSlice.js";
 import useAuth from "../../hook/useAuth.jsx";
+import FactoryIcon from '@mui/icons-material/Factory';
+import { FaDolly } from "react-icons/fa6";
+import { FaCheckCircle } from "react-icons/fa";
+import { FaHourglassEnd } from "react-icons/fa";
 
 function WorkOrderList() {
     const [id, setId] = useState(null);
@@ -61,6 +64,7 @@ function WorkOrderList() {
     const[createWorkOrder, {isLoading: isLoadingCreateBuyer}] = useCreateWorkOrderMutation();
     const [updateWorkOrder, {isLoading: isLoadingUpdateBuyer}] = useUpdateWorkOrderMutation();
     const [deleteBuyer, {isLoading: isLoadingDeleteBuyer}] = useDeleteBuyerMutation();
+
     // -- Debounce -------------------------------------------------------------------------------------------------
     const debounceSearch = useDebounce(filterValue.search, 500);
 
@@ -83,7 +87,8 @@ function WorkOrderList() {
         pageSize: filterValue.pageSize,
         search: debounceSearch
     });
-
+    const {data: workOrderStatData} = useGetWorkOrderStatsQuery();
+    console.log(workOrderStatData)
 
     // -- Handler --------------------------------------------------------------------------------------------------
 
@@ -306,30 +311,30 @@ function WorkOrderList() {
                     <StatCards cards={[
                         {
                             label: t("totalMO"),
-                            value: buyerStats?.totalBuyer || 0,
+                            value: workOrderStatData?.totalMO || 0,
                             color: "blue",
-                            icon: <ApartmentIcon/>
+                            icon: <FactoryIcon/>
                         },
                         {
                             label: t("totalWorkQty"),
                             // Sums all workers from the current data list
-                            value: buyerStats?.totalPcs || 0,
-                            color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
+                            value: workOrderStatData?.totalWorkOrderQty || 0,
+                            color: "amber",
+                            icon: <FaDolly />
                         },
                         {
                             label: t("totalOutputQty"),
                             // Sums all workers from the current data list
-                            value: buyerStats?.totalPcs || 0,
+                            value: workOrderStatData?.totalOutput || 0,
                             color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
+                            icon: <FaCheckCircle />
                         },
                         {
-                            label: t("activeWorkOrder"),
+                            label: t("totalBalance"),
                             // Sums all lines from the current data list
-                            value: buyerStats?.activeOrder || 0,
-                            color: "violet",
-                            icon: <PrecisionManufacturingIcon fontSize="small"/>
+                            value: workOrderStatData?.totalBalance || 0,
+                            color: "red",
+                            icon: <FaHourglassEnd />
                         },
 
                     ]} />

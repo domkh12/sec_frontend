@@ -181,5 +181,9 @@
   "noStepYet": "Didn't have step yet, please click",
   "remove": "Remove",
   "step": "Step",
-  "unit": "Unit"
+  "unit": "Unit",
+  "totalMO": "Total Manufacturing Order",
+  "totalWorkQty": "Total Work Quantity",
+  "totalOutputQty": "Total Output Quantity",
+  "totalBalance": "Total Balance"
 }
