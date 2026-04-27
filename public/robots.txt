@@ -1,19 +1,17 @@
 User-agent: *
 
-# Block all protected/admin routes
 Disallow: /admin
 Disallow: /admin/*
 Disallow: /manager
 Disallow: /manager/*
+Disallow: /warehouse
+Disallow: /warehouse/*
 Disallow: /tv
 Disallow: /tv/*
 Disallow: /unauthorize
 Disallow: /admin-menu-testing
 Disallow: /login
 
-# Allow only public routes
 Allow: /
-
-Crawl-delay: 10
 
 Sitemap: https://sec-mega.site/sitemap.xml

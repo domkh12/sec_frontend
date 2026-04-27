@@ -6,9 +6,6 @@ import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import dayjs from "dayjs";
 import NumberFlow from "@number-flow/react";
 
-// ─── Hour keys ────────────────────────────────────────────────────────────────
-const hourKeys = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
-
 
 function TVLineDisplay() {
     const ALL_HOUR_KEYS = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
@@ -21,6 +18,7 @@ function TVLineDisplay() {
 
     const [currentTime, setCurrentTime] = useState("");
     const [showControls, setShowControls] = useState(false);
+    const [showFsPrompt, setShowFsPrompt] = useState(false);
     const [zoom, setZoom] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const containerRef = useRef(null);
@@ -48,11 +46,18 @@ function TVLineDisplay() {
         }
     }, [messageIsSaturday]);
 
+    // ─── Show fullscreen prompt on load if user previously wanted fullscreen ──
+    useEffect(() => {
+        const wantsFullscreen = localStorage.getItem("wantsFullscreen") === "true";
+        if (wantsFullscreen && !document.fullscreenElement) {
+            setShowFsPrompt(true);
+        }
+    }, []);
+
     // ─── Build hourly rows from dailyRecords (last 3 days) + defect row ───────
     const hourRowsRaw = useMemo(() => {
         const records = data?.dailyRecords ?? [];
 
-        // Sort descending by date, take latest 3
         const sorted = [...records]
             .sort((a, b) => {
                 const toDate = (d) => {
@@ -79,32 +84,7 @@ function TVLineDisplay() {
             return row;
         });
 
-        // const dataRows = sorted.map((record) => ({
-        //     date:    record.date,
-        //     dTarg:   record.dTarg ?? null,
-        //     h8:      record.h8    ?? null,
-        //     h9:      record.h9    ?? null,
-        //     h10:     record.h10   ?? null,
-        //     h11:     record.h11   ?? null,
-        //     h13:     record.h13   ?? null,
-        //     h14:     record.h14   ?? null,
-        //     h15:     record.h15   ?? null,
-        //     h16:     record.h16   ?? null,
-        //     h17:     record.h17   ?? null,
-        //     h18:     record.h18   ?? null,
-        //     isToday: record.isToday ?? record.date === todayDate,
-        // }));
-
         const defects = data?.defects ?? {};
-        // const defectRow = {
-        //     date: "Defect", dTarg: null,
-        //     h8:  defects.h8  ?? null, h9:  defects.h9  ?? null,
-        //     h10: defects.h10 ?? null, h11: defects.h11 ?? null,
-        //     h13: defects.h13 ?? null, h14: defects.h14 ?? null,
-        //     h15: defects.h15 ?? null, h16: defects.h16 ?? null,
-        //     h17: defects.h17 ?? null, h18: defects.h18 ?? null,
-        //     isDefect: true,
-        // };
         const defectRow = {
             date: "Defect",
             dTarg: null,
@@ -169,9 +149,9 @@ function TVLineDisplay() {
     useEffect(() => {
         const tick = () => {
             const now = new Date();
-            setCurrentTime(now.toLocaleTimeString("en-US", { 
+            setCurrentTime(now.toLocaleTimeString("en-US", {
                 hour12: false,
-                timeZone: "Asia/Phnom_Penh"  // ← add this
+                timeZone: "Asia/Phnom_Penh"
             }));
         };
         tick();
@@ -179,11 +159,24 @@ function TVLineDisplay() {
         return () => clearInterval(id);
     }, []);
 
-    // ─── Fullscreen listener ──────────────────────────────────────────────────
+    // ─── Fullscreen listener — save preference to localStorage ───────────────
     useEffect(() => {
-        const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+        const onFsChange = () => {
+            const isFull = !!document.fullscreenElement;
+            setIsFullscreen(isFull);
+            localStorage.setItem("wantsFullscreen", String(isFull));
+        };
+        const onFsError = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+
         document.addEventListener("fullscreenchange", onFsChange);
-        return () => document.removeEventListener("fullscreenchange", onFsChange);
+        document.addEventListener("fullscreenerror", onFsError);
+
+        return () => {
+            document.removeEventListener("fullscreenchange", onFsChange);
+            document.removeEventListener("fullscreenerror", onFsError);
+        };
     }, []);
 
     // ─── Close popup on outside click ────────────────────────────────────────
@@ -200,11 +193,30 @@ function TVLineDisplay() {
     // ─── Fullscreen toggle ────────────────────────────────────────────────────
     const handleFullscreen = useCallback(async () => {
         const el = containerRef.current;
-        if (!document.fullscreenElement) {
-            try { await el.requestFullscreen(); } catch (e) { console.error(e); }
-        } else {
-            await document.exitFullscreen();
+        if (!el) return;
+
+        try {
+            if (!document.fullscreenElement) {
+                await el.requestFullscreen();
+            } else {
+                await document.exitFullscreen();
+            }
+        } catch (e) {
+            console.error("Fullscreen error:", e);
+            setIsFullscreen(!!document.fullscreenElement);
         }
+    }, []);
+
+    // ─── Enter fullscreen from prompt (satisfies browser user-gesture rule) ──
+    const handleEnterFullscreen = useCallback(async () => {
+        const el = containerRef.current;
+        if (!el) return;
+        try {
+            await el.requestFullscreen();
+        } catch (e) {
+            console.error("Fullscreen prompt error:", e);
+        }
+        setShowFsPrompt(false);
     }, []);
 
     const handleZoomIn    = () => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3));
@@ -241,22 +253,6 @@ function TVLineDisplay() {
         { id: "total", label: "Total" },
         { id: "rate",  label: "Rate%" },
     ];
-
-    // const columnsHour = [
-    //     { id: "date",  label: "Date"  },
-    //     { id: "h8",    label: "8:00"  },
-    //     { id: "h9",    label: "9:00"  },
-    //     { id: "h10",   label: "10:00" },
-    //     { id: "h11",   label: "11:00" },
-    //     { id: "h13",   label: "13:00" },
-    //     { id: "h14",   label: "14:00" },
-    //     { id: "h15",   label: "15:00" },
-    //     { id: "h16",   label: "16:00" },
-    //     { id: "h17",   label: "17:00" },
-    //     { id: "h18",   label: "18:00" },
-    //     { id: "total", label: "Total" },
-    //     { id: "rate",  label: "Rate%" },
-    // ];
 
     const getRateColor = (rate) => {
         if (rate >= 90) return "#1565c0";
@@ -304,6 +300,37 @@ function TVLineDisplay() {
 
     if (isSuccess) content = (
         <div ref={containerRef} style={{ position: "relative", width: "100%", minHeight: "100vh", backgroundColor: "#0a0a14" }}>
+
+            {/* ── Fullscreen restore prompt (shown on reload if was fullscreen) ── */}
+            {showFsPrompt && (
+                <div
+                    onClick={handleEnterFullscreen}
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        zIndex: 99999,
+                        backgroundColor: "rgba(0,0,0,0.92)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        gap: "20px",
+                    }}
+                >
+                    <div style={{ fontSize: "72px", lineHeight: 1 }}>⛶</div>
+                    <div style={{ color: "#fff", fontSize: "32px", fontWeight: "900", fontFamily: "'Arial Black', sans-serif" }}>
+                        Click to Enter Fullscreen
+                    </div>
+                    <div style={{ color: "#7eb8f7", fontSize: "20px", fontFamily: "'Arial', sans-serif" }}>
+                        LINE {data?.line}
+                    </div>
+                    <div style={{ color: "#445566", fontSize: "14px", marginTop: "8px" }}>
+                        Tap anywhere on screen
+                    </div>
+                </div>
+            )}
+
             {/* Zoom wrapper */}
             <div style={{
                 backgroundColor: "#b0c4de",
@@ -405,7 +432,6 @@ function TVLineDisplay() {
                                 const isRate = col.id === "rate";
                                 const isDate = col.id === "date";
                                 const rateValue = row.rateValue ?? 0;
-                                // ── Force red for defect row, otherwise use normal color logic ──
                                 const rateColor = row.isDefect ? "#c62828" : getRateColor(rateValue);
                                 const textColor = rateValue > 80 ? "#fff" : "#000";
                                 const cellValue = row[col.id] === null || row[col.id] === undefined ? "" : row[col.id];

@@ -1,8 +1,14 @@
 import {useGetProductionLineLookupQuery} from "../../redux/feature/productionLine/productionLineApiSlice.js";
 import {useGetWorkOrderQuery} from "../../redux/feature/workOrder/workOrderApiSlice.js";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
+import CardWorkOrder from "../../components/card/CardWorkOrder.jsx";
+import {useSelector} from "react-redux";
 
 function HourlyOutput(){
+
+    // -- Selector -----------------------------------------------------------------------------
+    const userProfile = useSelector((s) => s.auth.profile);
+    console.log(userProfile)
 
     // -- Query --------------------------------------------------------------------------------
     const {data: productionLine} = useGetProductionLineLookupQuery();
@@ -23,7 +29,7 @@ function HourlyOutput(){
 
         content = (
             <div className="bg-gray-100 absolute top-0 overflow-auto left-0 h-full w-full">
-                <div className="pt-20  grid grid-cols-12">
+                <div className="pt-20 grid grid-cols-12">
                     <div className="col-span-1 flex flex-col gap-2 justify-start items-center pb-10">
                         {
                             productionLine?.map(item => (
@@ -34,8 +40,19 @@ function HourlyOutput(){
                             ))
                         }
                     </div>
-                    <div className="col-span-8 border border-gray-400 rounded-2xl">
-
+                    <div className="col-span-8 p-5 border border-gray-400 rounded-2xl ">
+                        <p className="text-2xl">Welcome, {userProfile?.nameEn}</p>
+                        <div className="flex gap-5">
+                        {
+                            ids?.map(id => (
+                                <CardWorkOrder
+                                    key={id}
+                                    image={entities[id]?.image}
+                                    style={entities[id]?.style}
+                                />
+                            ))
+                        }
+                        </div>
                     </div>
                     <div className="col-span-3 border border-gray-400 rounded-2xl">
 
