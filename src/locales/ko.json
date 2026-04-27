@@ -165,9 +165,6 @@
   },
   "style": "스타일",
   "purchaseOrder": "구매 주문",
-  "po": {
-    "transaction": "구매 주문 거래"
-  },
   "other": "기타",
   "updateSuccess": "업데이트 성공",
   "createSuccess": "생성 성공",
@@ -182,5 +179,6 @@
   "totalMO": "총 제조 오더",
   "totalWorkQty": "총 작업 수량",
   "totalOutputQty": "총 생산 수량",
-  "totalBalance": "총 잔량"
+  "totalBalance": "총 잔량",
+  "po": "구매 주문서"
 }

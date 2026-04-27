@@ -167,9 +167,6 @@
     "lowStockAlert": "Low Stock Alert"
   },
   "purchaseOrder": "Purchase Order",
-  "po": {
-    "transaction": "PO Transaction"
-  },
   "style": "Style",
   "other": "Other",
   "addNew": "Add New",
@@ -185,5 +182,6 @@
   "totalMO": "Total Manufacturing Order",
   "totalWorkQty": "Total Work Quantity",
   "totalOutputQty": "Total Output Quantity",
-  "totalBalance": "Total Balance"
+  "totalBalance": "Total Balance",
+  "po": "Purchase Order"
 }

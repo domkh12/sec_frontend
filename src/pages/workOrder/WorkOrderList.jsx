@@ -2,15 +2,13 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    useDeleteBuyerMutation, useGetBuyerQuery, useGetBuyerStatsQuery,
+import { useGetBuyerQuery,
 } from "../../redux/feature/buyer/buyerApiSlice.js";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {
     setAlertBuyer,
-    setBuyerDataForUpdate,
     setFilterBuyer, setIsOpenDeleteBuyerDialog,
-    setIsOpenDialogAddOrEditBuyer, setIsOpenSnackbarBuyer
+    setIsOpenSnackbarBuyer
 } from "../../redux/feature/buyer/buyerSlice.js";
 import * as Yup from "yup";
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
@@ -18,15 +16,12 @@ import Seo from "../../components/seo/Seo.jsx";
 import BackButton from "../../components/ui/BackButton.jsx";
 import ButtonAddNew from "../../components/ui/ButtonAddNew.jsx";
 import StatCards from "../../components/card/StatCards.jsx";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import TableCus from "../../components/table/TableCus.jsx";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus.jsx";
 import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {
-    useCreateWorkOrderMutation, useGetWorkOrderQuery, useGetWorkOrderStatsQuery,
+    useCreateWorkOrderMutation, useDeleteWorkOrderMutation, useGetWorkOrderQuery, useGetWorkOrderStatsQuery,
     useUpdateWorkOrderMutation
 } from "../../redux/feature/workOrder/workOrderApiSlice.js";
 import {
@@ -42,6 +37,8 @@ import FactoryIcon from '@mui/icons-material/Factory';
 import { FaDolly } from "react-icons/fa6";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaHourglassEnd } from "react-icons/fa";
+import {setAlertMaterial, setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
+import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
 
 function WorkOrderList() {
     const [id, setId] = useState(null);
@@ -53,23 +50,23 @@ function WorkOrderList() {
     const {t} = useTranslation();
 
     // -- Selector -------------------------------------------------------------------------------------------------
-    const buyerDataForUpdate    = useSelector((state) => state.workOrder.workOrderDataForUpdate);
+    const woDataForUpdate    = useSelector((state) => state.workOrder.workOrderDataForUpdate);
     const isOpen                = useSelector((state) => state.workOrder.isOpenDialogAddOrEditWorkOrder);
     const isOpenSnackbar        = useSelector((state) => state.workOrder.isOpenSnackbarWorkOrder);
-    const alertBuyer            = useSelector((state) => state.workOrder.alertWorkOrder);
+    const alertWO            = useSelector((state) => state.workOrder.alertWorkOrder);
     const isOpenDeleteDialog    = useSelector((state) => state.workOrder.isOpenDeleteWorkOrderDialog);
     const filterValue           = useSelector((state) => state.workOrder.filter);
 
     // -- Mutation -------------------------------------------------------------------------------------------------
-    const[createWorkOrder, {isLoading: isLoadingCreateBuyer}] = useCreateWorkOrderMutation();
-    const [updateWorkOrder, {isLoading: isLoadingUpdateBuyer}] = useUpdateWorkOrderMutation();
-    const [deleteBuyer, {isLoading: isLoadingDeleteBuyer}] = useDeleteBuyerMutation();
+    const[createWorkOrder, {isLoading: isLoadingCreateWO}] = useCreateWorkOrderMutation();
+    const [updateWorkOrder, {isLoading: isLoadingUpdateWO}] = useUpdateWorkOrderMutation();
+    const [deleteWO, {isLoading: isLoadingDeleteWO}] = useDeleteWorkOrderMutation();
+    const [uploadFile, {isLoading: isLoadingUploadFile}] = useUploadFileMutation();
 
     // -- Debounce -------------------------------------------------------------------------------------------------
     const debounceSearch = useDebounce(filterValue.search, 500);
 
     // -- Query ----------------------------------------------------------------------------------------------------
-    const {data: buyerStats} = useGetBuyerStatsQuery();
     const {data: buyerData} = useGetBuyerQuery({
         pageNo: 1,
         pageSize: 1000
@@ -88,7 +85,6 @@ function WorkOrderList() {
         search: debounceSearch
     });
     const {data: workOrderStatData} = useGetWorkOrderStatsQuery();
-    console.log(workOrderStatData)
 
     // -- Handler --------------------------------------------------------------------------------------------------
 
@@ -113,20 +109,31 @@ function WorkOrderList() {
     }
 
     const handleSubmit = async (values, {resetForm}) => {
+        let imageUri = null;
+
+        if (values.image && typeof values.image !== "string") {
+            const formData = new FormData();
+            formData.append("file", values.image);
+            try{
+                const res = await uploadFile(formData).unwrap();
+                imageUri = res.uri;
+            }catch (error) {
+                console.log(error);
+                dispatch(setAlertMaterial({type: "error", message: error.data.error.description}));
+                dispatch(setIsOpenSnackbarMaterial(true));
+                return;
+            }
+        }
+
         try {
             const startDate = dayjs(values.startDate).format("YYYY-MM-DD");
             const endDate = dayjs(values.endDate).format("YYYY-MM-DD");
 
-            if (buyerDataForUpdate) {
+            if (woDataForUpdate) {
                 await updateWorkOrder({
-                    id: buyerDataForUpdate.id,
-                    name: values.name,
-                }).unwrap();
-                dispatch(setAlertBuyer({type: "success", message: "Update successfully"}));
-                dispatch(setWorkOrderDataForUpdate(null));
-            }else {
-                await createWorkOrder({
+                    id: woDataForUpdate.id,
                     mo: values.mo,
+                    po: values.po,
                     qty: values.qty,
                     style: values.style,
                     startDate: startDate,
@@ -134,6 +141,22 @@ function WorkOrderList() {
                     buyerId: values.buyer,
                     sizeIds: values.size,
                     colorId: values.color,
+                    image: imageUri
+                }).unwrap();
+                dispatch(setAlertWorkOrder({type: "success", message: "Update successfully"}));
+                dispatch(setWorkOrderDataForUpdate(null));
+            }else {
+                await createWorkOrder({
+                    mo: values.mo,
+                    po: values.po,
+                    qty: values.qty,
+                    style: values.style,
+                    startDate: startDate,
+                    endDate: endDate,
+                    buyerId: values.buyer,
+                    sizeIds: values.size,
+                    colorId: values.color,
+                    image: imageUri
                 }).unwrap();
                 dispatch(setAlertWorkOrder({type: "success", message: "Create successfully"}));
             }
@@ -141,24 +164,36 @@ function WorkOrderList() {
             dispatch(setIsOpenDialogAddOrEditWorkOrder(false));
             resetForm();
         } catch (error) {
-            dispatch(setAlertBuyer({type: "error", message: error.data.error.description}));
-            dispatch(setIsOpenSnackbarBuyer(true));
+            dispatch(setAlertWorkOrder({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarWorkOrder(true));
         }
     };
 
     const handleEdit = (row) => {
-        dispatch(setIsOpenDialogAddOrEditBuyer(true));
-        dispatch(setBuyerDataForUpdate(row));
+        dispatch(setIsOpenDialogAddOrEditWorkOrder(true));
+        dispatch(setWorkOrderDataForUpdate({
+            id: row?.id,
+            mo: row?.mo,
+            po: row?.po,
+            qty: row?.qty,
+            style: row?.style,
+            startDate: dayjs(row?.startDate, "DD-MM-YYYY"),
+            endDate: dayjs(row?.endDate, "DD-MM-YYYY"),
+            buyer: row?.buyer?.id,
+            size: row?.sizes?.map(size => size?.id),
+            color: row?.color?.id,
+            image: row?.image
+        }));
     };
 
     const handleDeleteOpen = (row) => {
-        dispatch(setIsOpenDeleteBuyerDialog(true));
+        dispatch(setIsOpenDeleteWorkOrderDialog(true));
         setId(row.id);
     };
 
     const handleFilterChange = (key, value) => {
         if (value === "all") {
-            return dispatch(setFilterBuyer({
+            return dispatch(setFilterWorkOrder({
                 ...filterValue,
                 [key]: "",
             }));
@@ -167,15 +202,15 @@ function WorkOrderList() {
             ...filterValue,
             [key]: value,
         }
-        dispatch(setFilterBuyer(newFilter));
+        dispatch(setFilterWorkOrder(newFilter));
     }
 
     const handleDelete = async () => {
         try {
-            await deleteBuyer({id: id}).unwrap();
-            dispatch(setIsOpenDeleteBuyerDialog(false));
-            dispatch(setAlertBuyer({type: "success", message: "Delete successfully"}));
-            dispatch(setIsOpenSnackbarBuyer(true));
+            await deleteWO({id: id}).unwrap();
+            dispatch(setIsOpenDeleteWorkOrderDialog(false));
+            dispatch(setAlertWorkOrder({type: "success", message: "Delete successfully"}));
+            dispatch(setIsOpenSnackbarWorkOrder(true));
         }catch (error) {
             dispatch(setIsOpenDeleteBuyerDialog(false));
             dispatch(setAlertBuyer({type: "error", message: error.data.error.description}));
@@ -195,6 +230,7 @@ function WorkOrderList() {
 
     const fields = [
         { name: "mo",     label: "table.mo",     type: "text" },
+        { name: "po",     label: "po",     type: "text" },
         { name: "style",     label: "style",     type: "text" },
         {
             name: "size",
@@ -231,13 +267,20 @@ function WorkOrderList() {
                 }));
             },
         },
+        {
+            name: "image",
+            label: "image",
+            type: "image"
+        }
 
     ];
 
     const initialValues ={
         mo: "",
+        po: "",
         qty: "",
         style: "",
+        image: "",
         startDate: null,
         endDate: null,
         buyer: "",
@@ -245,6 +288,12 @@ function WorkOrderList() {
     }
 
     const columns = [
+        {
+            id: "image",
+            label: t("image"),
+            minWidth: 130,
+            align: "left",
+        },,
         {
             id: "mo",
             label: t("table.mo"),
@@ -258,10 +307,34 @@ function WorkOrderList() {
             align: "left",
         },
         {
+            id: "po",
+            label: t("po"),
+            minWidth: 70,
+            align: "left"
+        },
+        {
+            id: "color",
+            label: t("color"),
+            minWidth: 100,
+            align: "left",
+            format: (value) => value?.color ?? "—"
+        },
+        {
+            id: "sizes",
+            label: t("size"),
+            minWidth: 160,
+            align: "left",
+            format: (value) => {
+                if (!value && !Array.isArray(value)) return "—";
+                return value.map(item => item.size).join(", ");
+            }
+        },
+        {
             id: "buyer",
             label: t("table.buyer"),
             minWidth: 130,
             align: "left",
+            format: (value) => value?.name ?? "—",
         },
         {
             id: "qty",
@@ -358,14 +431,14 @@ function WorkOrderList() {
                 isOpen && (
                     <DialogAddEditCus
                         fields={fields}
-                        title={buyerDataForUpdate ? "Update Work order" : "Create Work order"}
+                        title={woDataForUpdate ? "Update Work order" : "Create Work order"}
                         isOpen={isOpen}
                         onClose={handleClose}
-                        isUpdate={!!buyerDataForUpdate}
+                        isUpdate={!!woDataForUpdate}
                         validationSchema={validationSchema}
                         handleSubmit={handleSubmit}
-                        initialValues={buyerDataForUpdate ? buyerDataForUpdate : initialValues}
-                        isSubmitting={isLoadingCreateBuyer || isLoadingUpdateBuyer}
+                        initialValues={woDataForUpdate ? woDataForUpdate : initialValues}
+                        isSubmitting={isLoadingUploadFile || isLoadingCreateWO || isLoadingUpdateWO}
                     />
                 )
             }
@@ -377,14 +450,14 @@ function WorkOrderList() {
             >
                 <Alert
                     onClose={() => dispatch(setIsOpenSnackbarWorkOrder(false))}
-                    severity={alertBuyer.type}
+                    severity={alertWO.type}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {alertBuyer.message}
+                    {alertWO.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteWorkOrderDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteBuyer}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteWorkOrderDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteWO}/>
         </div>
     )
 

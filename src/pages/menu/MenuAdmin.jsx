@@ -115,7 +115,7 @@ function MenuAdmin(){
                     <MenuButton
                         title="Hourly Output"
                         iconPath={"/images/smart-tv.png"}
-                        onClick={() => navigate("menu-line")}
+                        onClick={() => navigate("hourly-output")}
                     />
                 </div>
             </div>

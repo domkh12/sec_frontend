@@ -1,4 +1,3 @@
-import {Divider} from "@mui/material";
 import TranslateButton from "./TranslateButton.jsx";
 import AvatarProfile from "./AvatarProfile.jsx";
 import Logo from "../util/Logo.jsx";

@@ -11,7 +11,6 @@ import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
 import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
-import MenuProductionLine from "./pages/hourlyOutput/MenuProductionLine.jsx";
 
 // Lazy load everything else
 const QrScan = lazy(() => import("./pages/qrScan/QrScan.jsx"));
@@ -130,7 +129,6 @@ function App() {
                               <Route path="defect-types" element={<DefectTypeList/>} />
                               <Route path="qr-scan" element={<QrScan/>} />
                               <Route path="qr-generator" element={<QrGenerator/>} />
-                              <Route path="menu-line" element={<MenuProductionLine/>}/>
                               <Route path="hourly-output" element={<HourlyOutput/>}/>
                           </Route>
                       </Route>

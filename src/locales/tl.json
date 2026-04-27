@@ -169,9 +169,6 @@
   },
   "style": "Style",
   "purchaseOrder": "Purchase Order",
-  "po": {
-    "transaction": "Transaksyon ng PO"
-  },
   "other": "Iba pa",
   "updateSuccess": "Matagumpay na na-update",
   "createSuccess": "Matagumpay na nagawa",
@@ -186,5 +183,6 @@
   "totalMO": "Kabuuang Utos sa Pagmamanupaktura",
   "totalWorkQty": "Kabuuang Dami ng Trabaho",
   "totalOutputQty": "Kabuuang Dami ng Output",
-  "totalBalance": "Kabuuang Balanse"
+  "totalBalance": "Kabuuang Balanse",
+  "po": "Order sa Pagbili"
 }
