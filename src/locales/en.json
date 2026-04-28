@@ -37,13 +37,6 @@
     "unblock.confirm": "Yes, Unblock",
     "block": "Block"
   },
-  "status": {
-    "soon": "Coming Soon",
-    "available": "Available",
-    "unavailable": "Unavailable","active": "Active",
-    "inactive": "Inactive",
-    "blocked": "Blocked"
-  },
   "profile": {
     "title": "Profile",
     "logout": "Logout"
@@ -183,5 +176,6 @@
   "totalWorkQty": "Total Work Quantity",
   "totalOutputQty": "Total Output Quantity",
   "totalBalance": "Total Balance",
-  "po": "Purchase Order"
+  "po": "Purchase Order",
+  "status": "Status"
 }

@@ -37,14 +37,6 @@
     "unblock.confirm": "예, 차단 해제",
     "block": "차단"
   },
-  "status": {
-    "soon": "출시 예정",
-    "available": "사용 가능",
-    "unavailable": "사용 불가",
-    "active": "활성",
-    "inactive": "비활성",
-    "blocked": "차단됨"
-  },
   "profile": {
     "title": "프로필",
     "logout": "로그아웃"
@@ -180,5 +172,6 @@
   "totalWorkQty": "총 작업 수량",
   "totalOutputQty": "총 생산 수량",
   "totalBalance": "총 잔량",
-  "po": "구매 주문서"
+  "po": "구매 주문서",
+  "status": "상태"
 }

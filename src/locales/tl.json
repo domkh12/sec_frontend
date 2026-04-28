@@ -184,5 +184,6 @@
   "totalWorkQty": "Kabuuang Dami ng Trabaho",
   "totalOutputQty": "Kabuuang Dami ng Output",
   "totalBalance": "Kabuuang Balanse",
-  "po": "Order sa Pagbili"
+  "po": "Order sa Pagbili",
+  "stauts": "Katayuan"
 }

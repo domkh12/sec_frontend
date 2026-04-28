@@ -268,6 +268,11 @@ function WorkOrderList() {
             },
         },
         {
+            name: "status",
+            label: "status",
+            type: "select",
+        },
+        {
             name: "image",
             label: "image",
             type: "image"
@@ -293,7 +298,7 @@ function WorkOrderList() {
             label: t("image"),
             minWidth: 130,
             align: "left",
-        },,
+        },
         {
             id: "mo",
             label: t("table.mo"),
@@ -339,6 +344,18 @@ function WorkOrderList() {
         {
             id: "qty",
             label: t("table.qty"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "output",
+            label: t("output"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "balance",
+            label: t("balance"),
             minWidth: 130,
             align: "left",
         },

@@ -37,14 +37,6 @@
     "unblock.confirm": "是的，解锁",
     "block": "封锁"
   },
-  "status": {
-    "soon": "即将推出",
-    "available": "可用",
-    "unavailable": "不可用",
-    "active": "激活",
-    "inactive": "未激活",
-    "blocked": "已屏蔽"
-  },
   "profile": {
     "title": "个人资料",
     "logout": "退出登录"
@@ -184,5 +176,6 @@
   "totalWorkQty": "总工作数量",
   "totalOutputQty": "总产出数量",
   "totalBalance": "总余额",
-  "po": "采购订单"
+  "po": "采购订单",
+  "status": "状态"
 }
