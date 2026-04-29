@@ -1,8 +1,16 @@
-import {Box, IconButton, Popper} from "@mui/material";
+import {Box, Button, IconButton, Popper} from "@mui/material";
 import { FaPlus } from "react-icons/fa6";
 import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setCurrentOutput} from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
 
-function CardWorkOrder({image, style, mo, color, balance, onClick}){
+function CardWorkOrder({image, style, mo, color, balance, onClick, sizes}){
+
+
+
+    // -- Hook ---------------------------------------------------------------------------------
+    const dispatch = useDispatch();
+
     // -- State --------------------------------------------------------------------------------
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -13,8 +21,15 @@ function CardWorkOrder({image, style, mo, color, balance, onClick}){
         setAnchorEl(anchorEl ? null : event.currentTarget);
     };
 
+    const handSizeClick = (size) => {
+        console.log(style, mo, color, image, size)
+        dispatch(setCurrentOutput({
+            style, mo, color, image, size, qty: 1
+        }))
+    }
+
     return (
-        <div className="flex flex-col border border-gray-400 rounded-lg">
+        <div className="flex flex-col border border-gray-400 rounded-lg hover:scale-101 transition">
             <div className="mb-3 w-full h-56 flex mx-auto justify-center items-center overflow-hidden">
                 <img src={image || "/images/placeholder.png"} alt={style} className="w-full h-full object-cover" loading={"lazy"} decoding={"async"}/>
             </div>
@@ -28,9 +43,11 @@ function CardWorkOrder({image, style, mo, color, balance, onClick}){
                     <FaPlus/>
                 </IconButton>
                 <Popper id={id} open={open} anchorEl={anchorEl}>
-                    <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-                        The content of the Popper.
-                    </Box>
+                    <div className="bg-white p-2 border rounded-md flex gap-1">
+                        {sizes?.map(size => (
+                            <Button key={size?.id} variant={"outlined"} onClick={() => handSizeClick(size)}>{size?.size}</Button>
+                        ))}
+                    </div>
                 </Popper>
             </div>
         </div>

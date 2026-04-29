@@ -76,7 +76,6 @@ function MaterialList() {
         color: colorData?.find((color) => color.id === filterValue.color)?.color || "",
     });
 
-
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterMaterial({
             ...filterValue,
@@ -174,7 +173,7 @@ function MaterialList() {
 
         try {
 
-            let size = sizeData.find((size) => size.id === values.size);
+            let size = sizeData?.find((size) => size?.id === values?.size) || "";
             let color = colorData.find((color) => color.id === values.color);
 
             if (materialDataForUpdate) {
@@ -226,8 +225,6 @@ function MaterialList() {
                 return value.size <= 2 * 1024 * 1024;
             }),
         unit: Yup.string().typeError(t("validation.required"))
-            .required(t("validation.required")),
-        size: Yup.string().typeError(t("validation.required"))
             .required(t("validation.required")),
         color: Yup.string().typeError(t("validation.required"))
             .required(t("validation.required")),
