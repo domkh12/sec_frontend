@@ -25,9 +25,13 @@ const hourlyOutputSlice = createSlice({
         currentOutput: [],
         totalOutput: 0,
         totalDefect: 0,
-        ratingDefect: 0.0
+        ratingDefect: 0.0,
+        selectedLine: {}
     },
     reducers: {
+        setSelectedLine: (state, action) => {
+            state.selectedLine = action.payload;
+        },
         setQtyCurrentOutputChange: (state, action) => {
             const incoming = action.payload;
             const existing = state.currentOutput.find(
@@ -113,6 +117,7 @@ const hourlyOutputSlice = createSlice({
 });
 
 export const {
+    setSelectedLine,
     setQtyCurrentOutputChange,
     setClearCurrentOutput,
     setIncreaseQty,

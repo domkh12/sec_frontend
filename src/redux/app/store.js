@@ -19,6 +19,7 @@ import defectTypeReducer from "../feature/defect-type/defectTypeSlice.js"
 import operationReducer from "../feature/operation/operationSlice.js"
 import processingTimeReducer from "../feature/processingTime/processingTimeSlice.js"
 import hourlyOutputReducer from "../feature/hourlyOutput/hourlyOutputSlice.js"
+import timeReducer from "../feature/time/timeSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -40,7 +41,8 @@ const store = configureStore({
     defectType: defectTypeReducer,
     operation: operationReducer,
     processingTime: processingTimeReducer,
-    hourlyOutput: hourlyOutputReducer
+    hourlyOutput: hourlyOutputReducer,
+    time: timeReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

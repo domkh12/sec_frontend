@@ -1,11 +1,11 @@
 import { apiSlice } from "../../app/api/apiSlice";
 import { createEntityAdapter } from "@reduxjs/toolkit";
 
-const productionlineAdapter = createEntityAdapter({});
+const productionLineAdapter = createEntityAdapter({});
 
-const initialState = productionlineAdapter.getInitialState();
+const initialState = productionLineAdapter.getInitialState();
 
-export const productionlineApiSlice = apiSlice.injectEndpoints({
+export const productionLineApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProductionLine: builder.query({
             query: ({ pageNo = 1, pageSize = 5, search = "", departmentId = "" }) => ({
@@ -20,7 +20,7 @@ export const productionlineApiSlice = apiSlice.injectEndpoints({
                     return prodL;
                 });
                 return {
-                    ...productionlineAdapter.setAll(initialState, loadedDept),
+                    ...productionLineAdapter.setAll(initialState, loadedDept),
                     totalPages: responseData.page.totalPages,
                     totalElements: responseData.page.totalElements,
                     pageNo: responseData.page.number,
@@ -90,15 +90,37 @@ export const productionlineApiSlice = apiSlice.injectEndpoints({
                 },
             }),
             providesTags: [{ type: "ProductionLineLookup", id: "LIST" }],
+        }),
+
+        getProductionLineByDepartment: builder.query({
+            query: ({id}) => ({
+                url: `/production-lines/department/${id}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "ProductionLineByDept", id: "LIST" }],
+        }),
+
+        getProductionLineByDepartmentNo: builder.query({
+            query: ({no}) => ({
+                url: `/production-lines/department?processNo=${no}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "ProductionLineByDept", id: "LIST" }],
         })
 
     }),
 });
 
 export const {
+    useGetProductionLineByDepartmentNoQuery,
+    useGetProductionLineByDepartmentQuery,
     useGetProductionLineLookupQuery,
     useUpdateProductionLineMutation,
     useDeleteProductionLineMutation,
     useCreateProductionLineMutation,
     useGetProductionLineQuery,
-} = productionlineApiSlice;
+} = productionLineApiSlice;
