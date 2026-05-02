@@ -21,7 +21,7 @@
     import {
     setClearCurrentOutput,
     setDecreaseQty, setFilterHourlyOutput,
-    setIncreaseQty, setQtyCurrentOutputChange, setSelectedLine
+    setIncreaseQty, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime
 } from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
     import { FaTrash } from "react-icons/fa";
     import { FaArrowRight } from "react-icons/fa6";
@@ -29,6 +29,7 @@
     import {useEffect} from "react";
     import DefectTypeSelect from "../../components/select/DefectTypeSelect.jsx";
     import useDebounce from "../../hook/useDebounce.jsx";
+    import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
 
     function HourlyOutput(){
         // -- State --------------------------------------------------------------------------------
@@ -41,11 +42,12 @@
         const totalDefect     = useSelector((s) => s.hourlyOutput.totalDefect);
         const totalRateDefect = useSelector((s) => s.hourlyOutput.ratingDefect);
         const selectedLine            = useSelector((s) => s.hourlyOutput.selectedLine);
-
+        const selectedTime            = useSelector((s) => s.hourlyOutput.selectedTime);
+        console.log(selectedTime)
         // -- Hook ---------------------------------------------------------------------------------
         const dispatch = useDispatch();
         const search = useDebounce(filterValue?.search, 500);
-        console.log(search)
+
         // -- Query --------------------------------------------------------------------------------
         const {data: productionLine, isSuccess: isSuccessProductionLine} = useGetProductionLineLookupQuery();
         const {data: workOrderData, isLoading: isLoadingWO, isSuccess: isSuccessWO} = useGetWorkOrderQuery({
@@ -58,7 +60,9 @@
             {no: selectedLine?.department?.processNo + 1},
             {skip: Object.keys(selectedLine).length === 0}
         );
-        console.log(lineByDeptData)
+
+        // -- Mutation -------------------------------------------------------------------------------
+        const [createOutputDetail, {isLoading: isLoadingOutputDetail}] = useCreateOutputDetailMutation();
 
         // -- Handler -------------------------------------------------------------------------------
         const handleQtyChange = (e, item) => {
@@ -66,14 +70,30 @@
         }
 
         const handleTimeChange = (event, newValue) => {
-            console.log(event.target.value, newValue)
+            dispatch(setSelectedTime(newValue));
         }
 
         const handleSearchChange = (e) => {
-            console.log(e.target.value)
             dispatch(setFilterHourlyOutput({
                 search: e.target.value
             }));
+        }
+
+        const handleSubmit = async () => {
+            let outputDetail = [];
+            // console.log(currentOutput)
+            currentOutput.forEach(item => {
+                outputDetail.push({
+                    sizeId: item?.size?.id,
+                    lineId: selectedLine?.id,
+                    goodQty: item?.qty,
+                    mo: item?.mo,
+                    timeId: selectedTime?.id
+                });
+            });
+            console.log({outputDetail})
+
+            await createOutputDetail(outputDetail);
         }
 
         // -- UseEffect -----------------------------------------------------------------------------------
@@ -169,9 +189,13 @@
                         <div className="col-span-3 border border-gray-400 rounded-2xl h-full px-4 py-4 overflow-hidden flex flex-col">
                             <div className="flex justify-between items-center shrink-0">
                                 <p className="text-xl mb-3">Current output</p>
-                                <Tooltip title={"Clear all"}>
-                                    <IconButton onClick={() => dispatch(setClearCurrentOutput())} color="error" size="small"><FaTrash/></IconButton>
-                                </Tooltip>
+                                {
+                                    currentOutput?.length > 0 && (
+                                        <Tooltip title={"Clear all"}>
+                                            <IconButton onClick={() => dispatch(setClearCurrentOutput())} color="error" size="small"><FaTrash/></IconButton>
+                                        </Tooltip>
+                                    )
+                                }
                             </div>
                             <div className="mb-2">
                                 <Autocomplete
@@ -254,9 +278,8 @@
                                 }
                             </div>
                             <div className="flex flex-col pt-3 shrink-0">
-
                                 {
-                                    selectedLine?.isInput && (
+                                    lineByDeptData?.length > 0 && (
                                         <div className="mb-2">
                                             <Autocomplete
                                                 size="small"
@@ -289,7 +312,7 @@
                                         <span className="text-2xl text-orange-600 font-semibold">{totalRateDefect}%</span>
                                     </p>
                                 </div>
-                                <Button variant="contained">Submit <FaArrowRight className="ml-1"/></Button>
+                                <Button variant="contained" onClick={handleSubmit} loading={isLoadingOutputDetail}>Submit <FaArrowRight className="ml-1"/></Button>
                             </div>
                         </div>
                     </div>

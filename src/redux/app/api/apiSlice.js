@@ -95,7 +95,8 @@ export const apiSlice = createApi({
     "Time",
     "TimeLookup",
     "DefectTypeLookup",
-    "ProductionLineByDept"
+    "ProductionLineByDept",
+    "OutputDetail"
   ],
   endpoints: (builder) => ({}),
 });

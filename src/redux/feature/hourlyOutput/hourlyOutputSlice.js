@@ -26,9 +26,13 @@ const hourlyOutputSlice = createSlice({
         totalOutput: 0,
         totalDefect: 0,
         ratingDefect: 0.0,
-        selectedLine: {}
+        selectedLine: {},
+        selectedTime: {}
     },
     reducers: {
+        setSelectedTime: (state, action) => {
+            state.selectedTime = action.payload;
+        },
         setSelectedLine: (state, action) => {
             state.selectedLine = action.payload;
         },
@@ -117,6 +121,7 @@ const hourlyOutputSlice = createSlice({
 });
 
 export const {
+    setSelectedTime,
     setSelectedLine,
     setQtyCurrentOutputChange,
     setClearCurrentOutput,
