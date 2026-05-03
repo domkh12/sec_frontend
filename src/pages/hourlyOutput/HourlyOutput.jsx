@@ -7,11 +7,12 @@
     import CardWorkOrder from "../../components/card/CardWorkOrder.jsx";
     import {useDispatch, useSelector} from "react-redux";
     import {
+    Alert,
     Autocomplete,
     Button,
     IconButton,
     InputAdornment,
-    Pagination,
+    Pagination, Snackbar,
     TextField,
     Tooltip
 } from "@mui/material";
@@ -19,9 +20,10 @@
     import { FaMinusCircle } from "react-icons/fa";
     import { FaPlusCircle } from "react-icons/fa";
     import {
+    setAlertHourlyOutput,
     setClearCurrentOutput,
     setDecreaseQty, setFilterHourlyOutput,
-    setIncreaseQty, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime
+    setIncreaseQty, setIsOpenSnackbarHourlyOutput, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime
 } from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
     import { FaTrash } from "react-icons/fa";
     import { FaArrowRight } from "react-icons/fa6";
@@ -30,6 +32,8 @@
     import DefectTypeSelect from "../../components/select/DefectTypeSelect.jsx";
     import useDebounce from "../../hook/useDebounce.jsx";
     import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
+    import {useTranslation} from "react-i18next";
+    import {setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
 
     function HourlyOutput(){
         // -- State --------------------------------------------------------------------------------
@@ -39,14 +43,17 @@
         const currentOutput           = useSelector((s) => s.hourlyOutput.currentOutput);
         const filterValue             = useSelector((s) => s.hourlyOutput.filter);
         const totalOutput             = useSelector((s) => s.hourlyOutput.totalOutput);
-        const totalDefect     = useSelector((s) => s.hourlyOutput.totalDefect);
-        const totalRateDefect = useSelector((s) => s.hourlyOutput.ratingDefect);
+        const totalDefect             = useSelector((s) => s.hourlyOutput.totalDefect);
+        const totalRateDefect         = useSelector((s) => s.hourlyOutput.ratingDefect);
         const selectedLine            = useSelector((s) => s.hourlyOutput.selectedLine);
         const selectedTime            = useSelector((s) => s.hourlyOutput.selectedTime);
-        console.log(selectedTime)
+        const isOpenSnackbar          = useSelector((s) => s.hourlyOutput.isOpenSnackbarHourlyOutput);
+        const alertHourlyOutput       = useSelector((s) => s.hourlyOutput.alertHourlyOutput);
+
         // -- Hook ---------------------------------------------------------------------------------
         const dispatch = useDispatch();
-        const search = useDebounce(filterValue?.search, 500);
+        const search               = useDebounce(filterValue?.search, 500);
+        const {t} = useTranslation();
 
         // -- Query --------------------------------------------------------------------------------
         const {data: productionLine, isSuccess: isSuccessProductionLine} = useGetProductionLineLookupQuery();
@@ -92,8 +99,16 @@
                 });
             });
             console.log({outputDetail})
+            try {
+                await createOutputDetail(outputDetail).unwrap();
+                dispatch(setAlertHourlyOutput({type: "success", message: t('createSuccess')}));
+                dispatch(setIsOpenSnackbarHourlyOutput(true));
+                dispatch(setClearCurrentOutput());
+            }catch (error){
+                dispatch(setAlertHourlyOutput({type: "error", message: error?.data?.error?.description ?? "Something went wrong!"}));
+                dispatch(setIsOpenSnackbarHourlyOutput(true));
+            }
 
-            await createOutputDetail(outputDetail);
         }
 
         // -- UseEffect -----------------------------------------------------------------------------------
@@ -121,6 +136,7 @@
                     console.log(entities[id].mo === e)
                 })
             }
+
             content = (
                 <div className="bg-gray-100 absolute top-0 left-0 h-full w-full">
                     <div className="pt-20 grid grid-cols-12 overflow-auto h-full w-full">
@@ -217,7 +233,7 @@
                                         currentOutput?.map((item, index) => (
                                             <div className="flex justify-between gap-2 min-w-0" key={index}>
                                                 <div className="w-14 h-14 shrink-0 overflow-hidden rounded-lg">
-                                                    <img src={item?.image} alt={item?.mo} className="object-cover" loading={"lazy"} decoding={"async"}/>
+                                                    <img src={item?.image || "/images/placeholder.png"} alt={item?.mo} className="object-cover" loading={"lazy"} decoding={"async"}/>
                                                 </div>
                                                 <div className="min-w-0">
                                                     <p className="text-md truncate ">{item?.style}-{item?.color}</p>
@@ -312,10 +328,29 @@
                                         <span className="text-2xl text-orange-600 font-semibold">{totalRateDefect}%</span>
                                     </p>
                                 </div>
-                                <Button variant="contained" onClick={handleSubmit} loading={isLoadingOutputDetail}>Submit <FaArrowRight className="ml-1"/></Button>
+                                <Button variant="contained" onClick={handleSubmit} loading={isLoadingOutputDetail}
+                                        disabled={totalOutput === 0}
+                                >
+                                    Submit <FaArrowRight className="ml-1"/>
+                                </Button>
                             </div>
                         </div>
                     </div>
+                    <Snackbar
+                        open={isOpenSnackbar}
+                        autoHideDuration={6000}
+                        onClose={() => dispatch(setIsOpenSnackbarHourlyOutput(false))}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    >
+                        <Alert
+                            onClose={() => dispatch(setIsOpenSnackbarHourlyOutput(false))}
+                            severity={alertHourlyOutput.type}
+                            variant="filled"
+                            sx={{ width: '100%' }}
+                        >
+                            {alertHourlyOutput.message}
+                        </Alert>
+                    </Snackbar>
                 </div>
             )
         }

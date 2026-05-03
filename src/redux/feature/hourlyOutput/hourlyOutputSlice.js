@@ -9,6 +9,17 @@ const calculateOutputQty = (state) => {
 
     state.totalOutput = total;
 };
+
+const calculateDefectRate = (state) => {
+    const totalOutput = Number(state.totalOutput) || 0;
+    const totalDefect = Number(state.totalDefect) || 0;
+
+    if (totalOutput === 0){
+        state.ratingDefect = 0;
+    }else {
+        state.ratingDefect = ((totalDefect / totalOutput) * 100).toFixed(2);
+    }
+}
 const hourlyOutputSlice = createSlice({
     name: "hourlyOutput",
     initialState: {
@@ -30,6 +41,10 @@ const hourlyOutputSlice = createSlice({
         selectedTime: {}
     },
     reducers: {
+        setTotalDefect: (state, action) => {
+            state.totalDefect = action.payload;
+            calculateDefectRate(state);
+        },
         setSelectedTime: (state, action) => {
             state.selectedTime = action.payload;
         },
@@ -47,10 +62,14 @@ const hourlyOutputSlice = createSlice({
             }
 
             calculateOutputQty(state);
+            calculateDefectRate(state);
         },
         setClearCurrentOutput: (state) => {
           state.currentOutput = [];
           state.totalOutput = 0;
+          state.totalDefect = 0;
+          state.selectedLine = {};
+          state.selectedTime = {};
         },
         setDecreaseQty:(state, action) => {
             const incoming = action.payload;
@@ -69,6 +88,7 @@ const hourlyOutputSlice = createSlice({
             }
 
             calculateOutputQty(state);
+            calculateDefectRate(state);
         },
         setIncreaseQty:(state, action) => {
             const incoming = action.payload;
@@ -83,6 +103,7 @@ const hourlyOutputSlice = createSlice({
                 state.currentOutput.push(incoming);
             }
             calculateOutputQty(state);
+            calculateDefectRate(state);
         },
         setCurrentOutput: (state, action) => {
           const incoming = action.payload;
@@ -98,6 +119,7 @@ const hourlyOutputSlice = createSlice({
           }
 
           calculateOutputQty(state);
+          calculateDefectRate(state);
         },
         setFilterHourlyOutput: (state, action) => {
             state.filter = action.payload;
@@ -121,6 +143,7 @@ const hourlyOutputSlice = createSlice({
 });
 
 export const {
+    setTotalDefect,
     setSelectedTime,
     setSelectedLine,
     setQtyCurrentOutputChange,

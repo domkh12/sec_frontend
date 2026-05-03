@@ -8,6 +8,9 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {useGetDefectTypeLookupQuery} from "../../redux/feature/defect-type/defectTypeApiSlice.js";
+import {useEffect} from "react";
+import {useDispatch} from "react-redux";
+import {setTotalDefect} from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
 
 /* ─── Generate a stable color from a string ─── */
 function colorFromName(name) {
@@ -91,6 +94,9 @@ export default function DefectTypeSelect() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [counts, setCounts] = React.useState({});
 
+    // -- Hook ---------------------------------------------------------------------------------------------------
+    const dispatch = useDispatch();
+
     const open = Boolean(anchorEl);
     const id = open ? 'defect-type-popper' : undefined;
 
@@ -102,6 +108,10 @@ export default function DefectTypeSelect() {
 
     const totalDefects = labels?.reduce((sum, l) => sum + (counts[l.name] ?? 0), 0);
     const activeLabels = labels?.filter((l) => (counts[l.name] ?? 0) > 0);
+
+    useEffect(() => {
+        dispatch(setTotalDefect(totalDefects));
+    }, [totalDefects]);
 
     return (
         <Box sx={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
