@@ -1,7 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 const calculateOutputQty = (state) => {
     let total = 0;
-    console.log(state)
 
     state.currentOutput.forEach(item => {
         total += Number(item.qty) || 0;
@@ -38,9 +37,13 @@ const hourlyOutputSlice = createSlice({
         totalDefect: 0,
         ratingDefect: 0.0,
         selectedLine: {},
-        selectedTime: {}
+        selectedTime: {},
+        selectedToLine: {}
     },
     reducers: {
+        setSelectedToLine: (state, action) => {
+            state.selectedToLine = action.payload;
+        },
         setTotalDefect: (state, action) => {
             state.totalDefect = action.payload;
             calculateDefectRate(state);
@@ -50,6 +53,7 @@ const hourlyOutputSlice = createSlice({
         },
         setSelectedLine: (state, action) => {
             state.selectedLine = action.payload;
+            state.currentOutput = [];
         },
         setQtyCurrentOutputChange: (state, action) => {
             const incoming = action.payload;
@@ -68,8 +72,9 @@ const hourlyOutputSlice = createSlice({
           state.currentOutput = [];
           state.totalOutput = 0;
           state.totalDefect = 0;
-          state.selectedLine = {};
+          state.selectedToLine = {};
           state.selectedTime = {};
+          state.ratingDefect = 0.0;
         },
         setDecreaseQty:(state, action) => {
             const incoming = action.payload;
@@ -143,6 +148,7 @@ const hourlyOutputSlice = createSlice({
 });
 
 export const {
+    setSelectedToLine,
     setTotalDefect,
     setSelectedTime,
     setSelectedLine,

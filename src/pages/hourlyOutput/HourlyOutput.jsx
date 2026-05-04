@@ -23,17 +23,17 @@
     setAlertHourlyOutput,
     setClearCurrentOutput,
     setDecreaseQty, setFilterHourlyOutput,
-    setIncreaseQty, setIsOpenSnackbarHourlyOutput, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime
+    setIncreaseQty, setIsOpenSnackbarHourlyOutput, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime,
+    setSelectedToLine
 } from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
     import { FaTrash } from "react-icons/fa";
     import { FaArrowRight } from "react-icons/fa6";
     import {useGetTimeLookupQuery} from "../../redux/feature/time/timeApiSlice.js";
-    import {useEffect} from "react";
+    import {useEffect, useState} from "react";
     import DefectTypeSelect from "../../components/select/DefectTypeSelect.jsx";
     import useDebounce from "../../hook/useDebounce.jsx";
     import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
     import {useTranslation} from "react-i18next";
-    import {setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
 
     function HourlyOutput(){
         // -- State --------------------------------------------------------------------------------
@@ -49,6 +49,7 @@
         const selectedTime            = useSelector((s) => s.hourlyOutput.selectedTime);
         const isOpenSnackbar          = useSelector((s) => s.hourlyOutput.isOpenSnackbarHourlyOutput);
         const alertHourlyOutput       = useSelector((s) => s.hourlyOutput.alertHourlyOutput);
+        const selectedToLine          = useSelector((s) => s.hourlyOutput.selectedToLine);
 
         // -- Hook ---------------------------------------------------------------------------------
         const dispatch = useDispatch();
@@ -80,6 +81,10 @@
             dispatch(setSelectedTime(newValue));
         }
 
+        const handleLineByDepartmentChange = (even, newValue) => {
+            dispatch(setSelectedToLine(newValue));
+        }
+
         const handleSearchChange = (e) => {
             dispatch(setFilterHourlyOutput({
                 search: e.target.value
@@ -88,17 +93,16 @@
 
         const handleSubmit = async () => {
             let outputDetail = [];
-            // console.log(currentOutput)
             currentOutput.forEach(item => {
                 outputDetail.push({
                     sizeId: item?.size?.id,
-                    lineId: selectedLine?.id,
+                    fromLineId: selectedLine?.id,
+                    toLineId: selectedToLine?.id,
                     goodQty: item?.qty,
                     mo: item?.mo,
                     timeId: selectedTime?.id
                 });
             });
-            console.log({outputDetail})
             try {
                 await createOutputDetail(outputDetail).unwrap();
                 dispatch(setAlertHourlyOutput({type: "success", message: t('createSuccess')}));
@@ -108,7 +112,6 @@
                 dispatch(setAlertHourlyOutput({type: "error", message: error?.data?.error?.description ?? "Something went wrong!"}));
                 dispatch(setIsOpenSnackbarHourlyOutput(true));
             }
-
         }
 
         // -- UseEffect -----------------------------------------------------------------------------------
@@ -119,11 +122,19 @@
             }
         }, [isSuccessProductionLine]);
 
+
         let content;
 
         if (isLoadingWO) content = (<LoadingComponent/>);
 
         if (isSuccessWO) {
+            const isFilled = (obj) => obj && Object.keys(obj).length > 0;
+            const isDisableSubmit = (
+                currentOutput?.length > 0 &&
+                isFilled(selectedTime) &&
+                isFilled(selectedLine) &&
+                (lineByDeptData?.length > 0 ? isFilled(selectedToLine) : true)
+            );
 
             const {ids, entities, totalPages} = workOrderData || {};
 
@@ -171,7 +182,7 @@
                                     onChange={handleSearchChange}
                                 />
                             </div>
-                            <div className="grid lg:grid-cols-5 grid-cols-3 gap-2">
+                            <div className="grid xl:grid-cols-5 grid-cols-3 gap-2">
                             {
                                 ids?.length > 0 ? (
                                     ids?.map(id => (
@@ -302,7 +313,7 @@
                                                 options={lineByDeptData}
                                                 getOptionKey={(option) => option.id}
                                                 getOptionLabel={(option) => option.line}
-                                                onChange={handleTimeChange}
+                                                onChange={handleLineByDepartmentChange}
                                                 renderInput={(params) => (
                                                     <TextField {...params} label="Line" placeholder="Line" />
                                                 )}
@@ -329,7 +340,7 @@
                                     </p>
                                 </div>
                                 <Button variant="contained" onClick={handleSubmit} loading={isLoadingOutputDetail}
-                                        disabled={totalOutput === 0}
+                                        disabled={!isDisableSubmit}
                                 >
                                     Submit <FaArrowRight className="ml-1"/>
                                 </Button>

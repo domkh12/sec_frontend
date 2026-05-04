@@ -36,7 +36,7 @@ function CardWorkOrder({image, style, mo, color, balance, onClick, sizes, po}){
                     <button
                         key={size?.id}
                         onClick={() => handSizeClick(size)}
-                        className="border rounded-md text-sm hover:scale-102 transition"
+                        className="border rounded-md text-sm hover:scale-102 py-2 transition"
                     >
                         {size?.size}
                     </button>

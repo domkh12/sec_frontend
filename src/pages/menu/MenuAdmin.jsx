@@ -114,7 +114,7 @@ function MenuAdmin(){
                     <Typography variant={"body1"} sx={{color: yellow[600]}}>Production Input</Typography>
                     <MenuButton
                         title="Hourly Output"
-                        iconPath={"/images/smart-tv.png"}
+                        iconPath={"/images/garment.png"}
                         onClick={() => navigate("hourly-output")}
                     />
                 </div>
