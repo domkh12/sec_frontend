@@ -6,10 +6,9 @@ import utilReducer from "../feature/util/utilSlice.js"
 import tvReducer from "../feature/tv/tvSlice.js"
 import departmentReducer from "../feature/department/departmentSlice.js"
 import productionReducer from "../feature/productionLine/productionLineSlice.js"
-import productReducer from "../feature/product/productSlice.js"
+import styleReducer from "../feature/style/styleSlice.js"
 import userReducer from "../feature/user/userSlice.js"
 import roleReducer from "../feature/role/roleSlice.js"
-import categoryReducer from "../feature/category/categorySlice.js"
 import buyerReducer from "../feature/buyer/buyerSlice.js"
 import sizeReducer from "../feature/size/sizeSlice.js"
 import colorReducer from "../feature/color/colorSlice.js"
@@ -17,7 +16,6 @@ import materialReducer from "../feature/material/materialSlice.js"
 import workOrderReducer from "../feature/workOrder/workOrderSlice.js"
 import defectTypeReducer from "../feature/defect-type/defectTypeSlice.js"
 import operationReducer from "../feature/operation/operationSlice.js"
-import processingTimeReducer from "../feature/processingTime/processingTimeSlice.js"
 import hourlyOutputReducer from "../feature/hourlyOutput/hourlyOutputSlice.js"
 import timeReducer from "../feature/time/timeSlice.js"
 
@@ -29,10 +27,9 @@ const store = configureStore({
     tv: tvReducer,
     department: departmentReducer,
     productionLine: productionReducer,
-    product: productReducer,
+    style: styleReducer,
     user: userReducer,
     role: roleReducer,
-    category: categoryReducer,
     buyer: buyerReducer,
     size: sizeReducer,
     color: colorReducer,
@@ -40,7 +37,6 @@ const store = configureStore({
     workOrder: workOrderReducer,
     defectType: defectTypeReducer,
     operation: operationReducer,
-    processingTime: processingTimeReducer,
     hourlyOutput: hourlyOutputReducer,
     time: timeReducer
   },

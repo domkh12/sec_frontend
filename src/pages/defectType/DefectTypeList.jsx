@@ -51,7 +51,6 @@ function DefectTypeList() {
     const debounceSearch = useDebounce(filterValue.search, 500);
 
     // -- Query --------------------------------------------------------------------------------------------------------
-    const {data: defectTypeStats} = useGetDefectTypeQuery();
     const {data: defectTypeData, isLoading, isSuccess, isFetching} = useGetDefectTypeQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
@@ -191,37 +190,6 @@ function DefectTypeList() {
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditDefectType(true))}/>
-                </div>
-                <div>
-                    <StatCards cards={[
-                        {
-                            label: t("stats.totalDefectTypes"),
-                            value: defectTypeStats?.totalBuyer || 0,
-                            color: "blue",
-                            icon: <ApartmentIcon/>
-                        },
-                        {
-                            label: t("stats.topDefectType"),
-                            // Sums all lines from the current data list
-                            value: defectTypeStats?.activeOrder || 0,
-                            color: "violet",
-                            icon: <PrecisionManufacturingIcon fontSize="small"/>
-                        },
-                        {
-                            label: t("stats.defectsToday"),
-                            // Sums all workers from the current data list
-                            value: defectTypeStats?.totalPcs || 0,
-                            color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
-                        },
-                        {
-                            label: t("stats.defectRate"),
-                            // Sums all workers from the current data list
-                            value: defectTypeStats?.totalPcs || 0,
-                            color: "emerald",
-                            icon: <PeopleAltRoundedIcon fontSize="small"/>
-                        },
-                    ]} />
                 </div>
                 <TableCus
                     columns={columns}

@@ -21,25 +21,11 @@ function MenuAdmin(){
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('system')}</Typography>
-                        {/*<MenuButton title={t('settings')} iconPath={"/images/gear.png"} onClick={() => navigate("settings")}/>*/}
-                        {/*<MenuButton title={t('auditLog')} iconPath={"/images/audit.png"} onClick={() => navigate("settings")}/>*/}
                         <MenuButton title={t('settings')} iconPath={"/images/coming-soon.png"} onClick={() => navigate("/admin")}/>
                         <MenuButton title={t('auditLog')} iconPath={"/images/coming-soon.png"} onClick={() => navigate("/admin")}/>
                     </div>
                 </div>
             </div>
-
-            {/*<div className="flex flex-col justify-center items-center w-full sm:w-auto">*/}
-            {/*    <Typography variant="h6" sx={{color: yellow[600]}}>{t('Human Resources')}</Typography>*/}
-            {/*    <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>*/}
-            {/*    <div className="flex flex-wrap justify-center items-start gap-5">*/}
-            {/*        <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">*/}
-            {/*            <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("Workforce")}</Typography>*/}
-            {/*            <MenuButton title={t('employee')} iconPath={"/images/team.png"} onClick={() => navigate("users")}/>*/}
-            {/*            <MenuButton title={t('take leave')} iconPath={"/images/insurance.png"} onClick={() => navigate("roles")}/>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('dataSetup')}</Typography>
@@ -75,32 +61,32 @@ function MenuAdmin(){
                             onClick={() => navigate("production-status")}
                         />
                     </div>
-                    {/*<div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">*/}
-                    {/*    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("style")}</Typography>*/}
-                    {/*    <MenuButton title={`${t("style")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>*/}
-                    {/*    <MenuButton title={`${t("product.productCategory")}`} iconPath={"/images/product-categories.png"} onClick={() => navigate("categories")}/>*/}
-                    {/*    <MenuButton title={`${t("table.color")}`} iconPath={"/images/color-wheel.png"} onClick={() => navigate("colors")}/>*/}
-                    {/*    <MenuButton title={`${t("table.size")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>*/}
-                    {/*    <MenuButton title={`${t("table.defectType")}`} iconPath={"/images/defect-type.png"} onClick={() => navigate("defect-types")}/>*/}
-                    {/*</div>*/}
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("style")}</Typography>
+                        <MenuButton title={`${t("style")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
+                        <MenuButton title={`${t("table.color")}`} iconPath={"/images/color-wheel.png"} onClick={() => navigate("colors")}/>
+                        <MenuButton title={`${t("table.size")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>
+                        <MenuButton title={`${t("table.defectType")}`} iconPath={"/images/defect-type.png"} onClick={() => navigate("defect-types")}/>
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("po")}</Typography>
+                        <MenuButton title={`${t("po")}`} iconPath={"/images/order-fulfillment.png"} onClick={() => navigate("purchase-orders")}/>
+                    </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
                         <MenuButton
                             title={`${t('Work Orders')}`}
                             iconPath={"/images/work-order.png"}
-                            // iconPath={"/images/coming-soon.png"}
                             onClick={() => navigate("work-orders")}
                         />
                         <MenuButton
                             title={`${t('QR Generator')}`}
                             iconPath={"/images/qr-white.png"}
-                            // iconPath={"/images/coming-soon.png"}
                             onClick={() => navigate("qr-generator")}
                         />
                         <MenuButton
                             title={`${t('QR Scan')}`}
                             iconPath={"/images/qr-white.png"}
-                            // iconPath={"/images/coming-soon.png"}
                             onClick={() => navigate("qr-scan")}
                         />
                     </div>
@@ -127,7 +113,6 @@ function MenuAdmin(){
                     <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Raw Materials')}</Typography>
                     <MenuButton
                         title={`${t('WH Raw Materials')}`}
-                        // iconPath={"/images/order-fulfillment.png"}
                         iconPath={"/images/warehouse.png"}
                         onClick={() => navigate("materials")}
                     />

@@ -148,12 +148,6 @@ function ColorList() {
 
     const columns = [
         {
-            id: "id",
-            label: t("table.id"),
-            minWidth: 50,
-            align: "left",
-        },
-        {
             id: "color",
             label: t("table.color"),
             minWidth: 130,

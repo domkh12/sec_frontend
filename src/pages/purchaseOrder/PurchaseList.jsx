@@ -6,8 +6,7 @@ import {
     useCreateProductMutation,
     useDeleteProductMutation, useGetProductQuery,
     useUpdateProductMutation
-} from "../../redux/feature/product/productApiSlice.js";
-import {useCreateCategoryMutation, useGetCategoryLookupQuery} from "../../redux/feature/category/categoryApiSlice.js";
+} from "../../redux/feature/style/styleApiSlice.js";
 import {useCreateColorMutation, useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
 import {
@@ -15,7 +14,7 @@ import {
     setFilterProduct, setIsOpenDeleteProductDialog,
     setIsOpenDialogAddOrEditProduct, setIsOpenSnackbarProduct,
     setProductDataForUpdate
-} from "../../redux/feature/product/productSlice.js";
+} from "../../redux/feature/style/styleSlice.js";
 import * as Yup from "yup";
 import {Alert, Backdrop, Snackbar} from "@mui/material";
 import BackButton from "../../components/ui/BackButton.jsx";
@@ -45,11 +44,9 @@ function PurchaseList() {
     const [createProduct]   = useCreateProductMutation();
     const [updateProduct]   = useUpdateProductMutation();
     const [deleteProduct]   = useDeleteProductMutation();
-    const [createCategory]  = useCreateCategoryMutation();
     const [createColor]     = useCreateColorMutation();
 
     // -- Query ---------------------------------------------------------------
-    const {data: categoryLookup}    = useGetCategoryLookupQuery();
     const {data: prodData,
         isLoading,
         isSuccess
@@ -162,35 +159,8 @@ function PurchaseList() {
         size:         Yup.array().min(1, t("validation.required")).required(t("validation.required")),
     });
 
-    const categorySchema = Yup.object().shape({
-        name:      Yup.string().required(t("validation.required"))
-    })
-
     const fields = [
         { name: "styleNo",     label: "table.styleNo",     type: "text" },
-        {
-            name: "subCategory",
-            label: "category",
-            type: "nestedSelect",
-            options: categoryLookup,
-            addNew: {
-                label: "Add new category",   // text shown below the field
-                title: "New Category",         // nested dialog title
-                fields: [
-                    { name: "name",  label: "name",  type: "text" },
-                ],
-                initialValues: { name: "" },
-                validationSchema: categorySchema,
-                onSubmit: async (values, helpers) => {
-                    await createCategory({
-                        name: values.name
-                    }).unwrap();
-                    dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
-                    dispatch(setIsOpenSnackbarProduct(true));
-                },
-
-            },
-        },
         { name: "color",
             label: "color",
             type: "autocomplete-checkbox",

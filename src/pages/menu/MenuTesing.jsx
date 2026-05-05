@@ -54,18 +54,18 @@ const DATA = {
     { id:3, name:"Night Shift", start:"22:00", end:"06:00", workers:80, supervisor:"Panha Rin", days:"Mon-Fri" },
   ],
   workOrders: [
-    { id:"WO-2026-001", product:"Men's Polo Shirt", buyer:"H&M", qty:5000, due:"2026-03-15", line:"Line A1", status:"In Progress", done:2840, priority:"High" },
-    { id:"WO-2026-002", product:"Women's T-Shirt", buyer:"Zara", qty:3000, due:"2026-03-12", line:"Line B1", status:"In Progress", done:2100, priority:"High" },
-    { id:"WO-2026-003", product:"Cargo Shorts", buyer:"Gap", qty:2000, due:"2026-03-20", line:"Line A2", status:"Pending", done:0, priority:"Medium" },
-    { id:"WO-2026-004", product:"Sports Jersey", buyer:"Nike", qty:1500, due:"2026-03-10", line:"Line B2", status:"Delayed", done:800, priority:"Critical" },
-    { id:"WO-2026-005", product:"Hooded Jacket", buyer:"Adidas", qty:4000, due:"2026-03-25", line:"Cut-1", status:"Pending", done:0, priority:"Medium" },
+    { id:"WO-2026-001", style:"Men's Polo Shirt", buyer:"H&M", qty:5000, due:"2026-03-15", line:"Line A1", status:"In Progress", done:2840, priority:"High" },
+    { id:"WO-2026-002", style:"Women's T-Shirt", buyer:"Zara", qty:3000, due:"2026-03-12", line:"Line B1", status:"In Progress", done:2100, priority:"High" },
+    { id:"WO-2026-003", style:"Cargo Shorts", buyer:"Gap", qty:2000, due:"2026-03-20", line:"Line A2", status:"Pending", done:0, priority:"Medium" },
+    { id:"WO-2026-004", style:"Sports Jersey", buyer:"Nike", qty:1500, due:"2026-03-10", line:"Line B2", status:"Delayed", done:800, priority:"Critical" },
+    { id:"WO-2026-005", style:"Hooded Jacket", buyer:"Adidas", qty:4000, due:"2026-03-25", line:"Cut-1", status:"Pending", done:0, priority:"Medium" },
   ],
   defects: [
-    { id:1, line:"Line A2", product:"Men's Polo Shirt", type:"Stitch Skip", qty:12, severity:"Major", date:"2026-03-05", status:"Open", inspector:"Ratha Sok" },
-    { id:2, line:"Line B2", product:"Sports Jersey", type:"Color Bleeding", qty:5, severity:"Critical", date:"2026-03-05", status:"Open", inspector:"Ratha Sok" },
-    { id:3, line:"Line A1", product:"Women's T-Shirt", type:"Size Variation", qty:8, severity:"Minor", date:"2026-03-04", status:"Resolved", inspector:"Sreymom Chan" },
-    { id:4, line:"Cut-2", product:"Cargo Shorts", type:"Cutting Error", qty:20, severity:"Major", date:"2026-03-04", status:"Rework", inspector:"Ratha Sok" },
-    { id:5, line:"Finish-1", product:"Hooded Jacket", type:"Loose Thread", qty:15, severity:"Minor", date:"2026-03-03", status:"Resolved", inspector:"Sreymom Chan" },
+    { id:1, line:"Line A2", style:"Men's Polo Shirt", type:"Stitch Skip", qty:12, severity:"Major", date:"2026-03-05", status:"Open", inspector:"Ratha Sok" },
+    { id:2, line:"Line B2", style:"Sports Jersey", type:"Color Bleeding", qty:5, severity:"Critical", date:"2026-03-05", status:"Open", inspector:"Ratha Sok" },
+    { id:3, line:"Line A1", style:"Women's T-Shirt", type:"Size Variation", qty:8, severity:"Minor", date:"2026-03-04", status:"Resolved", inspector:"Sreymom Chan" },
+    { id:4, line:"Cut-2", style:"Cargo Shorts", type:"Cutting Error", qty:20, severity:"Major", date:"2026-03-04", status:"Rework", inspector:"Ratha Sok" },
+    { id:5, line:"Finish-1", style:"Hooded Jacket", type:"Loose Thread", qty:15, severity:"Minor", date:"2026-03-03", status:"Resolved", inspector:"Sreymom Chan" },
   ],
   auditLog: [
     { id:1, user:"Sophea Keo", action:"Created Work Order WO-2026-005", time:"2026-03-05 09:14", module:"Production" },
@@ -154,18 +154,18 @@ const DATA = {
     { id:"MC-006", name:"Tajima TMEF", type:"Embroidery", dept:"Embroidery", line:"Emb-1", status:"Running", lastService:"2026-02-28", nextService:"2026-05-28" },
   ],
   costings: [
-    { id:1, product:"Men's Polo Shirt", fabric:3.20, trim:0.45, labor:1.80, overhead:0.60, total:6.05, fob:8.50, margin:28.8 },
-    { id:2, product:"Women's T-Shirt", fabric:1.80, trim:0.25, labor:1.10, overhead:0.40, total:3.55, fob:5.20, margin:31.7 },
-    { id:3, product:"Cargo Shorts", fabric:4.10, trim:0.90, labor:2.60, overhead:0.80, total:8.40, fob:12.00, margin:30.0 },
-    { id:4, product:"Sports Jersey", fabric:2.50, trim:0.60, labor:2.00, overhead:0.65, total:5.75, fob:8.00, margin:28.1 },
-    { id:5, product:"Hooded Jacket", fabric:8.20, trim:1.80, labor:4.80, overhead:1.50, total:16.30, fob:24.00, margin:32.1 },
+    { id:1, style:"Men's Polo Shirt", fabric:3.20, trim:0.45, labor:1.80, overhead:0.60, total:6.05, fob:8.50, margin:28.8 },
+    { id:2, style:"Women's T-Shirt", fabric:1.80, trim:0.25, labor:1.10, overhead:0.40, total:3.55, fob:5.20, margin:31.7 },
+    { id:3, style:"Cargo Shorts", fabric:4.10, trim:0.90, labor:2.60, overhead:0.80, total:8.40, fob:12.00, margin:30.0 },
+    { id:4, style:"Sports Jersey", fabric:2.50, trim:0.60, labor:2.00, overhead:0.65, total:5.75, fob:8.00, margin:28.1 },
+    { id:5, style:"Hooded Jacket", fabric:8.20, trim:1.80, labor:4.80, overhead:1.50, total:16.30, fob:24.00, margin:32.1 },
   ],
   standards: [
-    { id:1, product:"Men's Polo Shirt", operation:"Front Placket", smv:1.8, machine:"Single Needle", skill:"Medium" },
-    { id:2, product:"Men's Polo Shirt", operation:"Collar Attach", smv:2.2, machine:"Single Needle", skill:"High" },
-    { id:3, product:"Women's T-Shirt", operation:"Side Seam", smv:0.9, machine:"Overlock", skill:"Low" },
-    { id:4, product:"Cargo Shorts", operation:"Pocket Attach", smv:3.1, machine:"Single Needle", skill:"Medium" },
-    { id:5, product:"Sports Jersey", operation:"Number Print", smv:2.5, machine:"Heat Press", skill:"Medium" },
+    { id:1, style:"Men's Polo Shirt", operation:"Front Placket", smv:1.8, machine:"Single Needle", skill:"Medium" },
+    { id:2, style:"Men's Polo Shirt", operation:"Collar Attach", smv:2.2, machine:"Single Needle", skill:"High" },
+    { id:3, style:"Women's T-Shirt", operation:"Side Seam", smv:0.9, machine:"Overlock", skill:"Low" },
+    { id:4, style:"Cargo Shorts", operation:"Pocket Attach", smv:3.1, machine:"Single Needle", skill:"Medium" },
+    { id:5, style:"Sports Jersey", operation:"Number Print", smv:2.5, machine:"Heat Press", skill:"Medium" },
   ],
   inspections: [
     { id:1, wo:"WO-2026-001", stage:"In-Process", inspector:"Ratha Sok", date:"2026-03-05", checked:200, passed:194, failed:6, result:"Pass" },
@@ -191,31 +191,31 @@ const INIT_WH_RAW_TRANSACTIONS = [
 
 // ── PRODUCTION OUTPUT DATA ─────────────────────────────────────
 const INIT_PROD_OUTPUTS = [
-  { id:"OUT-001", date:"2026-03-05", shift:"Morning", line:"Line A1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:600, output:574, defects:12, rework:8, goodPcs:562, operator:"Malis Heng", supervisor:"Dara Pich", note:"" },
-  { id:"OUT-002", date:"2026-03-05", shift:"Morning", line:"Line B1", wo:"WO-2026-002", product:"Women's T-Shirt", target:620, output:612, defects:5, rework:5, goodPcs:607, operator:"Sina Kem", supervisor:"Dara Pich", note:"" },
-  { id:"OUT-003", date:"2026-03-05", shift:"Morning", line:"Line A2", wo:"WO-2026-003", product:"Cargo Shorts", target:580, output:490, defects:20, rework:12, goodPcs:470, operator:"Bopha Ly", supervisor:"Chanta Mao", note:"Machine downtime 30 min" },
-  { id:"OUT-004", date:"2026-03-05", shift:"Morning", line:"Line B2", wo:"WO-2026-004", product:"Sports Jersey", target:520, output:388, defects:5, rework:3, goodPcs:383, operator:"Ratha Sok", supervisor:"Virak Noun", note:"Color issue caused delay" },
-  { id:"OUT-005", date:"2026-03-05", shift:"Morning", line:"Cut-1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:1200, output:1180, defects:15, rework:10, goodPcs:1165, operator:"Virak Noun", supervisor:"Virak Noun", note:"" },
-  { id:"OUT-006", date:"2026-03-04", shift:"Morning", line:"Line A1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:600, output:588, defects:8, rework:6, goodPcs:580, operator:"Malis Heng", supervisor:"Dara Pich", note:"" },
-  { id:"OUT-007", date:"2026-03-04", shift:"Afternoon", line:"Line B1", wo:"WO-2026-002", product:"Women's T-Shirt", target:620, output:605, defects:4, rework:4, goodPcs:601, operator:"Kosal Vong", supervisor:"Dara Pich", note:"" },
-  { id:"OUT-008", date:"2026-03-04", shift:"Morning", line:"Finish-1", wo:"WO-2026-001", product:"Men's Polo Shirt", target:800, output:762, defects:10, rework:7, goodPcs:752, operator:"Panha Rin", supervisor:"Panha Rin", note:"" },
+  { id:"OUT-001", date:"2026-03-05", shift:"Morning", line:"Line A1", wo:"WO-2026-001", style:"Men's Polo Shirt", target:600, output:574, defects:12, rework:8, goodPcs:562, operator:"Malis Heng", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-002", date:"2026-03-05", shift:"Morning", line:"Line B1", wo:"WO-2026-002", style:"Women's T-Shirt", target:620, output:612, defects:5, rework:5, goodPcs:607, operator:"Sina Kem", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-003", date:"2026-03-05", shift:"Morning", line:"Line A2", wo:"WO-2026-003", style:"Cargo Shorts", target:580, output:490, defects:20, rework:12, goodPcs:470, operator:"Bopha Ly", supervisor:"Chanta Mao", note:"Machine downtime 30 min" },
+  { id:"OUT-004", date:"2026-03-05", shift:"Morning", line:"Line B2", wo:"WO-2026-004", style:"Sports Jersey", target:520, output:388, defects:5, rework:3, goodPcs:383, operator:"Ratha Sok", supervisor:"Virak Noun", note:"Color issue caused delay" },
+  { id:"OUT-005", date:"2026-03-05", shift:"Morning", line:"Cut-1", wo:"WO-2026-001", style:"Men's Polo Shirt", target:1200, output:1180, defects:15, rework:10, goodPcs:1165, operator:"Virak Noun", supervisor:"Virak Noun", note:"" },
+  { id:"OUT-006", date:"2026-03-04", shift:"Morning", line:"Line A1", wo:"WO-2026-001", style:"Men's Polo Shirt", target:600, output:588, defects:8, rework:6, goodPcs:580, operator:"Malis Heng", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-007", date:"2026-03-04", shift:"Afternoon", line:"Line B1", wo:"WO-2026-002", style:"Women's T-Shirt", target:620, output:605, defects:4, rework:4, goodPcs:601, operator:"Kosal Vong", supervisor:"Dara Pich", note:"" },
+  { id:"OUT-008", date:"2026-03-04", shift:"Morning", line:"Finish-1", wo:"WO-2026-001", style:"Men's Polo Shirt", target:800, output:762, defects:10, rework:7, goodPcs:752, operator:"Panha Rin", supervisor:"Panha Rin", note:"" },
 ];
 
 // ── WAREHOUSE FINISHED GOODS DATA ─────────────────────────────
 const INIT_FG_STOCK = [
-  { id:"FG-001", wo:"WO-2026-001", product:"Men's Polo Shirt", buyer:"H&M", style:"P001", color:"Navy", size:"Assorted", qty:1200, cartons:60, location:"FG-Zone-A", packedDate:"2026-03-05", status:"Ready to Ship", qcStatus:"Passed" },
-  { id:"FG-002", wo:"WO-2026-002", product:"Women's T-Shirt", buyer:"Zara", style:"P002", color:"White", size:"Assorted", qty:2100, cartons:105, location:"FG-Zone-B", packedDate:"2026-03-04", status:"Allocated", qcStatus:"Passed" },
-  { id:"FG-003", wo:"WO-2026-004", product:"Sports Jersey", buyer:"Nike", style:"P004", color:"Red", size:"Assorted", qty:383, cartons:20, location:"FG-Zone-A", packedDate:"2026-03-05", status:"On Hold", qcStatus:"Fail - Rework" },
-  { id:"FG-004", wo:"WO-2026-001", product:"Men's Polo Shirt", buyer:"H&M", style:"P001", color:"Navy", size:"S", qty:400, cartons:20, location:"FG-Zone-C", packedDate:"2026-03-03", status:"Shipped", qcStatus:"Passed" },
-  { id:"FG-005", wo:"WO-2026-002", product:"Women's T-Shirt", buyer:"Zara", style:"P002", color:"White", size:"M", qty:900, cartons:45, location:"FG-Zone-B", packedDate:"2026-03-02", status:"Shipped", qcStatus:"Passed" },
+  { id:"FG-001", wo:"WO-2026-001", style:"Men's Polo Shirt", buyer:"H&M", style:"P001", color:"Navy", size:"Assorted", qty:1200, cartons:60, location:"FG-Zone-A", packedDate:"2026-03-05", status:"Ready to Ship", qcStatus:"Passed" },
+  { id:"FG-002", wo:"WO-2026-002", style:"Women's T-Shirt", buyer:"Zara", style:"P002", color:"White", size:"Assorted", qty:2100, cartons:105, location:"FG-Zone-B", packedDate:"2026-03-04", status:"Allocated", qcStatus:"Passed" },
+  { id:"FG-003", wo:"WO-2026-004", style:"Sports Jersey", buyer:"Nike", style:"P004", color:"Red", size:"Assorted", qty:383, cartons:20, location:"FG-Zone-A", packedDate:"2026-03-05", status:"On Hold", qcStatus:"Fail - Rework" },
+  { id:"FG-004", wo:"WO-2026-001", style:"Men's Polo Shirt", buyer:"H&M", style:"P001", color:"Navy", size:"S", qty:400, cartons:20, location:"FG-Zone-C", packedDate:"2026-03-03", status:"Shipped", qcStatus:"Passed" },
+  { id:"FG-005", wo:"WO-2026-002", style:"Women's T-Shirt", buyer:"Zara", style:"P002", color:"White", size:"M", qty:900, cartons:45, location:"FG-Zone-B", packedDate:"2026-03-02", status:"Shipped", qcStatus:"Passed" },
 ];
 const INIT_FG_TRANSACTIONS = [
-  { id:"FGT-001", date:"2026-03-05", type:"Stock In", fgId:"FG-001", product:"Men's Polo Shirt", buyer:"H&M", qty:1200, cartons:60, by:"Kosal Vong", note:"From packing line, QC cleared" },
-  { id:"FGT-002", date:"2026-03-04", type:"Stock In", fgId:"FG-002", product:"Women's T-Shirt", buyer:"Zara", qty:2100, cartons:105, by:"Kosal Vong", note:"Packing completed" },
-  { id:"FGT-003", date:"2026-03-05", type:"Stock In", fgId:"FG-003", product:"Sports Jersey", buyer:"Nike", qty:383, cartons:20, by:"Kosal Vong", note:"On hold — awaiting rework clearance" },
-  { id:"FGT-004", date:"2026-03-05", type:"Allocate", fgId:"FG-002", product:"Women's T-Shirt", buyer:"Zara", qty:2100, cartons:105, by:"Sophea Keo", note:"Allocated to SH-2026-002" },
-  { id:"FGT-005", date:"2026-03-02", type:"Ship Out", fgId:"FG-004", product:"Men's Polo Shirt", buyer:"H&M", qty:400, cartons:20, by:"Sophea Keo", note:"Loaded to SH-2026-001 partial" },
-  { id:"FGT-006", date:"2026-03-02", type:"Ship Out", fgId:"FG-005", product:"Women's T-Shirt", buyer:"Zara", qty:900, cartons:45, by:"Sophea Keo", note:"Air freight BKK-BCN" },
+  { id:"FGT-001", date:"2026-03-05", type:"Stock In", fgId:"FG-001", style:"Men's Polo Shirt", buyer:"H&M", qty:1200, cartons:60, by:"Kosal Vong", note:"From packing line, QC cleared" },
+  { id:"FGT-002", date:"2026-03-04", type:"Stock In", fgId:"FG-002", style:"Women's T-Shirt", buyer:"Zara", qty:2100, cartons:105, by:"Kosal Vong", note:"Packing completed" },
+  { id:"FGT-003", date:"2026-03-05", type:"Stock In", fgId:"FG-003", style:"Sports Jersey", buyer:"Nike", qty:383, cartons:20, by:"Kosal Vong", note:"On hold — awaiting rework clearance" },
+  { id:"FGT-004", date:"2026-03-05", type:"Allocate", fgId:"FG-002", style:"Women's T-Shirt", buyer:"Zara", qty:2100, cartons:105, by:"Sophea Keo", note:"Allocated to SH-2026-002" },
+  { id:"FGT-005", date:"2026-03-02", type:"Ship Out", fgId:"FG-004", style:"Men's Polo Shirt", buyer:"H&M", qty:400, cartons:20, by:"Sophea Keo", note:"Loaded to SH-2026-001 partial" },
+  { id:"FGT-006", date:"2026-03-02", type:"Ship Out", fgId:"FG-005", style:"Women's T-Shirt", buyer:"Zara", qty:900, cartons:45, by:"Sophea Keo", note:"Air freight BKK-BCN" },
 ];
 
 // ── ENHANCED SHIPMENTS DATA ────────────────────────────────────
@@ -607,17 +607,17 @@ function UsersPage({ onBack }) {
 // WORK ORDERS PAGE
 // ═══════════════════════════════════════════════════════════════
 function AddWorkOrderModal({ onClose, onSave }) {
-  const [form, setForm] = useState({ product:"", buyer:"", qty:"", due:"", line:"", status:"Pending", done:0, priority:"Medium" });
+  const [form, setForm] = useState({ style:"", buyer:"", qty:"", due:"", line:"", status:"Pending", done:0, priority:"Medium" });
   const [saved, setSaved] = useState(false);
   const set = (k,v) => setForm(f=>({...f,[k]:v}));
-  const valid = form.product && form.buyer && form.qty && form.due && form.line;
+  const valid = form.style && form.buyer && form.qty && form.due && form.line;
   const handleSave = () => { if(!valid) return; onSave(form); setSaved(true); setTimeout(()=>onClose(),1400); };
   return (
       <Modal title="New Work Order" subtitle="Production Planning" icon="📋" accentColor="green" onClose={onClose}>
         {saved ? <SavedState message="Work Order Created" accentColor="green"/> : (
             <div className="px-6 pb-6 space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="Product" required><div className="relative"><select className={selectCls} value={form.product} onChange={e=>set("product",e.target.value)}><option value="">Select product…</option>{DATA.products.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
+                <FormField label="Product" required><div className="relative"><select className={selectCls} value={form.style} onChange={e=>set("style",e.target.value)}><option value="">Select style…</option>{DATA.products.map(p=><option key={p.id} value={p.name}>{p.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
                 <FormField label="Buyer" required><div className="relative"><select className={selectCls} value={form.buyer} onChange={e=>set("buyer",e.target.value)}><option value="">Select buyer…</option>{DATA.buyers.map(b=><option key={b.id} value={b.name}>{b.name}</option>)}</select><span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span></div></FormField>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -678,7 +678,7 @@ function WorkOrdersPage({ onBack }) {
   const [view, setView] = useState("cards");
   const filtered = orders.filter(o => {
     const q = search.toLowerCase();
-    return (!q || o.id.toLowerCase().includes(q) || o.product.toLowerCase().includes(q) || o.buyer.toLowerCase().includes(q) || o.line.toLowerCase().includes(q))
+    return (!q || o.id.toLowerCase().includes(q) || o.style.toLowerCase().includes(q) || o.buyer.toLowerCase().includes(q) || o.line.toLowerCase().includes(q))
         && (filterStatus==="All" || o.status===filterStatus) && (filterPriority==="All" || o.priority===filterPriority);
   });
   const statusColor = { "In Progress":"blue", Pending:"amber", Delayed:"rose", Completed:"green" };
@@ -686,7 +686,7 @@ function WorkOrdersPage({ onBack }) {
   return (
       <div>
         {editWO && <EditWorkOrderModal wo={editWO} onClose={()=>setEditWO(null)} onSave={f=>{setOrders(os=>os.map(o=>o.id===f.id?{...o,...f}:o));setEditWO(null);}}/>}
-        {deleteWO && <ConfirmDeleteModal title="Delete Work Order?" desc={`${deleteWO.id} — ${deleteWO.product}`} onClose={()=>setDeleteWO(null)} onConfirm={()=>{setOrders(os=>os.filter(o=>o.id!==deleteWO.id));setDeleteWO(null);}}/>}
+        {deleteWO && <ConfirmDeleteModal title="Delete Work Order?" desc={`${deleteWO.id} — ${deleteWO.style}`} onClose={()=>setDeleteWO(null)} onConfirm={()=>{setOrders(os=>os.filter(o=>o.id!==deleteWO.id));setDeleteWO(null);}}/>}
         {showAdd && <AddWorkOrderModal onClose={()=>setShowAdd(false)} onSave={addOrder}/>}
         <PageHeader title="Work Orders" subtitle="Production • Planning" icon="📋" onBack={onBack} color="green"
                     actions={<button onClick={()=>setShowAdd(true)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold hover:-translate-y-0.5 transition-all" style={{ background:"linear-gradient(135deg,rgba(52,211,153,0.25),rgba(52,211,153,0.1))", border:"1px solid rgba(52,211,153,0.4)", color:"#34d399" }}>+ New Order</button>}/>
@@ -697,7 +697,7 @@ function WorkOrdersPage({ onBack }) {
           <StatCard label="Total Qty" value={orders.reduce((s,w)=>s+Number(w.qty),0).toLocaleString()} icon="👕" color="green"/>
         </div>
         <div className="rounded-2xl p-4 mb-4 space-y-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
-          <SearchBar value={search} onChange={setSearch} placeholder="Search by order ID, product, buyer, line…"/>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search by order ID, style, buyer, line…"/>
           <div className="flex flex-wrap items-center gap-2">
             <FilterSelect value={filterStatus} onChange={setFilterStatus} options={["In Progress","Pending","Delayed","Completed"]} allLabel="All Status"/>
             <FilterSelect value={filterPriority} onChange={setFilterPriority} options={["Critical","High","Medium","Low"]} allLabel="All Priority"/>
@@ -721,7 +721,7 @@ function WorkOrdersPage({ onBack }) {
                       <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${a.bar}`}/>
                       <div className="p-4">
                         <div className="flex items-start justify-between gap-2 mb-3">
-                          <div><div className="flex items-center gap-2 mb-1"><span className="font-mono text-[10px] text-white/30">{wo.id}</span><StatusBadge status={wo.priority}/></div><p className="text-sm font-bold text-white/90">{wo.product}</p><p className="text-[11px] text-white/45 mt-0.5">{wo.buyer} · {wo.line}</p></div>
+                          <div><div className="flex items-center gap-2 mb-1"><span className="font-mono text-[10px] text-white/30">{wo.id}</span><StatusBadge status={wo.priority}/></div><p className="text-sm font-bold text-white/90">{wo.style}</p><p className="text-[11px] text-white/45 mt-0.5">{wo.buyer} · {wo.line}</p></div>
                           <StatusBadge status={wo.status}/>
                         </div>
                         <div className="mb-3">
@@ -747,7 +747,7 @@ function WorkOrdersPage({ onBack }) {
               <Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Priority","Status",""]}
                      rows={filtered.map(wo=>[
                        <span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,
-                       wo.product, wo.buyer, Number(wo.qty).toLocaleString(), wo.done.toLocaleString(),
+                       wo.style, wo.buyer, Number(wo.qty).toLocaleString(), wo.done.toLocaleString(),
                        <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,
                        wo.line, wo.due, <StatusBadge status={wo.priority}/>, <StatusBadge status={wo.status}/>,
                        <div className="flex gap-1"><button onClick={()=>setEditWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,191,36,0.1)", color:"#fbbf24" }}>✏️</button><button onClick={()=>setDeleteWO(wo)} className="px-2 py-0.5 rounded text-[10px]" style={{ background:"rgba(251,113,133,0.1)", color:"#fb7185" }}>🗑</button></div>
@@ -798,7 +798,7 @@ function SchedulePage({ onBack }) {
                 <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-green-400/60 to-green-300/20 rounded-b-full"/>
                 <button onClick={()=>setActiveWO(null)} className="absolute top-3 right-3 w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/10 text-xl">×</button>
                 <p className="font-mono text-[10px] text-white/30 mb-1">{activeWO.id}</p>
-                <p className="text-sm font-bold text-white/90 mb-0.5">{activeWO.product}</p>
+                <p className="text-sm font-bold text-white/90 mb-0.5">{activeWO.style}</p>
                 <p className="text-[11px] text-white/45 mb-3">{activeWO.buyer} · {activeWO.line}</p>
                 <div className="space-y-2 mb-3">
                   <div className="flex justify-between text-xs"><span className="text-white/40">Total Qty</span><span className="text-white/80">{activeWO.qty.toLocaleString()} pcs</span></div>
@@ -825,7 +825,7 @@ function SchedulePage({ onBack }) {
             <div className="flex flex-wrap gap-2">
               {DATA.workOrders.map(wo=>(
                   <button key={wo.id} onClick={()=>setActiveWO(wo)} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all hover:-translate-y-0.5" style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.6)" }}>
-                    <span>{priorityGlyph[wo.priority]}</span><span className="font-mono">{wo.id.split("-").pop()}</span><span className="text-white/40">{wo.product.split(" ").slice(0,2).join(" ")}</span><StatusBadge status={wo.status}/>
+                    <span>{priorityGlyph[wo.priority]}</span><span className="font-mono">{wo.id.split("-").pop()}</span><span className="text-white/40">{wo.style.split(" ").slice(0,2).join(" ")}</span><StatusBadge status={wo.status}/>
                   </button>
               ))}
             </div>
@@ -864,7 +864,7 @@ function SchedulePage({ onBack }) {
                         );
                       })}
                       <td className="px-3 py-2">
-                        {wo ? (<button onClick={()=>setActiveWO(wo)} className="text-left hover:bg-white/5 rounded-lg p-1 transition-colors w-full"><p className="font-mono text-[9px] text-white/30">{wo.id}</p><p className="text-[11px] text-white/70 truncate max-w-[130px]">{wo.product}</p><p className="text-[9px] text-white/35">{wo.buyer}</p></button>) : <span className="text-white/15 text-[10px]">No order</span>}
+                        {wo ? (<button onClick={()=>setActiveWO(wo)} className="text-left hover:bg-white/5 rounded-lg p-1 transition-colors w-full"><p className="font-mono text-[9px] text-white/30">{wo.id}</p><p className="text-[11px] text-white/70 truncate max-w-[130px]">{wo.style}</p><p className="text-[9px] text-white/35">{wo.buyer}</p></button>) : <span className="text-white/15 text-[10px]">No order</span>}
                       </td>
                       <td className="px-3 py-2 rounded-r-xl min-w-[120px]">
                         {wo ? <ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/> : <span className="text-white/15 text-[10px]">—</span>}
@@ -1049,14 +1049,14 @@ function ProductionLinesPage({onBack}){return(<div><PageHeader title="Production
 function ProductsPage({onBack}){return(<div><PageHeader title="Products / Style" subtitle="Data Setup • Products" icon="👕" onBack={onBack} color="blue"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Styles" value={DATA.products.length} icon="👕" color="blue"/><StatCard label="Active" value={DATA.products.filter(p=>p.status==="Active").length} icon="✅" color="green"/><StatCard label="Draft" value={DATA.products.filter(p=>p.status==="Draft").length} icon="📝" color="amber"/></div><GlassCard color="blue"><Table color="blue" cols={["Code","Style Name","Category","Buyer","SMV","Color","Status"]} rows={DATA.products.map(p=>[<span className="font-mono text-blue-300">{p.code}</span>,p.name,<Badge color="blue">{p.category}</Badge>,p.buyer,`${p.smv} min`,p.color,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
 function MaterialsPage({onBack}){return(<div><PageHeader title="Materials / BOM" subtitle="Data Setup • Materials" icon="🧵" onBack={onBack} color="blue"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Items" value={DATA.materials.length} icon="🧵" color="blue"/><StatCard label="Low Stock" value={DATA.materials.filter(m=>m.stock<m.reorder).length} icon="⚠️" color="rose"/><StatCard label="OK Stock" value={DATA.materials.filter(m=>m.stock>=m.reorder).length} icon="✅" color="green"/></div><GlassCard color="blue"><Table color="blue" cols={["Code","Material","Unit","Stock","Reorder","Cost/Unit","Supplier","Status"]} rows={DATA.materials.map(m=>[<span className="font-mono text-blue-300">{m.code}</span>,m.name,m.unit,m.stock.toLocaleString(),m.reorder.toLocaleString(),`$${m.cost}`,m.supplier,m.stock<m.reorder?<Badge color="rose">Low Stock</Badge>:<Badge color="green">OK</Badge>])}/></GlassCard></div>);}
 function ShiftsPage({onBack}){return(<div><PageHeader title="Shift Management" subtitle="Data Setup • Factory Structure" icon="🕐" onBack={onBack} color="blue"/><div className="grid grid-cols-1 md:grid-cols-3 gap-4">{DATA.shifts.map((s,i)=>(<GlassCard key={i} color="blue"><div className="text-2xl mb-2">🕐</div><h3 className="font-bold text-white/90 text-sm mb-1">{s.name}</h3><p className="text-xs text-white/40 mb-3">{s.start} – {s.end}</p><div className="space-y-2"><div className="flex justify-between text-xs"><span className="text-white/40">Days</span><span className="text-blue-300">{s.days}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">Supervisor</span><span className="text-white/75">{s.supervisor}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">Workers</span><span className="text-white/75">{s.workers}</span></div></div></GlassCard>))}</div></div>);}
-function StandardsPage({onBack}){return(<div><PageHeader title="Operation Standards (SMV)" subtitle="Data Setup • Standards" icon="📐" onBack={onBack} color="blue"/><GlassCard color="blue"><Table color="blue" cols={["#","Product","Operation","SMV (min)","Machine","Skill Level"]} rows={DATA.standards.map((s,i)=>[i+1,s.product,s.operation,<span className="font-semibold text-blue-300">{s.smv}</span>,s.machine,<StatusBadge status={s.skill}/>])}/></GlassCard></div>);}
+function StandardsPage({onBack}){return(<div><PageHeader title="Operation Standards (SMV)" subtitle="Data Setup • Standards" icon="📐" onBack={onBack} color="blue"/><GlassCard color="blue"><Table color="blue" cols={["#","Product","Operation","SMV (min)","Machine","Skill Level"]} rows={DATA.standards.map((s,i)=>[i+1,s.style,s.operation,<span className="font-semibold text-blue-300">{s.smv}</span>,s.machine,<StatusBadge status={s.skill}/>])}/></GlassCard></div>);}
 function RealtimePage({onBack}){return(<div><PageHeader title="Real-time Monitor" subtitle="Production • Monitoring" icon="📡" onBack={onBack} color="green"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Active Lines" value={STATS.activeLines} icon="⚡" color="green"/><StatCard label="Today Output" value={STATS.todayOutput.toLocaleString()} icon="👕" color="blue"/><StatCard label="Avg Efficiency" value={`${STATS.efficiency}%`} icon="📈" color="amber"/><StatCard label="Open Defects" value={STATS.openDefects} icon="⚠️" color="rose"/></div><GlassCard color="green"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Live Line Performance</p><div className="space-y-3">{DATA.productionLines.map((l,i)=>(<div key={i} className="flex items-center gap-3"><span className="w-16 text-xs text-white/60 shrink-0">{l.name}</span><div className="flex-1"><ProgressBar value={l.eff}/></div><span className="text-xs text-white/50 shrink-0 w-24 text-right">{l.actual}/{l.target} pcs</span><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background:l.eff>=90?"#34d399":l.eff>=75?"#60a5fa":"#fb7185" }}/></div>))}</div></GlassCard></div>);}
 function TVDisplayPage({onBack}){return(<div><PageHeader title="TV Displays" subtitle="Production • Monitoring" icon="📺" onBack={onBack} color="green"/><div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">{DATA.tvDisplays.map((tv,i)=>(<GlassCard key={i} color={tv.status==="Online"?"green":"rose"}><div className="flex items-start justify-between mb-3"><span className="text-2xl">📺</span><StatusBadge status={tv.status}/></div><h3 className="font-bold text-white/90 text-sm mb-1">{tv.name}</h3><p className="text-xs text-white/40 mb-3">{tv.location}</p><div className="space-y-2"><div className="flex justify-between text-xs"><span className="text-white/40">Lines</span><span className="text-white/70">{tv.line}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">IP</span><span className="font-mono text-green-300 text-[11px]">{tv.ip}</span></div><div className="flex justify-between text-xs"><span className="text-white/40">Last Ping</span><span className="text-white/50 text-[10px]">{tv.lastPing}</span></div></div></GlassCard>))}</div></div>);}
 function MachinesPage({onBack}){return(<div><PageHeader title="Machine Management" subtitle="Maintenance • Assets" icon="⚙️" onBack={onBack} color="orange"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.machines.length} icon="🔧" color="orange"/><StatCard label="Running" value={DATA.machines.filter(m=>m.status==="Running").length} icon="✅" color="green"/><StatCard label="Maintenance" value={DATA.machines.filter(m=>m.status==="Maintenance").length} icon="🔧" color="amber"/><StatCard label="Idle" value={DATA.machines.filter(m=>m.status==="Idle").length} icon="💤" color="gray"/></div><GlassCard color="orange"><Table color="orange" cols={["ID","Machine","Type","Dept","Line","Last Service","Next Service","Status"]} rows={DATA.machines.map(m=>[<span className="font-mono text-orange-300 text-[10px]">{m.id}</span>,m.name,m.type,m.dept,m.line,m.lastService,m.nextService,<StatusBadge status={m.status}/>])}/></GlassCard></div>);}
-function DefectsPage({onBack}){return(<div><PageHeader title="Defect Reports" subtitle="Quality • Control" icon="🔍" onBack={onBack} color="rose"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Open" value={DATA.defects.filter(d=>d.status==="Open").length} icon="🚨" color="rose"/><StatCard label="Rework" value={DATA.defects.filter(d=>d.status==="Rework").length} icon="🔄" color="amber"/><StatCard label="Resolved" value={DATA.defects.filter(d=>d.status==="Resolved").length} icon="✅" color="green"/></div><GlassCard color="rose"><Table color="rose" cols={["#","Line","Product","Defect Type","Qty","Severity","Inspector","Date","Status"]} rows={DATA.defects.map(d=>[d.id,d.line,d.product,d.type,d.qty,<StatusBadge status={d.severity}/>,d.inspector,d.date,<StatusBadge status={d.status}/>])}/></GlassCard></div>);}
+function DefectsPage({onBack}){return(<div><PageHeader title="Defect Reports" subtitle="Quality • Control" icon="🔍" onBack={onBack} color="rose"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Open" value={DATA.defects.filter(d=>d.status==="Open").length} icon="🚨" color="rose"/><StatCard label="Rework" value={DATA.defects.filter(d=>d.status==="Rework").length} icon="🔄" color="amber"/><StatCard label="Resolved" value={DATA.defects.filter(d=>d.status==="Resolved").length} icon="✅" color="green"/></div><GlassCard color="rose"><Table color="rose" cols={["#","Line","Product","Defect Type","Qty","Severity","Inspector","Date","Status"]} rows={DATA.defects.map(d=>[d.id,d.line,d.style,d.type,d.qty,<StatusBadge status={d.severity}/>,d.inspector,d.date,<StatusBadge status={d.status}/>])}/></GlassCard></div>);}
 function InspectionsPage({onBack}){return(<div><PageHeader title="Quality Inspections" subtitle="Quality • Inspection" icon="🔬" onBack={onBack} color="rose"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.inspections.length} icon="🔬" color="rose"/><StatCard label="Pass" value={DATA.inspections.filter(i=>i.result==="Pass").length} icon="✅" color="green"/><StatCard label="Fail" value={DATA.inspections.filter(i=>i.result==="Fail").length} icon="❌" color="rose"/><StatCard label="Avg Pass Rate" value={`${Math.round(DATA.inspections.reduce((s,i)=>s+(i.passed/i.checked*100),0)/DATA.inspections.length)}%`} icon="📊" color="amber"/></div><GlassCard color="rose"><Table color="rose" cols={["Work Order","Stage","Inspector","Date","Checked","Passed","Failed","Result"]} rows={DATA.inspections.map(i=>[<span className="font-mono text-rose-300 text-[10px]">{i.wo}</span>,<Badge color="blue">{i.stage}</Badge>,i.inspector,i.date,i.checked,i.passed,<span className="text-rose-300">{i.failed}</span>,<StatusBadge status={i.result}/>])}/></GlassCard></div>);}
 function DashboardPage({onBack}){const totalTarget=DATA.productionLines.reduce((s,l)=>s+l.target,0);const totalActual=DATA.productionLines.reduce((s,l)=>s+l.actual,0);return(<div><PageHeader title="Analytics Dashboard" subtitle="Reports • Analytics" icon="📊" onBack={onBack} color="rose"/><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5"><StatCard label="Today Output" value={STATS.todayOutput.toLocaleString()} icon="👕" color="green"/><StatCard label="Total Target" value={totalTarget.toLocaleString()} icon="🎯" color="blue"/><StatCard label="Overall Eff." value={`${Math.round(totalActual/totalTarget*100)}%`} icon="📈" color="amber"/><StatCard label="Open Defects" value={STATS.openDefects} icon="⚠️" color="rose"/></div><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><GlassCard color="rose"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Line Efficiency</p>{DATA.productionLines.map((l,i)=>(<div key={i} className="mb-2"><div className="flex justify-between text-[11px] text-white/50 mb-1"><span>{l.name}</span><span>{l.dept}</span></div><ProgressBar value={l.eff}/></div>))}</GlassCard><GlassCard color="rose"><p className="text-[10px] text-white/40 uppercase tracking-widest mb-3">Order Status</p>{["In Progress","Pending","Delayed"].map(s=>{const count=DATA.workOrders.filter(w=>w.status===s).length;return(<div key={s} className="mb-3"><div className="flex justify-between text-[11px] text-white/50 mb-1"><span>{s}</span><span>{count} orders</span></div><ProgressBar value={Math.round(count/DATA.workOrders.length*100)}/></div>);})}</GlassCard></div></div>);}
-function CostingPage({onBack}){return(<div><PageHeader title="Cost Sheet / Costing" subtitle="Finance • Costing" icon="💰" onBack={onBack} color="violet"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Avg FOB" value={`$${(DATA.costings.reduce((s,c)=>s+c.fob,0)/DATA.costings.length).toFixed(2)}`} icon="💵" color="violet"/><StatCard label="Avg Margin" value={`${(DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1)}%`} icon="📈" color="green"/><StatCard label="Styles Costed" value={DATA.costings.length} icon="📋" color="blue"/></div><GlassCard color="violet"><Table color="violet" cols={["Product","Fabric $","Trim $","Labor $","Overhead $","Total Cost","FOB $","Margin %"]} rows={DATA.costings.map(c=>[c.product,`$${c.fabric}`,`$${c.trim}`,`$${c.labor}`,`$${c.overhead}`,<span className="font-semibold text-white/90">${c.total}</span>,<span className="font-semibold text-violet-300">${c.fob}</span>,<span className="font-semibold text-green-400">{c.margin}%</span>])}/></GlassCard></div>);}
+function CostingPage({onBack}){return(<div><PageHeader title="Cost Sheet / Costing" subtitle="Finance • Costing" icon="💰" onBack={onBack} color="violet"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Avg FOB" value={`$${(DATA.costings.reduce((s,c)=>s+c.fob,0)/DATA.costings.length).toFixed(2)}`} icon="💵" color="violet"/><StatCard label="Avg Margin" value={`${(DATA.costings.reduce((s,c)=>s+c.margin,0)/DATA.costings.length).toFixed(1)}%`} icon="📈" color="green"/><StatCard label="Styles Costed" value={DATA.costings.length} icon="📋" color="blue"/></div><GlassCard color="violet"><Table color="violet" cols={["Product","Fabric $","Trim $","Labor $","Overhead $","Total Cost","FOB $","Margin %"]} rows={DATA.costings.map(c=>[c.style,`$${c.fabric}`,`$${c.trim}`,`$${c.labor}`,`$${c.overhead}`,<span className="font-semibold text-white/90">${c.total}</span>,<span className="font-semibold text-violet-300">${c.fob}</span>,<span className="font-semibold text-green-400">{c.margin}%</span>])}/></GlassCard></div>);}
 function BuyersPage({onBack}){return(<div><PageHeader title="Buyers / Customers" subtitle="Sales • Buyers" icon="🤝" onBack={onBack} color="cyan"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total Buyers" value={DATA.buyers.length} icon="🤝" color="cyan"/><StatCard label="Active Orders" value={DATA.workOrders.length} icon="📋" color="green"/><StatCard label="Total Pcs" value={DATA.buyers.reduce((s,b)=>s+b.totalPcs,0).toLocaleString()} icon="👕" color="blue"/></div><GlassCard color="cyan"><Table color="cyan" cols={["#","Buyer","Country","Contact","Email","Active Orders","Total Pcs","Status"]} rows={DATA.buyers.map(b=>[b.id,<span className="font-semibold text-cyan-300">{b.name}</span>,b.country,b.contact,<span className="text-white/50 text-[10px]">{b.email}</span>,b.activeOrders,b.totalPcs.toLocaleString(),<StatusBadge status={b.status}/>])}/></GlassCard></div>);}
 function SuppliersPage({onBack}){return(<div><PageHeader title="Suppliers" subtitle="Procurement • Suppliers" icon="🏭" onBack={onBack} color="teal"/><div className="grid grid-cols-3 gap-3 mb-5"><StatCard label="Total" value={DATA.suppliers.length} icon="🏭" color="teal"/><StatCard label="Active" value={DATA.suppliers.filter(s=>s.status==="Active").length} icon="✅" color="green"/><StatCard label="Avg Lead" value="13 days" icon="📦" color="amber"/></div><GlassCard color="teal"><Table color="teal" cols={["#","Supplier","Country","Contact","Material","Rating","Lead Days","Status"]} rows={DATA.suppliers.map(s=>[s.id,<span className="font-semibold text-teal-300">{s.name}</span>,s.country,s.contact,s.material,<Stars rating={s.rating}/>,`${s.leadDays}d`,<StatusBadge status={s.status}/>])}/></GlassCard></div>);}
 function PurchaseOrdersPage({onBack}){return(<div><PageHeader title="Purchase Orders" subtitle="Procurement • Orders" icon="📦" onBack={onBack} color="teal"/><div className="grid grid-cols-4 gap-3 mb-5"><StatCard label="Total" value={DATA.purchaseOrders.length} icon="📦" color="teal"/><StatCard label="In Transit" value={DATA.purchaseOrders.filter(p=>p.status==="In Transit").length} icon="🚢" color="blue"/><StatCard label="Delivered" value={DATA.purchaseOrders.filter(p=>p.status==="Delivered").length} icon="✅" color="green"/><StatCard label="Pending" value={DATA.purchaseOrders.filter(p=>p.status==="Pending"||p.status==="Confirmed").length} icon="⏳" color="amber"/></div><GlassCard color="teal"><Table color="teal" cols={["PO ID","Supplier","Material","Qty","Amount","Order Date","Delivery","Status"]} rows={DATA.purchaseOrders.map(p=>[<span className="font-mono text-teal-300 text-[10px]">{p.id}</span>,p.supplier,p.material,p.qty,<span className="font-semibold text-white/90">${p.amount.toLocaleString()}</span>,p.date,p.delivery,<StatusBadge status={p.status}/>])}/></GlassCard></div>);}
@@ -1169,7 +1169,7 @@ function ProductionReportPage({ onBack }) {
         <GlassCard color="green">
           <ReportSection title="Work Order Progress" color="green">
             <Table color="green" cols={["Order ID","Product","Buyer","Qty","Done","Progress","Line","Due","Status"]}
-                   rows={DATA.workOrders.map(wo=>[<span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,wo.product,wo.buyer,wo.qty.toLocaleString(),wo.done.toLocaleString(),<ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,wo.line,wo.due,<StatusBadge status={wo.status}/>])}/>
+                   rows={DATA.workOrders.map(wo=>[<span className="font-mono text-green-300 text-[10px]">{wo.id}</span>,wo.style,wo.buyer,wo.qty.toLocaleString(),wo.done.toLocaleString(),<ProgressBar value={wo.qty>0?Math.round(wo.done/wo.qty*100):0}/>,wo.line,wo.due,<StatusBadge status={wo.status}/>])}/>
           </ReportSection>
         </GlassCard>
       </div>
@@ -1209,7 +1209,7 @@ function QualityReportPage({ onBack }) {
             <ReportSection title="Defects by Line" color="rose">{byLine.map((b,i)=><SummaryRow key={i} label={b.line} value={`${b.count} reports`}/>)}</ReportSection>
           </GlassCard>
         </div>
-        <GlassCard color="rose"><ReportSection title="Open Defect Details" color="rose"><Table color="rose" cols={["#","Line","Product","Type","Qty","Severity","Inspector","Date","Status"]} rows={DATA.defects.map(d=>[d.id,d.line,d.product,d.type,<span className="font-semibold text-rose-300">{d.qty}</span>,<StatusBadge status={d.severity}/>,d.inspector,d.date,<StatusBadge status={d.status}/>])}/></ReportSection></GlassCard>
+        <GlassCard color="rose"><ReportSection title="Open Defect Details" color="rose"><Table color="rose" cols={["#","Line","Product","Type","Qty","Severity","Inspector","Date","Status"]} rows={DATA.defects.map(d=>[d.id,d.line,d.style,d.type,<span className="font-semibold text-rose-300">{d.qty}</span>,<StatusBadge status={d.severity}/>,d.inspector,d.date,<StatusBadge status={d.status}/>])}/></ReportSection></GlassCard>
       </div>
   );
 }
@@ -1321,9 +1321,9 @@ function FinanceReportPage({ onBack }) {
           <StatCard label="Styles Costed" value={DATA.costings.length} icon="👕" color="amber"/>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <div className="md:col-span-2"><GlassCard color="violet"><ReportSection title="Cost Sheet Breakdown" color="violet"><Table color="violet" cols={["Product","Fabric","Trim","Labor","Overhead","Total Cost","FOB","Margin","Profit/pc"]} rows={DATA.costings.map(c=>[c.product,`$${c.fabric}`,`$${c.trim}`,`$${c.labor}`,`$${c.overhead}`,<span className="font-semibold text-white/90">${c.total}</span>,<span className="font-semibold text-violet-300">${c.fob}</span>,<span className={`font-bold ${c.margin>=30?"text-green-400":"text-amber-400"}`}>{c.margin}%</span>,<span className="text-green-400">${(c.fob-c.total).toFixed(2)}</span>])}/></ReportSection><ReportSection title="Cost Structure per Style (avg)" color="violet">{[{label:"Fabric",value:DATA.costings.reduce((s,c)=>s+c.fabric,0)/DATA.costings.length,color:"teal"},{label:"Trim",value:DATA.costings.reduce((s,c)=>s+c.trim,0)/DATA.costings.length,color:"blue"},{label:"Labor",value:DATA.costings.reduce((s,c)=>s+c.labor,0)/DATA.costings.length,color:"amber"},{label:"Overhead",value:DATA.costings.reduce((s,c)=>s+c.overhead,0)/DATA.costings.length,color:"orange"}].map((x,i)=><MiniBar key={i} label={x.label} value={parseFloat(x.value.toFixed(2))} max={10} color={x.color}/>)}</ReportSection></GlassCard></div>
+          <div className="md:col-span-2"><GlassCard color="violet"><ReportSection title="Cost Sheet Breakdown" color="violet"><Table color="violet" cols={["Product","Fabric","Trim","Labor","Overhead","Total Cost","FOB","Margin","Profit/pc"]} rows={DATA.costings.map(c=>[c.style,`$${c.fabric}`,`$${c.trim}`,`$${c.labor}`,`$${c.overhead}`,<span className="font-semibold text-white/90">${c.total}</span>,<span className="font-semibold text-violet-300">${c.fob}</span>,<span className={`font-bold ${c.margin>=30?"text-green-400":"text-amber-400"}`}>{c.margin}%</span>,<span className="text-green-400">${(c.fob-c.total).toFixed(2)}</span>])}/></ReportSection><ReportSection title="Cost Structure per Style (avg)" color="violet">{[{label:"Fabric",value:DATA.costings.reduce((s,c)=>s+c.fabric,0)/DATA.costings.length,color:"teal"},{label:"Trim",value:DATA.costings.reduce((s,c)=>s+c.trim,0)/DATA.costings.length,color:"blue"},{label:"Labor",value:DATA.costings.reduce((s,c)=>s+c.labor,0)/DATA.costings.length,color:"amber"},{label:"Overhead",value:DATA.costings.reduce((s,c)=>s+c.overhead,0)/DATA.costings.length,color:"orange"}].map((x,i)=><MiniBar key={i} label={x.label} value={parseFloat(x.value.toFixed(2))} max={10} color={x.color}/>)}</ReportSection></GlassCard></div>
           <div className="space-y-4">
-            <GlassCard color="violet"><ReportSection title="Margin Analysis" color="violet"><SummaryRow label="Highest Margin" value={highMargin.product.split(" ").slice(0,2).join(" ")} sub={`${highMargin.margin}%`} highlight="text-green-400"/><SummaryRow label="Lowest Margin" value={lowMargin.product.split(" ").slice(0,2).join(" ")} sub={`${lowMargin.margin}%`} highlight="text-rose-400"/><SummaryRow label="Avg Margin" value={`${avgMargin}%`} highlight="text-violet-300"/><SummaryRow label="Avg FOB" value={`$${avgFOB}`}/></ReportSection></GlassCard>
+            <GlassCard color="violet"><ReportSection title="Margin Analysis" color="violet"><SummaryRow label="Highest Margin" value={highMargin.style.split(" ").slice(0,2).join(" ")} sub={`${highMargin.margin}%`} highlight="text-green-400"/><SummaryRow label="Lowest Margin" value={lowMargin.style.split(" ").slice(0,2).join(" ")} sub={`${lowMargin.margin}%`} highlight="text-rose-400"/><SummaryRow label="Avg Margin" value={`${avgMargin}%`} highlight="text-violet-300"/><SummaryRow label="Avg FOB" value={`$${avgFOB}`}/></ReportSection></GlassCard>
             <GlassCard color="violet"><ReportSection title="Payroll by Dept" color="violet">{DATA.payroll.map((p,i)=>(<SummaryRow key={i} label={p.employee.split(" ")[0]} value={`$${p.net}`} sub={p.dept} highlight="text-violet-300"/>))}<div className="mt-2 pt-2 border-t border-white/8"><SummaryRow label="Total" value={`$${totalPayroll.toLocaleString()}`} highlight="text-green-400"/></div></ReportSection></GlassCard>
           </div>
         </div>
@@ -1737,7 +1737,7 @@ function ProductionFlowPage({ onBack }) {
                       <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-[10px] text-white/30">{wo.id}</span>
-                          <span className="text-xs font-semibold text-white/85">{wo.product}</span>
+                          <span className="text-xs font-semibold text-white/85">{wo.style}</span>
                           <span className="text-[10px] text-white/40">{wo.buyer}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -2006,7 +2006,7 @@ function ProductionOutputPage({ onBack }) {
     const q = search.toLowerCase();
     return (filterShift==="All" || o.shift===filterShift)
         && (filterDate==="All" || o.date===filterDate)
-        && (!q || o.line.toLowerCase().includes(q) || o.product.toLowerCase().includes(q) || o.wo.toLowerCase().includes(q) || o.supervisor.toLowerCase().includes(q));
+        && (!q || o.line.toLowerCase().includes(q) || o.style.toLowerCase().includes(q) || o.wo.toLowerCase().includes(q) || o.supervisor.toLowerCase().includes(q));
   });
 
   const totalOutput   = filtered.reduce((s,o) => s + o.output, 0);
@@ -2015,7 +2015,7 @@ function ProductionOutputPage({ onBack }) {
   const avgEff        = filtered.length > 0 ? Math.round(filtered.reduce((s,o) => s + (o.output/o.target*100), 0) / filtered.length) : 0;
 
   const openForm = () => {
-    setForm({ date:new Date().toISOString().slice(0,10), shift:"Morning", line:"", wo:"", product:"", target:"", output:"", defects:"", rework:"", supervisor:"", note:"" });
+    setForm({ date:new Date().toISOString().slice(0,10), shift:"Morning", line:"", wo:"", style:"", target:"", output:"", defects:"", rework:"", supervisor:"", note:"" });
     setShowForm(true); setSaved(false);
   };
 
@@ -2070,9 +2070,9 @@ function ProductionOutputPage({ onBack }) {
                         </FormField>
                         <FormField label="Work Order">
                           <div className="relative">
-                            <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,product:wo?.product||"",target:wo?.qty||"",supervisor:DATA.productionLines.find(l=>l.name===f.line)?.supervisor||""})); }}>
+                            <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,style:wo?.style||"",target:wo?.qty||"",supervisor:DATA.productionLines.find(l=>l.name===f.line)?.supervisor||""})); }}>
                               <option value="">Select WO…</option>
-                              {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id} — {w.product}</option>)}
+                              {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id} — {w.style}</option>)}
                             </select>
                             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 pointer-events-none text-[10px]">▼</span>
                           </div>
@@ -2119,7 +2119,7 @@ function ProductionOutputPage({ onBack }) {
         </div>
 
         <div className="rounded-2xl p-3 mb-4 flex flex-wrap items-center gap-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
-          <SearchBar value={search} onChange={setSearch} placeholder="Search line, product, WO, supervisor…"/>
+          <SearchBar value={search} onChange={setSearch} placeholder="Search line, style, WO, supervisor…"/>
           <FilterPills options={["All","Morning","Afternoon","Night"].map(v=>({label:v,value:v}))} value={filterShift} onChange={setFilterShift}/>
           <FilterSelect value={filterDate} onChange={setFilterDate} options={allDates} allLabel="All Dates"/>
           <span className="ml-auto text-[10px] text-white/30"><span className="text-white/50 font-medium">{filtered.length}</span> records</span>
@@ -2141,7 +2141,7 @@ function ProductionOutputPage({ onBack }) {
                             <Badge color="blue">{o.shift}</Badge>
                             <span className="text-xs font-bold text-white/90">{o.line}</span>
                           </div>
-                          <span className="text-[11px] text-white/45 mt-0.5">{o.product} · <span className="font-mono">{o.wo}</span> · {o.date}</span>
+                          <span className="text-[11px] text-white/45 mt-0.5">{o.style} · <span className="font-mono">{o.wo}</span> · {o.date}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 text-right">
@@ -2188,7 +2188,7 @@ function WHFinishedGoodsPage({ onBack }) {
   const filtered = fgStock.filter(f => {
     const q = search.toLowerCase();
     return (filterStatus==="All" || f.status===filterStatus)
-        && (!q || f.product.toLowerCase().includes(q) || f.buyer.toLowerCase().includes(q) || f.wo.toLowerCase().includes(q) || f.id.toLowerCase().includes(q));
+        && (!q || f.style.toLowerCase().includes(q) || f.buyer.toLowerCase().includes(q) || f.wo.toLowerCase().includes(q) || f.id.toLowerCase().includes(q));
   });
 
   const totalQty     = fgStock.filter(f=>f.status!=="Shipped").reduce((s,f)=>s+f.qty,0);
@@ -2199,14 +2199,14 @@ function WHFinishedGoodsPage({ onBack }) {
   const statusColor = { "Ready to Ship":"green", "Allocated":"blue", "On Hold":"rose", "Shipped":"gray" };
 
   const openStockIn = () => {
-    setForm({ wo:"", product:"", buyer:"", style:"", color:"", size:"Assorted", qty:"", cartons:"", location:"FG-Zone-A", qcStatus:"Passed", note:"", packedDate:new Date().toISOString().slice(0,10) });
+    setForm({ wo:"", style:"", buyer:"", style:"", color:"", size:"Assorted", qty:"", cartons:"", location:"FG-Zone-A", qcStatus:"Passed", note:"", packedDate:new Date().toISOString().slice(0,10) });
     setShowStockIn(true); setSaved(false);
   };
 
   const submitStockIn = () => {
     if (!form.wo || !form.qty) return;
     const newFG = { ...form, id:`FG-${String(fgStock.length+1).padStart(3,"0")}`, qty:Number(form.qty), cartons:Number(form.cartons||0), status:"Ready to Ship" };
-    const newTx = { id:`FGT-${String(fgTx.length+1).padStart(3,"0")}`, date:form.packedDate, type:"Stock In", fgId:newFG.id, product:form.product, buyer:form.buyer, qty:Number(form.qty), cartons:Number(form.cartons||0), by:"Kosal Vong", note:form.note };
+    const newTx = { id:`FGT-${String(fgTx.length+1).padStart(3,"0")}`, date:form.packedDate, type:"Stock In", fgId:newFG.id, style:form.style, buyer:form.buyer, qty:Number(form.qty), cartons:Number(form.cartons||0), by:"Kosal Vong", note:form.note };
     setFgStock(fs => [newFG, ...fs]);
     setFgTx(ts => [newTx, ...ts]);
     setSaved(true); setTimeout(() => { setShowStockIn(false); setSaved(false); }, 1400);
@@ -2233,7 +2233,7 @@ function WHFinishedGoodsPage({ onBack }) {
                       <div className="grid grid-cols-2 gap-3">
                         <FormField label="Work Order" required>
                           <div className="relative">
-                            <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,product:wo?.product||"",buyer:wo?.buyer||""})); }}>
+                            <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,style:wo?.style||"",buyer:wo?.buyer||""})); }}>
                               <option value="">Select WO…</option>
                               {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id}</option>)}
                             </select>
@@ -2243,7 +2243,7 @@ function WHFinishedGoodsPage({ onBack }) {
                         <FormField label="Packed Date"><input type="date" className={inputCls} value={form.packedDate} onChange={e=>setForm(f=>({...f,packedDate:e.target.value}))} style={{ colorScheme:"dark" }}/></FormField>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
-                        <FormField label="Product"><input type="text" className={inputCls} value={form.product} onChange={e=>setForm(f=>({...f,product:e.target.value}))}/></FormField>
+                        <FormField label="Product"><input type="text" className={inputCls} value={form.style} onChange={e=>setForm(f=>({...f,style:e.target.value}))}/></FormField>
                         <FormField label="Buyer"><input type="text" className={inputCls} value={form.buyer} onChange={e=>setForm(f=>({...f,buyer:e.target.value}))}/></FormField>
                       </div>
                       <div className="grid grid-cols-3 gap-3">
@@ -2293,7 +2293,7 @@ function WHFinishedGoodsPage({ onBack }) {
         {tab==="stock" && (
             <div>
               <div className="rounded-2xl p-3 mb-4 flex flex-wrap items-center gap-3" style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)" }}>
-                <SearchBar value={search} onChange={setSearch} placeholder="Search product, buyer, WO, FG ID…"/>
+                <SearchBar value={search} onChange={setSearch} placeholder="Search style, buyer, WO, FG ID…"/>
                 <FilterPills options={["All","Ready to Ship","Allocated","On Hold","Shipped"].map(v=>({label:v,value:v}))} value={filterStatus} onChange={setFilterStatus}/>
               </div>
               <div className="space-y-2">
@@ -2312,7 +2312,7 @@ function WHFinishedGoodsPage({ onBack }) {
                                 <StatusBadge status={fg.status}/>
                                 <Badge color={qcOk?"green":"rose"}>{fg.qcStatus}</Badge>
                               </div>
-                              <p className="text-sm font-bold text-white/90">{fg.product}</p>
+                              <p className="text-sm font-bold text-white/90">{fg.style}</p>
                               <p className="text-[11px] text-white/40 mt-0.5">{fg.buyer} · {fg.color} · {fg.size} · {fg.location}</p>
                             </div>
                             <div className="flex items-center gap-6 text-right shrink-0">
@@ -2346,7 +2346,7 @@ function WHFinishedGoodsPage({ onBack }) {
                           <div className="flex items-center gap-2 flex-wrap mb-0.5">
                             <span className="font-mono text-[10px] text-white/30">{tx.id}</span>
                             <Badge color={tc}>{tx.type}</Badge>
-                            <span className="text-xs font-semibold text-white/80">{tx.product}</span>
+                            <span className="text-xs font-semibold text-white/80">{tx.style}</span>
                             <span className="text-[10px] text-white/40">{tx.buyer}</span>
                           </div>
                           <div className="flex flex-wrap gap-3 text-[10px] text-white/40">
@@ -2499,7 +2499,7 @@ function ShippingManagementPage({ onBack }) {
                           </FormField>
                           <FormField label="Work Order">
                             <div className="relative">
-                              <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,style:wo?.product||""})); }}>
+                              <select className={selectCls} value={form.wo} onChange={e=>{ const wo=DATA.workOrders.find(w=>w.id===e.target.value); setForm(f=>({...f,wo:e.target.value,style:wo?.style||""})); }}>
                                 <option value="">Select WO…</option>
                                 {DATA.workOrders.map(w=><option key={w.id} value={w.id}>{w.id}</option>)}
                               </select>

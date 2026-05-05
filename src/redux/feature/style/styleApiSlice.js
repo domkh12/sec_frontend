@@ -1,26 +1,26 @@
 import { apiSlice } from "../../app/api/apiSlice";
 import { createEntityAdapter } from "@reduxjs/toolkit";
 
-const productAdapter = createEntityAdapter({});
+const styleAdapter = createEntityAdapter({});
 
-const initialState = productAdapter.getInitialState();
+const initialState = styleAdapter.getInitialState();
 
-export const productApiSlice = apiSlice.injectEndpoints({
+export const styleApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getProduct: builder.query({
+        getStyle: builder.query({
             query: ({ pageNo = 1, pageSize = 20, search = "", status = "", sizeId = "", colorId = "", subCategoryId = ""}) => ({
-                url: `/products?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}&sizeId=${sizeId}&colorId=${colorId}&subCategoryId=${subCategoryId}`,
+                url: `/styles?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}&sizeId=${sizeId}&colorId=${colorId}&subCategoryId=${subCategoryId}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
             }),
             transformResponse: (responseData) => {
-                const loadedDept = responseData.content.map((product) => {
-                    product.id = product.id;
-                    return product;
+                const loadedDept = responseData.content.map((style) => {
+                    style.id = style.id;
+                    return style;
                 });
                 return {
-                    ...productAdapter.setAll(initialState, loadedDept),
+                    ...styleAdapter.setAll(initialState, loadedDept),
                     totalPages: responseData.page.totalPages,
                     totalElements: responseData.page.totalElements,
                     pageNo: responseData.page.number,
@@ -30,56 +30,56 @@ export const productApiSlice = apiSlice.injectEndpoints({
             providesTags: (result, error, arg) => {
                 if (result?.ids) {
                     return [
-                        { type: "Product", id: "LIST" },
-                        ...result.ids.map((id) => ({ type: "Product", id })),
+                        { type: "Style", id: "LIST" },
+                        ...result.ids.map((id) => ({ type: "Style", id })),
                     ];
-                } else return [{ type: "Product", id: "LIST" }];
+                } else return [{ type: "Style", id: "LIST" }];
             },
         }),
 
-        createProduct: builder.mutation({
+        createStyle: builder.mutation({
             query: (initialState) => ({
-                url: "/products",
+                url: "/styles",
                 method: "POST",
                 body: {
                     ...initialState,
                 },
             }),
             invalidatesTags: [
-                { type: "Product", id: "LIST" }
+                { type: "Style", id: "LIST" }
             ],
         }),
 
-        updateProduct: builder.mutation({
-            query: ({id, ...initialProductData}) => ({
-                url: `/products/${id}`,
+        updateStyle: builder.mutation({
+            query: ({id, ...initialStyleData}) => ({
+                url: `/styles/${id}`,
                 method: "PUT",
                 body: {
-                    ...initialProductData,
+                    ...initialStyleData,
                 },
             }),
-            invalidatesTags: [{type: "Product", id: "LIST"}],
+            invalidatesTags: [{type: "Style", id: "LIST"}],
         }),
 
-        deleteProduct: builder.mutation({
+        deleteStyle: builder.mutation({
             query: ({ id }) => ({
-                url: `/products/${id}`,
+                url: `/styles/${id}`,
                 method: "DELETE",
                 body: {
                     id,
                 },
             }),
-            invalidatesTags: (result, error, arg) => [{ type: "Product", id: "LIST" }],
+            invalidatesTags: (result, error, arg) => [{ type: "Style", id: "LIST" }],
         }),
 
-        getProductStats: builder.query({
+        getStyleStats: builder.query({
             query: () => ({
-                url: `/products/stats`,
+                url: `/styles/stats`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
             }),
-            providesTags: [{ type: "ProductStats", id: "LIST" }],
+            providesTags: [{ type: "StyleStats", id: "LIST" }],
         }),
 
 
@@ -87,9 +87,9 @@ export const productApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetProductStatsQuery,
-    useUpdateProductMutation,
-    useDeleteProductMutation,
-    useCreateProductMutation,
-    useGetProductQuery,
-} = productApiSlice;
+    useGetStyleStatsQuery,
+    useUpdateStyleMutation,
+    useDeleteStyleMutation,
+    useCreateStyleMutation,
+    useGetStyleQuery,
+} = styleApiSlice;

@@ -144,12 +144,6 @@ function SizeList() {
 
     const columns = [
         {
-            id: "id",
-            label: t("table.id"),
-            minWidth: 50,
-            align: "left",
-        },
-        {
             id: "size",
             label: t("table.size"),
             minWidth: 130,

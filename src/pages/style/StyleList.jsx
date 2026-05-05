@@ -10,20 +10,16 @@ import * as Yup from "yup";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {useState} from "react";
 import {
-    useCreateProductMutation, useDeleteProductMutation,
-    useGetProductQuery, useGetProductStatsQuery,
-    useUpdateProductMutation
-} from "../../redux/feature/product/productApiSlice.js";
+    useCreateStyleMutation, useDeleteStyleMutation,
+    useGetStyleQuery, useGetStyleStatsQuery,
+    useUpdateStyleMutation
+} from "../../redux/feature/style/styleApiSlice.js";
 import {
-    setAlertProduct, setFilterProduct,
-    setIsOpenDeleteProductDialog,
-    setIsOpenDialogAddOrEditProduct,
-    setIsOpenSnackbarProduct, setProductDataForUpdate
-} from "../../redux/feature/product/productSlice.js";
-import {
-    useCreateCategoryMutation,
-    useGetCategoryLookupQuery,
-} from "../../redux/feature/category/categoryApiSlice.js";
+    setAlertStyle, setFilterStyle,
+    setIsOpenDeleteStyleDialog,
+    setIsOpenDialogAddOrEditStyle,
+    setIsOpenSnackbarStyle, setStyleDataForUpdate
+} from "../../redux/feature/style/styleSlice.js";
 import {useCreateColorMutation, useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
 import StatCards from "../../components/card/StatCards.jsx";
@@ -33,9 +29,8 @@ import { FaFilePen } from "react-icons/fa6";
 import useDebounce from "../../hook/useDebounce.jsx";
 import useAuth from "../../hook/useAuth.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
-import {useGetSubCategoryQuery} from "../../redux/feature/category/subCategoryApiSlice.js";
 
-function ProductList() {
+function StyleList() {
     const {t} = useTranslation();
     const [id, setId] = useState(null);
     const {isMd} = useBreakpoints();
@@ -46,29 +41,27 @@ function ProductList() {
     const {isManager, isAdmin} = useAuth();
 
     // -- Selector --------------------------------------------------------------------------------------------
-    const productDataForUpdate     = useSelector((s) => s.product.productDataForUpdate);
-    const isOpen                   = useSelector((s) => s.product.isOpenDialogAddOrEditProduct);
-    const isOpenSnackbar           = useSelector((s) => s.product.isOpenSnackbarProduct);
-    const alertProduct             = useSelector((s) => s.product.alertProduct);
-    const isOpenDeleteDialog       = useSelector((s) => s.product.isOpenDeleteProductDialog);
-    const filterValue              = useSelector((s) => s.product.filter);
+    const styleDataForUpdate     = useSelector((s) => s.style.styleDataForUpdate);
+    const isOpen                   = useSelector((s) => s.style.isOpenDialogAddOrEditStyle);
+    const isOpenSnackbar           = useSelector((s) => s.style.isOpenSnackbarStyle);
+    const alertStyle             = useSelector((s) => s.style.alertStyle);
+    const isOpenDeleteDialog       = useSelector((s) => s.style.isOpenDeleteStyleDialog);
+    const filterValue              = useSelector((s) => s.style.filter);
 
     // -- Debounce -----------------------------------------------------------
     const searchFilter             = useDebounce(filterValue.search, 500);
 
     // -- Mutation -----------------------------------------------------------
-    const [createProduct]   = useCreateProductMutation();
-    const [updateProduct]   = useUpdateProductMutation();
-    const [deleteProduct]   = useDeleteProductMutation();
-    const [createCategory]  = useCreateCategoryMutation();
+    const [createStyle]   = useCreateStyleMutation();
+    const [updateStyle]   = useUpdateStyleMutation();
+    const [deleteStyle]   = useDeleteStyleMutation();
     const [createColor]     = useCreateColorMutation();
 
     // -- Query --------------------------------------------------------------
-    const {data: categoryLookup}    = useGetCategoryLookupQuery();
     const {data: prodData,
         isLoading,
         isSuccess
-    }                               = useGetProductQuery({
+    }                               = useGetStyleQuery({
                                         pageNo: filterValue.pageNo,
                                         pageSize: filterValue.pageSize,
                                         search: searchFilter,
@@ -85,24 +78,20 @@ function ProductList() {
                                         pageNo: 1,
                                         pageSize: 999
                                     });
-    const {data: productStats,
+    const {data: styleStats,
            isLoading:
-           isLoadingStatProduct}     = useGetProductStatsQuery();
-    const {data: subCategoryData}    = useGetSubCategoryQuery({
-                                        pageNo: 1,
-                                        pageSize: 99});
-    console.log({subCategoryData});
+           isLoadingStatStyle}     = useGetStyleStatsQuery();
 
     // -- Handler ----------------------------------------------------------------
     const handleChangePage = (event, newPage) => {
-        dispatch(setFilterProduct({
+        dispatch(setFilterStyle({
             ...filterValue,
             pageNo: newPage + 1,
         }))
     };
 
     const handleChangeRowsPerPage = (event, newValue) => {
-        dispatch(setFilterProduct({
+        dispatch(setFilterStyle({
             ...filterValue,
             pageSize: event.target.value,
             pageNo: 1,
@@ -110,48 +99,48 @@ function ProductList() {
     };
 
     const handleClose = () => {
-        dispatch(setIsOpenDialogAddOrEditProduct(false));
-        dispatch(setProductDataForUpdate(null));
+        dispatch(setIsOpenDialogAddOrEditStyle(false));
+        dispatch(setStyleDataForUpdate(null));
     }
 
     const handleSubmit = async (values, {resetForm}) => {
         setIsSubmitting(true);
         try {
-            if (productDataForUpdate) {
+            if (styleDataForUpdate) {
 
-                await updateProduct({
-                    id: productDataForUpdate.id,
+                await updateStyle({
+                    id: styleDataForUpdate.id,
                     styleNo: values.styleNo,
                     subCategoryId:  values.subCategory.childId,
                     colorId:     values.color,
                     sizeId:      values.size,
                 }).unwrap();
-                dispatch(setAlertProduct({type: "success", message: "Update successfully"}));
-                dispatch(setProductDataForUpdate(null));
+                dispatch(setAlertStyle({type: "success", message: "Update successfully"}));
+                dispatch(setStyleDataForUpdate(null));
             }else {
-                await createProduct({
+                await createStyle({
                     styleNo: values.styleNo,
                     subCategoryId:  values.subCategory.childId,
                     colorId:     values.color,
                     sizeId:      values.size,
                 }).unwrap();
-                dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
+                dispatch(setAlertStyle({type: "success", message: "Create successfully"}));
             }
-            dispatch(setIsOpenSnackbarProduct(true));
-            dispatch(setIsOpenDialogAddOrEditProduct(false));
+            dispatch(setIsOpenSnackbarStyle(true));
+            dispatch(setIsOpenDialogAddOrEditStyle(false));
             resetForm();
         } catch (error) {
             console.log(error);
-            dispatch(setAlertProduct({type: "error", message: error?.data?.error?.description}));
-            dispatch(setIsOpenSnackbarProduct(true));
+            dispatch(setAlertStyle({type: "error", message: error?.data?.error?.description}));
+            dispatch(setIsOpenSnackbarStyle(true));
         }finally {
             setIsSubmitting(false);
         }
     };
 
     const handleEdit = (row) => {
-        dispatch(setIsOpenDialogAddOrEditProduct(true));
-        dispatch(setProductDataForUpdate({
+        dispatch(setIsOpenDialogAddOrEditStyle(true));
+        dispatch(setStyleDataForUpdate({
             id: row.id,
             styleNo: row.styleNo,
             subCategory: {parentId: row.categoryId, childId: row.subCategoryId},
@@ -161,21 +150,21 @@ function ProductList() {
     };
 
     const handleDeleteOpen = (row) => {
-        dispatch(setIsOpenDeleteProductDialog(true));
+        dispatch(setIsOpenDeleteStyleDialog(true));
         setId(row.id);
     };
 
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteProduct({ id }).unwrap();
-            dispatch(setIsOpenDeleteProductDialog(false));
-            dispatch(setAlertProduct({ type: "success", message: "Delete successfully" }));
-            dispatch(setIsOpenSnackbarProduct(true));
+            await deleteStyle({ id }).unwrap();
+            dispatch(setIsOpenDeleteStyleDialog(false));
+            dispatch(setAlertStyle({ type: "success", message: "Delete successfully" }));
+            dispatch(setIsOpenSnackbarStyle(true));
         } catch (error) {
-            dispatch(setIsOpenDeleteProductDialog(false));
-            dispatch(setAlertProduct({ type: "error", message: error.data.error.description }));
-            dispatch(setIsOpenSnackbarProduct(true));
+            dispatch(setIsOpenDeleteStyleDialog(false));
+            dispatch(setAlertStyle({ type: "error", message: error.data.error.description }));
+            dispatch(setIsOpenSnackbarStyle(true));
         } finally {
             setIsDeleting(false);
         }
@@ -183,12 +172,12 @@ function ProductList() {
 
     const handleFilterChange = (key, value) => {
         if (value === "all") {
-           return dispatch(setFilterProduct({
+           return dispatch(setFilterStyle({
                ...filterValue,
                [key]: ""
            }))
         }
-        dispatch(setFilterProduct({
+        dispatch(setFilterStyle({
             ...filterValue,
             [key]: value,
         }))
@@ -202,35 +191,8 @@ function ProductList() {
         size:         Yup.array().min(1, t("validation.required")).required(t("validation.required")),
     });
 
-    const categorySchema = Yup.object().shape({
-        name:      Yup.string().required(t("validation.required"))
-    })
-
     const fields = [
         { name: "styleNo",     label: "table.styleNo",     type: "text" },
-        {
-            name: "subCategory",
-            label: "category",
-            type: "nestedSelect",
-            options: categoryLookup,
-            addNew: {
-                label: "Add new category",   // text shown below the field
-                title: "New Category",         // nested dialog title
-                fields: [
-                    { name: "name",  label: "name",  type: "text" },
-                ],
-                initialValues: { name: "" },
-                validationSchema: categorySchema,
-                onSubmit: async (values, helpers) => {
-                    await createCategory({
-                        name: values.name
-                    }).unwrap();
-                    dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
-                    dispatch(setIsOpenSnackbarProduct(true));
-                },
-
-            },
-        },
         { name: "color",
           label: "color",
           type: "autocomplete-checkbox",
@@ -253,11 +215,11 @@ function ProductList() {
                       await createColor({
                           color: values.color
                       }).unwrap();
-                      dispatch(setAlertProduct({type: "success", message: "Create successfully"}));
-                      dispatch(setIsOpenSnackbarProduct(true));
+                      dispatch(setAlertStyle({type: "success", message: "Create successfully"}));
+                      dispatch(setIsOpenSnackbarStyle(true));
                   }catch (error) {
-                      dispatch(setAlertProduct({type: "error", message: error.data.error.description}));
-                      dispatch(setIsOpenSnackbarProduct(true));
+                      dispatch(setAlertStyle({type: "error", message: error.data.error.description}));
+                      dispatch(setIsOpenSnackbarStyle(true));
                   }
               }
           }
@@ -309,18 +271,6 @@ function ProductList() {
                 ...(colorData?.ids?.map(id => ({
                     value: colorData.entities[id].id,
                     label: colorData.entities[id].color
-                })) || [])
-            ]
-        },
-        {
-            id: "subCategory",
-            label: t("table.subCategory"),
-            width: isMd ? 150 : "100%",
-            options: [
-                {value: "all", label: t("filter.all")},
-                ...(subCategoryData?.ids?.map(id => ({
-                    value: subCategoryData.entities[id].id,
-                    label: subCategoryData.entities[id].name
                 })) || [])
             ]
         },
@@ -391,15 +341,15 @@ function ProductList() {
             <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => isAdmin ? navigate("/admin") : isManager ? navigate("/manager") : navigate("/") }/>
-                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditProduct(true))}/>
+                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditStyle(true))}/>
                 </div>
                 <div>
                     <StatCards
-                        isLoading={isLoadingStatProduct}
+                        isLoading={isLoadingStatStyle}
                         cards={[
-                            { label: "Total Styles",  value: productStats?.totalStyleNo,  color: "violet", icon: <FaTshirt /> },
-                            { label: "Active",      value: productStats?.totalActive,   color: "emerald", icon: <FaCircleCheck/>},
-                            { label: "Draft",  value: productStats?.totalDraft,   color: "amber", icon: <FaFilePen/> },
+                            { label: "Total Styles",  value: styleStats?.totalStyleNo,  color: "violet", icon: <FaTshirt /> },
+                            { label: "Active",      value: styleStats?.totalActive,   color: "emerald", icon: <FaCircleCheck/>},
+                            { label: "Draft",  value: styleStats?.totalDraft,   color: "amber", icon: <FaFilePen/> },
                         ]}
                     />
                 </div>
@@ -414,7 +364,7 @@ function ProductList() {
                     searchPlaceholderText={`${t("table.styleNo")}`}
                     handleFilterChange={handleFilterChange}
                     filterConfig={filterConfig}
-                    onClearAllFilters={() => dispatch(setFilterProduct({
+                    onClearAllFilters={() => dispatch(setFilterStyle({
                         ...filterValue,
                         search: "",
                         status: "",
@@ -426,36 +376,36 @@ function ProductList() {
             </div>
             <DialogAddEditCus
                 fields={fields}
-                title={productDataForUpdate ? "Update Product" : "Create Product"}
+                title={styleDataForUpdate ? "Update Style" : "Create Style"}
                 isOpen={isOpen}
                 onClose={handleClose}
-                isUpdate={!!productDataForUpdate}
+                isUpdate={!!styleDataForUpdate}
                 validationSchema={validationSchema}
                 handleSubmit={handleSubmit}
-                initialValues={productDataForUpdate ? productDataForUpdate : initialValues}
+                initialValues={styleDataForUpdate ? styleDataForUpdate : initialValues}
                 isSubmitting={isSubmitting}
             />
 
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
-                onClose={() => dispatch(setIsOpenSnackbarProduct(false))}
+                onClose={() => dispatch(setIsOpenSnackbarStyle(false))}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert
-                    onClose={() => dispatch(setIsOpenSnackbarProduct(false))}
-                    severity={alertProduct.type}
+                    onClose={() => dispatch(setIsOpenSnackbarStyle(false))}
+                    severity={alertStyle.type}
                     variant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {alertProduct.message}
+                    {alertStyle.message}
                 </Alert>
             </Snackbar>
-            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteProductDialog(false))} handleDelete={handleDelete} isSubmitting={isDeleting}/>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteStyleDialog(false))} handleDelete={handleDelete} isSubmitting={isDeleting}/>
         </div>
     )
 
     return content;
 }
 
-export default ProductList
+export default StyleList
