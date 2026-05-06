@@ -20,8 +20,6 @@ import {
     setIsOpenDialogAddOrEditStyle,
     setIsOpenSnackbarStyle, setStyleDataForUpdate
 } from "../../redux/feature/style/styleSlice.js";
-import {useCreateColorMutation, useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
-import {useGetSizeQuery} from "../../redux/feature/size/sizeApiSlice.js";
 import StatCards from "../../components/card/StatCards.jsx";
 import { FaTshirt } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
@@ -55,7 +53,6 @@ function StyleList() {
     const [createStyle]   = useCreateStyleMutation();
     const [updateStyle]   = useUpdateStyleMutation();
     const [deleteStyle]   = useDeleteStyleMutation();
-    const [createColor]     = useCreateColorMutation();
 
     // -- Query --------------------------------------------------------------
     const {data: prodData,
@@ -65,18 +62,7 @@ function StyleList() {
                                         pageNo: filterValue.pageNo,
                                         pageSize: filterValue.pageSize,
                                         search: searchFilter,
-                                        status: filterValue.status,
-                                        sizeId: filterValue.size,
-                                        colorId: filterValue.color,
-                                        subCategoryId: filterValue.subCategory,
-                                    });
-    const {data: colorData}         = useGetColorQuery({
-                                        pageNo: 1,
-                                        pageSize: 999
-                                    });
-    const {data: sizeData}          = useGetSizeQuery({
-                                        pageNo: 1,
-                                        pageSize: 999
+                                        status: filterValue.status
                                     });
     const {data: styleStats,
            isLoading:
@@ -111,18 +97,14 @@ function StyleList() {
                 await updateStyle({
                     id: styleDataForUpdate.id,
                     styleNo: values.styleNo,
-                    subCategoryId:  values.subCategory.childId,
-                    colorId:     values.color,
-                    sizeId:      values.size,
+                    description: values.description
                 }).unwrap();
                 dispatch(setAlertStyle({type: "success", message: "Update successfully"}));
                 dispatch(setStyleDataForUpdate(null));
             }else {
                 await createStyle({
                     styleNo: values.styleNo,
-                    subCategoryId:  values.subCategory.childId,
-                    colorId:     values.color,
-                    sizeId:      values.size,
+                    description: values.description
                 }).unwrap();
                 dispatch(setAlertStyle({type: "success", message: "Create successfully"}));
             }
@@ -143,9 +125,7 @@ function StyleList() {
         dispatch(setStyleDataForUpdate({
             id: row.id,
             styleNo: row.styleNo,
-            subCategory: {parentId: row.categoryId, childId: row.subCategoryId},
-            color: row.colorId,
-            size: row.sizeId,
+            description: row.description
         }));
     };
 
@@ -186,94 +166,14 @@ function StyleList() {
     // -- Validation Schema ----------------------------------------------------------------------------------
     const validationSchema = Yup.object().shape({
         styleNo:      Yup.string().required(t("validation.required")),
-        // subCategory:  Yup.number().typeError(t("validation.required")).required(t("validation.required")),
-        color:        Yup.array().min(1, t("validation.required")).required(t("validation.required")),
-        size:         Yup.array().min(1, t("validation.required")).required(t("validation.required")),
     });
 
     const fields = [
         { name: "styleNo",     label: "table.styleNo",     type: "text" },
-        { name: "color",
-          label: "color",
-          type: "autocomplete-checkbox",
-          minWidth: 130,
-          fetchOptions: async () => {
-            return Object.values(colorData?.entities ?? {}).map((color) => ({
-                value: color.id,
-                label: color.color,
-            }));
-          },
-          addNew: {
-              label: "Add new color",
-              title: "New Color",
-              fields: [
-                  { name: "color",  label: "color",  type: "text" },
-              ],
-              initialValues: {color: ""},
-              onSubmit: async (values, helpers) => {
-                  try {
-                      await createColor({
-                          color: values.color
-                      }).unwrap();
-                      dispatch(setAlertStyle({type: "success", message: "Create successfully"}));
-                      dispatch(setIsOpenSnackbarStyle(true));
-                  }catch (error) {
-                      dispatch(setAlertStyle({type: "error", message: error.data.error.description}));
-                      dispatch(setIsOpenSnackbarStyle(true));
-                  }
-              }
-          }
-        },
-        {
-            name: "size",
-            label: "size",
-            type: "autocomplete-checkbox",
-            minWidth: 130,
-            fetchOptions: async () => {
-                return Object.values(sizeData?.entities ?? {}).map((size) => ({
-                    value: size.id,
-                    label: size.size,
-                }));
-            },
-            addXNew: {
-                label: "Add new Size",
-                title: "New Size",
-                fields: [
-                    { name: "size",  label: "size",  type: "text" },
-                ],
-                initialValues: {size: ""},
-                onSubmit: async (values, helpers) => {
-                    console.log(values);
-                }
-            }
-        },
+        { name: "description",     label: "description",     type: "text" },
     ];
 
     const filterConfig = [
-        {
-            id: "size",
-            label: t("table.size"),
-            width: isMd ? 150 : "100%",
-            options: [
-                {value: "all", label: t("filter.all")},
-                ...(sizeData?.ids?.map(id => ({
-                    value: sizeData.entities[id].id,
-                    label: sizeData.entities[id].size
-                })) || [])
-            ]
-        },
-        {
-            id: "color",
-            label: t("table.color"),
-            width: isMd ? 150 : "100%",
-            options: [
-                {value: "all", label: t("filter.all")},
-                ...(colorData?.ids?.map(id => ({
-                    value: colorData.entities[id].id,
-                    label: colorData.entities[id].color
-                })) || [])
-            ]
-        },
         {
             id: "status",
             label: t("table.status"),
@@ -288,9 +188,7 @@ function StyleList() {
 
     const initialValues = {
         styleNo: "",
-        subCategory:  "",
-        color:     [],
-        size:      [],
+        description: ""
     };
 
     const columns = [
@@ -301,26 +199,14 @@ function StyleList() {
             align: "left",
         },
         {
-            id: "size",
-            label: t("size"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "subCategory",
-            label: t("table.subCategory"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "color",
-            label: t("color"),
+            id: "description",
+            label: t("description"),
             minWidth: 130,
             align: "left",
         },
         {
             id: "status",
-            label: t("table.status"),
+            label: t("status"),
             minWidth: 130,
             align: "left",
         },

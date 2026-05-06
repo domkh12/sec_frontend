@@ -63,7 +63,7 @@ export const apiSlice = createApi({
     "TvData",
     "TvGeneralData",
     "ProductionLine",
-    "Product",
+    "Style",
     "User",
     "Role",
     "UserStats",
@@ -73,7 +73,7 @@ export const apiSlice = createApi({
     "BuyerFile",
     "Size",
     "Color",
-    "ProductStats",
+    "StyleStats",
     "Material",
     "MaterialStockIn",
     "MaterialStockOut",
@@ -91,7 +91,9 @@ export const apiSlice = createApi({
     "TimeLookup",
     "DefectTypeLookup",
     "ProductionLineByDept",
-    "OutputDetail"
+    "OutputDetail",
+    "PurchaseOrder",
+    "StyleLookup"
   ],
   endpoints: (builder) => ({}),
 });

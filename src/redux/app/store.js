@@ -18,6 +18,7 @@ import defectTypeReducer from "../feature/defect-type/defectTypeSlice.js"
 import operationReducer from "../feature/operation/operationSlice.js"
 import hourlyOutputReducer from "../feature/hourlyOutput/hourlyOutputSlice.js"
 import timeReducer from "../feature/time/timeSlice.js"
+import purchaseOrderReducer from "../feature/purchaseOrder/purchaseOrderSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -38,7 +39,8 @@ const store = configureStore({
     defectType: defectTypeReducer,
     operation: operationReducer,
     hourlyOutput: hourlyOutputReducer,
-    time: timeReducer
+    time: timeReducer,
+    purchaseOrder: purchaseOrderReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

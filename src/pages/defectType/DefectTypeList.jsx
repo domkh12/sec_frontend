@@ -160,12 +160,6 @@ function DefectTypeList() {
 
     const columns = [
         {
-            id: "id",
-            label: "#",
-            minWidth: 50,
-            align: "left",
-        },
-        {
             id: "name",
             label: t("table.defectType"),
             minWidth: 130,

@@ -8,8 +8,8 @@ const initialState = styleAdapter.getInitialState();
 export const styleApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getStyle: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "", status = "", sizeId = "", colorId = "", subCategoryId = ""}) => ({
-                url: `/styles?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}&sizeId=${sizeId}&colorId=${colorId}&subCategoryId=${subCategoryId}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", status = ""}) => ({
+                url: `/styles?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -46,7 +46,8 @@ export const styleApiSlice = apiSlice.injectEndpoints({
                 },
             }),
             invalidatesTags: [
-                { type: "Style", id: "LIST" }
+                { type: "Style", id: "LIST" },
+                { type: "StyleStats", id: "LIST" }
             ],
         }),
 
@@ -82,11 +83,21 @@ export const styleApiSlice = apiSlice.injectEndpoints({
             providesTags: [{ type: "StyleStats", id: "LIST" }],
         }),
 
+        getStyleLookup: builder.query({
+            query: () => ({
+                url: `/styles/lookup`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "StyleLookup", id: "LIST" }],
+        }),
 
     }),
 });
 
 export const {
+    useGetStyleLookupQuery,
     useGetStyleStatsQuery,
     useUpdateStyleMutation,
     useDeleteStyleMutation,
