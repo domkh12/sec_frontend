@@ -19,12 +19,14 @@ import {
     setIsOpenDialogAddOrEditPurchaseOrder, setIsOpenSnackbarPurchaseOrder, setPurchaseOrderDataForUpdate
 } from "../../redux/feature/purchaseOrder/purchaseOrderSlice.js";
 import {useGetStyleLookupQuery} from "../../redux/feature/style/styleApiSlice.js";
+import dayjs from "dayjs";
+import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
+import {POSTATUS} from "../../config/po.js";
+import useDebounce from "../../hook/useDebounce.jsx";
+import {useGetBuyerLookupQuery} from "../../redux/feature/buyer/buyerApiSlice.js";
 
 function PurchaseList() {
-    const {t} = useTranslation();
     const [id, setId] = useState(null);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -36,6 +38,13 @@ function PurchaseList() {
     const alertPurchaseOrder             = useSelector((s) => s.purchaseOrder.alertPurchaseOrder);
     const isOpenDeleteDialog       = useSelector((s) => s.purchaseOrder.isOpenDeletePurchaseOrderDialog);
     const filterValue              = useSelector((s) => s.purchaseOrder.filter);
+
+    // -- Hook ------------------------------------------------------------------------------------------------
+    const {isMd} = useBreakpoints();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const {t} = useTranslation();
+    const search = useDebounce(filterValue.search, 500);
 
     // -- Mutation -----------------------------------------------------------
     const [createPurchaseOrder]   = useCreatePurchaseOrderMutation();
@@ -49,9 +58,14 @@ function PurchaseList() {
     }                               = useGetPurchaseOrderQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
+        search: search,
+        status: filterValue.status,
+        styleId: filterValue.style,
+        buyerId: filterValue.buyer
     });
     const {data: styleLookup}      = useGetStyleLookupQuery();
-    console.log(styleLookup)
+    const {data: buyerLookup}      = useGetBuyerLookupQuery();
+    console.log(buyerLookup)
 
     // -- Handler ----------------------------------------------------------------
     const handleChangePage = (event, newPage) => {
@@ -81,19 +95,21 @@ function PurchaseList() {
 
                 await updatePurchaseOrder({
                     id: purchaseOrderDataForUpdate.id,
-                    styleNo: values.styleNo,
-                    subCategoryId:  values.subCategory.childId,
-                    color:     values.color,
-                    size:      values.size,
+                    po: values.po,
+                    styleId: values.style,
+                    qty: values.qty,
+                    shipmentDate: dayjs(values.shipmentDate).format("YYYY-MM-DD"),
+                    buyerId: values.buyer
                 }).unwrap();
                 dispatch(setAlertPurchaseOrder({type: "success", message: "Update successfully"}));
                 dispatch(setPurchaseOrderDataForUpdate(null));
             }else {
                 await createPurchaseOrder({
-                    styleNo: values.styleNo,
-                    subCategoryId:  values.subCategory.childId,
-                    colorId:     values.color,
-                    sizeId:      values.size,
+                    po: values.po,
+                    styleId: values.style,
+                    qty: values.qty,
+                    shipmentDate: dayjs(values.shipmentDate).format("YYYY-MM-DD"),
+                    buyerId: values.buyer
                 }).unwrap();
                 dispatch(setAlertPurchaseOrder({type: "success", message: "Create successfully"}));
             }
@@ -102,7 +118,7 @@ function PurchaseList() {
             resetForm();
         } catch (error) {
             console.log(error);
-            dispatch(setAlertPurchaseOrder({type: "error", message: error?.data?.error?.description}));
+            dispatch(setAlertPurchaseOrder({type: "error", message: error.data.error.description[0]?.reason ? error.data.error.description[0]?.reason : error.data.error.description}));
             dispatch(setIsOpenSnackbarPurchaseOrder(true));
         }finally {
             setIsSubmitting(false);
@@ -113,10 +129,11 @@ function PurchaseList() {
         dispatch(setIsOpenDialogAddOrEditPurchaseOrder(true));
         dispatch(setPurchaseOrderDataForUpdate({
             id: row.id,
-            styleNo: row.styleNo,
-            subCategoryId: row.subCategoryId,
-            color: row.color,
-            size: row.size,
+            style: row.style.id,
+            po: row.po,
+            qty: row.qty,
+            shipmentDate: dayjs(row.shipmentDate),
+            buyer: row.buyer.id
         }));
     };
 
@@ -141,21 +158,101 @@ function PurchaseList() {
         }
     };
 
+    const handleFilterChange = (key, value) => {
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterPurchaseOrder(newFilter));
+    }
+
+    const handleClearAllFilters = () => {
+        dispatch(setFilterPurchaseOrder({
+            search: "",
+        }));
+    }
+
     // -- Validation Schema ----------------------------------------------------------------------------------
     const validationSchema = Yup.object().shape({
-        po:      Yup.string().required(t("validation.required")),
+        po: Yup.string()
+            .required(t("validation.required"))
+            .min(3, t("validation.tooShort")),
+        qty: Yup.number()
+            .required(t("validation.required"))
+            .positive(t("validation.mustBePositive"))
+            .integer(t("validation.mustBeInteger"))
+            .typeError(t("validation.mustBeNumber")),
+        shipmentDate: Yup.date()
+            .required(t("validation.required"))
+            .nullable()
+            .typeError(t("validation.invalidDate")),
+        style: Yup.mixed()
+            .required(t("validation.required")),
+        buyer: Yup.mixed()
+            .required(t("validation.required")),
     });
 
     const fields = [
         { name: "po",     label: "po",     type: "text" },
-        { name: "qty",     label: "Total Order Qty",     type: "number" },
-        { name: "shipmentDate",     label: "Shipment Date",     type: "date" },
+        {
+            name: "style",
+            label: "style",
+            type: "autocomplete",
+            options: styleLookup?.map((style) => ({
+                value: style.id,
+                label: style.styleNo,
+            })),
+        },
+        { name: "qty",     label: "totalOrderQty",     type: "number" },
+        { name: "shipmentDate",     label: "shipmentDate",     type: "date" },
+        {
+            name: "buyer",
+            label: "buyer",
+            type: "autocomplete",
+            options: buyerLookup?.map((buyer) => ({
+                value: buyer.id,
+                label: buyer.name,
+            })),
+        },
+
     ];
+
+    const filterConfig = [
+        {
+            id: 'style',
+            label: t("style"),
+            width: isMd ? 150 : "100%",
+            options: styleLookup?.map((style) => ({
+                value: style?.id,
+                label: style?.styleNo
+            }))
+        },
+        {
+            id: 'buyer',
+            label: t("buyer"),
+            width: isMd ? 150 : "100%",
+            options: buyerLookup?.map((buyer) => ({
+                value: buyer?.id,
+                label: buyer?.name
+            }))
+        },
+        {
+            id: 'status',
+            label: t("table.status"),
+            width: isMd ? 150 : "100%",
+            options: POSTATUS.map((status) => ({
+                value: status.id,
+                label: status.label
+            }))
+        },
+    ]
 
     const initialValues = {
         po: "",
         qty: 0,
-        shipmentDate: null
+        shipmentDate: null,
+        style: null,
+        buyer: null
     };
 
     const columns = [
@@ -166,9 +263,36 @@ function PurchaseList() {
             align: "left",
         },
         {
-            id: "status",
-            label: t("table.status"),
+            id: "style",
+            label: t("style"),
             minWidth: 130,
+            align: "left",
+            format: (style => style.styleNo)
+        },
+        {
+            id: "qty",
+            label: t("totalOrderQty"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
+            id: "shipmentDate",
+            label: t("shipmentDate"),
+            minWidth: 120,
+            align: "left",
+            format: (value) => value ? dayjs(value).format("DD-MM-YYYY") : ""
+        },
+        {
+            id: "buyer",
+            label: t("buyer"),
+            minWidth: 130,
+            align: "left",
+            format: (buyer => buyer.name)
+        },
+        {
+            id: "status",
+            label: t("status"),
+            minWidth: 100,
             align: "left",
         },
         {
@@ -190,7 +314,20 @@ function PurchaseList() {
                     <BackButton onClick={() => navigate("/admin")}/>
                     <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditPurchaseOrder(true))}/>
                 </div>
-                <TableCus columns={columns} data={prodData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} onEdit={handleEdit} onDelete={handleDeleteOpen}/>
+                <TableCus
+                    columns={columns}
+                    data={prodData}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteOpen}
+                    isFilterActive={true}
+                    filterValue={filterValue}
+                    searchPlaceholderText={`${t("po")}`}
+                    filterConfig={filterConfig}
+                    handleFilterChange={handleFilterChange}
+                    onClearAllFilters={handleClearAllFilters}
+                />
             </div>
 
             <DialogAddEditCus

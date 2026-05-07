@@ -14,6 +14,9 @@ const purchaseOrderSlice = createSlice({
             pageNo: 1,
             pageSize: 20,
             search: "",
+            status: "",
+            buyerId: "",
+            styleId: ""
         }
     },
     reducers: {

@@ -8,8 +8,8 @@ const initialState = purchaseOrderAdapter.getInitialState();
 export const purchaseOrderApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getPurchaseOrder: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
-                url: `/purchase-orders?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", status = "", styleId = "", buyerId = "" }) => ({
+                url: `/purchase-orders?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&status=${status}&styleId=${styleId}&buyerId=${buyerId}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

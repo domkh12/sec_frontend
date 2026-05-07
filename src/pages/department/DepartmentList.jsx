@@ -149,12 +149,6 @@ function DepartmentList(){
 
     const columns = [
         {
-            id: "id",
-            label: t("id"),
-            minWidth: 50,
-            align: "left",
-        },
-        {
             id: "department",
             label: t("department.title"),
             minWidth: 130,
@@ -243,7 +237,6 @@ function DepartmentList(){
                     onDelete={handleDeleteOpen}
                     isFilterActive={true}
                     filterValue={filterValue}
-                    isFetching={isFetching}
                     handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('table.department')}/${t('table.head')}`}
                     onClearAllFilters={handleClearAllFilters}

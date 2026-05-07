@@ -185,5 +185,8 @@
   "totalOutputQty": "Kabuuang Dami ng Output",
   "totalBalance": "Kabuuang Balanse",
   "po": "Order sa Pagbili",
-  "stauts": "Katayuan"
+  "stauts": "Katayuan",
+  "totalOrderQty": "Kabuuang Dami ng Order",
+  "shipmentDate": "Petsa ng Pagpapadala",
+  "buyer": "Mamimili"
 }

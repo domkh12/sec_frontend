@@ -441,7 +441,6 @@ function UserList(){
                         searchPlaceholderText={`${t('table.firstName')}/${t('table.lastName')}/${t('table.phoneNumber')}/${t('table.position')}`}
                         filterValue={filterValue}
                         handleFilterChange={handleFilterChange}
-                        isFetching={isFetching}
                         filterConfig={filterConfig}
                         onClearAllFilters={handleClearAllFilters}
                     />

@@ -177,5 +177,8 @@
   "totalOutputQty": "Total Output Quantity",
   "totalBalance": "Total Balance",
   "po": "Purchase Order",
-  "status": "Status"
+  "status": "Status",
+  "totalOrderQty": "Total Order Qty",
+  "shipmentDate": "Shipment Date",
+  "buyer": "Buyer"
 }

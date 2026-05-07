@@ -47,7 +47,8 @@ export const styleApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: [
                 { type: "Style", id: "LIST" },
-                { type: "StyleStats", id: "LIST" }
+                { type: "StyleStats", id: "LIST" },
+                { type: "StyleLookup", id: 'LIST'}
             ],
         }),
 

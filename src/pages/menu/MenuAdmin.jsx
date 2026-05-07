@@ -36,10 +36,6 @@ function MenuAdmin(){
                         <MenuButton title={`${t("manage.department")}`} iconPath={"/images/production.png"} onClick={() => navigate("departments")}/>
                         <MenuButton title={`${t("product.line")}`} iconPath={"/images/production_line.png"} onClick={() => navigate("production-lines")}/>
                     </div>
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("other")}</Typography>
-                        <MenuButton title={`${t("table.buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("buyers")}/>
-                    </div>
                 </div>
             </div>
 
@@ -71,6 +67,8 @@ function MenuAdmin(){
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("po")}</Typography>
                         <MenuButton title={`${t("po")}`} iconPath={"/images/order-fulfillment.png"} onClick={() => navigate("purchase-orders")}/>
+                        <MenuButton title={`${t("table.buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("buyers")}/>
+
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
@@ -90,19 +88,14 @@ function MenuAdmin(){
                             onClick={() => navigate("qr-scan")}
                         />
                     </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
-                <Typography variant="h6" sx={{color: yellow[600]}}>Operations</Typography>
-                <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>Production Input</Typography>
-                    <MenuButton
-                        title="Hourly Output"
-                        iconPath={"/images/garment.png"}
-                        onClick={() => navigate("hourly-output")}
-                    />
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>Operations</Typography>
+                        <MenuButton
+                            title="Hourly Output"
+                            iconPath={"/images/garment.png"}
+                            onClick={() => navigate("hourly-output")}
+                        />
+                    </div>
                 </div>
             </div>
 

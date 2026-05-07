@@ -173,5 +173,8 @@
   "totalOutputQty": "총 생산 수량",
   "totalBalance": "총 잔량",
   "po": "구매 주문서",
-  "status": "상태"
+  "status": "상태",
+  "totalOrderQty": "총 주문량",
+  "shipmentDate": "선적 날짜",
+  "buyer": "구매자"
 }

@@ -5,12 +5,11 @@ import {
 import { Autocomplete } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import {useRef, useState, useEffect, useMemo, memo} from "react";
+import {useRef, useState, useEffect, useMemo} from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import PasswordField from "../ui/PasswordField.jsx";
 import NestedSelect from "../util/NestedSelect.jsx";
 import {CheckBox, CheckBoxOutlineBlank} from "@mui/icons-material";
-import VisuallyHiddenInput from "../input/VisuallyHiddenInput.jsx";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -522,6 +521,7 @@ function DialogAddEditCus({
                                 </span>
                             ) : t(field.label)
                         }
+                        format="DD-MM-YYYY"
                         value={values[field.name]}
                         onChange={(date) => setFieldValue(field.name, date)}
                         slotProps={{

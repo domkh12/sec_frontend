@@ -153,12 +153,6 @@ function BuyerList() {
 
     const columns = [
         {
-            id: "id",
-            label: t("table.id"),
-            minWidth: 50,
-            align: "left",
-        },
-        {
             id: "name",
             label: t("table.buyer"),
             minWidth: 130,

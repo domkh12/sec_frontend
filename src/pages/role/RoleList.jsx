@@ -47,12 +47,6 @@ function RoleList(){
 
     const columns = [
         {
-            id: "id",
-            label: "#",
-            minWidth: 50,
-            align: "left",
-        },
-        {
             id: "name",
             label: t("table.role"),
             minWidth: 130,
@@ -93,7 +87,16 @@ function RoleList(){
                     <div className="flex justify-between items-center">
                         <BackButton onClick={() => navigate("/admin")}/>
                     </div>
-                    <TableCus columns={columns} data={roleData} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} searchPlaceholderText={`${t('table.role')}/${t('table.description')}`}  isFilterActive={true} handleFilterChange={handleFilterChange} filterValue={filterValue} isFetching={isFetching}/>
+                    <TableCus
+                        columns={columns}
+                        data={roleData}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        searchPlaceholderText={`${t('table.role')}/${t('table.description')}`}
+                        isFilterActive={true}
+                        handleFilterChange={handleFilterChange}
+                        filterValue={filterValue}
+                    />
                 </div>
             </div>
         )

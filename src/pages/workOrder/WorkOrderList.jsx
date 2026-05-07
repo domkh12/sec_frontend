@@ -438,7 +438,6 @@ function WorkOrderList() {
                     onDelete={handleDeleteOpen}
                     isFilterActive={true}
                     filterValue={filterValue}
-                    isFetching={isFetching}
                     handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('MO')}`}
                     onClearAllFilters={handleClearAllFilters}

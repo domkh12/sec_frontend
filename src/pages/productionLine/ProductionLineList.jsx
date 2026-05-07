@@ -291,7 +291,6 @@ function ProductionLineList(){
                     searchPlaceholderText={`${t("table.productionLine")}`}
                     filterValue={filterValue}
                     handleFilterChange={handleFilterChange}
-                    isFetching={isFetching}
                     filterConfig={filterConfig}
                 />
             </div>
