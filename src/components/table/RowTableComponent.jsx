@@ -22,7 +22,7 @@ import { BiSolidArchiveIn } from "react-icons/bi";
 import { BiSolidArchiveOut } from "react-icons/bi";
 
 function RowTableComponent({
-                               id, idx, entity, columns, collapseColumns,
+                               id, idx, entity, columns, collapseColumns, onToggleActive, tToggleActive,
                                onView, onEdit, onDelete, onBlock, onStockIn, onStockOut,
                                tView, tEdit, tDelete,tFile, handleFile, onDeleteSub, tStockIn, tStockOut, tDeleteSub, tBlock, tUnblock, onUnblock, isCollapseRow, collapseDataKey
                            }) {
@@ -68,6 +68,7 @@ function RowTableComponent({
             NEW: { background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.45)", color: "#93c5fd" },
             PENDING: {background: "rgba(249,115,22,0.15)", border: "1px solid rgba(249,115,22,0.45)", color: "#fdba74"},
             DELAYED: {background: "rgba(220, 38, 38, 0.15)", border: "1px solid rgba(220, 38, 38, 0.45)", color: "#f87171"},
+            IN_PROGRESS:  { background: "rgba(168,85,247,0.15)",  border: "1px solid rgba(168,85,247,0.45)",  color: "#d8b4fe" },
         };
 
         const STATUS_DEFAULT = { background: "rgba(148,163,184,0.15)", border: "1px solid rgba(148,163,184,0.35)", color: "#cbd5e1" };
@@ -276,7 +277,50 @@ function RowTableComponent({
                                     </DialogContent>
                                 </Dialog>
                                 </>
-                            ) : (
+                            ) : col.id === "isActive" ? (
+                                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                    <Tooltip title={tToggleActive ?? (entity.isActive ? "Deactivate" : "Activate")}>
+                                        <Box
+                                            onClick={() => onToggleActive?.(entity)}
+                                            sx={{
+                                                width: 44,
+                                                height: 24,
+                                                borderRadius: "12px",
+                                                background: entity.isActive
+                                                    ? "rgba(34,197,94,0.3)"
+                                                    : "rgba(148,163,184,0.2)",
+                                                border: entity.isActive
+                                                    ? "1px solid rgba(34,197,94,0.6)"
+                                                    : "1px solid rgba(148,163,184,0.4)",
+                                                cursor: onToggleActive ? "pointer" : "default",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                padding: "2px",
+                                                transition: "all 0.25s ease",
+                                                "&:hover": onToggleActive ? {
+                                                    boxShadow: entity.isActive
+                                                        ? "0 0 10px rgba(34,197,94,0.4)"
+                                                        : "0 0 10px rgba(148,163,184,0.3)",
+                                                    transform: "scale(1.05)",
+                                                } : {},
+                                            }}
+                                               >
+                                                <Box
+                                                    sx={{
+                                                    width: 18,
+                                                    height: 18,
+                                                    borderRadius: "50%",
+                                                    background: entity.isActive ? "#22c55e" : "#94a3b8",
+                                                    transform: entity.isActive ? "translateX(20px)" : "translateX(0px)",
+                                                    transition: "all 0.25s ease",
+                                                    boxShadow: entity.isActive
+                                                        ? "0 0 6px rgba(34,197,94,0.6)"
+                                                        : "none",
+                                                }}
+                                            />
+                                        </Box>
+                                    </Tooltip>
+                                </Box>) : (
                                 col.format
                                     ? col.format(entity[col.id]) ?? "—"
                                     : entity[col.id] ?? "—"

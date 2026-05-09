@@ -108,6 +108,20 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        updateStatusWorkOrder: builder.mutation({
+            query: ({id, ...initialWorkOrderData}) => ({
+                url: `/work-orders/${id}/status`,
+                method: "PUT",
+                body: {
+                    ...initialWorkOrderData,
+                },
+            }),
+            invalidatesTags: [
+                {type: "WorkOrder", id: "LIST"},
+                {type: "PurchaseOrder", id: "LIST"}
+            ],
+        }),
+
         deleteWorkOrder: builder.mutation({
             query: ({ id }) => ({
                 url: `/work-orders/${id}`,
@@ -127,6 +141,7 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useUpdateStatusWorkOrderMutation,
     useGetStyleByMoMutation,
     useUploadWorkOrderFileMutation,
     useGetWorkOrderStatsQuery,

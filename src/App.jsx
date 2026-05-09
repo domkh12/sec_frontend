@@ -39,16 +39,12 @@ const ProductionLineList = lazy(() => import("./pages/productionLine/ProductionL
 const ProductList = lazy(() => import("./pages/style/./StyleList"));
 const Profile = lazy(() => import("./pages/profile/Profile.jsx"));
 const RoleList = lazy(() => import("./pages/role/RoleList.jsx"));
-const CategoryList = lazy(() => import("./pages/category/CategoryList.jsx"));
 const BuyerList = lazy(() => import("./pages/buyer/BuyerList.jsx"));
-const MenuTesting = lazy(() => import("./pages/menu/MenuTesing.jsx"));
 
 function App() {
   return (
       <Suspense fallback={<div className="bg-main h-screen"><LoadingComponent/></div>}>
         <Routes>
-          {/* Testing routes */}
-          <Route path="/admin-menu-testing" element={<MenuTesting/>}/>
           {/* Public routes */}
           <Route path="/" element={<Navigate to="/login" replace />}/>
           <Route path="/login" element={<Login/>}/>
@@ -107,7 +103,6 @@ function App() {
                               <Route path="profile" element={<Profile/>}/>
                               <Route path="users" element={<UserList/>}/>
                               <Route path="roles" element={<RoleList/>}/>
-                              <Route path="categories" element={<CategoryList/>}/>
                               <Route path="sizes" element={<SizeList/>} />
                               <Route path="colors" element={<ColorList/>} />
                               <Route path="purchase-orders" element={<PurchaseList/>}/>

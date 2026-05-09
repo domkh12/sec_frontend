@@ -269,7 +269,7 @@ const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5, collaps
     );
 });
 // ── Main component ────────────────────────────────────────────────────────────
-function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey, handleFile, onStockIn, onStockOut }) {
+function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey, handleFile, onStockIn, onStockOut }) {
     const { t } = useTranslation();
     const { ids, entities, totalElements, pageSize, pageNo } = data;
 
@@ -329,9 +329,11 @@ function TableCus({ columns, data, handleChangePage, handleChangeRowsPerPage, on
                 onStockOut={onStockOut}
                 tStockIn={tStockIn}
                 tStockOut={tStockOut}
+                onToggleActive={onToggleActive}
+                tToggleActive={tToggleActive}
             />
         ));
-    }, [ids, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, collapseColumns, collapseDataKey, handleFile, tFile, onStockIn, onStockOut, tStockIn, tStockOut]);
+    }, [ids, tToggleActive, onToggleActive, entities, columns, onView, onEdit, onDelete, tView, tEdit, tDelete, onDeleteSub, tDeleteSub, isFetching, collapseColumns, collapseDataKey, handleFile, tFile, onStockIn, onStockOut, tStockIn, tStockOut]);
 
     return (
         <div className="rounded-xl overflow-hidden" style={wrapperStyle}>

@@ -22,6 +22,7 @@ import {Alert, Snackbar} from "@mui/material";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete.jsx";
 import {
     useCreateWorkOrderMutation, useDeleteWorkOrderMutation, useGetWorkOrderQuery, useGetWorkOrderStatsQuery,
+    useUpdateStatusWorkOrderMutation,
     useUpdateWorkOrderMutation
 } from "../../redux/feature/workOrder/workOrderApiSlice.js";
 import {
@@ -39,6 +40,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaHourglassEnd } from "react-icons/fa";
 import {setAlertMaterial, setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
 import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
+import {useGetPurchaseOrderLookupQuery} from "../../redux/feature/purchaseOrder/purchaseOrderApiSlice.js";
 
 function WorkOrderList() {
     const [id, setId] = useState(null);
@@ -62,15 +64,13 @@ function WorkOrderList() {
     const [updateWorkOrder, {isLoading: isLoadingUpdateWO}] = useUpdateWorkOrderMutation();
     const [deleteWO, {isLoading: isLoadingDeleteWO}] = useDeleteWorkOrderMutation();
     const [uploadFile, {isLoading: isLoadingUploadFile}] = useUploadFileMutation();
+    const [updateWOStatus] = useUpdateStatusWorkOrderMutation();
 
     // -- Debounce -------------------------------------------------------------------------------------------------
     const debounceSearch = useDebounce(filterValue.search, 500);
 
     // -- Query ----------------------------------------------------------------------------------------------------
-    const {data: buyerData} = useGetBuyerQuery({
-        pageNo: 1,
-        pageSize: 1000
-    });
+
     const {data: colorData} = useGetColorQuery({
         pageNo: 1,
         pageSize: 1000
@@ -85,6 +85,8 @@ function WorkOrderList() {
         search: debounceSearch
     });
     const {data: workOrderStatData} = useGetWorkOrderStatsQuery();
+    const {data: poData} = useGetPurchaseOrderLookupQuery();
+    console.log(poData)
 
     // -- Handler --------------------------------------------------------------------------------------------------
 
@@ -148,12 +150,11 @@ function WorkOrderList() {
             }else {
                 await createWorkOrder({
                     mo: values.mo,
-                    po: values.po,
+                    poId: values.po,
                     qty: values.qty,
                     style: values.style,
                     startDate: startDate,
                     endDate: endDate,
-                    buyerId: values.buyer,
                     sizeIds: values.size,
                     colorId: values.color,
                     image: imageUri
@@ -224,17 +225,32 @@ function WorkOrderList() {
         }))
     }
 
+    const handleToggleActive = async (entity) => {
+        console.log(entity)
+        await updateWOStatus({
+            id: entity.id,
+            isActive: !entity.isActive
+        })
+    }
+
     const validationSchema = Yup.object().shape({
         // name: Yup.string().required(t("validation.required"))
     });
 
     const fields = [
         { name: "mo",     label: "table.mo",     type: "text" },
-        { name: "po",     label: "po",     type: "text" },
-        { name: "style",     label: "style",     type: "text" },
+        {
+            name: "po",
+            label: "po",
+            type: "autocomplete",
+            options: poData?.map(po => ({
+                value: po?.id,
+                label: po?.po
+            }))
+        },
         {
             name: "size",
-            label: "table.size",
+            label: "size",
             type: "autocomplete-checkbox",
             fetchOptions: async () => {
                 return Object.values(sizeData?.entities ?? {}).map((dept) => ({
@@ -245,50 +261,32 @@ function WorkOrderList() {
         },
         {
             name: "color",
-            label: "table.color",
+            label: "color",
             type: "autocomplete",
             fetchOptions: async () => {
-                return Object.values(colorData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.color,
+                return Object.values(colorData?.entities ?? {})?.map((dept) => ({
+                    value: dept?.id,
+                    label: dept?.color,
                 }));
             },
         },
         { name: "qty",     label: "table.qty",     type: "number" },
         { name: "startDate",     label: "table.startDate",     type: "date" },
         { name: "endDate",     label: "table.endDate",     type: "date" },
-        { name: "buyer",
-          label: "table.buyer",
-          type: "autocomplete",
-            fetchOptions: async () => {
-                return Object.values(buyerData?.entities ?? {}).map((dept) => ({
-                    value: dept.id,
-                    label: dept.name,
-                }));
-            },
-        },
-        {
-            name: "status",
-            label: "status",
-            type: "select",
-        },
         {
             name: "image",
             label: "image",
             type: "image"
         }
-
     ];
 
     const initialValues ={
         mo: "",
         po: "",
         qty: "",
-        style: "",
         image: "",
         startDate: null,
         endDate: null,
-        buyer: "",
         colors: [],
     }
 
@@ -301,13 +299,13 @@ function WorkOrderList() {
         },
         {
             id: "mo",
-            label: t("table.mo"),
+            label: t("mo"),
             minWidth: 50,
             align: "left",
         },
         {
             id: "style",
-            label: t("table.style"),
+            label: t("style"),
             minWidth: 130,
             align: "left",
         },
@@ -335,15 +333,8 @@ function WorkOrderList() {
             }
         },
         {
-            id: "buyer",
-            label: t("table.buyer"),
-            minWidth: 130,
-            align: "left",
-            format: (value) => value?.name ?? "—",
-        },
-        {
             id: "qty",
-            label: t("table.qty"),
+            label: t("qty"),
             minWidth: 130,
             align: "left",
         },
@@ -361,25 +352,26 @@ function WorkOrderList() {
         },
         {
             id: "startDate",
-            label: t("table.startDate"),
+            label: t("startDate"),
             minWidth: 130,
             align: "left",
         },
         {
             id: "endDate",
-            label: t("table.endDate"),
+            label: t("endDate"),
             minWidth: 130,
             align: "left",
         },
+        { id: "isActive", label: "Active", minWidth: 80 },
         {
             id: "status",
-            label: t("table.status"),
+            label: t("status"),
             minWidth: 130,
             align: "left",
         },
         {
             id: "action",
-            label: t("table.action"),
+            label: t("action"),
             minWidth: 50,
             align: "left",
         },
@@ -426,7 +418,6 @@ function WorkOrderList() {
                             color: "red",
                             icon: <FaHourglassEnd />
                         },
-
                     ]} />
                 </div>
                 <TableCus
@@ -441,6 +432,8 @@ function WorkOrderList() {
                     handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('MO')}`}
                     onClearAllFilters={handleClearAllFilters}
+                    onToggleActive={(entity) => handleToggleActive(entity)}
+                    tToggleActive="Toggle status"
                 />
             </div>
             {
