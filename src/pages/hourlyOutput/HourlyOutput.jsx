@@ -61,7 +61,8 @@
         const {data: workOrderData, isLoading: isLoadingWO, isSuccess: isSuccessWO} = useGetWorkOrderQuery({
             pageNo: 1,
             pageSize: 20,
-            search: search
+            search: search,
+            isActive: true
         });
         const {data: timeData} = useGetTimeLookupQuery();
         const {data: lineByDeptData} = useGetProductionLineByDepartmentNoQuery(

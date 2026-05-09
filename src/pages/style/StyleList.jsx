@@ -27,6 +27,7 @@ import { FaFilePen } from "react-icons/fa6";
 import useDebounce from "../../hook/useDebounce.jsx";
 import useAuth from "../../hook/useAuth.jsx";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 function StyleList() {
     const {t} = useTranslation();
@@ -220,7 +221,7 @@ function StyleList() {
 
     let content;
 
-    if (isLoading) content = <Backdrop open={isLoading}/>;
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">

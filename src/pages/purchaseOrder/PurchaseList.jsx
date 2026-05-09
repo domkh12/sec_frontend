@@ -24,6 +24,7 @@ import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 import {POSTATUS} from "../../config/po.js";
 import useDebounce from "../../hook/useDebounce.jsx";
 import {useGetBuyerLookupQuery} from "../../redux/feature/buyer/buyerApiSlice.js";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 function PurchaseList() {
     const [id, setId] = useState(null);
@@ -305,7 +306,7 @@ function PurchaseList() {
 
     let content;
 
-    if (isLoading) content = <Backdrop open={isLoading}/>;
+    if (isLoading) content = (<LoadingComponent/>);
 
     if (isSuccess) content = (
         <div className="pb-10">

@@ -79,7 +79,7 @@ function WorkOrderList() {
         pageNo: 1,
         pageSize: 1000
     })
-    const {data: workOrderData, isLoading, isSuccess, isFetching} = useGetWorkOrderQuery({
+    const {data: workOrderData, isLoading, isSuccess} = useGetWorkOrderQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
         search: debounceSearch

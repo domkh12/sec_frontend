@@ -8,8 +8,8 @@ const initialState = workOrderAdapter.getInitialState();
 export const workOrderApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getWorkOrder: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
-                url: `/work-orders?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", isActive = "" }) => ({
+                url: `/work-orders?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&isActive=${isActive}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
