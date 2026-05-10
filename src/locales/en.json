@@ -180,5 +180,6 @@
   "status": "Status",
   "totalOrderQty": "Total Order Qty",
   "shipmentDate": "Shipment Date",
-  "buyer": "Buyer"
+  "buyer": "Buyer",
+  "description": "Description"
 }

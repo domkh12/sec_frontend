@@ -155,12 +155,6 @@ function DepartmentList(){
             align: "left",
         },
         {
-            id: "head",
-            label: t('head'),
-            minWidth: 130,
-            align: "left",
-        },
-        {
             id: "lines",
             label: t('lines'),
             minWidth: 130,

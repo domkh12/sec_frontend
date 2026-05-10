@@ -207,8 +207,10 @@ export default function FullScreenDialogStockIn() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <TextField label="Code" value={stockData?.code || ""} disabled fullWidth size="small" />
                             <TextField label="Name" value={stockData?.name || ""} disabled fullWidth size="small" />
-                            <TextField label="Color" value={stockData?.color || ""} disabled fullWidth size="small" />
-                            <TextField label="Size" value={stockData?.size || ""} disabled fullWidth size="small" />
+                            <TextField label="Description" value={stockData?.description || ""} disabled fullWidth size="small" />
+                            <TextField label="Style" value={stockData?.styles?.map(s => s?.styleNo).join(", ") || ""} disabled fullWidth size="small" />
+                            <TextField label="Color" value={stockData?.color?.color || ""} disabled fullWidth size="small" />
+                            <TextField label="Size" value={stockData?.size?.size || ""} disabled fullWidth size="small" />
                             <TextField label="Unit" value={stockData?.unit || ""} disabled fullWidth size="small" />
                             <TextField label="Balance Stock" value={stockData?.balance || 0} disabled fullWidth size="small" />
                         </div>

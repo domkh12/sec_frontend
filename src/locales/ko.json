@@ -176,5 +176,6 @@
   "status": "상태",
   "totalOrderQty": "총 주문량",
   "shipmentDate": "선적 날짜",
-  "buyer": "구매자"
+  "buyer": "구매자",
+  "description": "상세 설명"
 }

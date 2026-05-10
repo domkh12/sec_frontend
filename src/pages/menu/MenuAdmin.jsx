@@ -28,22 +28,17 @@ function MenuAdmin(){
             </div>
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
-                <Typography variant="h6" sx={{color: yellow[600]}}>{t('dataSetup')}</Typography>
-                <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex flex-wrap justify-center items-start gap-5">
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('factory.structure')}</Typography>
-                        <MenuButton title={`${t("manage.department")}`} iconPath={"/images/production.png"} onClick={() => navigate("departments")}/>
-                        <MenuButton title={`${t("product.line")}`} iconPath={"/images/production_line.png"} onClick={() => navigate("production-lines")}/>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('Production')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
 
                 <div className="flex flex-wrap justify-center items-start gap-5">
+                    <div className="flex flex-wrap justify-center items-start gap-5">
+                        <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                            <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('factory.structure')}</Typography>
+                            <MenuButton title={`${t("manage.department")}`} iconPath={"/images/production.png"} onClick={() => navigate("departments")}/>
+                            <MenuButton title={`${t("product.line")}`} iconPath={"/images/production_line.png"} onClick={() => navigate("production-lines")}/>
+                        </div>
+                    </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Monitoring')}</Typography>
                         <MenuButton

@@ -37,6 +37,7 @@ import {UNITS} from "../../config/units.js";
 import useAuth from "../../hook/useAuth.jsx";
 import {useGetSizeLookupQuery} from "../../redux/feature/size/sizeApiSlice.js";
 import {useGetColorLookupQuery} from "../../redux/feature/color/colorApiSlice.js";
+import {useGetStyleLookupQuery} from "../../redux/feature/style/styleApiSlice.js";
 
 function MaterialList() {
     const [id, setId] = useState(null);
@@ -75,6 +76,7 @@ function MaterialList() {
         size: sizeData?.find((size) => size.id === filterValue.size)?.size || "",
         color: colorData?.find((color) => color.id === filterValue.color)?.color || "",
     });
+    const {data: styleData} = useGetStyleLookupQuery();
 
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterMaterial({
@@ -102,8 +104,10 @@ function MaterialList() {
             id: row.id,
             code: row.code,
             name: row.name,
+            description: row.description,
             unit: row.unit,
             image: row.image,
+            style: row.styles.map(style => style.id)
         }));
     };
 
@@ -155,6 +159,7 @@ function MaterialList() {
     }
 
     const handleSubmit = async (values, {resetForm}) => {
+        console.log(values)
         let imageUri = null;
 
         if (values.image && typeof values.image !== "string") {
@@ -173,18 +178,17 @@ function MaterialList() {
 
         try {
 
-            let size = sizeData?.find((size) => size?.id === values?.size) || "";
-            let color = colorData.find((color) => color.id === values.color);
-
             if (materialDataForUpdate) {
                 await updateMaterial({
                     id: materialDataForUpdate.id,
                     code: values.code,
                     name: values.name,
+                    description: values.description,
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
-                    size: size.size,
-                    color: color.color,
+                    sizeId: values.size,
+                    colorId: values.color,
+                    styleIds: values.style
                 }).unwrap();
                 dispatch(setAlertMaterial({type: "success", message: t("updateSuccess")}));
                 dispatch(setMaterialDataForUpdate(null));
@@ -192,10 +196,12 @@ function MaterialList() {
                 await createMaterial({
                     code: values.code,
                     name: values.name,
+                    description: values.description,
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
-                    size: size.size,
-                    color: color.color,
+                    sizeId: values.size,
+                    colorId: values.color,
+                    styleIds: values.style
                 }).unwrap();
                 dispatch(setAlertMaterial({type: "success", message: t("createSuccess")}));
             }
@@ -233,6 +239,7 @@ function MaterialList() {
     const fields = [
         { name: "code",     label: "table.code",     type: "text" },
         { name: "name",     label: "table.material",     type: "text" },
+        { name: "description",     label: "description",     type: "text" },
         {   name: "unit",
             label: "table.unit",
             type: "autocomplete",
@@ -260,6 +267,15 @@ function MaterialList() {
             })),
         },
         {
+            name: "style",
+            label: "style",
+            type: "autocomplete-checkbox",
+            options: styleData?.map((style) => ({
+                value: style?.id,
+                label: style?.styleNo
+            }))
+        },
+        {
             name: "image",
             label: "table.image",
             type: "image",
@@ -271,6 +287,10 @@ function MaterialList() {
         name: "",
         unit: "",
         image: "",
+        description: "",
+        size: "",
+        color: "",
+        style: [""]
     }
 
     const filterConfig = [
@@ -360,21 +380,36 @@ function MaterialList() {
             align: "left",
         },
         {
-            id: "size",
-            label: t('color'),
-            minWidth: 50,
+            id: "description",
+            label: t("description"),
+            minWidth: 130,
             align: "left",
         },
         {
-            id: "color",
+            id: "styles",
+            label: t("style"),
+            minWidth: 100,
+            align: "left",
+            format: (style) => style.map(s => s.styleNo).join(", ")
+        },
+        {
+            id: "size",
             label: t('size'),
             minWidth: 50,
             align: "left",
+            format: (s) => s.size
+        },
+        {
+            id: "color",
+            label: t('color'),
+            minWidth: 50,
+            align: "left",
+            format: (c) => c.color
         },
         {
             id: "unit",
             label: t("table.unit"),
-            minWidth: 130,
+            minWidth: 50,
             align: "left",
         },
         {

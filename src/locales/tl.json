@@ -188,5 +188,6 @@
   "stauts": "Katayuan",
   "totalOrderQty": "Kabuuang Dami ng Order",
   "shipmentDate": "Petsa ng Pagpapadala",
-  "buyer": "Mamimili"
+  "buyer": "Mamimili",
+  "description": "Paglalarawan"
 }

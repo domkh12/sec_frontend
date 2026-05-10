@@ -230,24 +230,6 @@ function ProductionLineList(){
             align: "left",
         },
         {
-            id: "target",
-            label: t("table.target"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "actual",
-            label: t("table.actual"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
-            id: "efficiency",
-            label: t("table.efficiency"),
-            minWidth: 130,
-            align: "left",
-        },
-        {
             id: "action",
             label: t("table.action"),
             minWidth: 50,

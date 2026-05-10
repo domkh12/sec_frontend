@@ -180,5 +180,6 @@
   "status": "状态",
   "totalOrderQty": "总订单数量",
   "shipmentDate": "出货日期",
-  "buyer": "买家"
+  "buyer": "买家",
+  "description": "描述"
 }
