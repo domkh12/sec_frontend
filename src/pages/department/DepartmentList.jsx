@@ -162,7 +162,7 @@ function DepartmentList(){
         },
         {
             id: "workers",
-            label: t("worker"),
+            label: t("workers"),
             minWidth: 130,
             align: "left",
         },

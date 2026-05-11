@@ -80,7 +80,7 @@
     "delete": "삭제",
     "noData": "데이터 없음",
     "updatedAt": "수정일",
-    "workers": "작업자",
+
     "target": "목표",
     "actual": "실제",
     "efficiency": "효율",
@@ -177,5 +177,16 @@
   "totalOrderQty": "총 주문량",
   "shipmentDate": "선적 날짜",
   "buyer": "구매자",
-  "description": "상세 설명"
+  "description": "상세 설명",
+  "workers": "작업자",
+  "image": "이미지",
+  "lines": "라인",
+  "monitoring": "모니터링",
+  "productionStatus": "생산 현황",
+  "tvDisplay": "TV 디스플레이",
+  "production": "생산",
+  "planning": "계획",
+  "workOrder": "작업 지시서",
+  "qrGenerator": "QR 코드 생성기",
+  "qrScan": "QR 코드 스캔"
 }

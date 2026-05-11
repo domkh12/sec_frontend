@@ -225,7 +225,7 @@ function ProductionLineList(){
         },
         {
             id: "workers",
-            label: t("table.workers"),
+            label: t("workers"),
             minWidth: 130,
             align: "left",
         },

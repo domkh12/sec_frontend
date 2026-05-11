@@ -88,7 +88,6 @@
     "delete": "Tanggalin",
     "noData": "Walang available na data",
     "updatedAt": "Na-update Noong",
-    "workers": "Mga Manggagawa",
     "target": "Target",
     "actual": "Aktwal",
     "efficiency": "Kahusayan",
@@ -189,5 +188,16 @@
   "totalOrderQty": "Kabuuang Dami ng Order",
   "shipmentDate": "Petsa ng Pagpapadala",
   "buyer": "Mamimili",
-  "description": "Paglalarawan"
+  "description": "Paglalarawan",
+  "workers": "Mga Manggagawa",
+  "image": "Larawan",
+  "lines": "Mga Linya",
+  "monitoring": "Pagsubaybay",
+  "productionStatus": "Katayuan ng Produksyon",
+  "tvDisplay": "Display sa TV",
+  "production": "Produksyon",
+  "planning": "Pagpaplano",
+  "workOrder": "Order sa Trabaho",
+  "qrGenerator": "Tagabuo ng QR",
+  "qrScan": "Scan ng QR"
 }

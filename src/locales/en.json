@@ -80,7 +80,6 @@
     "delete": "Delete",
     "noData": "No data available",
     "updatedAt": "Updated At",
-    "workers": "Workers",
     "target": "Target",
     "actual": "Actual",
     "efficiency": "Efficiency",
@@ -181,5 +180,16 @@
   "totalOrderQty": "Total Order Qty",
   "shipmentDate": "Shipment Date",
   "buyer": "Buyer",
-  "description": "Description"
+  "description": "Description",
+  "workers": "Workers",
+  "image": "Image",
+  "lines": "Lines",
+  "monitoring": "Monitoring",
+  "productionStatus": "Production Status",
+  "tvDisplay": "TV Display",
+  "production": "Production",
+  "planning": "Planning",
+  "workOrder": "Work Order",
+  "qrGenerator": "QR Generator",
+  "qrScan": "QR Scan"
 }

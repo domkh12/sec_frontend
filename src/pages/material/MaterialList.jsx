@@ -107,7 +107,9 @@ function MaterialList() {
             description: row.description,
             unit: row.unit,
             image: row.image,
-            style: row.styles.map(style => style.id)
+            style: row.styles.map(style => style.id),
+            size: row.size.id,
+            color: row.color.id
         }));
     };
 

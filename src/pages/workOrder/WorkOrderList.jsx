@@ -135,7 +135,7 @@ function WorkOrderList() {
                 await updateWorkOrder({
                     id: woDataForUpdate.id,
                     mo: values.mo,
-                    po: values.po,
+                    poId: values.po,
                     qty: values.qty,
                     style: values.style,
                     startDate: startDate,
@@ -175,7 +175,6 @@ function WorkOrderList() {
         dispatch(setWorkOrderDataForUpdate({
             id: row?.id,
             mo: row?.mo,
-            po: row?.po,
             qty: row?.qty,
             style: row?.style,
             startDate: dayjs(row?.startDate, "DD-MM-YYYY"),
@@ -183,7 +182,8 @@ function WorkOrderList() {
             buyer: row?.buyer?.id,
             size: row?.sizes?.map(size => size?.id),
             color: row?.color?.id,
-            image: row?.image
+            image: row?.image,
+            po: row?.po?.id
         }));
     };
 
@@ -313,7 +313,8 @@ function WorkOrderList() {
             id: "po",
             label: t("po"),
             minWidth: 70,
-            align: "left"
+            align: "left",
+            format: (po) => po.po
         },
         {
             id: "color",

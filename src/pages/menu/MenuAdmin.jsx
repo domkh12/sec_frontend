@@ -28,7 +28,7 @@ function MenuAdmin(){
             </div>
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
-                <Typography variant="h6" sx={{color: yellow[600]}}>{t('Production')}</Typography>
+                <Typography variant="h6" sx={{color: yellow[600]}}>{t('production')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
 
                 <div className="flex flex-wrap justify-center items-start gap-5">
@@ -40,14 +40,14 @@ function MenuAdmin(){
                         </div>
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Monitoring')}</Typography>
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('monitoring')}</Typography>
                         <MenuButton
-                            title={`${t('TV Display')}`}
+                            title={`${t('tvDisplay')}`}
                             iconPath={"/images/smart-tv.png"}
                             onClick={() => navigate("tv")}
                         />
                         <MenuButton
-                            title={`${t('Production Status')}`}
+                            title={`${t('productionStatus')}`}
                             iconPath={"/images/productivity.png"}
                             onClick={() => navigate("production-status")}
                         />
@@ -66,19 +66,19 @@ function MenuAdmin(){
 
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Planing')}</Typography>
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('planning')}</Typography>
                         <MenuButton
-                            title={`${t('Work Orders')}`}
+                            title={`${t('workOrder')}`}
                             iconPath={"/images/work-order.png"}
                             onClick={() => navigate("work-orders")}
                         />
                         <MenuButton
-                            title={`${t('QR Generator')}`}
+                            title={`${t('qrGenerator')}`}
                             iconPath={"/images/qr-white.png"}
                             onClick={() => navigate("qr-generator")}
                         />
                         <MenuButton
-                            title={`${t('QR Scan')}`}
+                            title={`${t('qrScan')}`}
                             iconPath={"/images/qr-white.png"}
                             onClick={() => navigate("qr-scan")}
                         />
