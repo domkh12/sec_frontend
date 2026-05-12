@@ -196,7 +196,7 @@
                                             balance={entities[id]?.balance}
                                             onClick={handleCardClick}
                                             sizes={entities[id].sizes}
-                                            po={entities[id]?.po}
+                                            po={entities[id]?.po?.po}
                                         />
                                     ))
                                 ) : (

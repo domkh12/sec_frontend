@@ -188,5 +188,10 @@
   "planning": "계획",
   "workOrder": "작업 지시서",
   "qrGenerator": "QR 코드 생성기",
-  "qrScan": "QR 코드 스캔"
+  "qrScan": "QR 코드 스캔",
+  "warehouse": "창고",
+  "whRawMaterials": "원자재 창고",
+  "rawMaterials": "원자재",
+  "operations": "운영",
+  "hourlyOutput": "시간당 생산량"
 }

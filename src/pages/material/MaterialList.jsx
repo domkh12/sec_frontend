@@ -67,14 +67,14 @@ function MaterialList() {
     const {data: sizeData} = useGetSizeLookupQuery();
     const {data: colorData} = useGetColorLookupQuery();
     const {data: materialStats} = useGetMaterialStatsQuery();
-    const {data: materialData, isLoading, isSuccess, isFetching} = useGetMaterialQuery({
+    const {data: materialData, isLoading, isSuccess} = useGetMaterialQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
         search: debounceSearch,
         status: filterValue.status,
         unit: filterValue.unit,
-        size: sizeData?.find((size) => size.id === filterValue.size)?.size || "",
-        color: colorData?.find((color) => color.id === filterValue.color)?.color || "",
+        size: filterValue.size,
+        color: filterValue.color,
     });
     const {data: styleData} = useGetStyleLookupQuery();
 
@@ -493,7 +493,6 @@ function MaterialList() {
                     onDelete={handleDeleteOpen}
                     isFilterActive={true}
                     filterValue={filterValue}
-                    isFetching={isFetching}
                     handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('table.code')}/${t('table.material')}`}
                     onClearAllFilters={handleClearAllFilters}

@@ -199,5 +199,8 @@
   "planning": "Pagpaplano",
   "workOrder": "Order sa Trabaho",
   "qrGenerator": "Tagabuo ng QR",
-  "qrScan": "Scan ng QR"
+  "qrScan": "Scan ng QR",
+  "warehouse": "Bodega",
+  "whRawMaterials": "Bodega ng Hilaw na Materyales",
+  "rawMaterials": "Hilaw na Materyales"
 }

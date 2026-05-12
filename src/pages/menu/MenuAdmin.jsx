@@ -84,9 +84,9 @@ function MenuAdmin(){
                         />
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>Operations</Typography>
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('operations')}</Typography>
                         <MenuButton
-                            title="Hourly Output"
+                            title={`${t('hourlyOutput')}`}
                             iconPath={"/images/garment.png"}
                             onClick={() => navigate("hourly-output")}
                         />
@@ -95,12 +95,12 @@ function MenuAdmin(){
             </div>
 
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
-                <Typography variant="h6" sx={{color: yellow[600]}}>{t('Warehouse')}</Typography>
+                <Typography variant="h6" sx={{color: yellow[600]}}>{t('warehouse')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('Raw Materials')}</Typography>
+                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('rawMaterials')}</Typography>
                     <MenuButton
-                        title={`${t('WH Raw Materials')}`}
+                        title={`${t('whRawMaterials')}`}
                         iconPath={"/images/warehouse.png"}
                         onClick={() => navigate("materials")}
                     />

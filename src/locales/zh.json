@@ -191,5 +191,8 @@
   "planning": "计划",
   "workOrder": "工单",
   "qrGenerator": "QR码生成器",
-  "qrScan": "QR码扫描"
+  "qrScan": "QR码扫描",
+  "warehouse": "仓库",
+  "whRawMaterials": "原材料仓库",
+  "rawMaterials": "原材料"
 }

@@ -194,5 +194,8 @@
   "qrGenerator": "បង្កើតកូដ QR",
   "qrScan": "ស្កេនកូដ QR",
   "operations": "ប្រតិបត្តិការ",
-  "hourlyOutput": "ទិន្នផលប្រចាំម៉ោង"
+  "hourlyOutput": "ទិន្នផលប្រចាំម៉ោង",
+  "warehouse": "ឃ្លាំង",
+  "whRawMaterials": "ឃ្លាំងវត្ថុធាតុដើម",
+  "rawMaterials": "វត្ថុធាតុដើម"
 }

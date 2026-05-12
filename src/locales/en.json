@@ -191,5 +191,8 @@
   "planning": "Planning",
   "workOrder": "Work Order",
   "qrGenerator": "QR Generator",
-  "qrScan": "QR Scan"
+  "qrScan": "QR Scan",
+  "warehouse": "Warehouse",
+  "whRawMaterials": "Raw Materials WH",
+  "rawMaterials": "Raw Materials"
 }
