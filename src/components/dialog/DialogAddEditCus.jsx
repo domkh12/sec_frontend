@@ -354,6 +354,87 @@ function DialogAddEditCus({
                         )}
                     </TextField>
                 );
+            case "autocomplete-checkbox-group":
+                return wrap(
+                    <Autocomplete
+                        size="small"
+                        multiple
+                        options={[...(resolvedOptions || []).sort((a, b) => a.label.localeCompare(b.label))]}
+                        disableCloseOnSelect
+                        loading={isLoading}
+                        groupBy={(option) => option.group || "Other"}
+                        getOptionKey={(opt) => opt.value}
+                        getOptionLabel={(opt) => opt.label ?? ""}
+                        value={(resolvedOptions || []).filter((o) => (values[field.name] || []).includes(o.value))}
+                        onChange={(_, selected) =>
+                            setFieldValue(
+                                field.name,
+                                selected.map((item) => item.value)
+                            )
+                        }
+                        renderTags={(value) => (
+                            <div style={{ marginLeft: '8px', color: 'rgba(255,255,255,0.85)', fontSize: '0.875rem' }}>
+                                {value.map((option) => option.label).join(", ")}
+                            </div>
+                        )}
+                        componentsProps={{
+                            paper: {
+                                sx: {
+                                    background: "rgba(15,23,42,1)",
+                                    border: "1px solid rgba(255,255,255,0.12)",
+                                    borderRadius: "10px",
+                                    boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                                    "& .MuiAutocomplete-option": {
+                                        color: "#fff !important",
+                                        fontSize: "0.875rem",
+                                        paddingLeft: 1.5,
+                                        '&[aria-selected="true"]': { backgroundColor: "rgba(147,197,253,0.18) !important" },
+                                        "&:hover": { backgroundColor: "rgba(255,255,255,0.08) !important" },
+                                    },
+                                    "& .MuiAutocomplete-noOptions": {
+                                        color: "rgba(255,255,255,1)",
+                                        fontSize: "0.875rem",
+                                    },
+                                    "& .MuiAutocomplete-groupLabel": {
+                                        backgroundColor: "rgba(147,197,253,1)",
+                                        color: "rgb(4 7 10 / 0.9)",
+                                        fontWeight: 600,
+                                        fontSize: "0.8rem",
+                                        borderBottom: "1px solid rgba(255,255,255,0.1)",
+                                    },
+                                },
+                            },
+                        }}
+                        sx={{
+                            "& .MuiSvgIcon-root": {
+                                color: "rgba(255,255,255,0.65) !important",
+                                "&:hover": { color: "rgba(255,255,255,0.45)" },
+                            }
+                        }}
+                        renderOption={(props, option, { selected }) => {
+                            const { key, ...optionProps } = props;
+                            const SelectionIcon = selected ? CheckBox : CheckBoxOutlineBlank;
+                            return (
+                                <li key={key} {...optionProps}>
+                                    <SelectionIcon
+                                        fontSize="small"
+                                        className="mr-2 my-1"
+                                    />
+                                    {option.label}
+                                </li>
+                            );
+                        }}
+                        renderInput={(params) => {
+                            return (
+                                <TextField
+                                    {...params}
+                                    {...commonProps}
+                                    onBlur={handleBlur}
+                                />
+                            );
+                        }}
+                    />
+                );
             case "autocomplete":
                 return wrap(
                     <Autocomplete
@@ -1113,5 +1194,3 @@ function DialogAddEditCus({
 }
 
 export default DialogAddEditCus;
-// const memoizedDialogAddEditCus = memo(DialogAddEditCus);
-// export default memoizedDialogAddEditCus;

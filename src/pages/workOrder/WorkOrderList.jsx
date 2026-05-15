@@ -41,6 +41,7 @@ import { FaHourglassEnd } from "react-icons/fa";
 import {setAlertMaterial, setIsOpenSnackbarMaterial} from "../../redux/feature/material/materialSlice.js";
 import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
 import {useGetPurchaseOrderLookupQuery} from "../../redux/feature/purchaseOrder/purchaseOrderApiSlice.js";
+import {useGetDeptLookupQuery} from "../../redux/feature/department/departmentApiSlice.js";
 
 function WorkOrderList() {
     const [id, setId] = useState(null);
@@ -86,7 +87,8 @@ function WorkOrderList() {
     });
     const {data: workOrderStatData} = useGetWorkOrderStatsQuery();
     const {data: poData} = useGetPurchaseOrderLookupQuery();
-    console.log(poData)
+    const { data: deptData } = useGetDeptLookupQuery();
+    console.log(deptData)
 
     // -- Handler --------------------------------------------------------------------------------------------------
 
@@ -271,6 +273,33 @@ function WorkOrderList() {
             },
         },
         { name: "qty",     label: "table.qty",     type: "number" },
+        {
+            name: "line",
+            label: "lines",
+            type: "autocomplete-checkbox-group",
+            fetchOptions: async () => {
+                try {
+                    if (!deptData) return [];
+                    const options = [];
+                    deptData
+                        .slice()
+                        .sort((a, b) => a.processNo - b.processNo)
+                        .forEach((dept) => {
+                            dept.children.forEach((line) => {
+                                options.push({
+                                    value: line.id,
+                                    label: line.line,
+                                    group: `${dept.processNo} - ${dept.name}`  // Prefix with processNo for correct group ordering
+                                });
+                            });
+                        });
+                    return options;
+                } catch (error) {
+                    console.error("Error in fetchOptions:", error);
+                    return [];
+                }
+            }
+        },
         { name: "startDate",     label: "table.startDate",     type: "date" },
         { name: "endDate",     label: "table.endDate",     type: "date" },
         {
