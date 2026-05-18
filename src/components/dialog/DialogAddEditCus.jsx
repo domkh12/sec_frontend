@@ -359,7 +359,7 @@ function DialogAddEditCus({
                     <Autocomplete
                         size="small"
                         multiple
-                        options={[...(resolvedOptions || []).sort((a, b) => a.label.localeCompare(b.label))]}
+                        options={[...(resolvedOptions || [])]}
                         disableCloseOnSelect
                         loading={isLoading}
                         groupBy={(option) => option.group || "Other"}

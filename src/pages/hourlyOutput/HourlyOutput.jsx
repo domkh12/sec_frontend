@@ -29,7 +29,7 @@
     import { FaTrash } from "react-icons/fa";
     import { FaArrowRight } from "react-icons/fa6";
     import {useGetTimeLookupQuery} from "../../redux/feature/time/timeApiSlice.js";
-    import {useEffect, useState} from "react";
+    import {useEffect} from "react";
     import DefectTypeSelect from "../../components/select/DefectTypeSelect.jsx";
     import useDebounce from "../../hook/useDebounce.jsx";
     import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
@@ -67,8 +67,10 @@
         const {data: timeData} = useGetTimeLookupQuery();
         const {data: lineByDeptData} = useGetProductionLineByDepartmentNoQuery(
             {no: selectedLine?.department?.processNo + 1},
-            {skip: Object.keys(selectedLine).length === 0}
+            {skip: selectedLine == null || Object?.keys(selectedLine)?.length === 0}
         );
+
+        console.log(productionLine)
 
         // -- Mutation -------------------------------------------------------------------------------
         const [createOutputDetail, {isLoading: isLoadingOutputDetail}] = useCreateOutputDetailMutation();

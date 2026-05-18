@@ -150,9 +150,9 @@ function NumberField({ id: idProp, label, error, size = 'medium', sx, inputSx, l
                 }
                 sx={{ pr: 0, ...inputSx }}
             />
-            {/*<FormHelperText sx={{ ml: 0, '&:empty': { mt: 0 } }}>*/}
-            {/*    Enter value from {other.min ?? 1}*/}
-            {/*</FormHelperText>*/}
+            <FormHelperText sx={{ ml: 0, '&:empty': { mt: 0 } }}>
+                Enter value from {other.min ?? 1}
+            </FormHelperText>
         </FormControl>
     );
 }

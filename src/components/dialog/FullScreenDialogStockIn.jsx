@@ -239,7 +239,7 @@ export default function FullScreenDialogStockIn() {
                               }) => (
                                 <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                                    <NumberField label="Quantity" name="qty" value={values.qty} onChange={(val) => setFieldValue("qty", val)} size="small" min={0.001}/>
+                                    <NumberField label="Quantity" name="qty" value={values.qty} onChange={(val) => setFieldValue("qty", val)} size="small" min={0} error={errors.qty}/>
 
                                     {/* DATE PICKER FIX */}
                                     <DatePicker

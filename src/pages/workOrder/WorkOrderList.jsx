@@ -292,6 +292,7 @@ function WorkOrderList() {
                                     group: `${dept.processNo} - ${dept.name}`  // Prefix with processNo for correct group ordering
                                 });
                             });
+                            console.log(dept)
                         });
                     return options;
                 } catch (error) {
