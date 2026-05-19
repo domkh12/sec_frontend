@@ -159,6 +159,7 @@ function WorkOrderList() {
                     endDate: endDate,
                     sizeIds: values.size,
                     colorId: values.color,
+                    lineIds: values.line,
                     image: imageUri
                 }).unwrap();
                 dispatch(setAlertWorkOrder({type: "success", message: "Create successfully"}));
@@ -317,7 +318,8 @@ function WorkOrderList() {
         image: "",
         startDate: null,
         endDate: null,
-        colors: [],
+        color: [],
+        line: []
     }
 
     const columns = [
