@@ -37,14 +37,6 @@
     "unblock.confirm": "Oo, I-unblock",
     "block": "I-block"
   },
-  "status": {
-    "soon": "Malapit Na",
-    "available": "Available",
-    "unavailable": "Hindi Available",
-    "active": "Aktibo",
-    "inactive": "Hindi Aktibo",
-    "blocked": "Naka-block"
-  },
   "profile": {
     "title": "Profile",
     "logout": "Mag-logout"
@@ -202,5 +194,15 @@
   "qrScan": "Scan ng QR",
   "warehouse": "Bodega",
   "whRawMaterials": "Bodega ng Hilaw na Materyales",
-  "rawMaterials": "Hilaw na Materyales"
+  "rawMaterials": "Hilaw na Materyales",
+  "employeeId": "ID ng Empleyado",
+  "gender": "Kasarian",
+  "qty": "Dami",
+  "output": "Output",
+  "balance": "Balanse",
+  "mo": "Order sa Produksyon (MO)",
+  "startDate": "Petsa ng Pagsisimula",
+  "endDate": "Petsa ng Pagtatapos",
+  "active": "Aktibo",
+  "status": "Katayuan"
 }

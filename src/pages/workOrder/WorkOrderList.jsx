@@ -145,6 +145,7 @@ function WorkOrderList() {
                     buyerId: values.buyer,
                     sizeIds: values.size,
                     colorId: values.color,
+                    lineIds: values.line,
                     image: imageUri
                 }).unwrap();
                 dispatch(setAlertWorkOrder({type: "success", message: "Update successfully"}));
@@ -229,7 +230,6 @@ function WorkOrderList() {
     }
 
     const handleToggleActive = async (entity) => {
-        console.log(entity)
         await updateWOStatus({
             id: entity.id,
             isActive: !entity.isActive
@@ -395,7 +395,7 @@ function WorkOrderList() {
             minWidth: 130,
             align: "left",
         },
-        { id: "isActive", label: "Active", minWidth: 80 },
+        { id: "isActive", label: t("active"), minWidth: 80 },
         {
             id: "status",
             label: t("status"),

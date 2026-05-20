@@ -184,7 +184,7 @@ function UserList(){
     };
 
     const fields = [
-        { name: "employeeId", label: "table.employeeId", type: "text"},
+        { name: "employeeId", label: "employeeId", type: "text"},
         { name: "nameEn", label: "table.nameEn", type: "text"},
         { name: "nameKh", label: "table.nameKh", type: "text"},
         { name : "gender", label: "gender", type: "text"},
@@ -219,7 +219,6 @@ function UserList(){
             })),
         }
     ];
-    console.log(deptLookupData)
 
     // Add this after your columns definition or in a separate constant
     const filterConfig = [
@@ -338,7 +337,7 @@ function UserList(){
     const columns = [
         {
             id: "employeeId",
-            label: "employeeId",
+            label: t("employeeId"),
             minWidth: 50,
             align: "left",
         },

@@ -197,5 +197,14 @@
   "hourlyOutput": "ទិន្នផលប្រចាំម៉ោង",
   "warehouse": "ឃ្លាំង",
   "whRawMaterials": "ឃ្លាំងវត្ថុធាតុដើម",
-  "rawMaterials": "វត្ថុធាតុដើម"
+  "rawMaterials": "វត្ថុធាតុដើម",
+  "employeeId": "លេខសម្គាល់បុគ្គលិក",
+  "gender": "ភេទ",
+  "qty": "បរិមាណ",
+  "output": "ទិន្នផល",
+  "balance": "ចំនួននៅសល់",
+  "mo": "ប័ណ្ណបញ្ជាផលិតកម្ម (MO)",
+  "startDate": "ថ្ងៃចាប់ផ្តើម",
+  "endDate": "ថ្ងៃបញ្ចប់",
+  "active": "សកម្ម"
 }

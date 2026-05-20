@@ -193,5 +193,14 @@
   "whRawMaterials": "원자재 창고",
   "rawMaterials": "원자재",
   "operations": "운영",
-  "hourlyOutput": "시간당 생산량"
+  "hourlyOutput": "시간당 생산량",
+  "employeeId": "사원 번호",
+  "gender": "성별",
+  "qty": "수량",
+  "output": "생산량",
+  "balance": "잔량",
+  "mo": "제조 지시서 (MO)",
+  "startDate": "시작 날짜",
+  "endDate": "종료 날짜",
+  "active": "활성화"
 }

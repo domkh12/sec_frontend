@@ -1,8 +1,8 @@
     import {
-    useGetProductionLineByDepartmentNoQuery,
+    useGetProductionLineByDepartmentNoQuery, useGetProductionLineByDepartmentQuery,
     useGetProductionLineLookupQuery
 } from "../../redux/feature/productionLine/productionLineApiSlice.js";
-    import {useGetWorkOrderQuery} from "../../redux/feature/workOrder/workOrderApiSlice.js";
+    import {useGetWOByLineQuery, useGetWorkOrderQuery} from "../../redux/feature/workOrder/workOrderApiSlice.js";
     import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
     import CardWorkOrder from "../../components/card/CardWorkOrder.jsx";
     import {useDispatch, useSelector} from "react-redux";
@@ -34,6 +34,7 @@
     import useDebounce from "../../hook/useDebounce.jsx";
     import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
     import {useTranslation} from "react-i18next";
+    import dayjs from "dayjs";
 
     function HourlyOutput(){
         // -- State --------------------------------------------------------------------------------
@@ -69,8 +70,10 @@
             {no: selectedLine?.department?.processNo + 1},
             {skip: selectedLine == null || Object?.keys(selectedLine)?.length === 0}
         );
-
-        console.log(productionLine)
+        const {data: woByLine} = useGetWOByLineQuery({
+            id: selectedLine?.id,},
+            {skip: selectedLine == null || Object?.keys(selectedLine)?.length === 0}
+        );
 
         // -- Mutation -------------------------------------------------------------------------------
         const [createOutputDetail, {isLoading: isLoadingOutputDetail}] = useCreateOutputDetailMutation();
@@ -103,7 +106,8 @@
                     toLineId: selectedToLine?.id,
                     goodQty: item?.qty,
                     mo: item?.mo,
-                    timeId: selectedTime?.id
+                    timeId: selectedTime?.id,
+                    outputDate: dayjs(new Date()).format("YYYY-MM-DD"),
                 });
             });
             try {
@@ -111,6 +115,8 @@
                 dispatch(setAlertHourlyOutput({type: "success", message: t('createSuccess')}));
                 dispatch(setIsOpenSnackbarHourlyOutput(true));
                 dispatch(setClearCurrentOutput());
+
+                dispatch(setSelectedTime({}));
             }catch (error){
                 dispatch(setAlertHourlyOutput({type: "error", message: error?.data?.error?.description ?? "Something went wrong!"}));
                 dispatch(setIsOpenSnackbarHourlyOutput(true));
@@ -136,7 +142,7 @@
                 currentOutput?.length > 0 &&
                 isFilled(selectedTime) &&
                 isFilled(selectedLine) &&
-                (lineByDeptData?.length > 0 ? isFilled(selectedToLine) : true)
+                (selectedLine?.isInput === true && lineByDeptData?.length > 0 ? isFilled(selectedToLine) : true)
             );
 
             const {ids, entities, totalPages} = workOrderData || {};
@@ -159,7 +165,11 @@
                                 productionLine?.map(item => (
                                     <button
                                         key={item?.id}
-                                        onClick={() => dispatch(setSelectedLine(item))}
+                                        onClick={() => {
+                                            dispatch(setSelectedLine(item));
+                                            dispatch(setSelectedToLine({}));
+                                            dispatch(setSelectedTime({}));
+                                        }}
                                         className={`flex flex-col justify-center items-center gap-1 border ${item?.id === selectedLine?.id ? "border-orange-600 border-2 text-orange-700 font-semibold bg-orange-200" : "border-gray-400"} w-20 h-18.75 
                                         py-8 rounded-xl cursor-pointer shadow-lg hover:scale-102 transition `}>
                                         <img src={item?.image || "/images/placeholder.png"} alt={item?.line} decoding={"async"} loading={"lazy"} width={"35%"} height={"100%"}/>
@@ -187,18 +197,18 @@
                             </div>
                             <div className="grid xl:grid-cols-5 grid-cols-3 gap-2">
                             {
-                                ids?.length > 0 ? (
-                                    ids?.map(id => (
+                                woByLine?.length > 0 ? (
+                                    woByLine?.map(wo => (
                                         <CardWorkOrder
-                                            key={id}
-                                            image={entities[id]?.image}
-                                            style={entities[id]?.style}
-                                            mo={entities[id]?.mo}
-                                            color={entities[id]?.color?.color}
-                                            balance={entities[id]?.balance}
+                                            key={wo?.id}
+                                            image={wo?.image}
+                                            style={wo?.style}
+                                            mo={wo?.mo}
+                                            color={wo?.color?.color}
+                                            balance={wo?.balance}
                                             onClick={handleCardClick}
-                                            sizes={entities[id].sizes}
-                                            po={entities[id]?.po?.po}
+                                            sizes={wo.sizes}
+                                            po={wo?.po?.po}
                                         />
                                     ))
                                 ) : (
@@ -207,13 +217,6 @@
                                     </div>
                                 )
                             }
-                            </div>
-                            <div className="flex w-full justify-center mt-5">
-                                {
-                                    totalPages > 0 && (
-                                        <Pagination count={totalPages}/>
-                                    )
-                                }
                             </div>
                         </div>
                         <div className="col-span-3 border border-gray-400 rounded-2xl h-full px-4 py-4 overflow-hidden flex flex-col">
@@ -229,13 +232,15 @@
                             </div>
                             <div className="mb-2">
                                 <Autocomplete
+                                    key={selectedTime?.id || 'reset-time'}
+                                    value={selectedTime && Object.keys(selectedTime).length > 0 ? selectedTime : null}
                                     size="small"
                                     options={timeData}
                                     getOptionKey={(option) => option.id}
                                     getOptionLabel={(option) => option.name}
                                     onChange={handleTimeChange}
                                     renderInput={(params) => (
-                                    <TextField {...params} label="Times" placeholder="Favorites" />
+                                    <TextField {...params} label="Times" placeholder="Times" />
                                     )}
                                 />
                             </div>
@@ -309,9 +314,11 @@
                             </div>
                             <div className="flex flex-col pt-3 shrink-0">
                                 {
-                                    lineByDeptData?.length > 0 && (
+                                    selectedLine?.isInput === true && (
                                         <div className="mb-2">
                                             <Autocomplete
+                                                key={selectedToLine?.id || 'reset-line'}
+                                                value={selectedToLine && Object.keys(selectedToLine).length > 0 ? selectedToLine : null}
                                                 size="small"
                                                 options={lineByDeptData}
                                                 getOptionKey={(option) => option.id}

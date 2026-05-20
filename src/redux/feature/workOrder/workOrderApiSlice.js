@@ -49,18 +49,6 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
-        getWorkOrderFiles: builder.query({
-            query: ({id}) => ({
-                url: `/work-orders/${id}/files`,
-                validateStatus: (response, result) => {
-                    return response.status === 200 && !result.isError;
-                },
-            }),
-            providesTags: [
-                { type: "WorkOrderFile", id: "LIST" }
-            ],
-        }),
-
         getWorkOrderLookup: builder.query({
             query: () => ({
                 url: `/work-orders/lookup`,
@@ -137,13 +125,23 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getWOByLine: builder.query({
+            query: ({id}) => ({
+                url: `/work-orders/production-line/${id}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "WorkOrderByLine", id: "LIST" }],
+        }),
+
     }),
 });
 
 export const {
+    useGetWOByLineQuery,
     useUpdateStatusWorkOrderMutation,
     useGetStyleByMoMutation,
-    useUploadWorkOrderFileMutation,
     useGetWorkOrderStatsQuery,
     useGetWorkOrderLookupQuery,
     useUpdateWorkOrderMutation,

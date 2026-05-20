@@ -194,5 +194,14 @@
   "qrScan": "QR码扫描",
   "warehouse": "仓库",
   "whRawMaterials": "原材料仓库",
-  "rawMaterials": "原材料"
+  "rawMaterials": "原材料",
+  "employeeId": "员工工号",
+  "gender": "性别",
+  "qty": "数量",
+  "output": "产出",
+  "balance": "余额",
+  "mo": "制造订单 (MO)",
+  "startDate": "开始日期",
+  "endDate": "结束日期",
+  "active": "启用"
 }

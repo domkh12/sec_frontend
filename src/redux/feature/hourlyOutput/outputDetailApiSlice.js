@@ -47,7 +47,8 @@ export const outputDetailApiSlice = apiSlice.injectEndpoints({
                 ],
             }),
             invalidatesTags:(result, error, arg) => [
-                { type: "OutputDetail", id: "LIST" }
+                { type: "OutputDetail", id: "LIST" },
+                { type: "WorkOrderByLine", id: "LIST"}
             ],
         }),
 

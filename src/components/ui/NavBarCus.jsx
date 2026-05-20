@@ -4,10 +4,11 @@ import AvatarProfile from "./AvatarProfile.jsx";
 import Logo from "../util/Logo.jsx";
 import { IconButton } from "@mui/material";
 import { BiFullscreen, BiExitFullscreen } from "react-icons/bi";
+import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
 
 function NavBarCus() {
     const [isFullScreen, setIsFullScreen] = useState(false);
-
+    const {isMd} = useBreakpoints();
     useEffect(() => {
         const handleFsChange = () => {
             setIsFullScreen(!!document.fullscreenElement);
@@ -32,9 +33,11 @@ function NavBarCus() {
             <Logo />
             <div className="flex items-center gap-3">
                 <TranslateButton />
-                <IconButton onClick={handleToggleFullScreen}>
-                    {isFullScreen ? <BiExitFullscreen /> : <BiFullscreen />}
-                </IconButton>
+                {isMd && (
+                    <IconButton onClick={handleToggleFullScreen}>
+                        {isFullScreen ? <BiExitFullscreen /> : <BiFullscreen />}
+                    </IconButton>
+                )}
                 <AvatarProfile />
             </div>
         </nav>

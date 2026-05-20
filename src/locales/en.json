@@ -196,5 +196,14 @@
   "whRawMaterials": "Raw Materials WH",
   "rawMaterials": "Raw Materials",
   "operations": "Operations",
-  "hourlyOutput": "Hourly Output"
+  "hourlyOutput": "Hourly Output",
+  "employeeId": "Employee ID",
+  "gender": "Gender",
+  "qty": "Qty",
+  "output": "Output",
+  "balance": "Balance",
+  "mo": "MO",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "active": "Active"
 }
