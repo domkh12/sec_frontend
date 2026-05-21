@@ -51,6 +51,8 @@
         const isOpenSnackbar          = useSelector((s) => s.hourlyOutput.isOpenSnackbarHourlyOutput);
         const alertHourlyOutput       = useSelector((s) => s.hourlyOutput.alertHourlyOutput);
         const selectedToLine          = useSelector((s) => s.hourlyOutput.selectedToLine);
+        const selectedDefect          = useSelector((s) => s.hourlyOutput.selectedDefect);
+        console.log(selectedDefect)
 
         // -- Hook ---------------------------------------------------------------------------------
         const dispatch = useDispatch();
@@ -115,7 +117,6 @@
                 dispatch(setAlertHourlyOutput({type: "success", message: t('createSuccess')}));
                 dispatch(setIsOpenSnackbarHourlyOutput(true));
                 dispatch(setClearCurrentOutput());
-
                 dispatch(setSelectedTime({}));
             }catch (error){
                 dispatch(setAlertHourlyOutput({type: "error", message: error?.data?.error?.description ?? "Something went wrong!"}));
@@ -167,8 +168,7 @@
                                         key={item?.id}
                                         onClick={() => {
                                             dispatch(setSelectedLine(item));
-                                            dispatch(setSelectedToLine({}));
-                                            dispatch(setSelectedTime({}));
+                                            dispatch(setClearCurrentOutput());
                                         }}
                                         className={`flex flex-col justify-center items-center gap-1 border ${item?.id === selectedLine?.id ? "border-orange-600 border-2 text-orange-700 font-semibold bg-orange-200" : "border-gray-400"} w-20 h-18.75 
                                         py-8 rounded-xl cursor-pointer shadow-lg hover:scale-102 transition `}>
@@ -184,16 +184,16 @@
                                     <p className="text-2xl">Welcome, {userProfile?.nameEn}</p>
                                     <p>{formattedDate}</p>
                                 </div>
-                                <TextField
-                                    size="small"
-                                    placeholder={"Search"}
-                                    slotProps={{
-                                        input: {
-                                            startAdornment: <InputAdornment position="start"><MdOutlineSearch className="w-5 h-5"/></InputAdornment>,
-                                        },
-                                    }}
-                                    onChange={handleSearchChange}
-                                />
+                                {/*<TextField*/}
+                                {/*    size="small"*/}
+                                {/*    placeholder={"Search"}*/}
+                                {/*    slotProps={{*/}
+                                {/*        input: {*/}
+                                {/*            startAdornment: <InputAdornment position="start"><MdOutlineSearch className="w-5 h-5"/></InputAdornment>,*/}
+                                {/*        },*/}
+                                {/*    }}*/}
+                                {/*    onChange={handleSearchChange}*/}
+                                {/*/>*/}
                             </div>
                             <div className="grid xl:grid-cols-5 grid-cols-3 gap-2">
                             {

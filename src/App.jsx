@@ -13,14 +13,15 @@ import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
 
 // Lazy load everything else
+const ProductionStatusSewingDefect = lazy(() => import("./pages/productionStatus/ProductionStatusSewingDefect.jsx"));
 const QrScan = lazy(() => import("./pages/qrScan/QrScan.jsx"));
 const QrGenerator = lazy(() => import("./pages/qrGenerator/QrGenerator.jsx"));
 const MenuWarehouse = lazy(() => import("./pages/menu/MenuWarehouse.jsx"));
 const WorkOrderList = lazy(() => import("./pages/workOrder/WorkOrderList.jsx"));
 const DefectTypeList = lazy(() => import("./pages/defectType/DefectTypeList.jsx"));
 const MaterialList = lazy(() => import("./pages/material/MaterialList.jsx"));
-const WipSewingOutput = lazy(() => import("./pages/workOrder/WipSewingOutput.jsx"));
-const WorkOrderStatusMenu = lazy(() => import("./pages/workOrder/WorkOrderStatusMenu"));
+const WipSewingOutput = lazy(() => import("./pages/productionStatus/./ProductionStatusSewingOutput"));
+const WorkOrderStatusMenu = lazy(() => import("./pages/productionStatus/./ProductionStatusMenu"));
 const FileManager = lazy(() => import("./pages/file/FileManager.jsx"));
 const PurchaseList = lazy(() => import("./pages/purchaseOrder/PurchaseList.jsx"));
 const SizeList = lazy(() => import("./pages/size/SizeList.jsx"));
@@ -117,6 +118,7 @@ function App() {
                               <Route path="production-status">
                                   <Route index element={<WorkOrderStatusMenu />}/>
                                   <Route path="sewing-output" element={<WipSewingOutput />}/>
+                                  <Route path="sewing-defect" element={<ProductionStatusSewingDefect />}/>
                               </Route>
                               <Route path="materials" element={<MaterialList/>}/>
                               <Route path="work-orders" element={<WorkOrderList/>}/>

@@ -68,7 +68,7 @@ function StatCardsDash({
                     <p className="text-nowrap tracking-wide">{title}</p>
                     <div >
                         <NumberFlow value={value} className="text-4xl font-bold" />
-                        <span className="ml-2">{unit}</span>
+                        <span className="ml-2 text-lg">{unit}</span>
                     </div>
                 </div>
             </div>

@@ -234,8 +234,6 @@ function MaterialList() {
             }),
         unit: Yup.string().typeError(t("validation.required"))
             .required(t("validation.required")),
-        color: Yup.string().typeError(t("validation.required"))
-            .required(t("validation.required")),
     });
 
     const fields = [

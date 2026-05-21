@@ -1,10 +1,11 @@
+import RefreshIcon from "@mui/icons-material/Refresh";
 import StatCardsDash from "../../components/card/StatCardsDash.jsx";
-import RefreshIcon from '@mui/icons-material/Refresh';
 import ColumnChartOutputByLine from "../../components/chart/ColumnChartOutputByLine.jsx";
 import ChartOutputByBuyer from "../../components/chart/ChartOutputByBuyer.jsx";
 import ChartOutputByMO from "../../components/chart/ChartOutputByMO.jsx";
+import ColumnChartDefectByLine from "../../components/chart/ColumnChartDefectByLine.jsx";
 
-function WipSewingOutput() {
+function ProductionStatusSewingDefect() {
     return (
         <div className="pb-12">
             <div className="card-glass flex flex-col sm:flex-row justify-between items-start sm:items-center text-white">
@@ -17,14 +18,6 @@ function WipSewingOutput() {
             <div className="card-glass">
                 <div className="flex flex-col md:flex-row gap-5 items-center">
                     <StatCardsDash
-                        title="Total Input"
-                        theme="sunset"
-                        value={1249}
-                        percentage="+12%"
-                        icon={<img src="/images/t-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
-                        unit="PCS"
-                    />
-                    <StatCardsDash
                         title="Total Output"
                         theme="emerald"
                         value={2000}
@@ -33,22 +26,31 @@ function WipSewingOutput() {
                         unit="PCS"
                     />
                     <StatCardsDash
-                        title="Total Active Style"
+                        title="Total Defect"
+                        theme="rose"
+                        value={1249}
+                        percentage="+12%"
+                        icon={<img src="/images/dirty-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
+                        unit="PCS"
+                    />
+                    <StatCardsDash
+                        title="Defect Rate"
+                        theme="sunset"
+                        value={2000}
+                        percentage="+8%"
+                        icon={<img src="/images/dirty-shirt.png" alt="quality control" className="w-10 h-auto" />}
+                        unit="%"
+                    />
+                    <StatCardsDash
+                        title="Line Affected"
                         theme="violet"
                         value={34}
                         percentage="+3%"
-                        icon={<img src="/images/tshirt.png" alt="style" className="w-10 h-auto" />}
-                    />
-                    <StatCardsDash
-                        title="Total QC Inspectors"
-                        theme="ocean"
-                        value={17}
-                        percentage="-1%"
-                        icon={<img src="/images/inspection.png" alt="inspector" className="w-10 h-auto" />}
+                        icon={<img src="/images/sewing-machine.png" alt="style" className="w-10 h-auto" />}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <ColumnChartOutputByLine/>
+                    <ColumnChartDefectByLine/>
                     <ChartOutputByBuyer/>
                 </div>
                 <div className="mt-4">
@@ -56,7 +58,7 @@ function WipSewingOutput() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default WipSewingOutput;
+export default ProductionStatusSewingDefect;

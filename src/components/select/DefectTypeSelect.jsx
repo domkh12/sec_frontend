@@ -9,8 +9,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {useGetDefectTypeLookupQuery} from "../../redux/feature/defect-type/defectTypeApiSlice.js";
 import {useEffect} from "react";
-import {useDispatch} from "react-redux";
-import {setTotalDefect} from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
+import {useDispatch, useSelector} from "react-redux";
+import {setSelectedDefect, setTotalDefect} from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
 
 /* ─── Generate a stable color from a string ─── */
 function colorFromName(name) {
@@ -94,6 +94,9 @@ export default function DefectTypeSelect() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [counts, setCounts] = React.useState({});
 
+    // -- Selector -----------------------------------------------------------------------------------------------
+    const selectedDefect =      useSelector((s) => s.hourlyOutput.selectedDefect);
+
     // -- Hook ---------------------------------------------------------------------------------------------------
     const dispatch = useDispatch();
 
@@ -106,13 +109,13 @@ export default function DefectTypeSelect() {
     const changeCount = (name, delta) =>
         setCounts((prev) => ({ ...prev, [name]: Math.max(0, (prev[name] ?? 0) + delta) }));
 
-    const totalDefects = labels?.reduce((sum, l) => sum + (counts[l.name] ?? 0), 0);
-    const activeLabels = labels?.filter((l) => (counts[l.name] ?? 0) > 0);
-
     useEffect(() => {
-        dispatch(setTotalDefect(totalDefects));
-    }, [totalDefects]);
+        const totalDefects = labels?.reduce((sum, l) => sum + (counts[l.name] ?? 0), 0);
+        const activeDefects = labels?.filter((l) => (counts[l.name] ?? 0) > 0);
 
+        dispatch(setTotalDefect(totalDefects));
+        dispatch(setSelectedDefect(activeDefects));
+    }, [counts, labels, dispatch]);
     return (
         <Box sx={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
 
@@ -141,9 +144,9 @@ export default function DefectTypeSelect() {
             </Box>
 
             {/* ── Summary chips (only labels with count > 0) ── */}
-            {activeLabels?.length > 0 && (
+            {selectedDefect?.length > 0 && (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1, maxWidth: 420, alignItems: 'center' }}>
-                    {activeLabels?.map((label) => {
+                    {selectedDefect?.map((label) => {
                         const bg = colorFromName(label.name);
                         const fg = contrastColor(bg);
                         return (

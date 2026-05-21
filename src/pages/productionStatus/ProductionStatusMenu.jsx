@@ -2,7 +2,7 @@ import BackButton from "../../components/ui/BackButton.jsx";
 import {useNavigate} from "react-router-dom";
 import {Typography} from "@mui/material";
 
-function WorkOrderStatusMenu() {
+function ProductionStatusMenu() {
     // -- Hook ------------------------------------------
     const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ function WorkOrderStatusMenu() {
                     <img src="/images/sewing-output.png" alt="sewing output" className="w-1/3 h-auto"/>
                     <Typography variant="h5" sx={{color: "white"}}>WIP Sewing Output</Typography>
                 </button>
-                <button className="button-glass flex flex-col" onClick={() => navigate("#") }>
+                <button className="button-glass flex flex-col" onClick={() => navigate("sewing-defect") }>
                     <img src="/images/sewing-defect.png" alt="sewing defects" className="w-1/3 h-auto"/>
                     <Typography variant="h5" sx={{color:"white"}}>WIP Sewing Defects</Typography>
                 </button>
@@ -22,4 +22,4 @@ function WorkOrderStatusMenu() {
         </div>
     )
 }
-export default WorkOrderStatusMenu;
+export default ProductionStatusMenu;
