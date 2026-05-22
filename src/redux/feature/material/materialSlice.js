@@ -34,8 +34,12 @@ const materialSlice = createSlice({
         isFullScreenDialogStockOut: false,
         stockInData: null,
         stockOutData: null,
+        isOpenEditStockQtyDialog: false,
     },
     reducers: {
+        setIsOpenEditStockQty: (state, action) => {
+            state.isOpenEditStockQtyDialog = action.payload;
+        },
         setIsOpenSnackbarMaterialStockIn: (state, action) => {
             state.isOpenSnackbarMaterialStockIn = action.payload;
         },
@@ -88,6 +92,7 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setIsOpenEditStockQty,
     setIsOpenSnackbarMaterialStockIn,
     setAlertMaterialStockIn,
     setAlertMaterialStockOut,

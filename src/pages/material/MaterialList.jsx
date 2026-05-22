@@ -38,6 +38,7 @@ import useAuth from "../../hook/useAuth.jsx";
 import {useGetSizeLookupQuery} from "../../redux/feature/size/sizeApiSlice.js";
 import {useGetColorLookupQuery} from "../../redux/feature/color/colorApiSlice.js";
 import {useGetStyleLookupQuery} from "../../redux/feature/style/styleApiSlice.js";
+import * as React from "react";
 
 function MaterialList() {
     const [id, setId] = useState(null);
@@ -108,8 +109,8 @@ function MaterialList() {
             unit: row.unit,
             image: row.image,
             style: row.styles.map(style => style.id),
-            size: row.size.id,
-            color: row.color.id
+            size: row?.size?.id,
+            color: row?.color?.id
         }));
     };
 
@@ -188,7 +189,7 @@ function MaterialList() {
                     description: values.description,
                     image: imageUri ? imageUri : null,
                     unit: values.unit,
-                    sizeId: values.size,
+                    sizeId: values?.size ? values?.size : null,
                     colorId: values.color,
                     styleIds: values.style
                 }).unwrap();
@@ -288,7 +289,7 @@ function MaterialList() {
         unit: "",
         image: "",
         description: "",
-        size: "",
+        size: null,
         color: "",
         style: [""]
     }
@@ -397,14 +398,14 @@ function MaterialList() {
             label: t('size'),
             minWidth: 50,
             align: "left",
-            format: (s) => s.size
+            format: (s) => s?.size
         },
         {
             id: "color",
             label: t('color'),
             minWidth: 50,
             align: "left",
-            format: (c) => c.color
+            format: (c) => c?.color
         },
         {
             id: "unit",
@@ -532,6 +533,7 @@ function MaterialList() {
             <FullScreenDialogStockIn/>
             <FullScreenDialogStockOut/>
             <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteMaterialDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteMaterial}/>
+
         </div>
     )
 

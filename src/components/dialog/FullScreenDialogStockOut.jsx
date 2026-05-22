@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     setAlertMaterialStockOut,
     setFilterStockOut,
-    setIsFullScreenDialogStockOut, setIsOpenSnackbarMaterial, setIsOpenSnackbarMaterialStockOut, setStockOutData
+    setIsFullScreenDialogStockOut, setIsOpenSnackbarMaterialStockOut, setStockOutData
 } from "../../redux/feature/material/materialSlice.js";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
@@ -40,7 +40,7 @@ import SelectUserWithSearch from "../select/SelectUserWithSearch.jsx";
 import NumberField from "../ui/NumberField.jsx";
 import {green} from "@mui/material/colors";
 import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
-import {useGetUserLookupQuery} from "../../redux/feature/user/userApiSlice.js";
+import Seo from "../seo/Seo.jsx";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -49,8 +49,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialogStockOut() {
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const [range, setRange] = useState();
-    const [openDate, setOpenDate] = useState(false);
 
     // -- Selector ----------------------------------------------------------------------------
     const open                    = useSelector((s) => s.material.isFullScreenDialogStockOut);
@@ -181,6 +179,7 @@ export default function FullScreenDialogStockOut() {
             onClose={handleClose}
             slots={{ transition: Transition }}
         >
+            <Seo title={"Stock Out"}/>
             {/* HEADER */}
             <AppBar sx={{ position: 'sticky', top: 0, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>

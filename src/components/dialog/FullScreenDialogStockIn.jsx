@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     setAlertMaterialStockIn,
     setFilterStockIn,
-    setIsFullScreenDialogStockIn, setIsOpenSnackbarMaterialStockIn,
+    setIsFullScreenDialogStockIn, setIsOpenEditStockQty, setIsOpenSnackbarMaterialStockIn,
     setStockInData
 } from "../../redux/feature/material/materialSlice.js";
 import { useTranslation } from "react-i18next";
@@ -39,6 +39,8 @@ import * as Yup from "yup";
 import {green} from "@mui/material/colors";
 import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
 import NumberField from "../ui/NumberField.jsx";
+import {Delete, Edit} from "@mui/icons-material";
+import Seo from "../seo/Seo.jsx";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -47,8 +49,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialogStockIn() {
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const [range, setRange] = useState();
-    const [openDate, setOpenDate] = useState(false);
 
     // -- Selector ----------------------------------------------------------------------------
     const open          = useSelector((s) => s.material.isFullScreenDialogStockIn);
@@ -162,12 +162,19 @@ export default function FullScreenDialogStockIn() {
                     fontWeight: "semibold",
                 }}>+ {entities[id]?.qtyInput} {entities[id]?.unit}</TableCell>
                 <TableCell>{entities[id]?.user}</TableCell>
-
+                <TableCell>
+                    <Button size="small" variant="contained" sx={{mr: 1}} onClick={() => dispatch(setIsOpenEditStockQty(true))}>
+                        <Edit />
+                    </Button>
+                    <Button size="small" variant="contained" color="error">
+                        <Delete />
+                    </Button>
+                </TableCell>
             </TableRow>
         ))
     ): (
         <TableRow>
-            <TableCell colSpan={4} align="center">
+            <TableCell colSpan={5} align="center">
                 No data available
             </TableCell>
         </TableRow>
@@ -180,6 +187,7 @@ export default function FullScreenDialogStockIn() {
             onClose={handleClose}
             slots={{ transition: Transition }}
         >
+            <Seo title={"Stock In"}/>
             {/* HEADER */}
             <AppBar sx={{ position: 'sticky', top: 0, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
@@ -309,6 +317,7 @@ export default function FullScreenDialogStockIn() {
                                 <TableCell>Date</TableCell>
                                 <TableCell>Quantity</TableCell>
                                 <TableCell>User</TableCell>
+                                <TableCell>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
