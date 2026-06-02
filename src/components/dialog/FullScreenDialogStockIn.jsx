@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     setAlertMaterialStockIn,
     setFilterStockIn,
-    setIsFullScreenDialogStockIn, setIsOpenEditStockQty, setIsOpenSnackbarMaterialStockIn,
+    setIsFullScreenDialogStockIn, setIsOpenDeleteStockInDialog, setIsOpenEditStockQty, setIsOpenSnackbarMaterialStockIn,
     setStockInData
 } from "../../redux/feature/material/materialSlice.js";
 import { useTranslation } from "react-i18next";
@@ -30,6 +30,7 @@ import dayjs from "dayjs";
 import {useState} from "react";
 import "react-day-picker/dist/style.css";
 import {
+    useDeleteStockInMutation,
     useGetMaterialStockInExcelMutation,
     useGetStockInQuery,
     useStockInMutation
@@ -41,6 +42,7 @@ import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
 import NumberField from "../ui/NumberField.jsx";
 import {Delete, Edit} from "@mui/icons-material";
 import Seo from "../seo/Seo.jsx";
+import DialogConfirmDelete from './DialogConfirmDelete.jsx';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -51,16 +53,18 @@ export default function FullScreenDialogStockIn() {
     const { t } = useTranslation();
 
     // -- Selector ----------------------------------------------------------------------------
-    const open          = useSelector((s) => s.material.isFullScreenDialogStockIn);
-    const stockData     = useSelector((s) => s.material.stockInData);
-    const filterValue   = useSelector((s) => s.material.filterStockIn);
-    console.log(stockData);
+    const open                  = useSelector((s) => s.material.isFullScreenDialogStockIn);
+    const stockData             = useSelector((s) => s.material.stockInData);
+    const filterValue           = useSelector((s) => s.material.filterStockIn);
+    const isOpenDeleteDialog    = useSelector((s) => s.material.isOpenDeleteStockInDialog);
+    
     // -- State -------------------------------------------------------------------------------
     const [value, setValue]    = useState(dayjs());
 
     // -- Mutation -----------------------------------------------------------------------------
     const [stockIn, {isLoading, isSuccess}] = useStockInMutation();
     const [reportStockInExcel, {isLoading: isLoadingStockInExcel}] = useGetMaterialStockInExcelMutation();
+    const [deleteStock, {isLoading: isLoadingDeleteStockIn}] = useDeleteStockInMutation();
 
     // -- Queries ------------------------------------------------------------------------------
     const { data: stockInData } = useGetStockInQuery(
@@ -83,6 +87,16 @@ export default function FullScreenDialogStockIn() {
     });
 
     // -- Handler ----------------------------------------------------------------------------
+
+    const handleDelete = async () => {
+        try {
+            await deleteStock({ id: stockInData?.ids[0] }).unwrap(); // Assuming you want to delete the first stock in entry for demonstration
+            dispatch(setIsOpenDeleteStockInDialog(false));
+        } catch (error) {
+            console.error("Error deleting stock:", error);
+        }
+    };
+
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterStockIn({
             ...filterValue,
@@ -166,7 +180,7 @@ export default function FullScreenDialogStockIn() {
                     <Button size="small" variant="contained" sx={{mr: 1}} onClick={() => dispatch(setIsOpenEditStockQty(true))}>
                         <Edit />
                     </Button>
-                    <Button size="small" variant="contained" color="error">
+                    <Button size="small" variant="contained" color="error" onClick={() => dispatch(setIsOpenDeleteStockInDialog(true))}>
                         <Delete />
                     </Button>
                 </TableCell>
@@ -341,6 +355,7 @@ export default function FullScreenDialogStockIn() {
                 }
 
             </div>
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteStockInDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteStockIn}/>
         </Dialog>
     );
 }

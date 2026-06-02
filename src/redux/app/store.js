@@ -19,6 +19,7 @@ import operationReducer from "../feature/operation/operationSlice.js"
 import hourlyOutputReducer from "../feature/hourlyOutput/hourlyOutputSlice.js"
 import timeReducer from "../feature/time/timeSlice.js"
 import purchaseOrderReducer from "../feature/purchaseOrder/purchaseOrderSlice.js"
+import analysisReducer from "../feature/analysis/analysisSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -40,7 +41,8 @@ const store = configureStore({
     operation: operationReducer,
     hourlyOutput: hourlyOutputReducer,
     time: timeReducer,
-    purchaseOrder: purchaseOrderReducer
+    purchaseOrder: purchaseOrderReducer,
+    analysis: analysisReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -11,7 +11,7 @@ function CardMODetail() {
                 <p>MMO262995 <br/>
                 <span className="text-gray-400">Buyer1</span>
                 </p>
-                <p>10,627 <br/><span>pcs</span></p>
+                <p className="text-right"><span className="font-bold text-xl">10,627</span> <br/><span>pcs</span></p>
             </div>
             <div className="flex justify-between items-center mt-2 px-4 py-3 rounded-2xl">
                 <div className="flex items-center gap-2">

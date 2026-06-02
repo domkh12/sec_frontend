@@ -3,8 +3,13 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ColumnChartOutputByLine from "../../components/chart/ColumnChartOutputByLine.jsx";
 import ChartOutputByBuyer from "../../components/chart/ChartOutputByBuyer.jsx";
 import ChartOutputByMO from "../../components/chart/ChartOutputByMO.jsx";
+import { useGetOutputTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
 
 function ProductionStatusSewingOutput() {
+
+    // -- Queries -------------------------------------------------------------------------------
+    const {data: outputToday, isLoading: isLoadingOutputToday} = useGetOutputTodayQuery();
+    console.log("Output Today:", outputToday);
     return (
         <div className="pb-12">
             <div className="card-glass flex flex-col sm:flex-row justify-between items-start sm:items-center text-white">
@@ -19,7 +24,7 @@ function ProductionStatusSewingOutput() {
                     <StatCardsDash
                         title="Total Input"
                         theme="sunset"
-                        value={1249}
+                        value={outputToday?.totalInput}
                         percentage="+12%"
                         icon={<img src="/images/t-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
                         unit="PCS"
@@ -27,7 +32,7 @@ function ProductionStatusSewingOutput() {
                     <StatCardsDash
                         title="Total Output"
                         theme="emerald"
-                        value={2000}
+                        value={outputToday?.totalOutput}
                         percentage="+8%"
                         icon={<img src="/images/quality-control.png" alt="quality control" className="w-10 h-auto" />}
                         unit="PCS"

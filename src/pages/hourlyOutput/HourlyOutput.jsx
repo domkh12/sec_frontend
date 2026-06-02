@@ -52,7 +52,6 @@
         const alertHourlyOutput       = useSelector((s) => s.hourlyOutput.alertHourlyOutput);
         const selectedToLine          = useSelector((s) => s.hourlyOutput.selectedToLine);
         const selectedDefect          = useSelector((s) => s.hourlyOutput.selectedDefect);
-        console.log(selectedDefect)
 
         // -- Hook ---------------------------------------------------------------------------------
         const dispatch = useDispatch();
