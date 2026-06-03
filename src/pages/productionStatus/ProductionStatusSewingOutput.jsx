@@ -8,7 +8,14 @@ import { useGetOutputTodayQuery } from "../../redux/feature/analysis/analysisApi
 function ProductionStatusSewingOutput() {
 
     // -- Queries -------------------------------------------------------------------------------
-    const {data: outputToday, isLoading: isLoadingOutputToday} = useGetOutputTodayQuery();
+    const {data: outputToday, isLoading: isLoadingOutputToday, refetch} = useGetOutputTodayQuery("outputToday",
+         {refetchOnMountOrArgChange: true,
+             refetchOnFocus: true, 
+             refetchOnReconnect: true, 
+             skip: false, 
+             refetchInterval: 60000,
+             pollingInterval: 60000
+            });
     console.log("Output Today:", outputToday);
     return (
         <div className="pb-12">
@@ -17,7 +24,7 @@ function ProductionStatusSewingOutput() {
                     <p className="text-[clamp(0.5rem,4vw,1.3rem)] text-nowrap">WIP | Daily Production Dashboard / Real-Time</p>
                     <p className="text-[clamp(0.5rem,4vw,1rem)]">Live · Sewing Output · Updated 10:07:27</p>
                 </div>
-                <button className="button-glass" disabled={true}><RefreshIcon className="animate-spin"/> Refresh</button>
+                <button className="button-glass" disabled={isLoadingOutputToday} onClick={() => {refetch()}}><RefreshIcon className={` ${isLoadingOutputToday ? 'animate-spin' : ''}`}/> Refresh</button>
             </div>
             <div className="card-glass">
                 <div className="flex flex-col md:flex-row gap-5 items-center">
@@ -40,7 +47,7 @@ function ProductionStatusSewingOutput() {
                     <StatCardsDash
                         title="Total Active Style"
                         theme="violet"
-                        value={34}
+                        value={outputToday?.totalStyleActive}
                         percentage="+3%"
                         icon={<img src="/images/tshirt.png" alt="style" className="w-10 h-auto" />}
                     />
@@ -57,7 +64,7 @@ function ProductionStatusSewingOutput() {
                     <ChartOutputByBuyer/>
                 </div>
                 <div className="mt-4">
-                    <ChartOutputByMO/>
+                    <ChartOutputByMO mo={outputToday?.mo}/>
                 </div>
             </div>
         </div>

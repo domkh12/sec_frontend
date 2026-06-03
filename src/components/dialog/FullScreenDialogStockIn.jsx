@@ -22,7 +22,8 @@ import {
     setAlertMaterialStockIn,
     setFilterStockIn,
     setIsFullScreenDialogStockIn, setIsOpenDeleteStockInDialog, setIsOpenEditStockQty, setIsOpenSnackbarMaterialStockIn,
-    setStockInData
+    setStockInData,
+    setStockInDataForDelete
 } from "../../redux/feature/material/materialSlice.js";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -57,6 +58,7 @@ export default function FullScreenDialogStockIn() {
     const stockData             = useSelector((s) => s.material.stockInData);
     const filterValue           = useSelector((s) => s.material.filterStockIn);
     const isOpenDeleteDialog    = useSelector((s) => s.material.isOpenDeleteStockInDialog);
+    const stockInDataForDelete  = useSelector((s) => s.material.stockInDataForDelete);
     
     // -- State -------------------------------------------------------------------------------
     const [value, setValue]    = useState(dayjs());
@@ -90,10 +92,16 @@ export default function FullScreenDialogStockIn() {
 
     const handleDelete = async () => {
         try {
-            await deleteStock({ id: stockInData?.ids[0] }).unwrap(); // Assuming you want to delete the first stock in entry for demonstration
+            await deleteStock({id: stockInDataForDelete?.id}).unwrap();
             dispatch(setIsOpenDeleteStockInDialog(false));
-        } catch (error) {
-            console.error("Error deleting stock:", error);
+            dispatch(setStockInDataForDelete(null));
+        }catch (error) {
+            console.log(error);
+            dispatch(setAlertMaterialStockIn({
+                type: "error",
+                message: error?.data?.error?.description || "Something went wrong"
+            }));
+            dispatch(setIsOpenSnackbarMaterialStockIn(true));
         }
     };
 
@@ -180,7 +188,10 @@ export default function FullScreenDialogStockIn() {
                     <Button size="small" variant="contained" sx={{mr: 1}} onClick={() => dispatch(setIsOpenEditStockQty(true))}>
                         <Edit />
                     </Button>
-                    <Button size="small" variant="contained" color="error" onClick={() => dispatch(setIsOpenDeleteStockInDialog(true))}>
+                    <Button size="small" variant="contained" color="error" onClick={() => {
+                        dispatch(setStockInDataForDelete(entities[id]));
+                        dispatch(setIsOpenDeleteStockInDialog(true));
+                    }}>
                         <Delete />
                     </Button>
                 </TableCell>

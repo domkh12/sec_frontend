@@ -267,10 +267,26 @@ export const materialApiSlice = apiSlice.injectEndpoints({
             ]
         }),
 
+        deleteStockOut: builder.mutation({
+            query: ({ id }) => ({
+                url: `/materials/stock-out/${id}`,
+                method: "DELETE",
+                body: {
+                    id,
+                },
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "Material", id: "LIST" },
+                { type: "MaterialStockOut", id: "LIST" },
+                { type: "MaterialStockIn", id: "LIST" }
+            ]
+        })
+
     }),
 });
 
 export const {
+    useDeleteStockOutMutation,
     useDeleteStockInMutation,
     useGetMaterialStockOutExcelMutation,
     useGetMaterialStockInExcelMutation,

@@ -35,9 +35,21 @@ const materialSlice = createSlice({
         stockInData: null,
         stockOutData: null,
         isOpenEditStockQtyDialog: false,
-        isOpenDeleteStockInDialog: false
+        isOpenDeleteStockInDialog: false,
+        isOpenDeleteStockOutDialog: false,
+        stockOutDataForDelete: null,
+        stockInDataForDelete: null
     },
     reducers: {
+        setStockInDataForDelete: (state, action) => {
+            state.stockInDataForDelete = action.payload;
+        },
+        setStockOutDataForDelete: (state, action) => {
+            state.stockOutDataForDelete = action.payload;
+        },
+        setIsOpenDeleteStockOutDialog: (state, action) => {
+            state.isOpenDeleteStockOutDialog = action.payload;
+        },
         setIsOpenDeleteStockInDialog: (state, action) => {
             state.isOpenDeleteStockInDialog = action.payload;
         },
@@ -96,6 +108,9 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setStockInDataForDelete,
+    setStockOutDataForDelete,
+    setIsOpenDeleteStockOutDialog,
     setIsOpenDeleteStockInDialog,
     setIsOpenEditStockQty,
     setIsOpenSnackbarMaterialStockIn,

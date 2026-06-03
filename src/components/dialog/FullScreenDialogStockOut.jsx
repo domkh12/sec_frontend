@@ -10,12 +10,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     setAlertMaterialStockOut,
     setFilterStockOut,
-    setIsFullScreenDialogStockOut, setIsOpenSnackbarMaterialStockOut, setStockOutData
+    setIsFullScreenDialogStockOut, setIsOpenDeleteStockInDialog, setIsOpenDeleteStockOutDialog, setIsOpenEditStockQty, setIsOpenSnackbarMaterialStockOut, setStockOutData,
+    setStockOutDataForDelete
 } from "../../redux/feature/material/materialSlice.js";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import dayjs from "dayjs";
 import {
+    useDeleteStockOutMutation,
     useGetMaterialStockOutExcelMutation,
     useGetStockOutQuery,
     useStockOutMutation
@@ -41,6 +43,8 @@ import NumberField from "../ui/NumberField.jsx";
 import {green} from "@mui/material/colors";
 import {PiMicrosoftExcelLogoFill} from "react-icons/pi";
 import Seo from "../seo/Seo.jsx";
+import { Delete, Edit } from '@mui/icons-material';
+import DialogConfirmDelete from './DialogConfirmDelete.jsx';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -56,6 +60,9 @@ export default function FullScreenDialogStockOut() {
     const filterValue             = useSelector((s) => s.material.filterStockOut);
     const isOpenSnackbarStockOut  = useSelector((s) => s.material.isOpenSnackbarMaterialStockOut);
     const alertMaterialStockOut   = useSelector((s) => s.material.alertMaterialStockOut);
+    const isOpenDeleteDialog      = useSelector((s) => s.material.isOpenDeleteStockOutDialog);
+    const stockOutDataForDelete   = useSelector((s) => s.material.stockOutDataForDelete);
+    console.log("stockOutDataForDelete", stockOutDataForDelete);
 
     // -- State -------------------------------------------------------------------------------
     const [value, setValue] = useState(dayjs());
@@ -63,6 +70,7 @@ export default function FullScreenDialogStockOut() {
     // -- Mutation -----------------------------------------------------------------------------
     const [stockOut, {isLoading}] = useStockOutMutation();
     const [reportStockOutExcel, {isLoading: isLoadingStockOutExcel}] = useGetMaterialStockOutExcelMutation();
+    const [deleteStock, {isLoading: isLoadingDeleteStockOut}] = useDeleteStockOutMutation();
 
     // -- Queries ------------------------------------------------------------------------------
     const { data: stockInData } = useGetStockOutQuery(
@@ -90,6 +98,21 @@ export default function FullScreenDialogStockOut() {
     });
 
     // -- Handler ----------------------------------------------------------------------------
+
+    const handleDelete = async () => {
+        try {
+            await deleteStock({id: stockOutDataForDelete.id}).unwrap();
+            dispatch(setIsOpenDeleteStockOutDialog(false));
+            dispatch(setStockOutDataForDelete(null));
+        } catch (error) {
+            dispatch(setAlertMaterialStockOut({
+                type: "error",
+                message: error?.data?.error?.description || "Something went wrong"
+            }));
+            dispatch(setIsOpenSnackbarMaterialStockOut(true));
+        }
+    }
+
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterStockOut({
             ...filterValue,
@@ -164,11 +187,22 @@ export default function FullScreenDialogStockOut() {
                     − {entities[id]?.qtyOutput} {entities[id]?.unit}
                 </TableCell>
                 <TableCell>{entities[id]?.requester}</TableCell>
+                <TableCell>
+                    <Button size="small" variant="contained" sx={{mr: 1}} onClick={() => dispatch(setIsOpenEditStockQty(true))}>
+                        <Edit />
+                    </Button>
+                    <Button size="small" variant="contained" color="error" onClick={() =>{
+                        dispatch(setIsOpenDeleteStockOutDialog(true));
+                        dispatch(setStockOutDataForDelete(entities[id]));
+                    }}>
+                        <Delete />
+                    </Button>
+                </TableCell>
             </TableRow>
         ))
     ) : (
         <TableRow>
-            <TableCell colSpan={4} align="center">No data available</TableCell>
+            <TableCell colSpan={5} align="center">No data available</TableCell>
         </TableRow>
     );
 
@@ -340,6 +374,7 @@ export default function FullScreenDialogStockOut() {
                                 <TableCell>Date</TableCell>
                                 <TableCell>Quantity</TableCell>
                                 <TableCell>Employee</TableCell>
+                                <TableCell>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -378,7 +413,7 @@ export default function FullScreenDialogStockOut() {
                     {alertMaterialStockOut.message}
                 </Alert>
             </Snackbar>
-
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteStockOutDialog(false))} handleDelete={handleDelete} />
         </Dialog>
     );
 }

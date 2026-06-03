@@ -5,7 +5,7 @@ import { Box, IconButton } from '@mui/material'
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
 import CardMODetail from '../card/CardMODetail'
 
-export default function MOCarousel() {
+export default function MOCarousel({mo}) {
     const autoplay = Autoplay({ delay: 3500, stopOnInteraction: false })
     const [emblaRef, emblaApi] = useEmblaCarousel(
         { loop: true, align: 'start' },
@@ -31,15 +31,11 @@ export default function MOCarousel() {
             {/* Viewport */}
             <Box ref={emblaRef} sx={{ overflow: 'hidden' }}>
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 50%', md: '0 0 33.333%' }, minWidth: 0 }}>
-                        <CardMODetail />
-                    </Box>
-                    <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 50%', md: '0 0 33.333%' }, minWidth: 0 }}>
-                        <CardMODetail />
-                    </Box>
-                    <Box sx={{ flex: { xs: '0 0 100%', sm: '0 0 50%', md: '0 0 33.333%' }, minWidth: 0 }}>
-                        <CardMODetail />
-                    </Box>
+                    {mo?.map((item, index) => (
+                        <Box key={index}  sx={{ flex: { xs: '0 0 100%', sm: '0 0 50%', md: '0 0 33.333%' }, minWidth: 0 }}>
+                            <CardMODetail moData={item} />
+                        </Box>
+                    ))}
                 </Box>
             </Box>
 
