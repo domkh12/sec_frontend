@@ -109,6 +109,8 @@ function DataTable({ rows, total }) {
                 <td className={tdCls}>{row.day}</td>
                 {/* Worker */}
                 <td className={tdCls}>{row.worker}</td>
+                {/* Helper */}
+                <td className={tdCls}>{row.helper}</td>
                 {/* Hour */}
                 <td className={tdCls}>{row.hour}</td>
                 {/* Tar/H */}
@@ -160,6 +162,7 @@ function DataTable({ rows, total }) {
                     <th className={thCls}>Sew.Start</th>
                     <th className={thCls}>Day</th>
                     <th className={thCls}>Worker</th>
+                    <th className={thCls}>Helper</th>
                     <th className={thCls}>Hour</th>
                     <th className={thCls}>Tar/H</th>
                     <th className={thCls}>Tar/Day</th>

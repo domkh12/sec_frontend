@@ -64,6 +64,7 @@ function mapApiToFormValues(tvData) {
     return {
         line:          tvData.line          ?? "",
         worker:        tvData.worker        != null ? String(tvData.worker) : "",
+        helper:        tvData.helper        != null ? String(tvData.helper) : "",
         orderNo:       tvData.orderNo       ?? "",
         totalInLine:   tvData.totalInLine   != null ? String(tvData.totalInLine)   : "",
         balanceInLine: tvData.balanceInLine != null ? String(tvData.balanceInLine) : "",
@@ -234,6 +235,7 @@ function TVLineInput() {
             tvName:        name,
             line:          values.line,
             worker:        Number(values.worker),
+            helper:        Number(values.helper),
             orderNo:       values.orderNo,
             totalInLine:   Number(values.totalInLine),
             balanceInLine: Number(values.balanceInLine),
@@ -398,6 +400,7 @@ function TVLineInput() {
                                                 {[
                                                     { key:"line",   label:"Line",   hint:"Line number"  },
                                                     { key:"worker", label:"Worker", hint:"Worker count" },
+                                                    { key:"helper", label:"Helper", hint:"Helper count" },
                                                 ].map(({ key, label, hint }) => (
                                                     <Box key={key} display="flex" flexDirection="column" gap={0.5}>
                                                         <TextField

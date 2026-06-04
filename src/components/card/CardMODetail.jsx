@@ -79,38 +79,14 @@ function CardMODetail({moData}) {
                                     </TableCell>
                                 ))
                             }
-                            {/* <TableCell sx={{color: "white"}}>
-                                <span className="text-[#F0997B]">100</span><br/>
-                                <span className="text-[#5DCAA5]">100</span>
-                            </TableCell>
-                            <TableCell sx={{color: "white"}}>
-                                <span className="text-[#F0997B]">100</span><br/>
-                                <span className="text-[#5DCAA5]">100</span>
-                            </TableCell>
-                            <TableCell sx={{color: "white"}}>
-                                <span className="text-[#F0997B]">100</span><br/>
-                                <span className="text-[#5DCAA5]">100</span>
-                            </TableCell>
-                            <TableCell sx={{color: "white"}}>
-                                <span className="text-[#F0997B]">100</span><br/>
-                                <span className="text-[#5DCAA5]">100</span>
-                            </TableCell>
-                            <TableCell sx={{color: "white"}}>
-                                <span className="text-[#F0997B]">100</span><br/>
-                                <span className="text-[#5DCAA5]">100</span>
-                            </TableCell>
-                            <TableCell sx={{color: "white"}}>
-                                <span className="text-[#F0997B]">100</span><br/>
-                                <span className="text-[#5DCAA5]">100</span>
-                            </TableCell> */}
                             <TableCell sx={{color: "white"}}>
                                 <div className="flex items-center gap-1 text-[#F0997B]">
                                 <FaArrowDown/>
-                                <span >600</span><br/>
+                                <span >{moData?.inputQty}</span><br/>
                                 </div>
                                 <div className="flex items-center gap-1 text-[#5DCAA5]">
                                     <FaArrowUp/>
-                                    <span className="text-[#5DCAA5]">600</span>
+                                    <span className="text-[#5DCAA5]">{moData?.outputQty}</span>
                                 </div>
 
                             </TableCell>

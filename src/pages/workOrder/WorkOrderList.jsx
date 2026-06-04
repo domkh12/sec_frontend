@@ -187,7 +187,8 @@ function WorkOrderList() {
             size: row?.sizes?.map(size => size?.id),
             color: row?.color?.id,
             image: row?.image,
-            po: row?.po?.id
+            po: row?.po?.id,
+            line: row?.lines?.map(line => line?.id)
         }));
     };
 
