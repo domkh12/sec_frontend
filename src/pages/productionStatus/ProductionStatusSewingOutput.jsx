@@ -61,7 +61,7 @@ function ProductionStatusSewingOutput() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <ColumnChartOutputByLine/>
-                    <ChartOutputByBuyer/>
+                    <ChartOutputByBuyer buyers={outputToday?.buyers}/>
                 </div>
                 <div className="mt-4">
                     <ChartOutputByMO mo={outputToday?.mo}/>

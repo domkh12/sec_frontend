@@ -31,6 +31,7 @@ function calcRow(row) {
 // ─── Compute TOTAL row ────────────────────────────────────────────────────────
 function buildTotal(rows) {
     const totalWorker  = rows.reduce((s, r) => s + (r.worker  ?? 0), 0);
+    const totalHelper  = rows.reduce((s, r) => s + (r.helper  ?? 0), 0);
     const totalTarH    = rows.reduce((s, r) => s + (r.tarH    ?? 0), 0);
     const totalTarDay  = rows.reduce((s, r) => s + (r.tarDay  ?? 0), 0);
     const totalTarNow  = rows.reduce((s, r) => s + (r.tarNow  ?? 0), 0);
@@ -45,7 +46,7 @@ function buildTotal(rows) {
         hourTotals[k] = rows.reduce((s, r) => s + (typeof r[k] === "number" ? r[k] : 0), 0) || null;
     });
     return {
-        line: "", styleNo: "Factory ALL    Total", sewStart: "", day: "", worker: totalWorker, act: "0-0",
+        line: "", styleNo: "Factory ALL    Total", sewStart: "", day: "", worker: totalWorker, helper: totalHelper,
         hour: "", tarH: totalTarH, tarDay: totalTarDay, tarNow: totalTarNow, dif: totalDif,
         finishPct: totalFinishPct, finish: totalFinish, yFinish: totalYFinish,
         defects: totalDefects, defPct: totalDefPct,

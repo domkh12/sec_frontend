@@ -51,9 +51,8 @@ function CardMODetail({moData}) {
                     </p>
                 </div>
             </div>
-            <div className="border-t border-b border-white/50 px-4 py-3 flex items-center gap-2">
-                <IoIosColorPalette/>
-                <p className="text-sm text-gray-400">7 Color . {moData?.sizeOutputs?.length} Size</p>
+            <div className="border-t border-b border-white/50 px-4 py-3 flex items-center gap-2">       
+                <p className="text-sm text-gray-400">{moData?.sizeOutputs?.length} Size</p>
             </div>
             <TableContainer>
                 <Table sx={{ minWidth: 400}} size="small" aria-label="a dense table">
@@ -70,7 +69,7 @@ function CardMODetail({moData}) {
                     </TableHead>
                     <TableBody>
                         <TableRow>
-                            <TableCell sx={{color: "white"}}>Red</TableCell>
+                            <TableCell sx={{color: "white"}}>{moData?.color?.color}</TableCell>
                             {
                                 moData?.sizeOutputs?.map((item, index) => (
                                     <TableCell key={index} sx={{color: "white"}}>
