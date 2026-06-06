@@ -9,9 +9,8 @@ import NumberFlow from "@number-flow/react";
 const ALL_HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
 const ALL_HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"];
 
-const isSaturday  = new Date().getDay() === 6;
-const HOUR_KEYS   = isSaturday ? ALL_HOUR_KEYS.slice(0, 8)   : ALL_HOUR_KEYS;
-const HOUR_LABELS = isSaturday ? ALL_HOUR_LABELS.slice(0, 8) : ALL_HOUR_LABELS;
+const HOUR_KEYS   =  ALL_HOUR_KEYS;
+const HOUR_LABELS =  ALL_HOUR_LABELS;
 
 // ─── Frontend calculation ─────────────────────────────────────────────────────
 function calcRow(row) {
