@@ -52,11 +52,11 @@ function ProductionStatusSewingOutput() {
                         icon={<img src="/images/tshirt.png" alt="style" className="w-10 h-auto" />}
                     />
                     <StatCardsDash
-                        title="Total QC Inspectors"
-                        theme="ocean"
-                        value={17}
+                        title="Balance WIP"
+                        theme="rose"
+                        value={outputToday?.totalBalance}
                         percentage="-1%"
-                        icon={<img src="/images/inspection.png" alt="inspector" className="w-10 h-auto" />}
+                        icon={<img src="/images/hourglass.png" alt="inspector" className="w-10 h-auto" />}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
