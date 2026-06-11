@@ -16,9 +16,16 @@ function ProductionStatusSewingOutput() {
              refetchInterval: 60000,
              pollingInterval: 60000
             });
-    console.log("Output Today:", outputToday);
-    return (
-        <div className="pb-12">
+
+    let content;
+
+    if (isLoadingOutputToday) {
+        content = <p>Loading...</p>;
+    }
+
+    if (outputToday) {
+        content = (
+            <div className="pb-12">
             <div className="card-glass flex flex-col sm:flex-row justify-between items-start sm:items-center text-white">
                 <div>
                     <p className="text-[clamp(0.5rem,4vw,1.3rem)] text-nowrap">WIP | Daily Production Dashboard / Real-Time</p>
@@ -60,7 +67,7 @@ function ProductionStatusSewingOutput() {
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <ColumnChartOutputByLine/>
+                    <ColumnChartOutputByLine lineData={outputToday?.lineData}/>
                     <ChartOutputByBuyer buyers={outputToday?.buyers}/>
                 </div>
                 <div className="mt-4">
@@ -68,7 +75,10 @@ function ProductionStatusSewingOutput() {
                 </div>
             </div>
         </div>
-    );
+        );
+    }
+
+    return content;
 }
 
 export default ProductionStatusSewingOutput;

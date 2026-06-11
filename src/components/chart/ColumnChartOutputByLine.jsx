@@ -3,20 +3,21 @@ import {useState} from "react";
 import {Tab, Tabs} from "@mui/material";
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 
-function ColumnChartOutputByLine() {
+function ColumnChartOutputByLine({lineData}) {
     const [tab, setTab] = useState("Output");
+   
     // Map each line to its buyer for the legend label
-    const lineData = [
-        { x: 'Line 1', y: 65, buyer: 'Buyer 2', mos: [{ mo: 'GPAR12406', qty: 10 }, { mo: 'GPAR12459', qty: 3455 }] },
-        { x: 'Line 2', y: 85, buyer: 'Buyer 2', mos: [{ mo: 'GPAR12460', qty: 85 }] },
-        { x: 'Line 3', y: 57, buyer: 'Buyer 1', mos: [{ mo: 'GPAR12461', qty: 30 }, { mo: 'GPAR12462', qty: 27 }] },
-        { x: 'Line 4', y: 56, buyer: 'Buyer 1', mos: [{ mo: 'GPAR12463', qty: 56 }] },
-        { x: 'Line 5', y: 61, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12464', qty: 20 }, { mo: 'GPAR12465', qty: 41 }] },
-        { x: 'Line 6', y: 58, buyer: 'Buyer 1', mos: [{ mo: 'GPAR12466', qty: 58 }] },
-        { x: 'Line 7', y: 63, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12467', qty: 63 }] },
-        { x: 'Line 8', y: 60, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12468', qty: 25 }, { mo: 'GPAR12469', qty: 35 }] },
-    ];
-
+    // const lineData = [
+    //     { x: 'Line 1', y: 65, buyer: 'Buyer 2', mos: [{ mo: 'GPAR12406', qty: 10 }, { mo: 'GPAR12459', qty: 3455 }] },
+    //     { x: 'Line 2', y: 85, buyer: 'Buyer 2', mos: [{ mo: 'GPAR12460', qty: 85 }] },
+    //     { x: 'Line 3', y: 57, buyer: 'Buyer 1', mos: [{ mo: 'GPAR12461', qty: 30 }, { mo: 'GPAR12462', qty: 27 }] },
+    //     { x: 'Line 4', y: 56, buyer: 'Buyer 1', mos: [{ mo: 'GPAR12463', qty: 56 }] },
+    //     { x: 'Line 5', y: 61, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12464', qty: 20 }, { mo: 'GPAR12465', qty: 41 }] },
+    //     { x: 'Line 6', y: 58, buyer: 'Buyer 1', mos: [{ mo: 'GPAR12466', qty: 58 }] },
+    //     { x: 'Line 7', y: 63, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12467', qty: 63 }] },
+    //     { x: 'Line 8', y: 60, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12468', qty: 25 }, { mo: 'GPAR12469', qty: 35 }] },
+    // ];
+ console.log("Line Data for Chart:", lineData);
     // Assign a fixed color per buyer
     const buyerColors = {
         'Buyer 1': '#FF4560',
@@ -27,7 +28,7 @@ function ColumnChartOutputByLine() {
     const [state] = useState({
         series: [{
             name: 'Output',
-            data: lineData.map(d => ({ x: d.x, y: d.y }))
+            data: lineData?.map(d => ({ x: d.x, y: d.y }))
         }],
         options: {
             chart: {
@@ -48,7 +49,7 @@ function ColumnChartOutputByLine() {
                     },
                 },
             },
-            colors: lineData.map(d => buyerColors[d.buyer]),  // 👈 color per bar by buyer
+            // colors: lineData?.map(d => buyerColors[d.buyer]),  // 👈 color per bar by buyer
             dataLabels: {
                 enabled: true,
                 offsetY: -20,
@@ -166,7 +167,7 @@ function ColumnChartOutputByLine() {
     });
 
     // Build unique buyers for custom legend
-    const buyers = [...new Set(lineData.map(d => d.buyer))];
+    const buyers = [...new Set(lineData?.map(d => d.buyer))];
 
     return(
         <div className="sub-card-glass flex items-start flex-wrap">
@@ -226,7 +227,7 @@ function ColumnChartOutputByLine() {
                             Buyers
                         </p>
                         <div className="flex gap-2.5 flex-row lg:flex-col">
-                            {buyers.map((buyer) => (
+                            {buyers?.map((buyer) => (
                                 <div key={buyer} className="flex items-center gap-2">
                       <span
                           className="h-2.5 w-2.5 shrink-0 rounded-full"
