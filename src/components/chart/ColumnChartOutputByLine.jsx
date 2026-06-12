@@ -1,5 +1,5 @@
 import ReactApexChart from 'react-apexcharts'
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {Tab, Tabs} from "@mui/material";
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 
@@ -18,18 +18,38 @@ function ColumnChartOutputByLine({lineData}) {
     //     { x: 'Line 8', y: 60, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12468', qty: 25 }, { mo: 'GPAR12469', qty: 35 }] },
     // ];
  console.log("Line Data for Chart:", lineData);
-    // Assign a fixed color per buyer
-    const buyerColors = {
-        'Buyer 1': '#FF4560',
-        'Buyer 2': '#008FFB',
-        'Buyer 3': '#00E396',
-    };
 
-    const [state] = useState({
+    const stringToColor = (str) => {
+        let hash = 0;
+
+        for (let i = 0; i < str?.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        const hue = Math.abs(hash % 360);
+
+        return `hsl(${hue}, 70%, 55%)`;
+    };
+    // Assign a fixed color per buyer
+    const buyerColors = useMemo(() => {
+    const uniqueBuyers = [...new Set(lineData?.map(d => d.buyer))];
+
+    return uniqueBuyers.reduce((acc, buyer) => {
+        acc[buyer] = stringToColor(buyer);
+        return acc;
+    }, {});
+    }, [lineData]);
+
+    const chartConfig = useMemo(() => {
+
+        return {
         series: [{
-            name: 'Output',
-            data: lineData?.map(d => ({ x: d.x, y: d.y }))
-        }],
+        name: 'Output',
+        data: lineData?.map(d => ({ 
+            x: d.x, 
+            y: d.y 
+        }))
+            }],
         options: {
             chart: {
                 type: 'bar',
@@ -49,7 +69,7 @@ function ColumnChartOutputByLine({lineData}) {
                     },
                 },
             },
-            // colors: lineData?.map(d => buyerColors[d.buyer]),  // 👈 color per bar by buyer
+            colors: lineData?.map(d => buyerColors[d.buyer]),  // 👈 color per bar by buyer
             dataLabels: {
                 enabled: true,
                 offsetY: -20,
@@ -104,7 +124,7 @@ function ColumnChartOutputByLine({lineData}) {
                                 "></span>
                                 <span style="font-size:13px; color:#4b5563; font-family:inherit;">${mo.mo}</span>
                             </div>
-                            <span style="font-size:13px; font-weight:700; color:#111827; margin-left:24px; font-family:inherit;">${mo.qty}</span>
+                            <span style="font-size:13px; font-weight:700; color:#111827; margin-left:24px; font-family:inherit;">${mo.outputQty}</span>
                         </div>
                     `).join('');
 
@@ -163,8 +183,9 @@ function ColumnChartOutputByLine({lineData}) {
             legend: {
                 show: false,   // hide default legend, we render custom below
             }
-        },
-    });
+        }
+        }
+    }, [lineData]);
 
     // Build unique buyers for custom legend
     const buyers = [...new Set(lineData?.map(d => d.buyer))];
@@ -175,7 +196,7 @@ function ColumnChartOutputByLine({lineData}) {
                 <div className="flex items-center gap-2.5">
                     <BarChartRoundedIcon className="text-white/80"/>
                     <p className="text-white">Production Output by Line <br/>
-                        <span className="text-[13px] font-medium text-white/80">30 lines · 5,813 total pcs · Colored by Buyer</span>
+                        <span className="text-[13px] font-medium text-white/80">{lineData?.length} lines · {lineData?.reduce((acc, line) => acc + line.y, 0)} total pcs · Colored by Buyer</span>
                     </p>
                 </div>
                 <div className="flex justify-end">
@@ -241,7 +262,7 @@ function ColumnChartOutputByLine({lineData}) {
 
                     {/* Chart */}
                     <div id="chart" style={{ flex: 1 }}>
-                        <ReactApexChart options={state.options} series={state.series} type="bar" height={350} />
+                        <ReactApexChart options={chartConfig.options} series={chartConfig.series} type="bar" height={350} />
                     </div>
                 </div>
                 <div className="flex text-white bg-gray-500 rounded-full px-4 py-1">
