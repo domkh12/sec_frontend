@@ -188,7 +188,9 @@ function ColumnChartOutputByLine({lineData}) {
     }, [lineData]);
 
     // Build unique buyers for custom legend
-    const buyers = [...new Set(lineData?.map(d => d.buyer))];
+    const buyers = useMemo(() => {
+        return [...new Set(lineData?.map(d => d.buyer).filter(Boolean))];
+    }, [lineData]); 
 
     return(
         <div className="sub-card-glass flex items-start flex-wrap">
@@ -250,10 +252,8 @@ function ColumnChartOutputByLine({lineData}) {
                         <div className="flex gap-2.5 flex-row lg:flex-col">
                             {buyers?.map((buyer) => (
                                 <div key={buyer} className="flex items-center gap-2">
-                      <span
-                          className="h-2.5 w-2.5 shrink-0 rounded-full"
-                          style={{ backgroundColor: buyerColors[buyer] }}
-                      />
+                                    <span className="h-2.5 w-2.5 shrink-0 rounded-full"
+                                        style={{ backgroundColor: buyerColors[buyer] }}/>
                                     <span className="text-[13px] text-white/80">{buyer}</span>
                                 </div>
                             ))}

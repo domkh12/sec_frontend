@@ -284,7 +284,7 @@ function TVLineDisplay() {
                         >
                             LINE {data.line}
                         </span>
-                        <span>Worker {data.worker}</span>
+                        <span>Worker {data.worker} + {data.helper}</span>
                     </div>
                     <div style={{ textAlign: "right", fontSize: "28px", fontWeight: "900" }}>
                         <span>

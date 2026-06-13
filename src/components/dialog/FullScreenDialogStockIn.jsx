@@ -44,6 +44,7 @@ import NumberField from "../ui/NumberField.jsx";
 import {Delete, Edit} from "@mui/icons-material";
 import Seo from "../seo/Seo.jsx";
 import DialogConfirmDelete from './DialogConfirmDelete.jsx';
+import DialogEditStockQty from './DialogEditStockQty.jsx';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -366,6 +367,7 @@ export default function FullScreenDialogStockIn() {
                 }
 
             </div>
+            <DialogEditStockQty />
             <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteStockInDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteStockIn}/>
         </Dialog>
     );
