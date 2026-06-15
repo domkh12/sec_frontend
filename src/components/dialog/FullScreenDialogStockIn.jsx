@@ -23,7 +23,8 @@ import {
     setFilterStockIn,
     setIsFullScreenDialogStockIn, setIsOpenDeleteStockInDialog, setIsOpenEditStockQty, setIsOpenSnackbarMaterialStockIn,
     setStockInData,
-    setStockInDataForDelete
+    setStockInDataForDelete,
+    setUpdateStockQtyData
 } from "../../redux/feature/material/materialSlice.js";
 import { useTranslation } from "react-i18next";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -186,7 +187,10 @@ export default function FullScreenDialogStockIn() {
                 }}>+ {entities[id]?.qtyInput} {entities[id]?.unit}</TableCell>
                 <TableCell>{entities[id]?.user}</TableCell>
                 <TableCell>
-                    <Button size="small" variant="contained" sx={{mr: 1}} onClick={() => dispatch(setIsOpenEditStockQty(true))}>
+                    <Button size="small" variant="contained" sx={{mr: 1}} onClick={() => {
+                        dispatch(setUpdateStockQtyData(entities[id]));
+                        dispatch(setIsOpenEditStockQty(true));
+                    }}>
                         <Edit />
                     </Button>
                     <Button size="small" variant="contained" color="error" onClick={() => {

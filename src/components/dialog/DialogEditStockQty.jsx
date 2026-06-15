@@ -5,10 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { setIsOpenEditStockQty } from "../../redux/feature/material/materialSlice";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { useState } from "react";
 
 function DialogEditStockQty() {
+
+    // -- State ------------------------------------------------------------------------------------------
+     const [value, setValue]    = useState(dayjs());
+
     // -- Selectors --------------------------------------------------------------------------------------
     const isOpen = useSelector((state) => state.material.isOpenEditStockQtyDialog);
+    const updateStockQtyData = useSelector((state) => state.material.updateStockQtyData);
+    console.log(updateStockQtyData);
 
     // -- Hooks -------------------------------------------------------------------------------------------
     const {t} = useTranslation();
@@ -30,9 +38,10 @@ function DialogEditStockQty() {
                     <p className="mb-4 text-xl">Update Stock</p>
                     <Formik
                         initialValues={{
-                            qty: "",
-                            dateInput: null
+                            qty: updateStockQtyData?.qtyInput || "",
+                            dateInput: dayjs(updateStockQtyData?.dateInput) || null,
                         }}
+                        enableReinitialize
                         validationSchema={validationSchema}
                         onSubmit={handleSubmit}
                     >

@@ -274,8 +274,8 @@ export default function TvGeneralDisplay() {
         }
     }, []);
 
-    const handleZoomIn    = () => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3));
-    const handleZoomOut   = () => setZoom((z) => Math.max(+(z - 0.1).toFixed(1), 0.3));
+    const handleZoomIn    = () => setZoom((z) => Math.min(+(z + 0.02).toFixed(2), 3));
+    const handleZoomOut   = () => setZoom((z) => Math.max(+(z - 0.02).toFixed(2), 0.3));
     const handleZoomReset = () => setZoom(1);
 
     const pad     = (n) => String(n).padStart(2, "0");
