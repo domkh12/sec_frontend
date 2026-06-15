@@ -283,6 +283,7 @@ export default function FullScreenDialogStockIn() {
                                     <DatePicker
                                         label="Date of Stock In"
                                         value={values.dateInput}
+                                        format="DD/MMM/YYYY"
                                         onChange={(newValue) => {
                                             setFieldValue("dateInput", newValue);
                                             setValue(newValue); // keep your local state if needed

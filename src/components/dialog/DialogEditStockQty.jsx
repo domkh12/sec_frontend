@@ -7,7 +7,9 @@ import { setIsOpenEditStockQty } from "../../redux/feature/material/materialSlic
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useState } from "react";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
+dayjs.extend(customParseFormat);
 function DialogEditStockQty() {
 
     // -- State ------------------------------------------------------------------------------------------
@@ -39,7 +41,9 @@ function DialogEditStockQty() {
                     <Formik
                         initialValues={{
                             qty: updateStockQtyData?.qtyInput || "",
-                            dateInput: dayjs(updateStockQtyData?.dateInput) || null,
+                            dateInput: updateStockQtyData?.dateInput
+                                        ? dayjs(updateStockQtyData.dateInput, "DD/MMM/YYYY hh:mmA")
+                                        : null,
                         }}
                         enableReinitialize
                         validationSchema={validationSchema}
@@ -73,6 +77,7 @@ function DialogEditStockQty() {
                                         <DatePicker
                                             label="Date of Stock In"
                                             value={values.dateInput}
+                                            format="DD/MMM/YYYY"
                                             onChange={(newValue) => {
                                                 setFieldValue("dateInput", newValue);
                                                 setValue(newValue); // keep your local state if needed

@@ -287,6 +287,7 @@ export default function FullScreenDialogStockOut() {
                                     <DatePicker
                                         label="Date of Stock Out"
                                         value={values.dateInput}
+                                        format="DD/MMM/YYYY"
                                         onChange={(newValue) => {
                                             setFieldValue("dateInput", newValue);
                                             setValue(newValue);
