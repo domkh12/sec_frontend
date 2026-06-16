@@ -18,6 +18,16 @@ function ColumnChartOutputByLine({lineData}) {
     //     { x: 'Line 8', y: 60, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12468', qty: 25 }, { mo: 'GPAR12469', qty: 35 }] },
     // ];
  console.log("Line Data for Chart:", lineData);
+    const peak = useMemo(() => {
+        return lineData?.reduce((max, line) => line.y > max ? line.y : max, 0);
+    }, [lineData]);
+
+    const linePeak = useMemo(() => {
+        const peakLine = lineData?.reduce((peak, line) => line.y > peak.y ? line : peak, {y: -Infinity});
+        return peakLine?.x || 'N/A';
+    }, [lineData]);
+
+     const test = lineData?.reduce((acc, line) => {console.log(acc); return acc}, null);
 
     const stringToColor = (str) => {
         let hash = 0;
@@ -152,6 +162,7 @@ function ColumnChartOutputByLine({lineData}) {
                                     border-radius:999px;
                                     letter-spacing:0.03em;
                                     font-family:inherit;
+                                    --bg: 0,0,0; color: rgb(calc((255 - var(--bg)) * 1), calc((255 - var(--bg)) * 1), calc((255 - var(--bg)) * 1))
                                 ">${d.buyer}</span>
                             </div>
 
@@ -266,7 +277,7 @@ function ColumnChartOutputByLine({lineData}) {
                     </div>
                 </div>
                 <div className="flex text-white bg-gray-500 rounded-full px-4 py-1">
-                    <p className="text-sm">Peak: <span className="text-yellow-500 font-bold">7</span> — 1,035 pcs</p>
+                    <p className="text-sm">Peak: <span className="text-yellow-500 font-bold">{linePeak}</span> — {peak} pcs</p>
                 </div>
             </div>
         </div>

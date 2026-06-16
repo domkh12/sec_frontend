@@ -280,12 +280,27 @@ export const materialApiSlice = apiSlice.injectEndpoints({
                 { type: "MaterialStockOut", id: "LIST" },
                 { type: "MaterialStockIn", id: "LIST" }
             ]
-        })
+        }),
+
+        updateStockInQty: builder.mutation({
+            query: ({ id, ...initialStockInQty}) => ({
+                url: `/materials/stock-in/${id}`,
+                method: "PUT",
+                body: {
+                    ...initialStockInQty
+                },
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "Material", id: "LIST" },
+                { type: "MaterialStockIn", id: "LIST" }
+            ]
+        }),
 
     }),
 });
 
 export const {
+    useUpdateStockInQtyMutation,
     useDeleteStockOutMutation,
     useDeleteStockInMutation,
     useGetMaterialStockOutExcelMutation,

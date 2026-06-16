@@ -8,6 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useState } from "react";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { useUpdateStockInQtyMutation } from "../../redux/feature/material/materialApiSlice";
 
 dayjs.extend(customParseFormat);
 function DialogEditStockQty() {
@@ -24,6 +25,9 @@ function DialogEditStockQty() {
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
+    // -- Mutations ---------------------------------------------------------------------------------------
+    const [updateStockInQty] = useUpdateStockInQtyMutation();
+
     // -- Handlers ---------------------------------------------------------------------------------------
 
     const validationSchema = Yup.object().shape({
@@ -31,7 +35,17 @@ function DialogEditStockQty() {
     });
 
     const handleSubmit = (values) => {
-        console.log(values);
+        const now = dayjs();
+    
+        // Take the selected date but use current time
+        const selectedDate = values.dateInput ? dayjs(values.dateInput) : now;
+        const dateWithCurrentTime = selectedDate
+            .hour(now.hour())
+            .minute(now.minute())
+            .second(now.second());
+
+        const formattedDate = dateWithCurrentTime.format("DD/MMM/YYYY hh:mmA");
+        console.log("Formatted Date:", formattedDate);
     }
 
     return(
