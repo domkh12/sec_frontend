@@ -51,6 +51,11 @@ function MenuAdmin(){
                             iconPath={"/images/productivity.png"}
                             onClick={() => navigate("production-status")}
                         />
+                        <MenuButton
+                            title={`${t('analytics')}`}
+                            iconPath={"/images/analysis.png"}
+                            onClick={() => navigate("analytics")}
+                        />
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("style")}</Typography>

@@ -203,5 +203,6 @@
   "mo": "制造订单 (MO)",
   "startDate": "开始日期",
   "endDate": "结束日期",
-  "active": "启用"
+  "active": "启用",
+  "analytics": "数据分析"
 }

@@ -202,5 +202,6 @@
   "mo": "제조 지시서 (MO)",
   "startDate": "시작 날짜",
   "endDate": "종료 날짜",
-  "active": "활성화"
+  "active": "활성화",
+  "analytics": "분석"
 }

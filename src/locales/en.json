@@ -205,5 +205,6 @@
   "mo": "MO",
   "startDate": "Start Date",
   "endDate": "End Date",
-  "active": "Active"
+  "active": "Active",
+  "analytics": "Analytics"
 }

@@ -6,7 +6,7 @@ function NotFound(){
     return(
         <div className="flex flex-col gap-10 justify-center items-center h-screen">
             <img src={"/images/no-results.png"} alt={"not found image"} className="w-1/5 h-auto"/>
-            <Typography variant="h5">Oops! That page can’t be found.</Typography>
+            <Typography variant="h5" sx={{color: "white"}}>Oops! That page can’t be found.</Typography>
             <Button variant="contained" onClick={() => navigate("/login")}>Back</Button>
         </div>
     )

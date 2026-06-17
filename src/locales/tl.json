@@ -204,5 +204,6 @@
   "startDate": "Petsa ng Pagsisimula",
   "endDate": "Petsa ng Pagtatapos",
   "active": "Aktibo",
-  "status": "Katayuan"
+  "status": "Katayuan",
+  "analytics": "Analitika"
 }
