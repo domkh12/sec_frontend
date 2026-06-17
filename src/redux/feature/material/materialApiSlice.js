@@ -285,7 +285,7 @@ export const materialApiSlice = apiSlice.injectEndpoints({
         updateStockInQty: builder.mutation({
             query: ({ id, ...initialStockInQty}) => ({
                 url: `/materials/stock-in/${id}`,
-                method: "PUT",
+                method: "PATCH",
                 body: {
                     ...initialStockInQty
                 },

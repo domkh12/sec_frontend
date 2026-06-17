@@ -34,7 +34,7 @@ function DialogEditStockQty() {
         qty: Yup.string().required(t("validation.required")),
     });
 
-    const handleSubmit = (values) => {
+    const handleSubmit = async (values) => {
         const now = dayjs();
     
         // Take the selected date but use current time
@@ -43,9 +43,14 @@ function DialogEditStockQty() {
             .hour(now.hour())
             .minute(now.minute())
             .second(now.second());
-
-        const formattedDate = dateWithCurrentTime.format("DD/MMM/YYYY hh:mmA");
-        console.log("Formatted Date:", formattedDate);
+        const formattedDate = dateWithCurrentTime.format("YYYY-MM-DDTHH:mm:ss");
+        console.log(formattedDate);
+        await updateStockInQty({
+            id: updateStockQtyData.id,
+            quantity: values.qty,
+            transactionDate: formattedDate
+        }).unwrap();
+        dispatch(setIsOpenEditStockQty(false));
     }
 
     return(

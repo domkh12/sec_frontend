@@ -82,7 +82,6 @@ function FinishCell({ pct }) {
 // ─── DataTable ────────────────────────────────────────────────────────────────
 function DataTable({ rows, total }) {
     const isSaturdays = new Date().getDay() === 4;
-    console.log("isSaturdays", isSaturdays);
     // Use border-separate + border-spacing-0 to prevent 1px border collapse on zoom/scale
     // This is the key fix for Android TV box border disappearing on zoom
 
@@ -211,7 +210,7 @@ function CtrlButton({ icon, label, onClick, active }) {
 export default function TvGeneralDisplay() {
     const [now, setNow]                   = useState(new Date());
     const [showControls, setShowControls] = useState(false);
-    const [zoom, setZoom]                 = useState(1);
+    const [zoom, setZoom]                 = useState(0.7);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const containerRef = useRef(null);
     const popupRef     = useRef(null);
@@ -264,19 +263,20 @@ export default function TvGeneralDisplay() {
         window.addEventListener("keydown", fn);
         return () => window.removeEventListener("keydown", fn);
     }, []);
-
-    const handleFullscreen = useCallback(async () => {
+    
+    const handleFullscreen = useCallback(async (event) => {
+        console.log(event);
         const el = containerRef.current;
         if (!document.fullscreenElement) {
             try { await el.requestFullscreen(); } catch (e) { console.error(e); }
         } else {
             await document.exitFullscreen();
         }
-    }, []);
+    }, []);``
 
     const handleZoomIn    = () => setZoom((z) => Math.min(+(z + 0.02).toFixed(2), 3));
     const handleZoomOut   = () => setZoom((z) => Math.max(+(z - 0.02).toFixed(2), 0.3));
-    const handleZoomReset = () => setZoom(1);
+    const handleZoomReset = () => setZoom(0.7);
 
     const pad     = (n) => String(n).padStart(2, "0");
     const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;

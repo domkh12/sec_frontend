@@ -326,9 +326,6 @@ export default function FullScreenDialogStockIn() {
                         className="w-full max-h-[300px] object-contain rounded-lg"
                     />
                 </div>
-
-
-
             </div>
             {/* STOCK HISTORY TABLE */}
             <div className="bg-white shadow rounded-2xl p-5 flex flex-col gap-4 mx-5 mb-10">
