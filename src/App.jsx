@@ -13,6 +13,7 @@ import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
 
 // Lazy load everything else
+const Analytics = lazy(() => import("./pages/analytics/Analytics.jsx"));
 const ProductionStatusSewingDefect = lazy(() => import("./pages/productionStatus/ProductionStatusSewingDefect.jsx"));
 const QrScan = lazy(() => import("./pages/qrScan/QrScan.jsx"));
 const QrGenerator = lazy(() => import("./pages/qrGenerator/QrGenerator.jsx"));
@@ -126,6 +127,7 @@ function App() {
                               <Route path="qr-scan" element={<QrScan/>} />
                               <Route path="qr-generator" element={<QrGenerator/>} />
                               <Route path="hourly-output" element={<HourlyOutput/>}/>
+                              <Route path="analytics" element={<Analytics/>}/>
                           </Route>
                       </Route>
 

@@ -4,6 +4,7 @@ import { CircularProgress, Typography, useTheme } from "@mui/material";
 import { useGetTvGeneralDataQuery } from "../../redux/feature/tv/tvApiSlice.js";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import NumberFlow from "@number-flow/react";
+import useOnlineStatus from "../../hook/useOnlineStatus.jsx";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const ALL_HOUR_KEYS   = ["h8","h9","h10","h11","h13","h14","h15","h16","h17","h18"];
@@ -212,6 +213,8 @@ export default function TvGeneralDisplay() {
     const [showControls, setShowControls] = useState(false);
     const [zoom, setZoom]                 = useState(0.7);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    // -- Hooks --------------------------------------------------------------------------------------------
+
     const containerRef = useRef(null);
     const popupRef     = useRef(null);
     const theme        = useTheme();
@@ -220,13 +223,30 @@ export default function TvGeneralDisplay() {
         `/topic/messages/tv-data-update`
     );
 
+    const isOnline = useOnlineStatus(
+        `${import.meta.env.VITE_API_FRONTEND_URL ||  "http://localhost:3000"}`,
+        3000
+    );
+
     const { data: tvGeneralData, isLoading, isSuccess, refetch } = useGetTvGeneralDataQuery(undefined, {
         pollingInterval: 300000,
     });
 
+
+    // -- UseEffect ----------------------------------------------------------------------------------------
+
     useEffect(() => {
         if (messages.isUpdate === true) refetch();
     }, [messages]);
+
+    // check online and then reload page and wait 9s before reload
+    useEffect(() => {
+        if(!isOnline){
+            setTimeout(() => {
+                window.location.reload();
+            }, 9000)
+        }
+    }, [isOnline])
 
     const computedRows = isSuccess && Array.isArray(tvGeneralData)
         ? tvGeneralData.map(calcRow)
@@ -272,7 +292,8 @@ export default function TvGeneralDisplay() {
         } else {
             await document.exitFullscreen();
         }
-    }, []);``
+    }, []);
+
 
     const handleZoomIn    = () => setZoom((z) => Math.min(+(z + 0.02).toFixed(2), 3));
     const handleZoomOut   = () => setZoom((z) => Math.max(+(z - 0.02).toFixed(2), 0.3));

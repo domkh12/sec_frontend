@@ -164,7 +164,6 @@ function NumField({ value, onChange, highlight = false, defect = false }) {
 
 const validationSchema = Yup.object().shape({
     line:          Yup.string().required("Line is required"),
-    worker:        Yup.number().typeError("Must be a number").required("Worker count is required").min(1, "Must be at least 1"),
     orderNo:       Yup.string().required("Order No. is required"),
     totalInLine:   Yup.number().typeError("Must be a number").required("Total In Line is required").min(0),
     balanceInLine: Yup.number().typeError("Must be a number").required("Balance In Line is required").min(0),
@@ -175,7 +174,6 @@ const validationSchema = Yup.object().shape({
     finishDate:    Yup.mixed().nullable(),
     orderInline:   Yup.string(),
     balanceDay:    Yup.number().typeError("Must be a number").min(0),
-    wHour:         Yup.number().typeError("Must be a number").required("Working hours required").min(1).max(24),
     hTarg:         Yup.number().typeError("Must be a number").required("Hourly target is required").min(0),
     input:         Yup.number().typeError("Must be a number").min(0),
     dTarg:         Yup.number().typeError("Must be a number").min(0),
