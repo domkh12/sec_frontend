@@ -1,7 +1,16 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Badge, Box, styled, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import Overview from "./Overview";
-// import TabPanel from '@mui/lab/TabPanel';
+import { 
+  FaChartBar, 
+  FaCog, 
+  FaChartLine, 
+  FaClipboardList, 
+  FaFileAlt,
+  FaIndustry,
+  FaTshirt
+} from "react-icons/fa";
+import DateRangePicker from "../../components/input/DateRangePicker";
 
 export default function Analytics() {
     const [value, setValue] = useState(0);
@@ -10,31 +19,152 @@ export default function Analytics() {
         setValue(newValue);
     };
 
+    const StyledBadge = styled(Badge)(({ theme }) => ({
+        '& .MuiBadge-badge': {
+            backgroundColor: '#44b700',
+            color: '#44b700',
+            '&::after': {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            animation: 'ripple 1.2s infinite ease-in-out',
+            border: '1px solid currentColor',
+            content: '""',
+            },
+        },
+        '@keyframes ripple': {
+            '0%': {
+            transform: 'scale(.8)',
+            opacity: 1,
+            },
+            '100%': {
+            transform: 'scale(2.4)',
+            opacity: 0,
+            },
+        },
+        }));
+
     return (
-        <div className="card-glass">
-            <p className="text-zinc-50 mb-4">Garment analytics</p>
+        <div className="card-glass p-6">
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                    <FaChartBar className="text-blue-400" size={24} />
+                    <p className="text-white text-xl font-bold">Manufacturing Analytics</p>
+                </div>
+                <div className="flex items-center gap-2 text-zinc-400 text-sm">
+                    {/* blinking dot */}
+                    <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        variant="dot"
+                        className="mr-1"
+                    ></StyledBadge>
+                    <span>Live</span>
+                </div>
+            </div>
+            
             <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"
-                    sx={{
+                <Box sx={{ borderBottom: 1, borderColor: 'divider',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2
+                 }}>
+                    <Tabs 
+                        value={value} 
+                        onChange={handleChange} 
+                        aria-label="analytics tabs"
+                        sx={{
                             "& .MuiTabs-indicator": {
-                                backgroundColor: "white",
+                                backgroundColor: "#3b82f6",
                             },
                         }}
                     >
-                        <Tab label="Overview" value={0} 
-                        sx={{ 
-                            color: 'white', 
-                            fontSize: '0.8rem', 
-                            "&.Mui-selected": { 
-                                color: 'white',
-                            },
-                        }} 
+                        <Tab 
+                            icon={<FaChartLine size={16} />}
+                            iconPosition="start"
+                            label="Overview" 
+                            value={0} 
+                            sx={{ 
+                                color: '#94a3b8', 
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                textTransform: 'none',
+                                "&.Mui-selected": { 
+                                    color: 'white',
+                                },
+                            }} 
+                        />
+                        <Tab 
+                            icon={<FaChartLine size={16} />}
+                            iconPosition="start"
+                            label="Overview" 
+                            value={0} 
+                            sx={{ 
+                                color: '#94a3b8', 
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                textTransform: 'none',
+                                "&.Mui-selected": { 
+                                    color: 'white',
+                                },
+                            }} 
+                        />
+                        <Tab 
+                            icon={<FaChartLine size={16} />}
+                            iconPosition="start"
+                            label="Overview" 
+                            value={0} 
+                            sx={{ 
+                                color: '#94a3b8', 
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                textTransform: 'none',
+                                "&.Mui-selected": { 
+                                    color: 'white',
+                                },
+                            }} 
+                        />
+                        <Tab 
+                            icon={<FaChartLine size={16} />}
+                            iconPosition="start"
+                            label="Overview" 
+                            value={0} 
+                            sx={{ 
+                                color: '#94a3b8', 
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                textTransform: 'none',
+                                "&.Mui-selected": { 
+                                    color: 'white',
+                                },
+                            }} 
+                        />
+                        <Tab 
+                            icon={<FaChartLine size={16} />}
+                            iconPosition="start"
+                            label="Overview" 
+                            value={0} 
+                            sx={{ 
+                                color: '#94a3b8', 
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                textTransform: 'none',
+                                "&.Mui-selected": { 
+                                    color: 'white',
+                                },
+                            }} 
                         />
                     </Tabs>
+                    <DateRangePicker
+                        onChange={({ start, end }) => console.log(start, end)}
+                    />
                 </Box>
-                <Overview/>
+                  
+                {value === 0 && <Overview />}
+                {value === 1 && <ProductionLine />}
+                {value === 2 && <StyleDetail />}
             </Box>
         </div>
-    )
+    );
 }
