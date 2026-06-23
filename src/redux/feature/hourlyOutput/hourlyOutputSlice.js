@@ -1,4 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 const calculateOutputQty = (state) => {
     let total = 0;
 
@@ -39,9 +40,13 @@ const hourlyOutputSlice = createSlice({
         selectedLine: {},
         selectedTime: {},
         selectedToLine: {},
-        selectedDefect: []
+        selectedDefect: [],
+        outputDate: dayjs(new Date()),
     },
     reducers: {
+        setOutputDate: (state, action) => {
+            state.outputDate = action.payload;
+        },
         setSelectedDefect: (state, action) => {
             state.selectedDefect = action.payload;
         },
@@ -80,6 +85,7 @@ const hourlyOutputSlice = createSlice({
           state.selectedTime = {};
           state.selectedDefect = []
           state.ratingDefect = 0.0;
+          state.outputDate = dayjs(new Date());
         },
         setDecreaseQty:(state, action) => {
             const incoming = action.payload;
@@ -153,6 +159,7 @@ const hourlyOutputSlice = createSlice({
 });
 
 export const {
+    setOutputDate,
     setSelectedDefect,
     setSelectedToLine,
     setTotalDefect,

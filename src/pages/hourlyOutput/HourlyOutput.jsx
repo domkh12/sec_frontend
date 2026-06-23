@@ -23,7 +23,7 @@
     setAlertHourlyOutput,
     setClearCurrentOutput,
     setDecreaseQty, setFilterHourlyOutput,
-    setIncreaseQty, setIsOpenSnackbarHourlyOutput, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime,
+    setIncreaseQty, setIsOpenSnackbarHourlyOutput, setOutputDate, setQtyCurrentOutputChange, setSelectedLine, setSelectedTime,
     setSelectedToLine
 } from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
     import { FaTrash } from "react-icons/fa";
@@ -35,6 +35,7 @@
     import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
     import {useTranslation} from "react-i18next";
     import dayjs from "dayjs";
+    import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
     function HourlyOutput(){
         // -- State --------------------------------------------------------------------------------
@@ -52,6 +53,7 @@
         const alertHourlyOutput       = useSelector((s) => s.hourlyOutput.alertHourlyOutput);
         const selectedToLine          = useSelector((s) => s.hourlyOutput.selectedToLine);
         const selectedDefect          = useSelector((s) => s.hourlyOutput.selectedDefect);
+        const outputDate              = useSelector((s) => s.hourlyOutput.outputDate);
 
         // -- Hook ---------------------------------------------------------------------------------
         const dispatch = useDispatch();
@@ -108,7 +110,7 @@
                     goodQty: item?.qty,
                     mo: item?.mo,
                     timeId: selectedTime?.id,
-                    outputDate: dayjs(new Date()).format("YYYY-MM-DD"),
+                    outputDate: outputDate,
                 });
             });
             try {
@@ -122,8 +124,14 @@
                 dispatch(setIsOpenSnackbarHourlyOutput(true));
             }
         }
-
+        
         // -- UseEffect -----------------------------------------------------------------------------------
+
+        useEffect(() => {
+            return () => {
+                dispatch(setClearCurrentOutput());
+            }
+        }, [])
 
         useEffect(() => {
             if (isSuccessProductionLine){
@@ -183,16 +191,6 @@
                                     <p className="text-2xl">Welcome, {userProfile?.nameEn}</p>
                                     <p>{formattedDate}</p>
                                 </div>
-                                {/*<TextField*/}
-                                {/*    size="small"*/}
-                                {/*    placeholder={"Search"}*/}
-                                {/*    slotProps={{*/}
-                                {/*        input: {*/}
-                                {/*            startAdornment: <InputAdornment position="start"><MdOutlineSearch className="w-5 h-5"/></InputAdornment>,*/}
-                                {/*        },*/}
-                                {/*    }}*/}
-                                {/*    onChange={handleSearchChange}*/}
-                                {/*/>*/}
                             </div>
                             <div className="grid xl:grid-cols-5 grid-cols-3 gap-2">
                             {
@@ -229,19 +227,75 @@
                                     )
                                 }
                             </div>
-                            <div className="mb-2">
+                            <div className="mb-2 flex gap-2 justify-between items-center pr-2">
                                 <Autocomplete
                                     key={selectedTime?.id || 'reset-time'}
                                     value={selectedTime && Object.keys(selectedTime).length > 0 ? selectedTime : null}
                                     size="small"
                                     options={timeData}
                                     getOptionKey={(option) => option.id}
-                                    getOptionLabel={(option) => option.name}
+                                    getOptionLabel={(option) => option.name.slice(6, 11)}
                                     onChange={handleTimeChange}
                                     renderInput={(params) => (
-                                    <TextField {...params} label="Times" placeholder="Times" />
+                                        <TextField {...params} label="Times" placeholder="Times" />
                                     )}
+                                    sx={{ width: "100%" }}
                                 />
+                                <DatePicker
+                                    value={outputDate}
+                                    onChange={(value) => dispatch(setOutputDate(dayjs(value)))} 
+                                
+                                    slotProps={{ 
+                                    textField: { 
+                                    size: 'small',
+                                    sx: {
+                                        '& .MuiInputBase-root': {
+                                        width: '40px', // Adjust as needed
+                                        height: '40px', // Adjust as needed
+                                        padding: '8px',
+                                        '& input': {
+                                            display: 'none', // Hide the input text
+                                        },
+                                        '& .MuiInputAdornment-root': {
+                                            margin: 0,
+                                        },
+                                        '& .MuiIconButton-root': {
+                                            padding: 0,
+                                        }
+                                        },
+                                        "& .MuiPickersSectionList-root": {
+                                            padding: 0,
+                                            width: "0%",
+                                            height: "0%",
+                                            overflow: "hidden",
+                                            display: "none",
+                                        },
+                                        "& .MuiInputAdornment-root": {
+                                            margin: 0,
+                                            padding: 0,
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            "&:active":{
+                                                border: "none",
+                                            }
+                                        },
+                                        "& .MuiButtonBase-root": {
+                                            padding: 0,
+                                        },
+                                        "& .MuiPickersInputBase-root":{
+                                            padding: 0,
+                                        },
+                                        "& .MuiPickersOutlinedInput-notchedOutline":{
+                                            paddingLeft: 1.5,
+                                            border: "none",
+                                            "&:focus":{
+                                                border: "none",
+                                            }
+                                        },
+                                        
+                                    }} 
+                                }}  />
                             </div>
 
                             {/* Current Output */}
@@ -332,7 +386,9 @@
                                 }
 
                                 <div className="mb-2">
-                                    <DefectTypeSelect/>
+                                    <DefectTypeSelect
+                                       
+                                    />
                                 </div>
                                 <div className="grid grid-cols-3 gap-2">
                                     <p className="text-md mb-3 bg-gray-300 rounded-md text-left p-2">

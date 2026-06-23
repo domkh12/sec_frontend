@@ -43,6 +43,11 @@ const yAxis = [
       stroke: "white",
       strokeWidth: 1,
     },
+    position: 'right',  // 👈 add this
+    valueFormatter: (value) => `${value}%`,
+    tickLabelStyle: {
+      fill: "white",
+    },
   },
 ];
 
@@ -64,6 +69,7 @@ export default function ChartGrid() {
       yAxis={yAxis}
       series={series}
       height={300}
+      
       grid={{ vertical: false, horizontal: true }}
       slotProps={{
         area: {
