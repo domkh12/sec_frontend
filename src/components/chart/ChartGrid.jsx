@@ -43,11 +43,7 @@ const yAxis = [
       stroke: "white",
       strokeWidth: 1,
     },
-    position: 'right',  // 👈 add this
-    valueFormatter: (value) => `${value}%`,
-    tickLabelStyle: {
-      fill: "white",
-    },
+    position: 'right',
   },
 ];
 
