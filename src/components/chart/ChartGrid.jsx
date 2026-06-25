@@ -12,6 +12,7 @@ const xAxis = [
     scaleType: "time",
     valueFormatter: (date) =>
       date.toLocaleDateString("en-US", {
+        day: "numeric",
         month: "short",
         year: "numeric",
       }),
@@ -31,7 +32,7 @@ const xAxis = [
 
 const yAxis = [
   {
-    valueFormatter: (value) => `${value}%`,
+    valueFormatter: (value) => `${value} pcs`,
     tickLabelStyle: {
       fill: "white",
     },
@@ -44,13 +45,14 @@ const yAxis = [
       strokeWidth: 1,
     },
     position: 'right',
+    width: 70,
   },
 ];
 
 const series = [
   {
-    dataKey: "rate",
-    valueFormatter: (value) => `${value}%`,
+    dataKey: "qty",
+    valueFormatter: (value) => `${value} pcs`,
     curve: "linear",
     area: true,
     color: "#1976D2",
@@ -65,7 +67,6 @@ export default function ChartGrid() {
       yAxis={yAxis}
       series={series}
       height={300}
-      
       grid={{ vertical: false, horizontal: true }}
       slotProps={{
         area: {
@@ -73,10 +74,11 @@ export default function ChartGrid() {
           fill: "#1976D2",
         },
       }}
+      
       sx={{
         "& .MuiChartsGrid-line": {
           stroke: "white",
-          strokeOpacity: 0.3,
+          strokeOpacity: 0.3
         },
         "& .MuiChartsAxis-root .MuiChartsAxis-line": {
           stroke: "white !important",

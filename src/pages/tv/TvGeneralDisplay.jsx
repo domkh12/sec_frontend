@@ -232,6 +232,17 @@ export default function TvGeneralDisplay() {
         pollingInterval: 300000,
     });
 
+    // -- useCallback --------------------------------------------------------------------------------------
+
+    const handleFullscreen = useCallback(async (event) => {
+        console.log(event);
+        const el = containerRef.current;
+        if (!document.fullscreenElement) {
+            try { await el.requestFullscreen(); } catch (e) { console.error(e); }
+        } else {
+            await document.exitFullscreen();
+        }
+    }, []);
 
     // -- UseEffect ----------------------------------------------------------------------------------------
 
@@ -244,6 +255,7 @@ export default function TvGeneralDisplay() {
         if(!isOnline){
             setTimeout(() => {
                 window.location.reload();
+                handleFullscreen();
             }, 9000)
         }
     }, [isOnline])
@@ -282,16 +294,6 @@ export default function TvGeneralDisplay() {
         const fn = (e) => { if (e.key === "Escape") setShowControls(false); };
         window.addEventListener("keydown", fn);
         return () => window.removeEventListener("keydown", fn);
-    }, []);
-    
-    const handleFullscreen = useCallback(async (event) => {
-        console.log(event);
-        const el = containerRef.current;
-        if (!document.fullscreenElement) {
-            try { await el.requestFullscreen(); } catch (e) { console.error(e); }
-        } else {
-            await document.exitFullscreen();
-        }
     }, []);
 
 

@@ -1,5 +1,5 @@
 import { Badge, Box, styled, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Overview from "./Overview";
 import { 
   FaChartBar, 
@@ -11,9 +11,30 @@ import {
   FaTshirt
 } from "react-icons/fa";
 import DateRangePicker from "../../components/input/DateRangePicker";
+import { useGetAnalysisQuery } from "../../redux/feature/analysis/analysisApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setDateFrom, setDateTo } from "../../redux/feature/analysis/analysisSlice";
+import dayjs from "dayjs";
 
 export default function Analytics() {
+    // -- state ---------------------------------------------------------------------------------------
     const [value, setValue] = useState(0);
+
+    // -- selector ------------------------------------------------------------------------------------
+    const dateFrom      = useSelector((state) => state.analysis.dateFrom);
+    const dateTo        = useSelector((state) => state.analysis.dateTo);
+    
+    // console.log(dateFrom, dateTo);
+    // -- Hook ----------------------------------------------------------------------------------------
+    const dispatch = useDispatch();
+
+    // -- Query ---------------------------------------------------------------------------------------
+    // if no data get last 28 day
+    const {data: analysisData} = useGetAnalysisQuery({
+        dateFrom: dateFrom ? dateFrom : dayjs().subtract(28, "day").format("YYYY-MM-DD"),
+        dateTo: dateTo ? dateTo : dayjs().format("YYYY-MM-DD"),
+    });
+    console.log(analysisData);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -58,11 +79,14 @@ export default function Analytics() {
                         
                     </Tabs>
                     <DateRangePicker
-                        onChange={({ start, end }) => console.log(start, end)}
+                        onChange={({ start, end }) => {
+                            dispatch(setDateFrom(start));
+                            dispatch(setDateTo(end));
+                        }}
                     />
                 </Box>
                   
-                {value === 0 && <Overview />}
+                {value === 0 && <Overview data={analysisData}/>}
                 {value === 1 && <ProductionLine />}
                 {value === 2 && <StyleDetail />}
             </Box>
