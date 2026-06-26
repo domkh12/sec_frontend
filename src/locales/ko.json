@@ -203,5 +203,6 @@
   "startDate": "시작 날짜",
   "endDate": "종료 날짜",
   "active": "활성화",
-  "analytics": "분석"
+  "analytics": "분석",
+  "outputDetails": "출력 상세"
 }

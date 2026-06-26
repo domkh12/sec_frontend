@@ -59,7 +59,7 @@ function MenuManager(){
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                     <Typography variant={"body1"} sx={{color: yellow[600]}}>Production Input</Typography>
                     <MenuButton
-                        title="Hourly Output"
+                        title="TV Input"
                         iconPath={"/images/smart-tv.png"}
                         onClick={() => navigate("tv-menu")}
                     />

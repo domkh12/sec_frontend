@@ -205,5 +205,6 @@
   "endDate": "Petsa ng Pagtatapos",
   "active": "Aktibo",
   "status": "Katayuan",
-  "analytics": "Analitika"
+  "analytics": "Analitika",
+  "outputDetails": "Mga Detalye ng Output"
 }

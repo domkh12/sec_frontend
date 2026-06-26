@@ -271,7 +271,7 @@ const SkeletonRows = memo(function SkeletonRows({ columns, rowCount = 5, collaps
 // ── Main component ────────────────────────────────────────────────────────────
 function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePage, handleChangeRowsPerPage, onEdit, onView, onDelete, onDeleteSub, onBlock, onUnblock, searchPlaceholderText, isFilterActive, handleFilterChange, filterValue, isFetching = false, filterConfig, onClearAllFilters, collapseColumns, collapseDataKey, handleFile, onStockIn, onStockOut }) {
     const { t } = useTranslation();
-    const { ids, entities, totalElements, pageSize, pageNo } = data;
+    const { ids, entities, totalElements, pageSize, pageNo } = data || {};
 
     const tView   = useMemo(() => t("table.view"),   [t]);
     const tEdit   = useMemo(() => t("table.edit"),   [t]);
@@ -287,7 +287,7 @@ function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePag
         if (isFetching) {
             return <SkeletonRows columns={columns} collapseColumns={collapseColumns}/>;
         }
-        if (!ids.length) {
+        if (!ids?.length) {
             return (
                 <TableRow>
                     <TableCell

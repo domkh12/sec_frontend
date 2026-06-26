@@ -175,7 +175,7 @@
   "totalWorkQty": "Total Work Quantity",
   "totalOutputQty": "Total Output Quantity",
   "totalBalance": "Total Balance",
-  "po": "Purchase Order",
+  "po": "PO",
   "status": "Status",
   "totalOrderQty": "Total Order Qty",
   "shipmentDate": "Shipment Date",
@@ -206,5 +206,6 @@
   "startDate": "Start Date",
   "endDate": "End Date",
   "active": "Active",
-  "analytics": "Analytics"
+  "analytics": "Analytics",
+  "outputDetails": "Output Details"
 }

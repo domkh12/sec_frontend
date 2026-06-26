@@ -1,12 +1,15 @@
 import { LineChart } from "@mui/x-charts/LineChart";
-import chartData from "../../locales/fakeData.json";
 
-const dataset = chartData.map((item) => ({
-  ...item,
-  date: new Date(item.date)
-}));
 
-const xAxis = [
+
+export default function ChartGrid({data, dataKey}) {
+
+  const dataset = data?.map((item) => ({
+    ...item,
+    date: new Date(item.date), // ✅ convert string → Date object
+  }));
+
+  const xAxis = [
   {
     dataKey: "date",
     scaleType: "time",
@@ -30,36 +33,35 @@ const xAxis = [
   },
 ];
 
-const yAxis = [
-  {
-    valueFormatter: (value) => `${value} pcs`,
-    tickLabelStyle: {
-      fill: "white",
+  const yAxis = [
+    {
+      valueFormatter: (value) => `${value} pcs`,
+      tickLabelStyle: {
+        fill: "white",
+      },
+      axisLineStyle: {
+        stroke: "white",
+        strokeWidth: 1,
+      },
+      tickLineStyle: {
+        stroke: "white",
+        strokeWidth: 1,
+      },
+      position: 'right',
+      width: 70,
     },
-    axisLineStyle: {
-      stroke: "white",
-      strokeWidth: 1,
-    },
-    tickLineStyle: {
-      stroke: "white",
-      strokeWidth: 1,
-    },
-    position: 'right',
-    width: 70,
-  },
-];
+  ];
 
-const series = [
-  {
-    dataKey: "qty",
-    valueFormatter: (value) => `${value} pcs`,
-    curve: "linear",
-    area: true,
-    color: "#1976D2",
-  },
-];
+  const series = [
+    {
+      dataKey: dataKey,
+      valueFormatter: (value) => `${value} pcs`,
+      curve: "linear",
+      area: true,
+      color: "#1976D2",
+    },
+  ];
 
-export default function ChartGrid() {
   return (
     <LineChart
       dataset={dataset}

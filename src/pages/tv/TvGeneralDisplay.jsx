@@ -211,7 +211,7 @@ function CtrlButton({ icon, label, onClick, active }) {
 export default function TvGeneralDisplay() {
     const [now, setNow]                   = useState(new Date());
     const [showControls, setShowControls] = useState(false);
-    const [zoom, setZoom]                 = useState(0.7);
+    const [zoom, setZoom]                 = useState(0.68);
     const [isFullscreen, setIsFullscreen] = useState(false);
     // -- Hooks --------------------------------------------------------------------------------------------
 
@@ -259,7 +259,7 @@ export default function TvGeneralDisplay() {
             }, 9000)
         }
     }, [isOnline])
-
+    
     const computedRows = isSuccess && Array.isArray(tvGeneralData)
         ? tvGeneralData.map(calcRow)
         : [];
@@ -269,6 +269,7 @@ export default function TvGeneralDisplay() {
     // Clock
     useEffect(() => {
         const t = setInterval(() => setNow(new Date()), 1000);
+        handleFullscreen();
         return () => clearInterval(t);
     }, []);
 

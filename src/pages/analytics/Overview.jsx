@@ -12,42 +12,17 @@ import {
 } from "react-icons/fa";
 import fakeData from "../../locales/fakeData.json";
 import ChartGrid from "../../components/chart/ChartGrid";
-import { FaCircleArrowDown, FaCircleArrowUp } from "react-icons/fa6";
-
-function StatCard({ title, value, growth, icon: Icon, subtitle = "", color = "blue", trend = "up" }) {
-  const isPositive = trend === "UP"; // ← use trend instead of growth >= 0
-
-  return (
-    <div className="border-[0.1px] border-gray-100 py-4 cursor-pointer">
-      <p className="text-zinc-400 text-sm text-center">{title}</p>
-      <div className="flex justify-center items-center gap-2">
-        <p className="text-white text-3xl mt-1 text-center">
-          {typeof value === 'number' ? value.toLocaleString() : value}
-        </p>
-        {growth !== undefined && (
-          <div className="flex items-center">
-            {isPositive ? (
-              <FaCircleArrowUp className="text-green-400" size={18} />
-            ) : trend === "DOWN" ? (
-              <FaCircleArrowDown className="text-red-400" size={18} />  // ← red when down
-            ) : (
-              <FaCircleArrowDown className="text-gray-400" size={18} /> // ← gray when FLAT
-            )}
-          </div>
-        )}
-      </div>
-      {growth !== undefined && (
-        <div className="mt-2 text-center">
-          <span className={isPositive ? "text-green-400 text-sm" : trend === "DOWN" ? "text-red-400 text-sm" : "text-gray-400 text-sm"}>
-            {isPositive ? "+" : ""}{growth}%
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
+import StatCardAnalytics from "../../components/card/StatCardAnalytics";
+import { useDispatch, useSelector } from "react-redux";
+import { setDataKey } from "../../redux/feature/analysis/analysisSlice";
 
 export default function Overview({data}) {
+
+  // -- Selector ----------------------------------------------------------------------------------
+  const dataKey = useSelector((state) => state.analysis.dataKey);
+
+  // -- Hook --------------------------------------------------------------------------------------
+  const dispatch = useDispatch();
 
   return (
     <div className="space-y-6">
@@ -57,7 +32,7 @@ export default function Overview({data}) {
         
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-            <StatCard 
+            <StatCardAnalytics 
               title="Total Input" 
               value={data?.totalInput || 0} 
               growth={data?.totalInputComparison?.changePercent}
@@ -65,8 +40,13 @@ export default function Overview({data}) {
               subtitle="Cutting department"
               color="blue"
               trend={data?.totalInputComparison?.trend}
+              onClick={() => {
+                dispatch(setDataKey("input"));
+              }}
+              isActive={dataKey === "input"}
+              border="border-l-0"
             />
-            <StatCard 
+            <StatCardAnalytics 
               title="Total Output" 
               value={data?.totalOutput || 0} 
               growth={data?.totalOutputComparison?.changePercent}
@@ -74,6 +54,10 @@ export default function Overview({data}) {
               subtitle="Sewing department"
               color="green"
               trend={data?.totalOutputComparison?.trend}
+              onClick={() => {
+                dispatch(setDataKey("output"));
+              }}
+              isActive={dataKey === "output"}
             />
             {/* <StatCard 
               title="Defect Rate" 
@@ -93,7 +77,7 @@ export default function Overview({data}) {
             /> */}
           </div>
           <div className="p-4">
-            <ChartGrid />
+            <ChartGrid data={data?.data || []} dataKey={dataKey}/>
           </div>
         </div>
       </div>
