@@ -20,7 +20,7 @@ import hourlyOutputReducer from "../feature/hourlyOutput/hourlyOutputSlice.js"
 import timeReducer from "../feature/time/timeSlice.js"
 import purchaseOrderReducer from "../feature/purchaseOrder/purchaseOrderSlice.js"
 import analysisReducer from "../feature/analysis/analysisSlice.js"
-import outputDetailReducer from "../feature/analysis/analysisSlice.js"
+import outputDetailReducer from "../feature/outputDetail/outputDetailSlice.js"
 
 const store = configureStore({
   reducer: {

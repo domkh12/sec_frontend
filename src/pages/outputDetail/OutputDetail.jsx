@@ -7,23 +7,50 @@ import TableCus from '../../components/table/TableCus.jsx';
 import { useTranslation } from 'react-i18next';
 import {useGetOutputDetailQuery} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
 import dayjs from 'dayjs';
+import { setFilterOutputDetail } from '../../redux/feature/outputDetail/outputDetailSlice.js';
+import useDebounce from '../../hook/useDebounce.jsx';
 
 function OutputDetail() {
   // -- selector ----------------------------------------------------------------------------
   const pageNo = useSelector((state) => state.outputDetail.pageNo);
   const pageSize = useSelector((state) => state.outputDetail.pageSize);
-
+  const filterValue = useSelector((state) => state.outputDetail.filter);
+  const debounceSearch = useDebounce(filterValue.search, 500);
+  console.log(debounceSearch);
 
   // -- Query --------------------------------------------------------------------------------
   const {data: outputDetail} = useGetOutputDetailQuery({
     pageNo,
-    pageSize
+    pageSize,
+    search: debounceSearch
   });
 
   // -- hook ---------------------------------------------------------------------------------
   const dispatch  = useDispatch();
   const navigate  = useNavigate();
   const {t}       = useTranslation();
+
+  // -- Handler ------------------------------------------------------------------------------
+
+  const handleFilterChange = (key, value) => {
+        if (value === "all") {
+            return dispatch(setFilterOutputDetail({
+                ...filterValue,
+                [key]: "",
+            }));
+        }
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterOutputDetail(newFilter));
+    }
+
+  const handleClearAllFilters = () => {
+          dispatch(setFilterOutputDetail({
+              search: "",
+          }))
+      }
 
   const columns = [
         {
@@ -84,7 +111,6 @@ function OutputDetail() {
     <div className='card-glass'>
       <div className="flex justify-between items-center">
           <BackButton onClick={() => navigate("/admin")}/>
-          <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditColor(true))}/>
       </div>
       <TableCus
             columns={columns}
@@ -93,11 +119,11 @@ function OutputDetail() {
             // handleChangeRowsPerPage={handleChangeRowsPerPage}
             // onEdit={handleEdit}
             // onDelete={handleDeleteOpen}
-            // isFilterActive={true}
-            // filterValue={filterValue}
+            isFilterActive={true}
+            filterValue={filterValue}
             // isFetching={isFetching}
-            // handleFilterChange={handleFilterChange}
-            // searchPlaceholderText={`${t('table.color')}`}
+            handleFilterChange={handleFilterChange}
+            searchPlaceholderText={`${t('mo')}`}
             // onClearAllFilters={handleClearAllFilters}
         />
     </div>

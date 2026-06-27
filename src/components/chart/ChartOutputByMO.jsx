@@ -6,7 +6,7 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
 import CardMODetail from '../card/CardMODetail'
 
 export default function MOCarousel({mo}) {
-    const autoplay = Autoplay({ delay: 3500, stopOnInteraction: false })
+    const autoplay = Autoplay({ delay: 9000, stopOnInteraction: false })
     const [emblaRef, emblaApi] = useEmblaCarousel(
         { loop: true, align: 'start' },
         [autoplay]

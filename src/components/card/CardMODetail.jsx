@@ -6,7 +6,7 @@ import { FaArrowDown } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
 function CardMODetail({moData}) {
     return(
-        <div className="text-white border border-white/50 rounded-2xl w-full min-w-[450px] pb-10 overflow-hidden">
+        <div className="text-white border border-white/50 rounded-2xl w-full pb-10 overflow-hidden">
             <div className="flex justify-between items-center px-4 py-3 border-b border-white/50">
                 <p>{moData?.mo} <br/>
                 <span className="text-gray-400">{moData?.buyer}</span>
