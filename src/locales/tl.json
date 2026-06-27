@@ -206,5 +206,7 @@
   "active": "Aktibo",
   "status": "Katayuan",
   "analytics": "Analitika",
-  "outputDetails": "Mga Detalye ng Output"
+  "outputDetails": "Mga Detalye ng Output",
+  "productionLine": "Linya ng Produksyon",
+  "goodOutputQty": "Dami ng Maayos na Output"
 }

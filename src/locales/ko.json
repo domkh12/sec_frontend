@@ -204,5 +204,7 @@
   "endDate": "종료 날짜",
   "active": "활성화",
   "analytics": "분석",
-  "outputDetails": "출력 상세"
+  "outputDetails": "출력 상세",
+  "productionLine": "생산 라인",
+  "goodOutputQty": "양품 생산 수량"
 }

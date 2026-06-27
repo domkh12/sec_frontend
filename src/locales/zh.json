@@ -205,5 +205,7 @@
   "endDate": "结束日期",
   "active": "启用",
   "analytics": "数据分析",
-  "outputDetails": "输出详情"
+  "outputDetails": "输出详情",
+  "productionLine": "生产线",
+  "goodOutputQty": "良品产量"
 }

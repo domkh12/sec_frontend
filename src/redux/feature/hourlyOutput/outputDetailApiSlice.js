@@ -8,8 +8,8 @@ const initialState = outputDetailAdapter.getInitialState();
 export const outputDetailApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getOutputDetail: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = ""}) => ({
-                url: `/output-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", lineId = "", sizeId = ""}) => ({
+                url: `/output-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&sizeId=${sizeId}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -53,10 +53,25 @@ export const outputDetailApiSlice = apiSlice.injectEndpoints({
         }),
 
 
+        deleteOutputDetail: builder.mutation({
+            query: ({id}) => ({
+                url: `/output-details/${id}`,
+                method: "DELETE",
+                body: [
+                    id,
+                ],
+            }),
+            invalidatesTags:(result, error, arg) => [
+                { type: "OutputDetail", id: "LIST" }
+            ],
+        }),
+
+
     }),
 });
 
 export const {
+    useDeleteOutputDetailMutation,
     useCreateOutputDetailMutation,
     useGetOutputDetailQuery
 } = outputDetailApiSlice;

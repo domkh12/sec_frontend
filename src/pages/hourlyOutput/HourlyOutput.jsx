@@ -243,58 +243,44 @@
                                 />
                                 <DatePicker
                                     value={outputDate}
-                                    onChange={(value) => dispatch(setOutputDate(dayjs(value)))} 
-                                
-                                    slotProps={{ 
-                                    textField: { 
-                                    size: 'small',
-                                    sx: {
-                                        '& .MuiInputBase-root': {
-                                        width: '40px', // Adjust as needed
-                                        height: '40px', // Adjust as needed
-                                        padding: '8px',
-                                        '& input': {
-                                            display: 'none', // Hide the input text
+                                    onChange={(value) => dispatch(setOutputDate(dayjs(value)))}
+                                    slots={{
+                                        openPickerButton: (props) => (
+                                            <IconButton {...props} sx={{ padding: 0, width: 40, height: 40, flexDirection: 'column' }}>
+                                                <span style={{ fontSize: '14px', fontWeight: 'bold', color: 'red', lineHeight: 1.1 }}>
+                                                    {dayjs(outputDate).format('DD')}
+                                                </span>
+                                                <span style={{ fontSize: '11px', color: '#888', lineHeight: 1.1 }}>
+                                                    {dayjs(outputDate).format('MMM')}
+                                                </span>
+                                            </IconButton>
+                                        ),
+                                    }}
+                                    slotProps={{
+                                        textField: {
+                                            size: 'small',
+                                            sx: {
+                                                '& .MuiInputBase-root': {
+                                                    width: '40px', height: '40px', padding: '8px',
+                                                    '& input': { display: 'none' },
+                                                    '& .MuiInputAdornment-root': { margin: 0 },
+                                                },
+                                                '& .MuiPickersSectionList-root': {
+                                                    padding: 0, width: '0%', height: '0%',
+                                                    overflow: 'hidden', display: 'none',
+                                                },
+                                                '& .MuiInputAdornment-root': {
+                                                    margin: 0, padding: 0,
+                                                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                                                },
+                                                '& .MuiPickersInputBase-root': { padding: 0 },
+                                                '& .MuiPickersOutlinedInput-notchedOutline': {
+                                                    border: 'none', '&:focus': { border: 'none' },
+                                                },
+                                            },
                                         },
-                                        '& .MuiInputAdornment-root': {
-                                            margin: 0,
-                                        },
-                                        '& .MuiIconButton-root': {
-                                            padding: 0,
-                                        }
-                                        },
-                                        "& .MuiPickersSectionList-root": {
-                                            padding: 0,
-                                            width: "0%",
-                                            height: "0%",
-                                            overflow: "hidden",
-                                            display: "none",
-                                        },
-                                        "& .MuiInputAdornment-root": {
-                                            margin: 0,
-                                            padding: 0,
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            "&:active":{
-                                                border: "none",
-                                            }
-                                        },
-                                        "& .MuiButtonBase-root": {
-                                            padding: 0,
-                                        },
-                                        "& .MuiPickersInputBase-root":{
-                                            padding: 0,
-                                        },
-                                        "& .MuiPickersOutlinedInput-notchedOutline":{
-                                            paddingLeft: 1.5,
-                                            border: "none",
-                                            "&:focus":{
-                                                border: "none",
-                                            }
-                                        },
-                                    }} 
-                                }}  />
+                                    }}
+                                />
                             </div>
 
                             {/* Current Output */}

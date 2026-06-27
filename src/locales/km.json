@@ -208,5 +208,7 @@
   "endDate": "ថ្ងៃបញ្ចប់",
   "active": "សកម្ម",
   "analytics": "ការវិភាគទិន្នន័យ",
-  "outputDetails": "ព័ត៌មានលម្អិតនៃលទ្ធផល"
+  "outputDetails": "ព័ត៌មានលម្អិតនៃលទ្ធផល",
+  "productionLine": "ខ្សែសង្វាក់ផលិតកម្ម",
+  "goodOutputQty": "ចំនួនទិន្នផលល្អ"
 }

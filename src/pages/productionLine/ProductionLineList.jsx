@@ -43,7 +43,7 @@ function ProductionLineList(){
     const debounceSearch = useDebounce(filterValue.search, 500);
 
     // -- Mutation ---------------------------------------------------------------------------------------
-    const[createDept, {isLoading: isLoadingCreateDept}] = useCreateProductionLineMutation();
+    const [createDept, {isLoading: isLoadingCreateDept}] = useCreateProductionLineMutation();
     const [updateDept, {isLoading: isLoadingUpdateDept}] = useUpdateProductionLineMutation();
     const [deleteDept, {isLoading: isLoadingDeleteDept}] = useDeleteProductionLineMutation();
     const [uploadFile, {isLoading: isLoadingUploadFile, isError: isErrorUploadFile, error: errorUploadFile}] = useUploadFileMutation();

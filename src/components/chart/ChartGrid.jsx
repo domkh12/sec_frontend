@@ -96,7 +96,7 @@ export default function ChartGrid({data, dataKey}) {
         },
         "& .MuiChartsLegend-root .MuiTypography-root": {
           color: "white",
-        },
+        }
       }}
     />
   );

@@ -14,6 +14,8 @@ const sizeSlice = createSlice({
             pageNo: 1,
             pageSize: 20,
             search: "",
+            lineId: "",
+            styleId: "",
         }
     },
     reducers: {

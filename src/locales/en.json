@@ -207,5 +207,7 @@
   "endDate": "End Date",
   "active": "Active",
   "analytics": "Analytics",
-  "outputDetails": "Output Details"
+  "outputDetails": "Output Details",
+  "productionLine": "Production Line",
+  "goodOutputQty": "Good Output Qty"
 }
