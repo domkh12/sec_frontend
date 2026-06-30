@@ -255,7 +255,6 @@ export default function TvGeneralDisplay() {
         if(!isOnline){
             setTimeout(() => {
                 window.location.reload();
-                handleFullscreen();
             }, 9000)
         }
     }, [isOnline])
@@ -269,9 +268,12 @@ export default function TvGeneralDisplay() {
     // Clock
     useEffect(() => {
         const t = setInterval(() => setNow(new Date()), 1000);
-        handleFullscreen();
         return () => clearInterval(t);
     }, []);
+
+    useEffect(() => {
+        handleFullscreen();
+    }, [])
 
     // Fullscreen change listener
     useEffect(() => {

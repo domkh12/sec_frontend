@@ -1,7 +1,7 @@
 import {useDispatch} from "react-redux";
 import {setCurrentOutput} from "../../redux/feature/hourlyOutput/hourlyOutputSlice.js";
 
-function CardWorkOrder({image, style, mo, color, balance, onClick, sizes, po}){
+function CardWorkOrder({image, style, mo, color, output, onClick, sizes, po}){
 
     // -- Hook ---------------------------------------------------------------------------------
     const dispatch = useDispatch();
@@ -27,9 +27,6 @@ function CardWorkOrder({image, style, mo, color, balance, onClick, sizes, po}){
                 <p className="text-xs text-gray-500">{mo}</p>
                 <p className="text-xs text-gray-500">{po}</p>
                 <p className="font-bold text-lg text-nowrap truncate">{style}-{color}</p>
-            </div>
-            <div className={"flex justify-between items-center px-2 py-2"}>
-                <p><span className="text-emerald-600">{balance}</span> pcs</p>
             </div>
             <div className="grid grid-cols-3 gap-1 p-1">
                 {sizes?.map(size => (

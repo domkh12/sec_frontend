@@ -254,8 +254,8 @@ function DialogAddEditCus({
             </div>
         );
 
-        const stepOptions = field.options ?? [];
-        const stepValues = values[field.name] ?? [];
+        const stepOptions = field?.options ?? [];
+        const stepValues = values[field?.name] ?? [];
 
         const addStep = () => {
             setFieldValue(field.name, [

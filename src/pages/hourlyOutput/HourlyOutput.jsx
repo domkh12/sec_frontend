@@ -9,10 +9,14 @@
     import {
     Alert,
     Autocomplete,
+    Box,
     Button,
+    FormControl,
     IconButton,
     InputAdornment,
-    Pagination, Snackbar,
+    InputLabel,
+    MenuItem,
+    Pagination, Select, Snackbar,
     TextField,
     Tooltip
 } from "@mui/material";
@@ -202,7 +206,7 @@
                                             style={wo?.style}
                                             mo={wo?.mo}
                                             color={wo?.color?.color}
-                                            balance={wo?.balance}
+                                            output={wo?.output}
                                             onClick={handleCardClick}
                                             sizes={wo.sizes}
                                             po={wo?.po?.po}
@@ -228,7 +232,7 @@
                                 }
                             </div>
                             <div className="mb-2 flex gap-2 justify-between items-center pr-2">
-                                <Autocomplete
+                                {/* <Autocomplete
                                     key={selectedTime?.id || 'reset-time'}
                                     value={selectedTime && Object.keys(selectedTime).length > 0 ? selectedTime : null}
                                     size="small"
@@ -237,10 +241,35 @@
                                     getOptionLabel={(option) => option.name.slice(6, 11)}
                                     onChange={handleTimeChange}
                                     renderInput={(params) => (
-                                        <TextField {...params} label="Times" placeholder="Times" />
+                                        <TextField
+                                            {...params}
+                                            label="Times"
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                readOnly: true,
+                                            }}
+                                        />
                                     )}
                                     sx={{ width: "100%" }}
-                                />
+                                    
+                                /> */}
+                                <FormControl fullWidth size="small">
+                                    <InputLabel>Times</InputLabel>
+                                    <Select
+                                        value={selectedTime?.id || ""}
+                                        label="Times"
+                                        onChange={(e) => {
+                                            const time = timeData.find(t => t.id === e.target.value);
+                                            handleTimeChange(null, time);
+                                        }}
+                                    >
+                                        {timeData.map((time) => (
+                                            <MenuItem key={time.id} value={time.id}>
+                                                {time.name.slice(6, 11)}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                                 <DatePicker
                                     value={outputDate}
                                     onChange={(value) => dispatch(setOutputDate(dayjs(value)))}
@@ -354,7 +383,7 @@
                                 {
                                     selectedLine?.isInput === true && (
                                         <div className="mb-2">
-                                            <Autocomplete
+                                            {/* <Autocomplete
                                                 key={selectedToLine?.id || 'reset-line'}
                                                 value={selectedToLine && Object.keys(selectedToLine).length > 0 ? selectedToLine : null}
                                                 size="small"
@@ -365,7 +394,27 @@
                                                 renderInput={(params) => (
                                                     <TextField {...params} label="Line" placeholder="Line" />
                                                 )}
-                                            />
+                                            /> */}
+                                            <FormControl fullWidth size="small">
+                                                <InputLabel id="line-label">Line</InputLabel>
+                                                <Select
+                                                    labelId="line-label"
+                                                    label="Line"
+                                                    value={selectedToLine?.id || ""}
+                                                    onChange={(e) => {
+                                                    const selected = lineByDeptData.find(
+                                                        (item) => item.id === e.target.value
+                                                    );
+                                                    handleLineByDepartmentChange(null, selected);
+                                                    }}
+                                                >
+                                                    {lineByDeptData?.map((line) => (
+                                                    <MenuItem key={line.id} value={line.id}>
+                                                        {line.line}
+                                                    </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </div>
                                     )
                                 }

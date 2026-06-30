@@ -282,7 +282,7 @@ function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePag
     const tFile = useMemo(() => t('table.file'), [t]);
     const tStockIn = useMemo(() => t('table.stockIn'), [t]);
     const tStockOut = useMemo(() => t('table.stockOut'), [t]);
-
+    
     const tableContent = useMemo(() => {
         if (isFetching) {
             return <SkeletonRows columns={columns} collapseColumns={collapseColumns}/>;

@@ -500,7 +500,7 @@ function TVLineInput() {
                                                                     {/* Hour slots */}
                                                                     {HOUR_KEYS.map(k => (
                                                                         <TableCell key={k} align="center">
-                                                                            {(isToday || isDefect) ? (
+                                                                            {(isDefect) ? (
                                                                                 <NumField
                                                                                     value={row[k]}
                                                                                     onChange={(v) => updateRow(ri, k, v)}

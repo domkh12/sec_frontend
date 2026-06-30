@@ -52,6 +52,21 @@ export const outputDetailApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        updateOutputQty: builder.mutation({
+            query: ({id, qty}) => ({
+                url: `/output-details/${id}?qty=${qty}`,
+                method: "PATCH",
+                body: [
+                    id,
+                    qty
+                ],
+            }),
+            invalidatesTags:(result, error, arg) => [
+                { type: "OutputDetail", id: "LIST" },
+                { type: "WorkOrderByLine", id: "LIST"}
+            ],
+        }),
+
 
         deleteOutputDetail: builder.mutation({
             query: ({id}) => ({
@@ -71,6 +86,7 @@ export const outputDetailApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useUpdateOutputQtyMutation,
     useDeleteOutputDetailMutation,
     useCreateOutputDetailMutation,
     useGetOutputDetailQuery
