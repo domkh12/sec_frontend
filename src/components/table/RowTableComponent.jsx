@@ -321,9 +321,27 @@ function RowTableComponent({
                                         </Box>
                                     </Tooltip>
                                 </Box>) : (
-                                col.format
-                                    ? col.format(entity[col.id]) ?? "—"
-                                    : entity[col.id] ?? "—"
+                                 // accpet props className for other columns
+                                
+                                    col.isDescription ? (
+                                        <p>
+                                            <span className={col.className}>
+                                                { col.format
+                                                ? col.format(entity[col.id]) ?? "—"
+                                                : entity[col.id] ?? "—"}
+                                            </span><br/>
+                                            <span className="text-gray-400 text-xs">{col.description(entity[col.id])}</span>
+                                        </p>
+                                    ): (
+                                    <span className={col.className}>
+                                        { col.format
+                                        ? col.format(entity[col.id]) ?? "—"
+                                        : entity[col.id] ?? "—"}
+                                    </span>
+                                    )
+                                 
+                               
+                               
                             )}
                         </TableCell>
                     ))}

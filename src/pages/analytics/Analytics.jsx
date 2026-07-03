@@ -11,10 +11,12 @@ import {
   FaTshirt
 } from "react-icons/fa";
 import DateRangePicker from "../../components/input/DateRangePicker";
-import { useGetAnalysisQuery } from "../../redux/feature/analysis/analysisApiSlice";
+import { useGetAnalysisQuery, useGetOutputLast48hrsQuery } from "../../redux/feature/analysis/analysisApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setDateFrom, setDateTo } from "../../redux/feature/analysis/analysisSlice";
 import dayjs from "dayjs";
+import LoadingComponent from "../../components/ui/LoadingComponent";
+import useWebsocketServer from "../../hook/useWebsocketServer";
 
 export default function Analytics() {
     // -- state ---------------------------------------------------------------------------------------
@@ -30,18 +32,44 @@ export default function Analytics() {
 
     // -- Query ---------------------------------------------------------------------------------------
     // if no data get last 28 day
-    const {data: analysisData} = useGetAnalysisQuery({
+    const {data: analysisData, 
+        isSuccess: isAnalysisDataSuccess, 
+        isLoading: isAnalysisDataLoading,
+        refetch: refetchAnalysisData
+    } = useGetAnalysisQuery({
         dateFrom: dateFrom ? dateFrom : dayjs().subtract(28, "day").format("YYYY-MM-DD"),
         dateTo: dateTo ? dateTo : dayjs().format("YYYY-MM-DD"),
     });
-    console.log(analysisData);
+    
+    const {
+        data: outputLast48hrsData,
+        isSuccess: isOutputLast48hrsDataSuccess,
+        isLoading: isOutputLast48hrsDataLoading,
+        refetch: refetchOutputLast48hrs,
+    } = useGetOutputLast48hrsQuery();
+
+    const { messages } = useWebsocketServer(`/topic/messages/tv-data-update`);
+
+    useEffect(() => {
+        if (messages.isUpdate === true) {
+            refetchOutputLast48hrs();
+            refetchAnalysisData();
+        }
+    }, [messages, refetchOutputLast48hrs]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    return (
-        <div className="card-glass p-6">
+    let content;
+
+    if (isAnalysisDataLoading || isOutputLast48hrsDataLoading) {
+        content = <LoadingComponent/>;
+    } 
+
+    if (isAnalysisDataSuccess && isOutputLast48hrsDataSuccess) {
+        content = (
+            <div className="card-glass p-6">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <FaChartBar className="text-blue-400" size={24} />
@@ -86,10 +114,13 @@ export default function Analytics() {
                     />
                 </Box>
                   
-                {value === 0 && <Overview data={analysisData}/>}
+                {value === 0 && <Overview data={analysisData} outputLast48hrsData={outputLast48hrsData}/>}
                 {value === 1 && <ProductionLine />}
                 {value === 2 && <StyleDetail />}
             </Box>
         </div>
-    );
+        );
+    }
+
+    return content;
 }

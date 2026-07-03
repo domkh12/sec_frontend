@@ -40,7 +40,7 @@ body{
 }
 
 .sub-card-glass{
-    @apply relative overflow-hidden rounded-xl
+    @apply relative  rounded-xl
     border border-white/1 bg-white/[0.01]
      px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_20px_rgba(0,0,0,0.25)]
     hover:bg-white/[0.02] transition-all duration-200

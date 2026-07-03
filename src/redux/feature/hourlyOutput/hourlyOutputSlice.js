@@ -1,13 +1,20 @@
 import {createSlice} from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 const calculateOutputQty = (state) => {
-    let total = 0;
+    let totalOutput = 0;
+    let currentDefect = 0;
 
     state.currentOutput.forEach(item => {
-        total += Number(item.qty) || 0;
+        if (item.entryType === "defect") {
+            currentDefect += Number(item.qty) || 0;
+        } else {
+            totalOutput += Number(item.qty) || 0;
+        }
     });
 
-    state.totalOutput = total;
+    state.totalOutput = totalOutput;
+    state.currentDefect = currentDefect;
+    state.totalDefect = currentDefect + (Number(state.defectTypeTotal) || 0);
 };
 
 const calculateDefectRate = (state) => {
@@ -20,6 +27,14 @@ const calculateDefectRate = (state) => {
         state.ratingDefect = ((totalDefect / totalOutput) * 100).toFixed(2);
     }
 }
+
+const getEntryKey = (item) => {
+    const type = item.entryType || "output";
+    const sizeKey = type === "defect" ? item.defectType?.id ?? item.defectType?.name ?? "no-defect-type" : item.size?.id ?? item.size?.size ?? "no-size";
+
+    return `${item.mo}-${type}-${sizeKey}`;
+}
+
 const hourlyOutputSlice = createSlice({
     name: "hourlyOutput",
     initialState: {
@@ -36,6 +51,8 @@ const hourlyOutputSlice = createSlice({
         currentOutput: [],
         totalOutput: 0,
         totalDefect: 0,
+        currentDefect: 0,
+        defectTypeTotal: 0,
         ratingDefect: 0.0,
         selectedLine: {},
         selectedTime: {},
@@ -54,7 +71,8 @@ const hourlyOutputSlice = createSlice({
             state.selectedToLine = action.payload;
         },
         setTotalDefect: (state, action) => {
-            state.totalDefect = action.payload;
+            state.defectTypeTotal = Number(action.payload) || 0;
+            state.totalDefect = (Number(state.currentDefect) || 0) + state.defectTypeTotal;
             calculateDefectRate(state);
         },
         setSelectedTime: (state, action) => {
@@ -67,7 +85,7 @@ const hourlyOutputSlice = createSlice({
         setQtyCurrentOutputChange: (state, action) => {
             const incoming = action.payload;
             const existing = state.currentOutput.find(
-              item => item.mo === incoming.item.mo && item.size.size === incoming.item.size.size
+              item => getEntryKey(item) === getEntryKey(incoming.item)
             );
 
             if (existing){
@@ -81,6 +99,8 @@ const hourlyOutputSlice = createSlice({
           state.currentOutput = [];
           state.totalOutput = 0;
           state.totalDefect = 0;
+          state.currentDefect = 0;
+          state.defectTypeTotal = 0;
           state.selectedToLine = {};
           state.selectedTime = {};
           state.selectedDefect = []
@@ -91,7 +111,7 @@ const hourlyOutputSlice = createSlice({
             const incoming = action.payload;
 
             const index = state.currentOutput.findIndex(
-                item => item.mo === incoming.mo && item.size.size === incoming.size.size
+                item => getEntryKey(item) === getEntryKey(incoming)
             );
 
             if (index !== -1) {
@@ -110,7 +130,7 @@ const hourlyOutputSlice = createSlice({
             const incoming = action.payload;
 
             const existing = state.currentOutput.find(
-                item => item.mo === incoming.mo && item.size.size === incoming.size.size
+                item => getEntryKey(item) === getEntryKey(incoming)
             );
 
             if (existing) {
@@ -125,7 +145,7 @@ const hourlyOutputSlice = createSlice({
           const incoming = action.payload;
 
           const existing = state.currentOutput.find(
-              item => item.mo === incoming.mo && item.size.size === incoming.size.size
+              item => getEntryKey(item) === getEntryKey(incoming)
           );
 
           if (existing) {

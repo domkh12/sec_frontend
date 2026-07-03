@@ -157,7 +157,10 @@ function OutputDetail() {
             label: t("reportDate"),
             minWidth: 130,
             align: "left",
-            format: (value) => dayjs(value).format("DD-MM-YYYY")
+            isDescription: true,
+            // cut string from 0 to space
+            format: (value) => value?.slice(0, value?.indexOf(" ")),
+            description: (value) => value?.slice(value?.indexOf(" ") + 1),
         },
         {
             id: "mo",

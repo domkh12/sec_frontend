@@ -33,11 +33,23 @@ export const analysisApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getOutputLast48hrs: builder.query({
+            query: () => ({
+                url: `/analysis/last48hrs`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [
+                { type: "OutputLast48hrs", id: "LIST" }
+            ],
+        }),
 
     }),
 });
 
 export const {
+    useGetOutputLast48hrsQuery,
     useGetAnalysisQuery,
     useGetOutputTodayQuery
 } = analysisApiSlice;

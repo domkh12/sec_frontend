@@ -34,7 +34,6 @@
     import { FaArrowRight } from "react-icons/fa6";
     import {useGetTimeLookupQuery} from "../../redux/feature/time/timeApiSlice.js";
     import {useEffect} from "react";
-    import DefectTypeSelect from "../../components/select/DefectTypeSelect.jsx";
     import useDebounce from "../../hook/useDebounce.jsx";
     import {useCreateOutputDetailMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
     import {useTranslation} from "react-i18next";
@@ -56,7 +55,6 @@
         const isOpenSnackbar          = useSelector((s) => s.hourlyOutput.isOpenSnackbarHourlyOutput);
         const alertHourlyOutput       = useSelector((s) => s.hourlyOutput.alertHourlyOutput);
         const selectedToLine          = useSelector((s) => s.hourlyOutput.selectedToLine);
-        const selectedDefect          = useSelector((s) => s.hourlyOutput.selectedDefect);
         const outputDate              = useSelector((s) => s.hourlyOutput.outputDate);
 
         // -- Hook ---------------------------------------------------------------------------------
@@ -65,19 +63,19 @@
         const {t} = useTranslation();
 
         // -- Query --------------------------------------------------------------------------------
-        const {data: productionLine, isSuccess: isSuccessProductionLine} = useGetProductionLineLookupQuery();
+        const {data: productionLine, isSuccess: isSuccessProductionLine, isLoading: isLoadingProductionLine} = useGetProductionLineLookupQuery();
         const {data: workOrderData, isLoading: isLoadingWO, isSuccess: isSuccessWO} = useGetWorkOrderQuery({
             pageNo: 1,
             pageSize: 20,
             search: search,
             isActive: true
         });
-        const {data: timeData} = useGetTimeLookupQuery();
-        const {data: lineByDeptData} = useGetProductionLineByDepartmentNoQuery(
+        const {data: timeData, isLoading: isLoadingTime, isSuccess: isSuccessTime} = useGetTimeLookupQuery();
+        const {data: lineByDeptData, isLoading: isLoadingLineByDept, isSuccess: isSuccessLineByDept} = useGetProductionLineByDepartmentNoQuery(
             {no: selectedLine?.department?.processNo + 1},
             {skip: selectedLine == null || Object?.keys(selectedLine)?.length === 0}
         );
-        const {data: woByLine} = useGetWOByLineQuery({
+        const {data: woByLine, isLoading: isLoadingWOByLine, isSuccess: isSuccessWOByLine} = useGetWOByLineQuery({
             id: selectedLine?.id,},
             {skip: selectedLine == null || Object?.keys(selectedLine)?.length === 0}
         );
@@ -107,11 +105,15 @@
         const handleSubmit = async () => {
             let outputDetail = [];
             currentOutput.forEach(item => {
+                const isDefect = item?.entryType === "defect";
+
                 outputDetail.push({
-                    sizeId: item?.size?.id,
+                    sizeId: isDefect ? null : item?.size?.id,
+                    defectTypeId: isDefect ? item?.defectType?.id : null,
                     fromLineId: selectedLine?.id,
                     toLineId: selectedToLine?.id,
-                    goodQty: item?.qty,
+                    goodQty: isDefect ? 0 : item?.qty,
+                    defectQty: isDefect ? item?.qty : 0,
                     mo: item?.mo,
                     timeId: selectedTime?.id,
                     outputDate: outputDate,
@@ -146,9 +148,9 @@
 
         let content;
 
-        if (isLoadingWO) content = (<LoadingComponent/>);
+        if (isLoadingWO || isLoadingProductionLine || isLoadingTime || isLoadingLineByDept) content = (<LoadingComponent/>);
 
-        if (isSuccessWO) {
+        if (isSuccessWO && isSuccessProductionLine && isSuccessTime && isSuccessLineByDept) {
             const isFilled = (obj) => obj && Object.keys(obj).length > 0;
             const isDisableSubmit = (
                 currentOutput?.length > 0 &&
@@ -263,7 +265,7 @@
                                             handleTimeChange(null, time);
                                         }}
                                     >
-                                        {timeData.map((time) => (
+                                        {timeData?.map((time) => (
                                             <MenuItem key={time.id} value={time.id}>
                                                 {time.name.slice(6, 11)}
                                             </MenuItem>
@@ -316,15 +318,27 @@
                             <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
                                 {
                                     currentOutput?.length > 0 ? (
-                                        currentOutput?.map((item, index) => (
-                                            <div className="flex justify-between gap-2 min-w-0" key={index}>
+                                        currentOutput?.map((item, index) => {
+                                            const isDefect = item?.entryType === "defect";
+
+                                            return (
+                                            <div className={`flex justify-between gap-2 min-w-0 rounded-lg border p-1.5 ${isDefect ? "border-red-200 bg-red-50" : "border-green-300 bg-green-50"}`} key={index}>
                                                 <div className="w-14 h-14 shrink-0 overflow-hidden rounded-lg">
                                                     <img src={item?.image || "/images/placeholder.png"} alt={item?.mo} className="object-cover" loading={"lazy"} decoding={"async"}/>
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="text-md truncate ">{item?.style}-{item?.color}</p>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <p className="text-md truncate ">{item?.style}-{item?.color}</p>
+                                                        {isDefect && (
+                                                            <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase text-red-700">
+                                                                Defect
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <p className="text-sm text-gray-500">{item?.mo}</p>
-                                                    <p className="text-purple-600 text-lg ">{item?.size?.size}</p>
+                                                    <p className={`${isDefect ? "text-red-600" : "text-purple-600"} text-lg `}>
+                                                        {isDefect ? item?.defectType?.name : item?.size?.size}
+                                                    </p>
                                                 </div>
                                                 <div className="flex justify-center items-center">
                                                     <IconButton
@@ -370,7 +384,7 @@
                                                     </IconButton>
                                                 </div>
                                             </div>
-                                        ))
+                                        )})
                                     ): (
                                        <div className="flex justify-center items-center h-full">
                                             <img src="/images/empty-box.png" alt="empty" loading={"lazy"} decoding={"async"} className="w-32 h-auto"/>
@@ -418,12 +432,6 @@
                                         </div>
                                     )
                                 }
-
-                                <div className="mb-2">
-                                    <DefectTypeSelect
-                                       
-                                    />
-                                </div>
                                 <div className="grid grid-cols-3 gap-2">
                                     <p className="text-md mb-3 bg-gray-300 rounded-md text-left p-2">
                                         Output <br/>
