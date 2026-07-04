@@ -99,7 +99,8 @@ export const apiSlice = createApi({
     "WorkOrderByLine",
     "Analysis",
     "OutputDetail",
-    "OutputLast48hrs"
+    "OutputLast48hrs",
+    "DefectToday"
   ],
   endpoints: (builder) => ({}),
 });

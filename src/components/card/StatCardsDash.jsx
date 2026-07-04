@@ -6,7 +6,7 @@ import {CARD_THEMES} from "../../config/theme.js";
 function StatCardsDash({
                            icon = <FaShirt />,
                            title = "--",
-                           percentage = "--",
+                           percentage = "",
                            theme = "emerald",
                            value = 0,
                            unit = "",

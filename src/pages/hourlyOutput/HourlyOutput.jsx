@@ -106,7 +106,7 @@
             let outputDetail = [];
             currentOutput.forEach(item => {
                 const isDefect = item?.entryType === "defect";
-
+                    
                 outputDetail.push({
                     sizeId: isDefect ? null : item?.size?.id,
                     defectTypeId: isDefect ? item?.defectType?.id : null,
@@ -261,13 +261,13 @@
                                         value={selectedTime?.id || ""}
                                         label="Times"
                                         onChange={(e) => {
-                                            const time = timeData.find(t => t.id === e.target.value);
+                                            const time = timeData?.find(t => t?.id === e.target.value);
                                             handleTimeChange(null, time);
                                         }}
                                     >
                                         {timeData?.map((time) => (
-                                            <MenuItem key={time.id} value={time.id}>
-                                                {time.name.slice(6, 11)}
+                                            <MenuItem key={time?.id} value={time?.id}>
+                                                {time?.name?.slice(6, 11)}
                                             </MenuItem>
                                         ))}
                                     </Select>

@@ -33,6 +33,18 @@ export const analysisApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getDefectToday: builder.query({
+            query: () => ({
+                url: `/analysis/defect-today`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [
+                { type: "DefectToday", id: "LIST" }
+            ],
+        }),
+
         getOutputLast48hrs: builder.query({
             query: () => ({
                 url: `/analysis/last48hrs`,
@@ -45,10 +57,13 @@ export const analysisApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        
+
     }),
 });
 
 export const {
+    useGetDefectTodayQuery,
     useGetOutputLast48hrsQuery,
     useGetAnalysisQuery,
     useGetOutputTodayQuery

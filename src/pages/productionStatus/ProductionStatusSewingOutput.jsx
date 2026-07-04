@@ -8,7 +8,7 @@ import { useGetOutputTodayQuery } from "../../redux/feature/analysis/analysisApi
 function ProductionStatusSewingOutput() {
 
     // -- Queries -------------------------------------------------------------------------------
-    const {data: outputToday, isLoading: isLoadingOutputToday, refetch} = useGetOutputTodayQuery("outputToday",
+    const {data: outputToday, isLoading: isLoadingOutputToday, refetch, isFetching: isFetchingOutputToday} = useGetOutputTodayQuery("outputToday",
          {refetchOnMountOrArgChange: true,
              refetchOnFocus: true, 
              refetchOnReconnect: true, 
@@ -31,7 +31,7 @@ function ProductionStatusSewingOutput() {
                     <p className="text-[clamp(0.5rem,4vw,1.3rem)] text-nowrap">WIP | Daily Production Dashboard / Real-Time</p>
                     <p className="text-[clamp(0.5rem,4vw,1rem)]">Live · Sewing Output · Updated 10:07:27</p>
                 </div>
-                <button className="button-glass" disabled={isLoadingOutputToday} onClick={() => {refetch()}}><RefreshIcon className={` ${isLoadingOutputToday ? 'animate-spin' : ''}`}/> Refresh</button>
+                <button className="button-glass" disabled={isLoadingOutputToday || isFetchingOutputToday} onClick={() => {refetch()}}><RefreshIcon className={` ${isLoadingOutputToday || isFetchingOutputToday ? 'animate-spin' : ''}`}/> Refresh</button>
             </div>
             <div className="card-glass">
                 <div className="flex flex-col md:flex-row gap-5 items-center">
@@ -39,7 +39,7 @@ function ProductionStatusSewingOutput() {
                         title="Total Input"
                         theme="sunset"
                         value={outputToday?.totalInput}
-                        percentage="+12%"
+                        // percentage="+12%"
                         icon={<img src="/images/t-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
                         unit="PCS"
                     />
@@ -47,7 +47,7 @@ function ProductionStatusSewingOutput() {
                         title="Total Output"
                         theme="emerald"
                         value={outputToday?.totalOutput}
-                        percentage="+8%"
+                        // percentage="+8%"
                         icon={<img src="/images/quality-control.png" alt="quality control" className="w-10 h-auto" />}
                         unit="PCS"
                     />
@@ -55,14 +55,14 @@ function ProductionStatusSewingOutput() {
                         title="Total Active Style"
                         theme="violet"
                         value={outputToday?.totalStyleActive}
-                        percentage="+3%"
+                        // percentage="+3%"
                         icon={<img src="/images/tshirt.png" alt="style" className="w-10 h-auto" />}
                     />
                     <StatCardsDash
                         title="Balance WIP"
                         theme="rose"
                         value={outputToday?.totalBalance}
-                        percentage="-1%"
+                        // percentage="-1%"
                         icon={<img src="/images/hourglass.png" alt="inspector" className="w-10 h-auto" />}
                     />
                 </div>

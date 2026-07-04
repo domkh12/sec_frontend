@@ -16,6 +16,11 @@ body{
   min-height: 100vh;
 }
 
+@theme {
+  --color-primary: #092D74;
+  --color-primary-hover: #0B3A99;
+}
+
 .bg-main::before {
   content: '';
   position: fixed;    /* fixed goes on pseudo, not parent */
