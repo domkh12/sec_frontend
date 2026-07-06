@@ -11,8 +11,6 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import StatCardsDash from "../../components/card/StatCardsDash.jsx";
 import { useGetDefectTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
 
-const USE_MOCK_DEFECT_DATA = true;
-
 const sewingDefectMockApi = {
     updatedAt: "10:07 AM",
     targetDefectRate: 2.5,
@@ -21,6 +19,7 @@ const sewingDefectMockApi = {
             line: "Line 1",
             mos: [
                 {
+                    buyer: "H&M",
                     mo: "GPAR12406",
                     style: "ST-2406",
                     output: 760,
@@ -35,13 +34,9 @@ const sewingDefectMockApi = {
                         { type: "Loose thread", qty: 1 },
                         { type: "Oil stain", qty: 1 },
                     ],
-                    pos: [
-                        {
-                            buyer: "H&M",
-                        },
-                    ],
                 },
                 {
+                    buyer: "H&M",
                     mo: "GPAR12459",
                     style: "ST-2459",
                     output: 520,
@@ -55,11 +50,6 @@ const sewingDefectMockApi = {
                         { type: "Label issue", qty: 1 },
                         { type: "Size mark", qty: 1 },
                         { type: "Button issue", qty: 1 },
-                    ],
-                    pos: [
-                        {
-                            buyer: "H&M",
-                        },
                     ],
                 },
             ],
@@ -133,6 +123,7 @@ const sewingDefectMockApi = {
             line: "Line 5",
             mos: [
                 {
+                    buyer: "Uniqlo",
                     mo: "GPAR12464",
                     style: "ST-2464",
                     output: 420,
@@ -147,13 +138,9 @@ const sewingDefectMockApi = {
                         { type: "Loose thread", qty: 1 },
                         { type: "Size mark", qty: 2 },
                     ],
-                    pos: [
-                        {
-                            buyer: "Uniqlo",
-                        },
-                    ],
                 },
                 {
+                    buyer: "Uniqlo",
                     mo: "GPAR12465",
                     style: "ST-2464",
                     output: 385,
@@ -169,13 +156,9 @@ const sewingDefectMockApi = {
                         { type: "Oil stain", qty: 1 },
                         { type: "Label issue", qty: 1 },
                     ],
-                    pos: [
-                        {
-                            buyer: "Uniqlo",
-                        },
-                    ],
                 },
                 {
+                    buyer: "Uniqlo",
                     mo: "GPAR12472",
                     style: "ST-2464",
                     output: 270,
@@ -188,11 +171,6 @@ const sewingDefectMockApi = {
                         { type: "Needle mark", qty: 1 },
                         { type: "Puckering", qty: 1 },
                         { type: "Uneven stitch", qty: 1 },
-                    ],
-                    pos: [
-                        {
-                            buyer: "Uniqlo",
-                        },
                     ],
                 },
             ],
@@ -406,37 +384,12 @@ function getUniqueLabel(values) {
 }
 
 function normalizeMoItem(moItem, moIndex, parent = {}) {
-    const poGroups = Array.isArray(moItem?.pos) ? moItem.pos : Array.isArray(moItem?.purchaseOrders) ? moItem.purchaseOrders : [];
-
-    if (poGroups.length > 0) {
-        const normalizedPos = poGroups.map((poItem) => ({
-            ...poItem,
-            buyer: poItem?.buyer ?? parent.buyer ?? "-",
-            po: poItem?.po ?? poItem?.poNo ?? "-",
-        }));
-        const defectTypes = normalizeDefectTypes(moItem?.defectTypes);
-        const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
-
-        return {
-            ...moItem,
-            buyer: getUniqueLabel(normalizedPos.map((item) => item.buyer)) || parent.buyer || "-",
-            po: getUniqueLabel(normalizedPos.map((item) => item.po)) || "-",
-            mo: moItem?.mo ?? moItem?.moNo ?? `MO ${moIndex + 1}`,
-            style: moItem?.style ?? moItem?.styleNo ?? "-",
-            output: Number(moItem?.output ?? moItem?.checked ?? 0),
-            defect: Number(moItem?.defect ?? moItem?.defectQty ?? defectTypeTotal),
-            defectTypes,
-            pos: normalizedPos,
-        };
-    }
-
     const defectTypes = normalizeDefectTypes(moItem?.defectTypes);
     const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
 
     return {
         ...moItem,
         buyer: moItem?.buyer ?? parent.buyer ?? "-",
-        po: moItem?.po ?? moItem?.poNo ?? parent.po ?? parent.poNo ?? "-",
         mo: moItem?.mo ?? moItem?.moNo ?? `MO ${moIndex + 1}`,
         style: moItem?.style ?? moItem?.styleNo ?? "-",
         output: Number(moItem?.output ?? moItem?.checked ?? 0),
@@ -446,22 +399,15 @@ function normalizeMoItem(moItem, moIndex, parent = {}) {
 }
 
 function normalizeLine(line, index) {
-    const poGroups = Array.isArray(line?.pos) ? line.pos : Array.isArray(line?.purchaseOrders) ? line.purchaseOrders : [];
-    const mos = poGroups.length > 0
-        ? poGroups.flatMap((poItem) => {
-            const poMos = Array.isArray(poItem?.mos) ? poItem.mos : [];
-            return poMos.map((moItem, moIndex) => normalizeMoItem(moItem, moIndex, poItem));
-        })
-        : Array.isArray(line?.mos)
-            ? line.mos.map((moItem, moIndex) => normalizeMoItem(moItem, moIndex, line))
-            : [];
+    const mos = Array.isArray(line?.mos)
+        ? line.mos.map((moItem, moIndex) => normalizeMoItem(moItem, moIndex, line))
+        : [];
 
     if (mos.length > 0) {
         const output = mos.reduce((sum, item) => sum + item.output, 0);
         const defect = mos.reduce((sum, item) => sum + item.defect, 0);
         const defectTypes = mergeDefectTypes(mos.map((item) => item.defectTypes));
         const buyerLabel = getUniqueLabel(mos.map((item) => item.buyer));
-        const poLabel = getUniqueLabel(mos.map((item) => item.po));
         const moLabel = mos.map((item) => item.mo).join(", ");
         const styleLabel = getUniqueStyleLabel(mos.map((item) => item.style));
 
@@ -469,14 +415,12 @@ function normalizeLine(line, index) {
             ...line,
             line: line?.line ?? line?.lineName ?? `Line ${index + 1}`,
             buyer: buyerLabel || line?.buyer || "-",
-            po: poLabel || line?.po || line?.poNo || "-",
             mo: moLabel || "-",
             style: styleLabel || "-",
             output,
             defect,
             defectTypes,
             mos,
-            pos: mos.flatMap((item) => item.pos ?? []),
         };
     }
 
@@ -489,12 +433,12 @@ function normalizeLine(line, index) {
         ...line,
         line: line?.line ?? line?.lineName ?? `Line ${index + 1}`,
         buyer: line?.buyer ?? "-",
-        po: line?.po ?? line?.poNo ?? "-",
         mo: line?.mo ?? line?.moNo ?? "-",
         style: line?.style ?? line?.styleNo ?? "-",
         output,
         defect,
         defectTypes,
+        mos: line?.mo || line?.moNo ? [normalizeMoItem(line, 0)] : [],
     };
 }
 
@@ -528,14 +472,12 @@ const DefectBarLabel = forwardRef(function DefectBarLabel({ x, y, width, childre
 function ProductionStatusSewingDefect() {
 
     // -- Query ----------------------------------------------------------------------------------------
-    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday } = useGetDefectTodayQuery(undefined, {
-        skip: USE_MOCK_DEFECT_DATA,
-    });
+    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday } = useGetDefectTodayQuery();
 
     const [lastUpdated, setLastUpdated] = useState(sewingDefectMockApi.updatedAt);
 
     const dashboard = useMemo(() => {
-        const source = USE_MOCK_DEFECT_DATA ? sewingDefectMockApi : defectToday ?? sewingDefectMockApi;
+        const source = defectToday?.data ?? defectToday ?? sewingDefectMockApi;
         const lines = Array.isArray(source?.lines) ? source.lines.map(normalizeLine) : [];
         const hourlyTrend = Array.isArray(source?.hourlyTrend) ? source.hourlyTrend : [];
         const targetDefectRate = Number(source?.targetDefectRate ?? sewingDefectMockApi.targetDefectRate);
@@ -545,6 +487,7 @@ function ProductionStatusSewingDefect() {
         const totalDefect = lines.reduce((sum, line) => sum + line.defect, 0);
         const defectRate = totalOutput ? (totalDefect / totalOutput) * 100 : 0;
         const affectedLines = lines.filter((line) => line.defect > 0).length;
+        const runningLines = lines.filter((line) => line.mos?.length > 0).length;
         const activeStyles = new Set(lines.map((line) => line.style).filter(Boolean)).size;
 
         const lineAnalysis = lines
@@ -587,6 +530,7 @@ function ProductionStatusSewingDefect() {
             totalDefect,
             defectRate,
             affectedLines,
+            runningLines,
             activeStyles,
             lineAnalysis,
             defectMix,
@@ -596,13 +540,11 @@ function ProductionStatusSewingDefect() {
     }, [defectToday]);
 
     const refreshMockApi = () => {
-        if (!USE_MOCK_DEFECT_DATA) {
-            refetch();
-        }
+        refetch();
         setLastUpdated(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     };
 
-    const displayUpdatedAt = USE_MOCK_DEFECT_DATA ? lastUpdated : defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
+    const displayUpdatedAt = defectToday?.data?.updatedAt ?? defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
     const riskLines = dashboard.lineAnalysis.filter((line) => line.defectRate > dashboard.targetDefectRate);
     const topDefect = dashboard.defectMix[0] ?? { type: "-", qty: 0, rate: 0 };
     const highestRiskLine = [...dashboard.lineAnalysis].sort((a, b) => b.defectRate - a.defectRate)[0] ?? { line: "-", defectRate: 0 };
@@ -615,8 +557,8 @@ function ProductionStatusSewingDefect() {
                     <p className="text-[clamp(1rem,4vw,1.3rem)] text-nowrap">WIP | Sewing Defect Dashboard / Real-Time</p>
                     <p className="text-[clamp(0.8rem,3vw,1rem)] text-white/75">Live | Sewing Defect | Updated {displayUpdatedAt}</p>
                 </div>
-                <button className="button-glass" onClick={refreshMockApi} disabled={!USE_MOCK_DEFECT_DATA && (isLoadingDefectToday || isFetchingDefectToday)}>
-                    <RefreshIcon className={!USE_MOCK_DEFECT_DATA && (isLoadingDefectToday || isFetchingDefectToday) ? "animate-spin" : ""} /> Refresh
+                <button className="button-glass" onClick={refreshMockApi} disabled={isLoadingDefectToday || isFetchingDefectToday}>
+                    <RefreshIcon className={isLoadingDefectToday || isFetchingDefectToday ? "animate-spin" : ""} /> Refresh
                 </button>
             </div>
 
@@ -657,7 +599,7 @@ function ProductionStatusSewingDefect() {
                         title="Active Styles"
                         theme="sunset"
                         value={dashboard.activeStyles}
-                        percentage={`${dashboard.lineAnalysis.length} running lines`}
+                        percentage={`${dashboard.runningLines} running lines`}
                         icon={<img src="/images/tshirt.png" alt="active styles" className="w-10 h-auto" />}
                     />
                 </div>
@@ -853,9 +795,9 @@ function ProductionStatusSewingDefect() {
                             title="Follow-up Lines"
                             subtitle={`${riskLines.length} lines exceed the ${dashboard.targetDefectRate}% target`}
                         />
-                        <div className="mt-4 overflow-x-auto">
+                        <div className="mt-4 max-h-[360px] overflow-auto pr-1">
                             <table className="w-full min-w-[640px] text-left text-sm text-white">
-                                <thead className="border-b border-white/10 text-white/55">
+                                <thead className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/80 text-white/55 backdrop-blur">
                                 <tr>
                                     <th className="py-3 pr-3 font-medium">Line</th>
                                     <th className="py-3 pr-3 font-medium">Buyer / MO</th>
@@ -863,7 +805,7 @@ function ProductionStatusSewingDefect() {
                                     <th className="py-3 pr-3 font-medium">Output</th>
                                     <th className="py-3 pr-3 font-medium">Defects</th>
                                     <th className="py-3 pr-3 font-medium">Rate</th>
-                                    <th className="py-3 font-medium">Status</th>
+                                    <th className="py-3 font-medium whitespace-nowrap">Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -881,7 +823,7 @@ function ProductionStatusSewingDefect() {
                                             <td className="py-3 pr-3">{line.output.toLocaleString()} pcs</td>
                                             <td className="py-3 pr-3">{line.defect} pcs</td>
                                             <td className="py-3 pr-3">{line.defectRate.toFixed(2)}%</td>
-                                            <td className="py-3">
+                                            <td className="py-3 whitespace-nowrap">
                                                 <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${isRisk ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
                                                     {isRisk && <WarningAmberRoundedIcon sx={{ fontSize: 16 }} />}
                                                     {isRisk ? "Follow-up" : "On target"}
