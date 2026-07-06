@@ -11,30 +11,57 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import StatCardsDash from "../../components/card/StatCardsDash.jsx";
 import { useGetDefectTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
 
+const USE_MOCK_DEFECT_DATA = true;
+
 const sewingDefectMockApi = {
     updatedAt: "10:07 AM",
     targetDefectRate: 2.5,
     lines: [
         {
             line: "Line 1",
-            buyer: "H&M",
-            mo: "GPAR12406",
-            style: "ST-2406",
-            output: 1280,
-            defect: 21,
-            defectTypes: [
-                { type: "Open seam", qty: 5 },
-                { type: "Broken stitch", qty: 3 },
-                { type: "Dirty mark", qty: 3 },
-                { type: "Skip stitch", qty: 2 },
-                { type: "Needle mark", qty: 1 },
-                { type: "Puckering", qty: 1 },
-                { type: "Uneven stitch", qty: 1 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 1 },
-                { type: "Button issue", qty: 1 },
+            mos: [
+                {
+                    mo: "GPAR12406",
+                    style: "ST-2406",
+                    output: 760,
+                    defect: 12,
+                    defectTypes: [
+                        { type: "Open seam", qty: 3 },
+                        { type: "Broken stitch", qty: 2 },
+                        { type: "Dirty mark", qty: 2 },
+                        { type: "Skip stitch", qty: 1 },
+                        { type: "Needle mark", qty: 1 },
+                        { type: "Puckering", qty: 1 },
+                        { type: "Loose thread", qty: 1 },
+                        { type: "Oil stain", qty: 1 },
+                    ],
+                    pos: [
+                        {
+                            buyer: "H&M",
+                        },
+                    ],
+                },
+                {
+                    mo: "GPAR12459",
+                    style: "ST-2459",
+                    output: 520,
+                    defect: 9,
+                    defectTypes: [
+                        { type: "Open seam", qty: 2 },
+                        { type: "Broken stitch", qty: 1 },
+                        { type: "Dirty mark", qty: 1 },
+                        { type: "Skip stitch", qty: 1 },
+                        { type: "Uneven stitch", qty: 1 },
+                        { type: "Label issue", qty: 1 },
+                        { type: "Size mark", qty: 1 },
+                        { type: "Button issue", qty: 1 },
+                    ],
+                    pos: [
+                        {
+                            buyer: "H&M",
+                        },
+                    ],
+                },
             ],
         },
         {
@@ -104,23 +131,70 @@ const sewingDefectMockApi = {
         },
         {
             line: "Line 5",
-            buyer: "Uniqlo",
-            mo: "GPAR12464",
-            style: "ST-2464",
-            output: 1075,
-            defect: 36,
-            defectTypes: [
-                { type: "Open seam", qty: 8 },
-                { type: "Broken stitch", qty: 6 },
-                { type: "Dirty mark", qty: 5 },
-                { type: "Skip stitch", qty: 4 },
-                { type: "Needle mark", qty: 3 },
-                { type: "Puckering", qty: 2 },
-                { type: "Uneven stitch", qty: 2 },
-                { type: "Loose thread", qty: 2 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 2 },
+            mos: [
+                {
+                    mo: "GPAR12464",
+                    style: "ST-2464",
+                    output: 420,
+                    defect: 14,
+                    defectTypes: [
+                        { type: "Open seam", qty: 3 },
+                        { type: "Broken stitch", qty: 2 },
+                        { type: "Dirty mark", qty: 2 },
+                        { type: "Skip stitch", qty: 2 },
+                        { type: "Needle mark", qty: 1 },
+                        { type: "Puckering", qty: 1 },
+                        { type: "Loose thread", qty: 1 },
+                        { type: "Size mark", qty: 2 },
+                    ],
+                    pos: [
+                        {
+                            buyer: "Uniqlo",
+                        },
+                    ],
+                },
+                {
+                    mo: "GPAR12465",
+                    style: "ST-2464",
+                    output: 385,
+                    defect: 13,
+                    defectTypes: [
+                        { type: "Open seam", qty: 3 },
+                        { type: "Broken stitch", qty: 2 },
+                        { type: "Dirty mark", qty: 2 },
+                        { type: "Skip stitch", qty: 1 },
+                        { type: "Needle mark", qty: 1 },
+                        { type: "Uneven stitch", qty: 1 },
+                        { type: "Loose thread", qty: 1 },
+                        { type: "Oil stain", qty: 1 },
+                        { type: "Label issue", qty: 1 },
+                    ],
+                    pos: [
+                        {
+                            buyer: "Uniqlo",
+                        },
+                    ],
+                },
+                {
+                    mo: "GPAR12472",
+                    style: "ST-2464",
+                    output: 270,
+                    defect: 9,
+                    defectTypes: [
+                        { type: "Open seam", qty: 2 },
+                        { type: "Broken stitch", qty: 2 },
+                        { type: "Dirty mark", qty: 1 },
+                        { type: "Skip stitch", qty: 1 },
+                        { type: "Needle mark", qty: 1 },
+                        { type: "Puckering", qty: 1 },
+                        { type: "Uneven stitch", qty: 1 },
+                    ],
+                    pos: [
+                        {
+                            buyer: "Uniqlo",
+                        },
+                    ],
+                },
             ],
         },
         {
@@ -292,7 +366,120 @@ function normalizeDefectTypes(defectTypes) {
     return [];
 }
 
+function mergeDefectTypes(defectTypeGroups) {
+    return Object.entries(
+        defectTypeGroups.flat().reduce((acc, item) => {
+            acc[item.type] = (acc[item.type] || 0) + item.qty;
+            return acc;
+        }, {})
+    ).map(([type, qty]) => ({ type, qty }));
+}
+
+function getUniqueStyleLabel(styles) {
+    const uniqueStyles = new Map();
+
+    styles.forEach((style) => {
+        const displayStyle = String(style ?? "").trim();
+        const key = displayStyle.toLowerCase();
+
+        if (displayStyle && !uniqueStyles.has(key)) {
+            uniqueStyles.set(key, displayStyle);
+        }
+    });
+
+    return [...uniqueStyles.values()].join(", ");
+}
+
+function getUniqueLabel(values) {
+    const uniqueValues = new Map();
+
+    values.forEach((value) => {
+        const displayValue = String(value ?? "").trim();
+        const key = displayValue.toLowerCase();
+
+        if (displayValue && !uniqueValues.has(key)) {
+            uniqueValues.set(key, displayValue);
+        }
+    });
+
+    return [...uniqueValues.values()].join(", ");
+}
+
+function normalizeMoItem(moItem, moIndex, parent = {}) {
+    const poGroups = Array.isArray(moItem?.pos) ? moItem.pos : Array.isArray(moItem?.purchaseOrders) ? moItem.purchaseOrders : [];
+
+    if (poGroups.length > 0) {
+        const normalizedPos = poGroups.map((poItem) => ({
+            ...poItem,
+            buyer: poItem?.buyer ?? parent.buyer ?? "-",
+            po: poItem?.po ?? poItem?.poNo ?? "-",
+        }));
+        const defectTypes = normalizeDefectTypes(moItem?.defectTypes);
+        const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
+
+        return {
+            ...moItem,
+            buyer: getUniqueLabel(normalizedPos.map((item) => item.buyer)) || parent.buyer || "-",
+            po: getUniqueLabel(normalizedPos.map((item) => item.po)) || "-",
+            mo: moItem?.mo ?? moItem?.moNo ?? `MO ${moIndex + 1}`,
+            style: moItem?.style ?? moItem?.styleNo ?? "-",
+            output: Number(moItem?.output ?? moItem?.checked ?? 0),
+            defect: Number(moItem?.defect ?? moItem?.defectQty ?? defectTypeTotal),
+            defectTypes,
+            pos: normalizedPos,
+        };
+    }
+
+    const defectTypes = normalizeDefectTypes(moItem?.defectTypes);
+    const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
+
+    return {
+        ...moItem,
+        buyer: moItem?.buyer ?? parent.buyer ?? "-",
+        po: moItem?.po ?? moItem?.poNo ?? parent.po ?? parent.poNo ?? "-",
+        mo: moItem?.mo ?? moItem?.moNo ?? `MO ${moIndex + 1}`,
+        style: moItem?.style ?? moItem?.styleNo ?? "-",
+        output: Number(moItem?.output ?? moItem?.checked ?? 0),
+        defect: Number(moItem?.defect ?? moItem?.defectQty ?? defectTypeTotal),
+        defectTypes,
+    };
+}
+
 function normalizeLine(line, index) {
+    const poGroups = Array.isArray(line?.pos) ? line.pos : Array.isArray(line?.purchaseOrders) ? line.purchaseOrders : [];
+    const mos = poGroups.length > 0
+        ? poGroups.flatMap((poItem) => {
+            const poMos = Array.isArray(poItem?.mos) ? poItem.mos : [];
+            return poMos.map((moItem, moIndex) => normalizeMoItem(moItem, moIndex, poItem));
+        })
+        : Array.isArray(line?.mos)
+            ? line.mos.map((moItem, moIndex) => normalizeMoItem(moItem, moIndex, line))
+            : [];
+
+    if (mos.length > 0) {
+        const output = mos.reduce((sum, item) => sum + item.output, 0);
+        const defect = mos.reduce((sum, item) => sum + item.defect, 0);
+        const defectTypes = mergeDefectTypes(mos.map((item) => item.defectTypes));
+        const buyerLabel = getUniqueLabel(mos.map((item) => item.buyer));
+        const poLabel = getUniqueLabel(mos.map((item) => item.po));
+        const moLabel = mos.map((item) => item.mo).join(", ");
+        const styleLabel = getUniqueStyleLabel(mos.map((item) => item.style));
+
+        return {
+            ...line,
+            line: line?.line ?? line?.lineName ?? `Line ${index + 1}`,
+            buyer: buyerLabel || line?.buyer || "-",
+            po: poLabel || line?.po || line?.poNo || "-",
+            mo: moLabel || "-",
+            style: styleLabel || "-",
+            output,
+            defect,
+            defectTypes,
+            mos,
+            pos: mos.flatMap((item) => item.pos ?? []),
+        };
+    }
+
     const defectTypes = normalizeDefectTypes(line?.defectTypes);
     const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
     const output = Number(line?.output ?? line?.checked ?? 0);
@@ -302,6 +489,7 @@ function normalizeLine(line, index) {
         ...line,
         line: line?.line ?? line?.lineName ?? `Line ${index + 1}`,
         buyer: line?.buyer ?? "-",
+        po: line?.po ?? line?.poNo ?? "-",
         mo: line?.mo ?? line?.moNo ?? "-",
         style: line?.style ?? line?.styleNo ?? "-",
         output,
@@ -340,12 +528,14 @@ const DefectBarLabel = forwardRef(function DefectBarLabel({ x, y, width, childre
 function ProductionStatusSewingDefect() {
 
     // -- Query ----------------------------------------------------------------------------------------
-    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday } = useGetDefectTodayQuery();
+    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday } = useGetDefectTodayQuery(undefined, {
+        skip: USE_MOCK_DEFECT_DATA,
+    });
 
     const [lastUpdated, setLastUpdated] = useState(sewingDefectMockApi.updatedAt);
 
     const dashboard = useMemo(() => {
-        const source = defectToday ?? sewingDefectMockApi;
+        const source = USE_MOCK_DEFECT_DATA ? sewingDefectMockApi : defectToday ?? sewingDefectMockApi;
         const lines = Array.isArray(source?.lines) ? source.lines.map(normalizeLine) : [];
         const hourlyTrend = Array.isArray(source?.hourlyTrend) ? source.hourlyTrend : [];
         const targetDefectRate = Number(source?.targetDefectRate ?? sewingDefectMockApi.targetDefectRate);
@@ -406,11 +596,13 @@ function ProductionStatusSewingDefect() {
     }, [defectToday]);
 
     const refreshMockApi = () => {
-        refetch();
+        if (!USE_MOCK_DEFECT_DATA) {
+            refetch();
+        }
         setLastUpdated(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     };
 
-    const displayUpdatedAt = defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
+    const displayUpdatedAt = USE_MOCK_DEFECT_DATA ? lastUpdated : defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
     const riskLines = dashboard.lineAnalysis.filter((line) => line.defectRate > dashboard.targetDefectRate);
     const topDefect = dashboard.defectMix[0] ?? { type: "-", qty: 0, rate: 0 };
     const highestRiskLine = [...dashboard.lineAnalysis].sort((a, b) => b.defectRate - a.defectRate)[0] ?? { line: "-", defectRate: 0 };
@@ -423,8 +615,8 @@ function ProductionStatusSewingDefect() {
                     <p className="text-[clamp(1rem,4vw,1.3rem)] text-nowrap">WIP | Sewing Defect Dashboard / Real-Time</p>
                     <p className="text-[clamp(0.8rem,3vw,1rem)] text-white/75">Live | Sewing Defect | Updated {displayUpdatedAt}</p>
                 </div>
-                <button className="button-glass" onClick={refreshMockApi} disabled={isLoadingDefectToday || isFetchingDefectToday}>
-                    <RefreshIcon className={isLoadingDefectToday || isFetchingDefectToday ? "animate-spin" : ""} /> Refresh
+                <button className="button-glass" onClick={refreshMockApi} disabled={!USE_MOCK_DEFECT_DATA && (isLoadingDefectToday || isFetchingDefectToday)}>
+                    <RefreshIcon className={!USE_MOCK_DEFECT_DATA && (isLoadingDefectToday || isFetchingDefectToday) ? "animate-spin" : ""} /> Refresh
                 </button>
             </div>
 
@@ -530,7 +722,10 @@ function ProductionStatusSewingDefect() {
                                     <div>
 
                                     <p className="text-sm text-white/60">Highest defect: {line.line} | {line.buyer}</p>
-                                    <p className="text-sm text-white/75">Style: {line.style} | MO: {line.mo}</p>
+                                    <p className="text-sm text-white/75">
+                                        Style: {line.style} | MO: {line.mo}
+                                        {line.mos?.length > 1 && <span className="whitespace-nowrap"> ({line.mos.length} MOs)</span>}
+                                    </p>
                                    
                                     <p className="text-sm text-rose-100">{line.defectRate}% defect rate</p>
                                     </div>
@@ -678,13 +873,16 @@ function ProductionStatusSewingDefect() {
                                     return (
                                         <tr key={line.line} className="border-b border-white/10 last:border-0">
                                             <td className="py-3 pr-3 font-semibold">{line.line}</td>
-                                            <td className="py-3 pr-3 text-white/70">{line.buyer} / {line.mo}</td>
+                                            <td className="py-3 pr-3 text-white/70">
+                                                {line.buyer} / {line.mo}
+                                                {line.mos?.length > 1 && <span className="ml-2 inline-flex whitespace-nowrap rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70">{line.mos.length} MOs</span>}
+                                            </td>
                                             <td className="py-3 pr-3 text-white/80">{line.style}</td>
                                             <td className="py-3 pr-3">{line.output.toLocaleString()} pcs</td>
                                             <td className="py-3 pr-3">{line.defect} pcs</td>
                                             <td className="py-3 pr-3">{line.defectRate.toFixed(2)}%</td>
                                             <td className="py-3">
-                                                <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${isRisk ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
+                                                <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${isRisk ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
                                                     {isRisk && <WarningAmberRoundedIcon sx={{ fontSize: 16 }} />}
                                                     {isRisk ? "Follow-up" : "On target"}
                                                 </span>
