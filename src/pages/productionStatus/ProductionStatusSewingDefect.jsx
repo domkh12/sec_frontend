@@ -8,196 +8,11 @@ import FactCheckRoundedIcon from "@mui/icons-material/FactCheckRounded";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { useMediaQuery } from "@mui/material";
 import StatCardsDash from "../../components/card/StatCardsDash.jsx";
 import { useGetDefectTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
 
-const sewingDefectMockApi = {
-    updatedAt: "10:07 AM",
-    targetDefectRate: 2.5,
-    lines: [
-        {
-            line: "Line 1",
-            buyer: "H&M",
-            mo: "GPAR12406",
-            style: "ST-2406",
-            output: 1280,
-            defect: 21,
-            defectTypes: [
-                { type: "Open seam", qty: 5 },
-                { type: "Broken stitch", qty: 3 },
-                { type: "Dirty mark", qty: 3 },
-                { type: "Skip stitch", qty: 2 },
-                { type: "Needle mark", qty: 1 },
-                { type: "Puckering", qty: 1 },
-                { type: "Uneven stitch", qty: 1 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 1 },
-                { type: "Button issue", qty: 1 },
-            ],
-        },
-        {
-            line: "Line 2",
-            buyer: "Target",
-            mo: "GPAR12460",
-            style: "ST-2460",
-            output: 1160,
-            defect: 43,
-            defectTypes: [
-                { type: "Open seam", qty: 9 },
-                { type: "Broken stitch", qty: 7 },
-                { type: "Dirty mark", qty: 6 },
-                { type: "Skip stitch", qty: 5 },
-                { type: "Needle mark", qty: 4 },
-                { type: "Puckering", qty: 3 },
-                { type: "Uneven stitch", qty: 2 },
-                { type: "Loose thread", qty: 2 },
-                { type: "Oil stain", qty: 2 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 1 },
-                { type: "Button issue", qty: 1 },
-            ],
-        },
-        {
-            line: "Line 3",
-            buyer: "Nike",
-            mo: "GPAR12461",
-            style: "ST-2461",
-            output: 1425,
-            defect: 29,
-            defectTypes: [
-                { type: "Open seam", qty: 6 },
-                { type: "Broken stitch", qty: 5 },
-                { type: "Dirty mark", qty: 4 },
-                { type: "Skip stitch", qty: 3 },
-                { type: "Needle mark", qty: 2 },
-                { type: "Puckering", qty: 2 },
-                { type: "Uneven stitch", qty: 2 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 1 },
-                { type: "Button issue", qty: 1 },
-            ],
-        },
-        {
-            line: "Line 4",
-            buyer: "Adidas",
-            mo: "GPAR12463",
-            style: "ST-2463",
-            output: 980,
-            defect: 18,
-            defectTypes: [
-                { type: "Open seam", qty: 4 },
-                { type: "Broken stitch", qty: 3 },
-                { type: "Dirty mark", qty: 2 },
-                { type: "Skip stitch", qty: 2 },
-                { type: "Needle mark", qty: 1 },
-                { type: "Puckering", qty: 1 },
-                { type: "Uneven stitch", qty: 1 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 1 },
-            ],
-        },
-        {
-            line: "Line 5",
-            buyer: "Uniqlo",
-            mo: "GPAR12464",
-            style: "ST-2464",
-            output: 1075,
-            defect: 36,
-            defectTypes: [
-                { type: "Open seam", qty: 8 },
-                { type: "Broken stitch", qty: 6 },
-                { type: "Dirty mark", qty: 5 },
-                { type: "Skip stitch", qty: 4 },
-                { type: "Needle mark", qty: 3 },
-                { type: "Puckering", qty: 2 },
-                { type: "Uneven stitch", qty: 2 },
-                { type: "Loose thread", qty: 2 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 2 },
-            ],
-        },
-        {
-            line: "Line 6",
-            buyer: "Puma",
-            mo: "GPAR12466",
-            style: "ST-2466",
-            output: 1320,
-            defect: 24,
-            defectTypes: [
-                { type: "Open seam", qty: 5 },
-                { type: "Broken stitch", qty: 4 },
-                { type: "Dirty mark", qty: 3 },
-                { type: "Skip stitch", qty: 2 },
-                { type: "Needle mark", qty: 2 },
-                { type: "Puckering", qty: 2 },
-                { type: "Uneven stitch", qty: 1 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 2 },
-            ],
-        },
-        { 
-            line: "Line 7",
-            buyer: "Puma",
-            mo: "GPAR12466",
-            style: "ST-2467",
-            output: 1320,
-            defect: 24,
-            defectTypes: [
-                { type: "Open seam", qty: 5 },
-                { type: "Broken stitch", qty: 4 },
-                { type: "Dirty mark", qty: 3 },
-                { type: "Skip stitch", qty: 2 },
-                { type: "Needle mark", qty: 2 },
-                { type: "Puckering", qty: 2 },
-                { type: "Uneven stitch", qty: 1 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 2 },
-            ],
-        },
-        {
-            line: "Line 8",
-            buyer: "Puma",
-            mo: "GPAR12466",
-            style: "ST-2468",
-            output: 1320,
-            defect: 24,
-            defectTypes: [
-                { type: "Open seam", qty: 5 },
-                { type: "Broken stitch", qty: 4 },
-                { type: "Dirty mark", qty: 3 },
-                { type: "Skip stitch", qty: 2 },
-                { type: "Needle mark", qty: 2 },
-                { type: "Puckering", qty: 2 },
-                { type: "Uneven stitch", qty: 1 },
-                { type: "Loose thread", qty: 1 },
-                { type: "Oil stain", qty: 1 },
-                { type: "Label issue", qty: 1 },
-                { type: "Size mark", qty: 2 },
-            ],
-        },
-    ],
-    hourlyTrend: [
-        { hour: "08:00", output: 930, defect: 31 },
-        { hour: "09:00", output: 1085, defect: 34 },
-        { hour: "10:00", output: 1120, defect: 29 },
-        { hour: "11:00", output: 1188, defect: 25 },
-        { hour: "12:00", output: 820, defect: 15 },
-        { hour: "13:00", output: 1210, defect: 31 },
-        { hour: "14:00", output: 1270, defect: 35 },
-        { hour: "15:00", output: 1312, defect: 30 },
-    ],
-};
+const DEFAULT_TARGET_DEFECT_RATE = 2.5;
 
 const chartTextSx = {
     "& .MuiChartsGrid-line": { stroke: "#ffffff", strokeOpacity: 0.28 },
@@ -292,7 +107,96 @@ function normalizeDefectTypes(defectTypes) {
     return [];
 }
 
+function mergeDefectTypes(defectTypeGroups) {
+    return Object.entries(
+        defectTypeGroups.flat().reduce((acc, item) => {
+            acc[item.type] = (acc[item.type] || 0) + item.qty;
+            return acc;
+        }, {})
+    ).map(([type, qty]) => ({ type, qty }));
+}
+
+function getUniqueStyleLabel(styles) {
+    const uniqueStyles = new Map();
+
+    styles.forEach((style) => {
+        const displayStyle = String(style ?? "").trim();
+        const key = displayStyle.toLowerCase();
+
+        if (displayStyle && !uniqueStyles.has(key)) {
+            uniqueStyles.set(key, displayStyle);
+        }
+    });
+
+    return [...uniqueStyles.values()].join(", ");
+}
+
+function getUniqueLabel(values) {
+    const uniqueValues = new Map();
+
+    values.forEach((value) => {
+        const displayValue = String(value ?? "").trim();
+        const key = displayValue.toLowerCase();
+
+        if (displayValue && !uniqueValues.has(key)) {
+            uniqueValues.set(key, displayValue);
+        }
+    });
+
+    return [...uniqueValues.values()].join(", ");
+}
+
+function getHourEndLabel(hour) {
+    const displayHour = String(hour ?? "").trim();
+
+    if (!displayHour.includes("-")) {
+        return displayHour;
+    }
+
+    return displayHour.split("-").pop().trim();
+}
+
+function normalizeMoItem(moItem, moIndex, parent = {}) {
+    const defectTypes = normalizeDefectTypes(moItem?.defectTypes);
+    const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
+
+    return {
+        ...moItem,
+        buyer: moItem?.buyer ?? parent.buyer ?? "-",
+        mo: moItem?.mo ?? moItem?.moNo ?? `MO ${moIndex + 1}`,
+        style: moItem?.style ?? moItem?.styleNo ?? "-",
+        output: Number(moItem?.output ?? moItem?.checked ?? 0),
+        defect: Number(moItem?.defect ?? moItem?.defectQty ?? defectTypeTotal),
+        defectTypes,
+    };
+}
+
 function normalizeLine(line, index) {
+    const mos = Array.isArray(line?.mos)
+        ? line.mos.map((moItem, moIndex) => normalizeMoItem(moItem, moIndex, line))
+        : [];
+
+    if (mos.length > 0) {
+        const output = mos.reduce((sum, item) => sum + item.output, 0);
+        const defect = mos.reduce((sum, item) => sum + item.defect, 0);
+        const defectTypes = mergeDefectTypes(mos.map((item) => item.defectTypes));
+        const buyerLabel = getUniqueLabel(mos.map((item) => item.buyer));
+        const moLabel = mos.map((item) => item.mo).join(", ");
+        const styleLabel = getUniqueStyleLabel(mos.map((item) => item.style));
+
+        return {
+            ...line,
+            line: line?.line ?? line?.lineName ?? `Line ${index + 1}`,
+            buyer: buyerLabel || line?.buyer || "-",
+            mo: moLabel || "-",
+            style: styleLabel || "-",
+            output,
+            defect,
+            defectTypes,
+            mos,
+        };
+    }
+
     const defectTypes = normalizeDefectTypes(line?.defectTypes);
     const defectTypeTotal = defectTypes.reduce((sum, item) => sum + item.qty, 0);
     const output = Number(line?.output ?? line?.checked ?? 0);
@@ -307,6 +211,7 @@ function normalizeLine(line, index) {
         output,
         defect,
         defectTypes,
+        mos: line?.mo || line?.moNo ? [normalizeMoItem(line, 0)] : [],
     };
 }
 
@@ -341,20 +246,22 @@ function ProductionStatusSewingDefect() {
 
     // -- Query ----------------------------------------------------------------------------------------
     const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday } = useGetDefectTodayQuery();
+    const shouldRotateLineLabels = useMediaQuery("(max-width:1535px)");
 
-    const [lastUpdated, setLastUpdated] = useState(sewingDefectMockApi.updatedAt);
+    const [lastUpdated, setLastUpdated] = useState("-");
 
     const dashboard = useMemo(() => {
-        const source = defectToday ?? sewingDefectMockApi;
+        const source = defectToday?.data ?? defectToday;
         const lines = Array.isArray(source?.lines) ? source.lines.map(normalizeLine) : [];
         const hourlyTrend = Array.isArray(source?.hourlyTrend) ? source.hourlyTrend : [];
-        const targetDefectRate = Number(source?.targetDefectRate ?? sewingDefectMockApi.targetDefectRate);
-        const updatedAt = source?.updatedAt ?? sewingDefectMockApi.updatedAt;
+        const targetDefectRate = Number(source?.targetDefectRate ?? DEFAULT_TARGET_DEFECT_RATE);
+        const updatedAt = source?.updatedAt ?? "-";
 
         const totalOutput = lines.reduce((sum, line) => sum + line.output, 0);
         const totalDefect = lines.reduce((sum, line) => sum + line.defect, 0);
         const defectRate = totalOutput ? (totalDefect / totalOutput) * 100 : 0;
         const affectedLines = lines.filter((line) => line.defect > 0).length;
+        const runningLines = lines.filter((line) => line.mos?.length > 0).length;
         const activeStyles = new Set(lines.map((line) => line.style).filter(Boolean)).size;
 
         const lineAnalysis = lines
@@ -363,8 +270,7 @@ function ProductionStatusSewingDefect() {
                 defectRate: line.output ? Number(((line.defect / line.output) * 100).toFixed(2)) : 0,
                 passQty: line.output - line.defect,
                 contribution: totalDefect ? Number(((line.defect / totalDefect) * 100).toFixed(1)) : 0,
-            }))
-            .sort((a, b) => b.defect - a.defect);
+            }));
 
         const defectMix = Object.entries(
             lines.reduce((acc, line) => {
@@ -397,6 +303,7 @@ function ProductionStatusSewingDefect() {
             totalDefect,
             defectRate,
             affectedLines,
+            runningLines,
             activeStyles,
             lineAnalysis,
             defectMix,
@@ -405,16 +312,21 @@ function ProductionStatusSewingDefect() {
         };
     }, [defectToday]);
 
-    const refreshMockApi = () => {
+    const refreshDashboard = () => {
         refetch();
         setLastUpdated(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     };
 
-    const displayUpdatedAt = defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
+    const displayUpdatedAt = defectToday?.data?.updatedAt ?? defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
     const riskLines = dashboard.lineAnalysis.filter((line) => line.defectRate > dashboard.targetDefectRate);
     const topDefect = dashboard.defectMix[0] ?? { type: "-", qty: 0, rate: 0 };
+    const highestDefectLine = [...dashboard.lineAnalysis].sort((a, b) => b.defect - a.defect)[0];
     const highestRiskLine = [...dashboard.lineAnalysis].sort((a, b) => b.defectRate - a.defectRate)[0] ?? { line: "-", defectRate: 0 };
     const bestLine = [...dashboard.lineAnalysis].sort((a, b) => a.defectRate - b.defectRate)[0] ?? { line: "-", defectRate: 0 };
+    const maxLineDefect = Math.max(...dashboard.lineAnalysis.map((line) => line.defect), 0);
+    const lineDefectYAxisMax = maxLineDefect > 0 ? Math.ceil(maxLineDefect * 1.35) : 1;
+    const lineDefectXAxisHeight = shouldRotateLineLabels ? 78 : 44;
+    const hourlyXAxisHeight = shouldRotateLineLabels ? 56 : 36;
 
     return (
         <div className="pb-12">
@@ -423,7 +335,7 @@ function ProductionStatusSewingDefect() {
                     <p className="text-[clamp(1rem,4vw,1.3rem)] text-nowrap">WIP | Sewing Defect Dashboard / Real-Time</p>
                     <p className="text-[clamp(0.8rem,3vw,1rem)] text-white/75">Live | Sewing Defect | Updated {displayUpdatedAt}</p>
                 </div>
-                <button className="button-glass" onClick={refreshMockApi} disabled={isLoadingDefectToday || isFetchingDefectToday}>
+                <button className="button-glass" onClick={refreshDashboard} disabled={isLoadingDefectToday || isFetchingDefectToday}>
                     <RefreshIcon className={isLoadingDefectToday || isFetchingDefectToday ? "animate-spin" : ""} /> Refresh
                 </button>
             </div>
@@ -465,7 +377,7 @@ function ProductionStatusSewingDefect() {
                         title="Active Styles"
                         theme="sunset"
                         value={dashboard.activeStyles}
-                        percentage={`${dashboard.lineAnalysis.length} running lines`}
+                        percentage={`${dashboard.runningLines} running lines`}
                         icon={<img src="/images/tshirt.png" alt="active styles" className="w-10 h-auto" />}
                     />
                 </div>
@@ -476,7 +388,7 @@ function ProductionStatusSewingDefect() {
                             <SectionHeader
                                 icon={<BarChartRoundedIcon className="text-white/80" />}
                                 title="Line Defect Hotspots"
-                                subtitle={`${dashboard.lineAnalysis.length} lines | ${dashboard.totalDefect} defects | Sorted by quantity`}
+                                subtitle={`${dashboard.lineAnalysis.length} lines | ${dashboard.totalDefect} defects | API line order`}
                             />
                             <div className="rounded-full border border-white/15 bg-white/10 px-4 py-1 text-sm text-white">
                                 Target: {dashboard.targetDefectRate}%
@@ -488,12 +400,22 @@ function ProductionStatusSewingDefect() {
                                 xAxis={[{
                                     scaleType: "band",
                                     dataKey: "line",
-                                    tickLabelStyle: { fill: "#ffffff" },
+                                    position: "bottom",
+                                    height: lineDefectXAxisHeight,
+                                    tickLabelInterval: () => true,
+                                    valueFormatter: (line) => line,
+                                    tickLabelStyle: {
+                                        fill: "#ffffff",
+                                        fontSize: 12,
+                                        angle: shouldRotateLineLabels ? -35 : 0,
+                                        textAnchor: shouldRotateLineLabels ? "end" : "middle",
+                                    },
                                     axisLineStyle: { stroke: "#ffffff" },
                                     tickLineStyle: { stroke: "#ffffff" },
                                 }]}
                                 yAxis={[{
-                                    width: 96,
+                                    width: 82,
+                                    max: lineDefectYAxisMax,
                                     valueFormatter: (value) => `${value.toLocaleString()} pcs`,
                                     tickLabelStyle: { fill: "#ffffff", fontSize: 12 },
                                     axisLineStyle: { stroke: "#ffffff" },
@@ -516,21 +438,29 @@ function ProductionStatusSewingDefect() {
                                     },
                                 ]}
                                 grid={{ horizontal: true, vertical: false }}
-                                margin={{ top: 70, right: 28, bottom: 38, left: 10 }}
+                                margin={{ top: 24, right: 0, bottom: 24, left: 0 }}
                                 borderRadius={8}
                                 skipAnimation={false}
                                 sx={chartTextSx}
                                 slots={{ barLabel: DefectBarLabel }}
-                                slotProps={chartSlotProps}
+                                slotProps={{
+                                    ...chartSlotProps,
+                                    legend: {
+                                        hidden: true,
+                                    },
+                                }}
                             />
                         </div>
                         <div className="grid grid-cols-1">
-                            {dashboard.lineAnalysis.slice(0, 1).map((line) => (
+                            {highestDefectLine && [highestDefectLine].map((line) => (
                                 <div key={line.line} className="rounded-xl border flex justify-between border-rose-300/20 bg-rose-500/10 px-4 py-3 text-white w-full">
                                     <div>
 
                                     <p className="text-sm text-white/60">Highest defect: {line.line} | {line.buyer}</p>
-                                    <p className="text-sm text-white/75">Style: {line.style} | MO: {line.mo}</p>
+                                    <p className="text-sm text-white/75">
+                                        Style: {line.style} | MO: {line.mo}
+                                        {line.mos?.length > 1 && <span className="whitespace-nowrap"> ({line.mos.length} MOs)</span>}
+                                    </p>
                                    
                                     <p className="text-sm text-rose-100">{line.defectRate}% defect rate</p>
                                     </div>
@@ -604,23 +534,35 @@ function ProductionStatusSewingDefect() {
                             <LineChart
                                 xAxis={[{
                                     scaleType: "point",
-                                    data: dashboard.hourlyRates.map((row) => row.hour),
-                                    tickLabelStyle: { fill: "#ffffff" },
+                                    data: dashboard.hourlyRates.map((row) => getHourEndLabel(row.hour)),
+                                    position: "bottom",
+                                    height: hourlyXAxisHeight,
+                                    tickLabelInterval: () => true,
+                                    tickLabelStyle: {
+                                        fill: "#ffffff",
+                                        fontSize: 12,
+                                        angle: shouldRotateLineLabels ? -35 : 0,
+                                        textAnchor: shouldRotateLineLabels ? "end" : "middle",
+                                    },
                                     axisLineStyle: { stroke: "#ffffff" },
                                     tickLineStyle: { stroke: "#ffffff" },
                                 }]}
                                 yAxis={[
                                     {
                                         id: "pcs",
+                                        position: "left",
+                                        width: 64,
                                         valueFormatter: (value) => `${value} pcs`,
-                                        tickLabelStyle: { fill: "#ffffff" },
+                                        tickLabelStyle: { fill: "#ffffff", fontSize: 12 },
                                         axisLineStyle: { stroke: "#ffffff" },
                                         tickLineStyle: { stroke: "#ffffff" },
                                     },
                                     {
                                         id: "rate",
+                                        position: "right",
+                                        width: 42,
                                         valueFormatter: (value) => `${value}%`,
-                                        tickLabelStyle: { fill: "#ffffff" },
+                                        tickLabelStyle: { fill: "#ffffff", fontSize: 12 },
                                         axisLineStyle: { stroke: "#ffffff" },
                                         tickLineStyle: { stroke: "#ffffff" },
                                     },
@@ -644,10 +586,15 @@ function ProductionStatusSewingDefect() {
                                     },
                                 ]}
                                 grid={{ horizontal: true, vertical: false }}
-                                margin={{ top: 28, right: 22, bottom: 34, left: 52 }}
+                                margin={{ top: 24, right: 0, bottom: shouldRotateLineLabels ? 0 : 38, left: 0 }}
                                 skipAnimation={false}
                                 sx={chartTextSx}
-                                slotProps={chartSlotProps}
+                                slotProps={{
+                                    ...chartSlotProps,
+                                    legend: {
+                                        hidden: true,
+                                    },
+                                }}
                             />
                         </div>
                     </div>
@@ -658,9 +605,9 @@ function ProductionStatusSewingDefect() {
                             title="Follow-up Lines"
                             subtitle={`${riskLines.length} lines exceed the ${dashboard.targetDefectRate}% target`}
                         />
-                        <div className="mt-4 overflow-x-auto">
+                        <div className="mt-4 max-h-[360px] overflow-auto pr-1">
                             <table className="w-full min-w-[640px] text-left text-sm text-white">
-                                <thead className="border-b border-white/10 text-white/55">
+                                <thead className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/80 text-white/55 backdrop-blur">
                                 <tr>
                                     <th className="py-3 pr-3 font-medium">Line</th>
                                     <th className="py-3 pr-3 font-medium">Buyer / MO</th>
@@ -668,7 +615,7 @@ function ProductionStatusSewingDefect() {
                                     <th className="py-3 pr-3 font-medium">Output</th>
                                     <th className="py-3 pr-3 font-medium">Defects</th>
                                     <th className="py-3 pr-3 font-medium">Rate</th>
-                                    <th className="py-3 font-medium">Status</th>
+                                    <th className="py-3 font-medium whitespace-nowrap">Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -678,13 +625,16 @@ function ProductionStatusSewingDefect() {
                                     return (
                                         <tr key={line.line} className="border-b border-white/10 last:border-0">
                                             <td className="py-3 pr-3 font-semibold">{line.line}</td>
-                                            <td className="py-3 pr-3 text-white/70">{line.buyer} / {line.mo}</td>
+                                            <td className="py-3 pr-3 text-white/70">
+                                                {line.buyer} / {line.mo}
+                                                {line.mos?.length > 1 && <span className="ml-2 inline-flex whitespace-nowrap rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70">{line.mos.length} MOs</span>}
+                                            </td>
                                             <td className="py-3 pr-3 text-white/80">{line.style}</td>
                                             <td className="py-3 pr-3">{line.output.toLocaleString()} pcs</td>
                                             <td className="py-3 pr-3">{line.defect} pcs</td>
                                             <td className="py-3 pr-3">{line.defectRate.toFixed(2)}%</td>
-                                            <td className="py-3">
-                                                <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${isRisk ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
+                                            <td className="py-3 whitespace-nowrap">
+                                                <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${isRisk ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
                                                     {isRisk && <WarningAmberRoundedIcon sx={{ fontSize: 16 }} />}
                                                     {isRisk ? "Follow-up" : "On target"}
                                                 </span>
