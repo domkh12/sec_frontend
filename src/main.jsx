@@ -11,9 +11,11 @@ import {Provider} from "react-redux";
 import store from "./redux/app/store.js";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import { HelmetProvider } from "react-helmet-async";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <HelmetProvider>
       <BrowserRouter
           future={{
               v7_startTransition: true,
@@ -22,13 +24,12 @@ createRoot(document.getElementById('root')).render(
           <Provider store={store}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
               <ThemeProvider theme={theme}>
-
                     <CssBaseline />
-
                   <App />
               </ThemeProvider>
               </LocalizationProvider>
           </Provider>
       </BrowserRouter>
+      </HelmetProvider>
   </StrictMode>,
 )

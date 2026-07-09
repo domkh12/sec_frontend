@@ -5,7 +5,7 @@ import Logo from "../util/Logo.jsx";
 import { IconButton } from "@mui/material";
 import { BiFullscreen, BiExitFullscreen } from "react-icons/bi";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
-import { FaHome } from "react-icons/fa";
+import { FaChartPie, FaHome } from "react-icons/fa";
 import useAuth from "../../hook/useAuth.jsx";
 import { MdAnalytics } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,6 +27,7 @@ function NavBarCus() {
     const homePath = isAdmin ? "/admin" : isManager ? "/manager" : "/tv";
     const isHomeActive = pathname === homePath;
     const isAnalyticsActive = pathname.startsWith("/admin/analytics");
+    const isProductionStatusActive = pathname.startsWith("/admin/production-status");
 
     useEffect(() => {
         const handleFsChange = () => {
@@ -60,6 +61,12 @@ function NavBarCus() {
                         <FaHome className="text-base" />
                         Home
                     </button>
+                    {isAdmin && (
+                        <button className={getNavButtonClass(isProductionStatusActive)} onClick={() => navigate("/admin/production-status")}>
+                            <FaChartPie className="text-lg"/>
+                            Production Status
+                        </button>
+                    )}
                     {isAdmin && (
                         <button className={getNavButtonClass(isAnalyticsActive)} onClick={() => navigate("/admin/analytics")}>
                             <MdAnalytics className="text-lg"/>

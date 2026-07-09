@@ -1,5 +1,6 @@
 User-agent: *
 
+# Private application areas
 Disallow: /admin
 Disallow: /admin/*
 Disallow: /manager
@@ -8,10 +9,14 @@ Disallow: /warehouse
 Disallow: /warehouse/*
 Disallow: /tv
 Disallow: /tv/*
+
+# Utility/error pages
 Disallow: /unauthorize
 Disallow: /admin-menu-testing
-Disallow: /login
 
+# Public entry point and static assets
 Allow: /
+Allow: /images/
+Allow: /assets/
 
 Sitemap: https://sec-mega.site/sitemap.xml

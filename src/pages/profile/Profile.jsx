@@ -15,6 +15,8 @@ import {useUpdateUserProfileMutation } from "../../redux/feature/auth/authApiSli
 import {setAlertProfile, setIsOpenSnackbarProfile} from "../../redux/feature/auth/authSlice.js";
 import useFileUpload from "../../hook/useFileUpload.jsx";
 import useAuth from "../../hook/useAuth.jsx";
+import Seo from "../../components/seo/Seo.jsx";
+import CustomTextField1 from "../../components/input/CustomTextField1.jsx";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
@@ -105,222 +107,77 @@ function Profile() {
         }
     }
 
+    const navigateToHome = () => {
+        if (isAdmin) navigate("/admin");
+        else if (isManager) navigate("/manager");
+        else if (isWarehouse) navigate("/warehouse");
+        else if (isViewer) navigate("/tv");
+    }
+
     return (
-        <>
-        <div className="card-glass">
-            <BackButton onClick={() => isManager ? navigate("/manager") : isAdmin ? navigate("/admin") : isWarehouse ? navigate("/warehouse") : navigate("/")}/>
+        <div className="card-glass text-amber-50">
+            <Seo title="Profile" />
+            <BackButton onClick={navigateToHome} />
+            <p className="text-2xl font-bold my-5">Account Settings</p>
+            <div className="w-full flex gap-4 justify-start items-start">
+                <div className=" flex flex-col gap-4 mt-5 justify-start items-start">
+                    <button className="button-glass" style={{ width: "200px", textAlign: "left", margin: 0 }}>
+                        My profile
+                    </button>
+                    <button className="hover:button-glass">
+                        Security
+                    </button>
+                    <button>
+                        Notifications
+                    </button>
+                    <button>
+                        Help
+                    </button>
+                </div>
+                <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255,255,255,0.1)" }} />
+                <div className="w-full">
+                    <div className="w-full">
+                        <div className="flex gap-5 justify-baseline items-center">
+                            <img src={user.avatar || "/images/default-avatar.png"} alt="Avatar" className="w-32 h-32 rounded-full mb-4" />
+                            <div className="">
+                                <p>Profile picture</p><br/>
+                                <p>PNG, JPG under 2MB</p>
+                                <div className="flex gap-5 mt-5">
+                                    <button className="hover:underline text-blue-400 cursor-pointer">Upload new picture</button>
+                                    <button className="hover:underline text-red-500 cursor-pointer">Delete</button>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                    <div className="mt-5">
+                        <p className="mb-5">Full name</p>
 
-            {/* ── 1. Identity Card ─────────────────────────────────────────────── */}
-            <div className="card-glass">
-                {/* Role badge */}
-                <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-                    <Typography
-                        sx={{
-                            fontSize: 10, fontWeight: 700, letterSpacing: 2,
-                            textTransform: "uppercase", color: "#a5f3fc",
-                            border: "1px solid rgba(6,182,212,0.4)",
-                            background: "rgba(8,145,178,0.2)",
-                            borderRadius: "999px", px: 1.5, py: 0.5,
-                        }}
-                    >
-                        {user.role}
-                    </Typography>
-                </Box>
-
-                {/* Avatar + name */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Box sx={{ position: "relative" }}>
-                        <Box sx={{
-                            p: "3px", borderRadius: "50%",
-                            background: "linear-gradient(135deg, #22d3ee, #6366f1)",
-                            boxShadow: "0 0 20px rgba(6,182,212,0.45)",
-                        }}>
-                            <Avatar src={user.avatar} alt={user.username} sx={{ width: 64, height: 64, border: "3px solid #0f172a" }} />
-                        </Box>
-                        {/* Online dot */}
-                        <Box sx={{
-                            position: "absolute", bottom: 2, right: 2,
-                            width: 12, height: 12, borderRadius: "50%",
-                            bgcolor: "#34d399", border: "2px solid #0f172a",
-                            boxShadow: "0 0 8px #34d399",
-                        }} />
-                    </Box>
-
-                    <Box>
-                        <Typography sx={{ color: "#f1f5f9", fontWeight: 700, fontSize: 16 }}>
-                            {user.firstName} {user.lastName}
-                        </Typography>
-                        <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
-                            @{user.username}
-                        </Typography>
-                    </Box>
-                </Box>
-
-                {/* Quick stats */}
-                <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1.5, mt: 3 }}>
-                    {[
-                        { label: "User ID",  value: `#${user.id}` },
-                        { label: "Phone",    value: user.phoneNumber ? `+${user.phoneNumber}` : "—" },
-                        { label: "Birthday", value: user.dateOfBirth ?? "—" },
-                    ].map(({ label, value }) => (
-                        <Box key={label} sx={{
-                            background: "rgba(255,255,255,0.05)",
-                            border: "1px solid rgba(255,255,255,0.06)",
-                            borderRadius: "12px", px: 1.5, py: 1.5, textAlign: "center",
-                        }}>
-                            <Typography sx={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.5)", mb: 0.5 }}>
-                                {label}
-                            </Typography>
-                            <Typography sx={{ fontSize: 11, fontWeight: 600, color: "#f1f5f9" }} noWrap>
-                                {value}
-                            </Typography>
-                        </Box>
-                    ))}
-                </Box>
-            </div>
-
-            {/* ── 2. Photo Upload Card ─────────────────────────────────────────── */}
-            <CardGlassBlur2>
-                <Typography sx={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.7)", mb: 2 }}>
-                    Profile Photo
-                </Typography>
-
-                <Box sx={{
-                    display: "flex", alignItems: "center", gap: 2,
-                    border: "1px dashed rgba(6,182,212,0.25)",
-                    borderRadius: "12px", p: 2, background: "rgba(255,255,255,0.02)",
-                }}>
-                    <Avatar src={user.avatar} variant="rounded" sx={{ width: 52, height: 52, border: "1px solid rgba(255,255,255,0.1)" }} />
-
-                    <Box sx={{ flex: 1 }}>
-                        <Typography sx={{ color: "#f1f5f9", fontSize: 13, fontWeight: 500 }}>Change picture</Typography>
-                        <Typography sx={{ color: "rgba(255,255,255,0.4)", fontSize: 11, mt: 0.3 }}>JPG or PNG · max 5 MB</Typography>
-                    </Box>
-
-                    <Stack spacing={1}>
-                        <InputFileUpload onChange={handleUploadImage} isLoading={isLoadingUpload}/>
-                        <Button
-                            size="small"
-                            sx={{
-                                fontSize: 11, fontWeight: 600, color: "#f87171",
-                                border: "1px solid rgba(248,113,113,0.5)", borderRadius: "8px",
-                                "&:hover": { background: "rgba(239,68,68,0.15)", borderColor: "#f87171" },
-                            }}
-                            onClick={handleRemoveImage}
+                        <Formik
+                            initialValues={initialValues}
+                            onSubmit={handleSubmit}
+                            sx={{ 
+                                width: "100%",
+                             }}
                         >
-                            Remove
-                        </Button>
-                    </Stack>
-                </Box>
-            </CardGlassBlur2>
-
-            {/* ── 3. Edit Profile Card ─────────────────────────────────────────── */}
-            <CardGlassBlur2>
-                <Typography sx={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "rgba(255,255,255,0.7)", mb: 3 }}>
-                    Edit Profile
-                </Typography>
-
-                <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit} enableReinitialize>
-                    {({ values, errors, touched, handleChange, handleBlur, setFieldValue }) => (
-                        <Form>
-                            <Stack spacing={2.5}>
-                                {/* First Name / Last Name */}
-                                <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-                                    <TextField
-                                        name="firstName"
-                                        label="First Name"
-                                        value={values.firstName}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.firstName && Boolean(errors.firstName)}
-                                        helperText={touched.firstName && errors.firstName}
-                                        sx={fieldSx}
-                                    />
-                                    <TextField
-                                        name="lastName"
-                                        label="Last Name"
-                                        value={values.lastName}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.lastName && Boolean(errors.lastName)}
-                                        helperText={touched.lastName && errors.lastName}
-                                        sx={fieldSx}
-                                    />
-                                </Box>
-
-                                {/* Phone */}
-                                <TextField
-                                    name="phone"
-                                    label="Phone Number"
-                                    placeholder="+1 234 567 890"
-                                    value={values.phone}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.phone && Boolean(errors.phone)}
-                                    helperText={touched.phone && errors.phone}
-                                    sx={fieldSx}
-                                />
-
-                                {/* Birthday */}
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DatePicker
-                                        label="Birthday"
-                                        value={values.birthday}
-                                        onChange={(val) => setFieldValue("birthday", val)}
-                                        disableFuture
-                                        slotProps={{
-                                            textField: {
-                                                onBlur: () => handleBlur({ target: { name: "birthday" } }),
-                                                error: touched.birthday && Boolean(errors.birthday),
-                                                helperText: touched.birthday && errors.birthday,
-                                                sx: fieldSx,
-                                                fullWidth: true,
-                                            },
-                                        }}
-                                    />
-                                </LocalizationProvider>
-                            </Stack>
-
-                            <Divider sx={{ borderColor: "rgba(255,255,255,0.05)", my: 3 }} />
-
-                            <Button
-                                type="submit"
-                                fullWidth
-                                disabled={isLoading}
-                                sx={{
-                                    py: 1.5, borderRadius: "12px", fontWeight: 700,
-                                    fontSize: 14, letterSpacing: 1, textTransform: "none",
-                                    background: "linear-gradient(90deg, #06b6d4, #6366f1)",
-                                    color: "#fff",
-                                    boxShadow: "0 4px 20px rgba(6,182,212,0.3)",
-                                    "&:hover": { opacity: 0.9, transform: "translateY(-1px)" },
-                                    "&:active": { transform: "translateY(0)" },
-                                    transition: "all 0.15s ease",
-                                }}
-                            >
-                                {isLoading ? "Saving…" : "Save Changes"}
-                            </Button>
-                        </Form>
-                    )}
-                </Formik>
-            </CardGlassBlur2>
+                            <Form>
+                                <div className="w-full grid grid-cols-2 gap-5">
+                                    <div>
+                                        <p>Name Khmer</p>
+                                        <CustomTextField1 name="firstName" value={user.nameKh}/>
+                                    </div>
+                                    <div>
+                                        <p>Name English</p>
+                                        <CustomTextField1 name="lastName" value={user.nameEn}/>
+                                    </div>
+                                </div>
+                                
+                            </Form>
+                        </Formik>
+                    </div>    
+                </div>
+            </div>
         </div>
-        <Snackbar
-            open={isOpenSnackbar}
-            autoHideDuration={6000}
-            onClose={() => dispatch(setIsOpenSnackbarProfile(false))}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-            <Alert
-                onClose={() => dispatch(setIsOpenSnackbarProfile(false))}
-                severity={alertProfile.type}
-                variant="filled"
-                sx={{ width: '100%' }}
-            >
-                {alertProfile.message}
-            </Alert>
-        </Snackbar>
-        </>
     );
 }
 

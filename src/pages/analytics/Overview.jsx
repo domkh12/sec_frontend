@@ -43,7 +43,6 @@ export default function Overview({data, outputLast48hrsData}) {
               value={data?.totalInput || 0} 
               growth={data?.totalInputComparison?.changePercent}
               icon={FaBox}
-              subtitle="Cutting department"
               color="blue"
               trend={data?.totalInputComparison?.trend}
               onClick={() => {
@@ -57,7 +56,6 @@ export default function Overview({data, outputLast48hrsData}) {
               value={data?.totalOutput || 0} 
               growth={data?.totalOutputComparison?.changePercent}
               icon={FaCheckCircle}
-              subtitle="Sewing department"
               color="green"
               trend={data?.totalOutputComparison?.trend}
               onClick={() => {
@@ -65,22 +63,6 @@ export default function Overview({data, outputLast48hrsData}) {
               }}
               isActive={dataKey === "output"}
             />
-            {/* <StatCard 
-              title="Defect Rate" 
-              value={`${data?.defectRate || 0}%`} 
-              growth={-0.8}
-              icon={FaExclamationTriangle}
-              subtitle="Quality control"
-              color="red"
-            />
-            <StatCard 
-              title="Efficiency" 
-              value={`${data?.efficiency || 0}%`} 
-              growth={5.2}
-              icon={FaChartLine}
-              subtitle="Overall performance"
-              color="yellow"
-            /> */}
           </div>
           <div className="p-4">
             <ChartGrid data={data?.data || []} dataKey={dataKey}/>

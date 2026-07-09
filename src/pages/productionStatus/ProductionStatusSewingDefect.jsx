@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
@@ -11,6 +11,7 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import { useMediaQuery } from "@mui/material";
 import StatCardsDash from "../../components/card/StatCardsDash.jsx";
 import { useGetDefectTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
+import useWebsocketServer from "../../hook/useWebsocketServer.js";
 
 const DEFAULT_TARGET_DEFECT_RATE = 2.5;
 
@@ -245,7 +246,23 @@ const DefectBarLabel = forwardRef(function DefectBarLabel({ x, y, width, childre
 function ProductionStatusSewingDefect() {
 
     // -- Query ----------------------------------------------------------------------------------------
-    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday } = useGetDefectTodayQuery();
+    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday, refetch: refetchDefectToday } = useGetDefectTodayQuery("defectToday",
+         {refetchOnMountOrArgChange: true,
+            refetchOnFocus: true, 
+            refetchOnReconnect: true, 
+            skip: false, 
+            refetchInterval: 60000,
+            pollingInterval: 60000
+        });
+    const { messages } = useWebsocketServer(`/topic/messages/tv-data-update`);
+
+    // -- useEffect ----------------------------------------------------------------------------------------
+    useEffect(() => {
+        if (messages.isUpdate === true) {
+            refetchDefectToday();
+        }
+    }, [messages, refetchDefectToday]);
+
     const shouldRotateLineLabels = useMediaQuery("(max-width:1535px)");
 
     const [lastUpdated, setLastUpdated] = useState("-");
@@ -327,6 +344,7 @@ function ProductionStatusSewingDefect() {
     const lineDefectYAxisMax = maxLineDefect > 0 ? Math.ceil(maxLineDefect * 1.35) : 1;
     const lineDefectXAxisHeight = shouldRotateLineLabels ? 78 : 44;
     const hourlyXAxisHeight = shouldRotateLineLabels ? 56 : 36;
+    const hourlyYAxisMax = Math.max(...dashboard.hourlyRates.map((row) => row.defect), 0) * 1.25;
 
     return (
         <div className="pb-12">
@@ -551,6 +569,7 @@ function ProductionStatusSewingDefect() {
                                     {
                                         id: "pcs",
                                         position: "left",
+                                        max: hourlyYAxisMax,
                                         width: 64,
                                         valueFormatter: (value) => `${value} pcs`,
                                         tickLabelStyle: { fill: "#ffffff", fontSize: 12 },
@@ -560,6 +579,7 @@ function ProductionStatusSewingDefect() {
                                     {
                                         id: "rate",
                                         position: "right",
+                                        max: hourlyYAxisMax > 0 ? Math.ceil(Math.max(...dashboard.hourlyRates.map((row) => row.rate)) * 1.35) : 1,
                                         width: 42,
                                         valueFormatter: (value) => `${value}%`,
                                         tickLabelStyle: { fill: "#ffffff", fontSize: 12 },
@@ -575,6 +595,7 @@ function ProductionStatusSewingDefect() {
                                         color: "#f59e0b",
                                         valueFormatter: (value) => `${value} pcs`,
                                         curve: "catmullRom",
+                                        barLabelPlacement: "outside",
                                     },
                                     {
                                         yAxisId: "rate",
@@ -583,6 +604,7 @@ function ProductionStatusSewingDefect() {
                                         color: "#fb7185",
                                         valueFormatter: (value) => `${value}%`,
                                         curve: "catmullRom",
+                                        barLabelPlacement: "outside",
                                     },
                                 ]}
                                 grid={{ horizontal: true, vertical: false }}
@@ -592,7 +614,7 @@ function ProductionStatusSewingDefect() {
                                 slotProps={{
                                     ...chartSlotProps,
                                     legend: {
-                                        hidden: true,
+                                        hidden: false,
                                     },
                                 }}
                             />
