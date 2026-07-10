@@ -3,6 +3,7 @@ import {
     Box, Paper, Typography, TextField, Button,
     Table, TableHead, TableBody, TableRow, TableCell,
     Chip, Divider, Stack, Grid, Alert, Collapse, Card,
+    Dialog, DialogTitle, DialogContent, DialogActions,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -190,6 +191,7 @@ function TVLineInput() {
     const { t } = useTranslation();
     const {isAdmin, isHrManager} = useAuth();
     const [showSuccess, setShowSuccess] = useState(false);
+    const [showCreateStyle, setShowCreateStyle] = useState(false);
     const navigate = useNavigate();
     const {
         messages,
@@ -259,9 +261,11 @@ function TVLineInput() {
             await updateTvData(payload).unwrap();
             setShowSuccess(true);
             setTimeout(() => setShowSuccess(false), 3000);
+            return true;
         } catch (error) {
             console.error("Error saving TV data:", error);
             setSaveError(error?.data?.error?.description || "Failed to save data. Please try again.");
+            return false;
         }
     };
 
@@ -296,6 +300,23 @@ function TVLineInput() {
     }
 
     const initialValues = mapApiToFormValues(tvData);
+
+    const newStyleInitialValues = {
+        ...initialValues,
+        orderNo: "",
+        totalInLine: "",
+        balanceInLine: "",
+        orderQty: "",
+        totalOutput: "",
+        qcRepairBack: "",
+        startDate: null,
+        finishDate: null,
+        orderInline: "",
+        balanceDay: "",
+        hTarg: "",
+        input: "",
+        dTarg: "",
+    };
 
     return (
         <CardList>
@@ -500,7 +521,7 @@ function TVLineInput() {
                                                                     {/* Hour slots */}
                                                                     {HOUR_KEYS.map(k => (
                                                                         <TableCell key={k} align="center">
-                                                                            {(isDefect) ? (
+                                                                            {(isDefect || isToday) ? (
                                                                                 <NumField
                                                                                     value={row[k]}
                                                                                     onChange={(v) => updateRow(ri, k, v)}
@@ -574,7 +595,18 @@ function TVLineInput() {
                                                 color="primary"
                                                 startIcon={<AddIcon />}
                                                 sx={{ fontWeight: 700, color: "white", borderColor: "white" }}
+                                                type="button"
+                                                onClick={() => setShowCreateStyle(true)}
+                                            >
+                                                Create new style
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                startIcon={<AddIcon />}
+                                                sx={{ fontWeight: 700, color: "white", borderColor: "white" }}
                                                 onClick={handleCreateTvData}
+                                                type="button"
                                             >
                                                 Create new row
                                             </Button>
@@ -595,6 +627,111 @@ function TVLineInput() {
                         );
                     }}
                 </Formik>
+
+                <Dialog
+                    open={showCreateStyle}
+                    onClose={() => setShowCreateStyle(false)}
+                    fullWidth
+                    maxWidth="md"
+                >
+                    <Formik
+                        initialValues={newStyleInitialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={async (values, { setSubmitting }) => {
+                            const saved = await handleSubmit(values);
+                            setSubmitting(false);
+                            if (saved) setShowCreateStyle(false);
+                        }}
+                    >
+                        {({ values, touched, errors, handleChange, handleBlur, setFieldValue, isSubmitting }) => (
+                            <Form>
+                                <DialogTitle fontWeight={900}>Create New Style</DialogTitle>
+                                <DialogContent dividers>
+                                    <SectionHeader icon={<AssignmentIcon />} title="Order Information" color="success.main" />
+                                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                        {orderFields.map(({ key, label, type }) => (
+                                            <TextField
+                                                key={key}
+                                                fullWidth
+                                                name={key}
+                                                label={label}
+                                                type={type}
+                                                size="small"
+                                                value={values[key]}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={!!(errors[key] && touched[key])}
+                                                helperText={errors[key] && touched[key] ? errors[key] : null}
+                                                inputProps={{ style: { fontWeight: 700 } }}
+                                                sx={type === "number" ? noSpinSx : {}}
+                                            />
+                                        ))}
+
+                                        <DatePicker
+                                            label="Start Date"
+                                            value={values.startDate}
+                                            onChange={(val) => setFieldValue("startDate", val)}
+                                            slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                                        />
+                                        <DatePicker
+                                            label="Finish Date"
+                                            value={values.finishDate}
+                                            onChange={(val) => setFieldValue("finishDate", val)}
+                                            minDate={values.startDate ?? undefined}
+                                            slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                                        />
+                                    </div>
+
+                                    <Divider sx={{ my: 3 }} />
+                                    <SectionHeader icon={<AccessTimeIcon />} title="Target Settings" color="primary.main" />
+                                    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {[
+                                            { key: "line", label: "Line", type: "text" },
+                                            { key: "worker", label: "Worker", type: "number" },
+                                            { key: "helper", label: "Helper", type: "number" },
+                                            { key: "wHour", label: "W.Hour", type: "number" },
+                                            { key: "hTarg", label: "H.Targ", type: "number" },
+                                            { key: "input", label: "Input", type: "number" },
+                                        ].map(({ key, label, type }) => (
+                                            <TextField
+                                                key={key}
+                                                fullWidth
+                                                name={key}
+                                                label={label}
+                                                type={type}
+                                                size="small"
+                                                value={values[key]}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={!!(errors[key] && touched[key])}
+                                                helperText={errors[key] && touched[key] ? errors[key] : null}
+                                                sx={type === "number" ? noSpinSx : {}}
+                                            />
+                                        ))}
+                                    </div>
+                                </DialogContent>
+                                <DialogActions sx={{ p: 2 }}>
+                                    <Button
+                                        type="button"
+                                        color="inherit"
+                                        onClick={() => setShowCreateStyle(false)}
+                                        disabled={isSubmitting}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        startIcon={<SaveIcon />}
+                                        disabled={isSubmitting}
+                                    >
+                                        Save
+                                    </Button>
+                                </DialogActions>
+                            </Form>
+                        )}
+                    </Formik>
+                </Dialog>
             </LocalizationProvider>
         </CardList>
     );

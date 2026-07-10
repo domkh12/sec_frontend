@@ -83,6 +83,11 @@ function MenuAdmin(){
                             onClick={() => navigate("output-details")}
                         />
                         <MenuButton
+                            title={`${t('defectDetails')}`}
+                            iconPath={"/images/shirt.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
                             title={`${t('qrGenerator')}`}
                             iconPath={"/images/qr-white.png"}
                             onClick={() => navigate("qr-generator")}

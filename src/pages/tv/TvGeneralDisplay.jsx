@@ -13,6 +13,78 @@ const ALL_HOUR_LABELS = ["8:00","9:00","10:00","11:00","13:00","14:00","15:00","
 const HOUR_KEYS   =  ALL_HOUR_KEYS;
 const HOUR_LABELS =  ALL_HOUR_LABELS;
 
+// Set to false when you want to use the real /tvs/tv-general endpoint.
+const USE_MOCK_TV_GENERAL_API = true;
+
+const MOCK_TV_GENERAL_DATA = [
+    {
+        line: "1",
+        worker: 32,
+        helper: 3,
+        act: "0-0",
+        styles: [
+            {
+                orderNo: "Style1", sewStart: "01/07", day: 10,
+                hour: 45, tarH: 45, tarDay: 360, yFinish: 550, defects: 2,
+                h8: 40, h9: 46, h10: 44, h11: 48, h13: 0,
+                h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
+            },
+        ],
+    },
+    {
+        // One API record represents one physical production line.
+        line: "2",
+        worker: 45,
+        helper: 5,
+        act: "0-0",
+        styles: [
+            {
+                orderNo: "Style2-A", sewStart: "04/06", day: 37,
+                hour: 52, tarH: 52, tarDay: 416, yFinish: 800, defects: 3,
+                h8: 50, h9: 54, h10: 51, h11: 55, h13: 0,
+                h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
+            },
+            {
+                orderNo: "Style2-B", sewStart: "10/07", day: 1,
+                hour: 40, tarH: 40, tarDay: 320, yFinish: 120, defects: 1,
+                h8: 0, h9: 0, h10: 0, h11: 22, h13: 0,
+                h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
+            },
+        ],
+    },
+    {
+        line: "3",
+        worker: 38,
+        helper: 4,
+        act: "0-0",
+        styles: [
+            {
+                orderNo: "Style3", sewStart: "07/07", day: 4,
+                hour: 48, tarH: 48, tarDay: 384, yFinish: 50, defects: 0,
+                h8: 47, h9: 50, h10: 45, h11: 49, h13: 0,
+                h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
+            },
+        ],
+    },
+];
+
+// Convert each line's nested styles into table rows without creating duplicate
+// line records. Line-level values are counted only on the first displayed style.
+function expandLineStyles(lineData) {
+    const styles = Array.isArray(lineData.styles) ? lineData.styles : [];
+
+    if (styles.length === 0) return [lineData];
+
+    return styles.map((style, styleIndex) => ({
+        ...lineData,
+        ...style,
+        styles: undefined,
+        worker: styleIndex === 0 ? lineData.worker : null,
+        helper: styleIndex === 0 ? lineData.helper : null,
+        isNewStyle: styleIndex > 0,
+    }));
+}
+
 // ─── Frontend calculation ─────────────────────────────────────────────────────
 function calcRow(row) {
     const finish = HOUR_KEYS.reduce(
@@ -46,7 +118,7 @@ function buildTotal(rows) {
         hourTotals[k] = rows.reduce((s, r) => s + (typeof r[k] === "number" ? r[k] : 0), 0) || null;
     });
     return {
-        line: "", styleNo: "Factory ALL    Total", sewStart: "", day: "", worker: totalWorker, helper: totalHelper,
+        line: "", orderNo: "Factory ALL    Total", sewStart: "", day: "", worker: totalWorker, helper: totalHelper,
         hour: "", tarH: totalTarH, tarDay: totalTarDay, tarNow: totalTarNow, dif: totalDif,
         finishPct: totalFinishPct, finish: totalFinish, yFinish: totalYFinish,
         defects: totalDefects, defPct: totalDefPct,
@@ -89,19 +161,41 @@ function DataTable({ rows, total }) {
     const thCls = "border-2 border-blue-500 bg-blue-700 text-white px-1 py-1 text-center text-sm font-bold whitespace-nowrap leading-tight";
     const tdCls = "border-2 border-blue-200 px-1 py-0.5 text-center text-xl whitespace-nowrap leading-snug";
 
-    const renderRow = (row, idx, isTotal) => {
+    const lineRowSpans = rows.map(() => 1);
+    let lineGroupStart = 0;
+
+    rows.forEach((row, idx) => {
+        const continuesPreviousLine =
+            idx > 0 &&
+            row.isNewStyle === true &&
+            String(row.line) === String(rows[idx - 1].line);
+
+        if (continuesPreviousLine) {
+            lineRowSpans[lineGroupStart] += 1;
+            lineRowSpans[idx] = 0;
+        } else {
+            lineGroupStart = idx;
+        }
+    });
+
+    const renderRow = (row, idx, isTotal, lineRowSpan = 1) => {
         const rowBg = isTotal ? "bg-yellow-300" : idx % 2 === 0 ? "bg-white" : "bg-blue-50";
         const fw    = isTotal ? "font-bold" : "font-normal";
         const randomKey = `row-${idx}`;
         return (
-            <tr key={row.line || randomKey} className={rowBg}>
+            <tr key={`${row.line || randomKey}-${row.orderNo || idx}`} className={rowBg}>
                 {/* Line */}
-                <td className={`${tdCls} text-blue-900 font-bold text-3xl text-left pl-1`}>
-                    {row.line}
-                </td>
-                {/* Style No */}
+                {lineRowSpan > 0 && (
+                    <td
+                        rowSpan={lineRowSpan}
+                        className={`${tdCls} text-blue-900 font-bold text-3xl text-left pl-1 align-middle`}
+                    >
+                        {row.line}
+                    </td>
+                )}
+                {/* Order No */}
                 <td className={`${tdCls} ${fw} text-left pl-1 max-w-[130px] overflow-hidden text-ellipsis`}>
-                    {row.styleNo}
+                    {row.orderNo}
                 </td>
                 {/* Sew Start */}
                 <td className={tdCls}>{row.sewStart}</td>
@@ -158,7 +252,7 @@ function DataTable({ rows, total }) {
                 <thead>
                 <tr>
                     <th className={`${thCls} text-left pl-1`}>Line</th>
-                    <th className={`${thCls} text-left pl-1`}>Style No</th>
+                    <th className={`${thCls} text-left pl-1`}>Order No</th>
                     <th className={thCls}>Sew.Start</th>
                     <th className={thCls}>Day</th>
                     <th className={thCls}>Worker</th>
@@ -178,7 +272,7 @@ function DataTable({ rows, total }) {
                 </tr>
                 </thead>
                 <tbody>
-                {rows.map((row, i) => renderRow(row, i, false))}
+                {rows.map((row, i) => renderRow(row, i, false, lineRowSpans[i]))}
                 {renderRow(total, 0, true)}
                 </tbody>
             </table>
@@ -230,7 +324,12 @@ export default function TvGeneralDisplay() {
 
     const { data: tvGeneralData, isLoading, isSuccess, refetch } = useGetTvGeneralDataQuery(undefined, {
         pollingInterval: 300000,
+        skip: USE_MOCK_TV_GENERAL_API,
     });
+
+    const displayData = USE_MOCK_TV_GENERAL_API ? MOCK_TV_GENERAL_DATA : tvGeneralData;
+    const displayIsLoading = USE_MOCK_TV_GENERAL_API ? false : isLoading;
+    const displayIsSuccess = USE_MOCK_TV_GENERAL_API ? true : isSuccess;
 
     // -- useCallback --------------------------------------------------------------------------------------
 
@@ -247,20 +346,20 @@ export default function TvGeneralDisplay() {
     // -- UseEffect ----------------------------------------------------------------------------------------
 
     useEffect(() => {
-        if (messages.isUpdate === true) refetch();
+        if (!USE_MOCK_TV_GENERAL_API && messages.isUpdate === true) refetch();
     }, [messages]);
 
     // check online and then reload page and wait 9s before reload
     useEffect(() => {
-        if(!isOnline){
+        if(!USE_MOCK_TV_GENERAL_API && !isOnline){
             setTimeout(() => {
                 window.location.reload();
             }, 9000)
         }
     }, [isOnline])
     
-    const computedRows = isSuccess && Array.isArray(tvGeneralData)
-        ? tvGeneralData.map(calcRow)
+    const computedRows = displayIsSuccess && Array.isArray(displayData)
+        ? displayData.flatMap(expandLineStyles).map(calcRow)
         : [];
 
     const total = computedRows.length > 0 ? buildTotal(computedRows) : null;
@@ -309,8 +408,8 @@ export default function TvGeneralDisplay() {
     const dateStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()}`;
     const [h, m, s] = timeStr.split(":").map(Number);
 
-    if (isLoading) return <CircularProgress />;
-    if (!isSuccess || computedRows.length === 0) return null;
+    if (displayIsLoading) return <CircularProgress />;
+    if (!displayIsSuccess || computedRows.length === 0) return null;
 
     return (
         <div

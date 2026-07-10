@@ -17,6 +17,7 @@ import useFileUpload from "../../hook/useFileUpload.jsx";
 import useAuth from "../../hook/useAuth.jsx";
 import Seo from "../../components/seo/Seo.jsx";
 import CustomTextField1 from "../../components/input/CustomTextField1.jsx";
+import CustomNumberInput from "../../components/input/CustomNumberInput.jsx";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
@@ -169,6 +170,10 @@ function Profile() {
                                     <div>
                                         <p>Name English</p>
                                         <CustomTextField1 name="lastName" value={user.nameEn}/>
+                                    </div>
+                                    <div>
+                                        <p>Phone number</p>
+                                        <CustomNumberInput name="phone" value={user.phoneNumber}/>
                                     </div>
                                 </div>
                                 
