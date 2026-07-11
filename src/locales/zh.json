@@ -207,5 +207,9 @@
   "analytics": "数据分析",
   "outputDetails": "输出详情",
   "productionLine": "生产线",
-  "goodOutputQty": "良品产量"
+  "goodOutputQty": "良品产量",
+  "defectDetails": "瑕疵详情",
+  "tvInput": "电视输入",
+  "home": "首页",
+  "manufacturingAnalytics": "制造分析"
 }

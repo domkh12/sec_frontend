@@ -154,7 +154,6 @@ function FinishCell({ pct }) {
 
 // ─── DataTable ────────────────────────────────────────────────────────────────
 function DataTable({ rows, total }) {
-    const isSaturdays = new Date().getDay() === 4;
     // Use border-separate + border-spacing-0 to prevent 1px border collapse on zoom/scale
     // This is the key fix for Android TV box border disappearing on zoom
 
@@ -201,10 +200,17 @@ function DataTable({ rows, total }) {
                 <td className={tdCls}>{row.sewStart}</td>
                 {/* Day */}
                 <td className={tdCls}>{row.day}</td>
-                {/* Worker */}
-                <td className={tdCls}>{row.worker}</td>
-                {/* Helper */}
-                <td className={tdCls}>{row.helper}</td>
+                {/* Worker and Helper are line-level values, merged across styles. */}
+                {lineRowSpan > 0 && (
+                    <td rowSpan={lineRowSpan} className={`${tdCls} align-middle font-bold`}>
+                        {row.worker}
+                    </td>
+                )}
+                {lineRowSpan > 0 && (
+                    <td rowSpan={lineRowSpan} className={`${tdCls} align-middle font-bold`}>
+                        {row.helper}
+                    </td>
+                )}
                 {/* Hour */}
                 <td className={tdCls}>{row.hour}</td>
                 {/* Tar/H */}
@@ -313,7 +319,7 @@ export default function TvGeneralDisplay() {
     const popupRef     = useRef(null);
     const theme        = useTheme();
 
-    const { messages, loading, connectionState, isConnected } = useWebsocketServer(
+    const { messages } = useWebsocketServer(
         `/topic/messages/tv-data-update`
     );
 
@@ -333,8 +339,7 @@ export default function TvGeneralDisplay() {
 
     // -- useCallback --------------------------------------------------------------------------------------
 
-    const handleFullscreen = useCallback(async (event) => {
-        console.log(event);
+    const handleFullscreen = useCallback(async () => {
         const el = containerRef.current;
         if (!document.fullscreenElement) {
             try { await el.requestFullscreen(); } catch (e) { console.error(e); }
@@ -347,7 +352,7 @@ export default function TvGeneralDisplay() {
 
     useEffect(() => {
         if (!USE_MOCK_TV_GENERAL_API && messages.isUpdate === true) refetch();
-    }, [messages]);
+    }, [messages, refetch]);
 
     // check online and then reload page and wait 9s before reload
     useEffect(() => {
@@ -372,7 +377,7 @@ export default function TvGeneralDisplay() {
 
     useEffect(() => {
         handleFullscreen();
-    }, [])
+    }, [handleFullscreen])
 
     // Fullscreen change listener
     useEffect(() => {

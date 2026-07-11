@@ -73,7 +73,7 @@ function MenuAdmin(){
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                         <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('planning')}</Typography>
                         <MenuButton
-                            title={`${t('MO')}`}
+                            title={`${t('mo')}`}
                             iconPath={"/images/work-order.png"}
                             onClick={() => navigate("work-orders")}
                         />
@@ -106,7 +106,7 @@ function MenuAdmin(){
                             onClick={() => navigate("hourly-output")}
                         />
                         <MenuButton
-                            title="TV Input"
+                            title={`${t('tvInput')}`}
                             iconPath={"/images/smart-tv.png"}
                             onClick={() => navigate("tv-menu")}
                         />

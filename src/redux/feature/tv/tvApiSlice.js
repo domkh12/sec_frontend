@@ -87,6 +87,14 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [{ type: "TvData", id: "LIST" }],
         }),
 
+        createNewStyle: builder.mutation({
+            query: ({name}) => ({
+                url: `/tvs/data/${name}/style`,
+                method: "POST",
+            }),
+            invalidatesTags: [{ type: "TvData", id: "LIST" }],
+        }),
+
         updateTvData: builder.mutation({
             query: (initialState) => ({
                 url: `/tvs/data`,
@@ -124,6 +132,7 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useCreateNewStyleMutation,
     useUpdateTvDataMutation,
     useGetTvGeneralDataQuery,
     useCreateTvDataMutation,

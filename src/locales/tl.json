@@ -208,5 +208,9 @@
   "analytics": "Analitika",
   "outputDetails": "Mga Detalye ng Output",
   "productionLine": "Linya ng Produksyon",
-  "goodOutputQty": "Dami ng Maayos na Output"
+  "goodOutputQty": "Dami ng Maayos na Output",
+  "defectDetails": "Mga Detalye ng Depekto",
+  "tvInput": "Input sa TV",
+  "home": "Home",
+  "manufacturingAnalytics": "Analitika ng Paggawa"
 }

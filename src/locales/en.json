@@ -209,5 +209,9 @@
   "analytics": "Analytics",
   "outputDetails": "Output Details",
   "productionLine": "Production Line",
-  "goodOutputQty": "Good Output Qty"
+  "goodOutputQty": "Good Output Qty",
+  "defectDetails": "Defect Details",
+  "tvInput": "TV Input",
+  "home": "Home",
+  "manufacturingAnalytics": "Manufacturing Analytics"
 }
