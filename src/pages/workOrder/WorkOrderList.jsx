@@ -371,18 +371,36 @@ function WorkOrderList() {
             label: t("qty"),
             minWidth: 130,
             align: "left",
+            // add style yellow text
+            format: (value) => {
+                return (
+                    <span className="text-yellow-500">{value}</span>
+                )
+            }
         },
         {
             id: "output",
             label: t("output"),
             minWidth: 130,
             align: "left",
+            // add style green text
+            format: (value) => {
+                return (
+                    <span className="text-green-500">{value}</span>
+                )
+            }
         },
         {
             id: "balance",
             label: t("balance"),
             minWidth: 130,
             align: "left",
+            // add style red text
+            format: (value) => {
+                return (
+                    <span className="text-red-500">{value}</span>
+                )
+            }
         },
         {
             id: "startDate",
