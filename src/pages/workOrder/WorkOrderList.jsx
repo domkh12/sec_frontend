@@ -482,7 +482,7 @@ function WorkOrderList() {
                     isFilterActive={true}
                     filterValue={filterValue}
                     handleFilterChange={handleFilterChange}
-                    searchPlaceholderText={`${t('MO')}`}
+                    searchPlaceholderText={`${t('MO/PO/Style')}`}
                     onClearAllFilters={handleClearAllFilters}
                     onToggleActive={(entity) => handleToggleActive(entity)}
                     tToggleActive="Toggle status"
