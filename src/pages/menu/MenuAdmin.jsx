@@ -85,7 +85,7 @@ function MenuAdmin(){
                         <MenuButton
                             title={`${t('defectDetails')}`}
                             iconPath={"/images/shirt.png"}
-                            onClick={() => navigate("#")}
+                            onClick={() => navigate("defect-details")}
                         />
                         <MenuButton
                             title={`${t('qrGenerator')}`}

@@ -6,6 +6,7 @@ import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import dayjs from "dayjs";
 import NumberFlow from "@number-flow/react";
 import { getMockTvLineDisplay } from "./mockTvLineApi.js";
+import { useGetProductionLineLookupQuery } from "../../redux/feature/productionLine/productionLineApiSlice.js";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const hourKeys = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
@@ -73,6 +74,7 @@ function TVLineDisplay() {
     const popupRef = useRef(null);
     const {name} = useParams();
 
+    // -- Query ----------------------------------------------------------
     const {
         data: serverData,
         isLoading: serverIsLoading,

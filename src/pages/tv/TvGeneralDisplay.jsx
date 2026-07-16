@@ -220,7 +220,7 @@ function DataTable({ rows, total }) {
                 {/* Tar/Now */}
                 <td className={`${tdCls} ${fw}`}>{row.tarNow || ""}</td>
                 {/* DIF */}
-                <td className={`${tdCls} text-red-600 font-bold`}>{row.dif || ""}</td>
+                <td className={`${tdCls} ${row.dif < 0 ? "text-red-600" : "text-green-600"} font-bold`}>{row.dif || ""}</td>
                 {/* Finish% with bar */}
                 <FinishCell pct={row.finishPct} />
                 {/* Finish */}

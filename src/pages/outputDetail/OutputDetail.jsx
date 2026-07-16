@@ -169,6 +169,27 @@ function OutputDetail() {
             align: "left",
         },
         {
+            id: "purchaseOrder",
+            label: t("po"),
+            minWidth: 130,
+            align: "left",
+            format: (value) => value?.po,
+        },
+        {
+            id: "style",
+            label: t("style"),
+            minWidth: 130,
+            align: "left",
+            format: (value) => value?.styleNo,
+        },
+        {
+            id: "buyer",
+            label: t("buyer"),
+            minWidth: 130,
+            align: "left",
+            format: (value) => value?.name,
+        },
+        {
             id: "size",
             label: t("size"),
             minWidth: 130,
@@ -257,7 +278,7 @@ function OutputDetail() {
             isFilterActive={true}
             filterValue={filterValue}
             handleFilterChange={handleFilterChange}
-            searchPlaceholderText={`${t('mo')}`}
+            searchPlaceholderText={`${t('mo')}/${t('po')}/${t('style')}`}
             onClearAllFilters={handleClearAllFilters}
             filterConfig={filterConfig}
         />
