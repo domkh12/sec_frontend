@@ -32,7 +32,6 @@ function OutputDetail() {
   const alertOutputDetail           = useSelector((state) => state.outputDetail.alertOutputDetail);
   const isOpenSnackbar              = useSelector((state) => state.outputDetail.isOpenSnackbarOutputDetail);
   
-
   // -- Query --------------------------------------------------------------------------------
   const {data: outputDetail, isLoading, isSuccess} = useGetOutputDetailQuery({
     pageNo: filterValue.pageNo,

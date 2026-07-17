@@ -21,6 +21,7 @@ import timeReducer from "../feature/time/timeSlice.js"
 import purchaseOrderReducer from "../feature/purchaseOrder/purchaseOrderSlice.js"
 import analysisReducer from "../feature/analysis/analysisSlice.js"
 import outputDetailReducer from "../feature/outputDetail/outputDetailSlice.js"
+import defectDetailReducer from "../feature/defect-detail/defectDetailSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -44,7 +45,8 @@ const store = configureStore({
     time: timeReducer,
     purchaseOrder: purchaseOrderReducer,
     analysis: analysisReducer,
-    outputDetail: outputDetailReducer
+    outputDetail: outputDetailReducer,
+    defectDetail: defectDetailReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
