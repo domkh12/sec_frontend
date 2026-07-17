@@ -5,10 +5,11 @@ import Logo from "../util/Logo.jsx";
 import { IconButton } from "@mui/material";
 import { BiFullscreen, BiExitFullscreen } from "react-icons/bi";
 import {useBreakpoints} from "../../hook/useBreakpoints.jsx";
-import { FaHome } from "react-icons/fa";
+import { FaChartPie, FaHome } from "react-icons/fa";
 import useAuth from "../../hook/useAuth.jsx";
 import { MdAnalytics } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const navButtonBaseClass = "relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all duration-200 cursor-pointer";
 const navButtonInactiveClass = "text-primary/85 hover:bg-white/40 hover:text-primary-hover hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_8px_24px_rgba(9,45,116,0.14)]";
@@ -20,6 +21,7 @@ function getNavButtonClass(isActive) {
 
 function NavBarCus() {
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const {t} = useTranslation();
     const {isMd} = useBreakpoints();
     const {isAdmin, isManager} = useAuth();
     const navigate = useNavigate();
@@ -27,6 +29,7 @@ function NavBarCus() {
     const homePath = isAdmin ? "/admin" : isManager ? "/manager" : "/tv";
     const isHomeActive = pathname === homePath;
     const isAnalyticsActive = pathname.startsWith("/admin/analytics");
+    const isProductionStatusActive = pathname.startsWith("/admin/production-status");
 
     useEffect(() => {
         const handleFsChange = () => {
@@ -58,12 +61,18 @@ function NavBarCus() {
                 <div className="flex gap-2">
                     <button className={getNavButtonClass(isHomeActive)} onClick={handleNavigateHome}>
                         <FaHome className="text-base" />
-                        Home
+                        {t('home')}
                     </button>
+                    {isAdmin && (
+                        <button className={getNavButtonClass(isProductionStatusActive)} onClick={() => navigate("/admin/production-status")}>
+                            <FaChartPie className="text-lg"/>
+                            {t('productionStatus')}
+                        </button>
+                    )}
                     {isAdmin && (
                         <button className={getNavButtonClass(isAnalyticsActive)} onClick={() => navigate("/admin/analytics")}>
                             <MdAnalytics className="text-lg"/>
-                            Analytics
+                            {t('analytics')}
                         </button>
                     )}
                 </div>

@@ -13,6 +13,7 @@ import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
 
 // Lazy load everything else
+const DefectDetail = lazy(() => import("./pages/defectDetail/DefectDetail.jsx"));
 const OutputDetail = lazy(() => import("./pages/outputDetail/OutputDetail.jsx"));
 const Analytics = lazy(() => import("./pages/analytics/Analytics.jsx"));
 const ProductionStatusSewingDefect = lazy(() => import("./pages/productionStatus/ProductionStatusSewingDefect.jsx"));
@@ -130,6 +131,7 @@ function App() {
                               <Route path="hourly-output" element={<HourlyOutput/>}/>
                               <Route path="analytics" element={<Analytics/>}/>
                               <Route path="output-details" element={<OutputDetail/>}/>
+                                <Route path="defect-details" element={<DefectDetail/>}/>
 
                                <Route path="tv-menu">
                                   <Route index element={<MenuTv/>}/>

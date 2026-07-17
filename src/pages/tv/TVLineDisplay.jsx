@@ -5,29 +5,132 @@ import {Backdrop} from "@mui/material";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import dayjs from "dayjs";
 import NumberFlow from "@number-flow/react";
+import { getMockTvLineDisplay } from "./mockTvLineApi.js";
+import { useGetProductionLineLookupQuery } from "../../redux/feature/productionLine/productionLineApiSlice.js";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const hourKeys = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
+// Change to false to use GET /tvs/{name} from Spring Boot.
+const USE_MOCK_TV_LINE_API = true;
+
+const sumOrderField = (orders, field) => orders.reduce(
+    (sum, order) => sum + (Number(order[field]) || 0), 0
+);
+
+function mergeOrdersForDisplay(lineData, orders) {
+    if (orders.length === 0) return lineData;
+
+    const recordsByDate = new Map();
+    orders.flatMap((order) => order.dailyRecords ?? []).forEach((record) => {
+        const merged = recordsByDate.get(record.date) ?? {
+            date: record.date,
+            dTarg: 0,
+            isToday: false,
+            ...Object.fromEntries(hourKeys.map((key) => [key, 0])),
+        };
+        merged.dTarg += Number(record.dTarg) || 0;
+        merged.isToday = merged.isToday || Boolean(record.isToday);
+        hourKeys.forEach((key) => {
+            merged[key] += Number(record[key]) || 0;
+        });
+        recordsByDate.set(record.date, merged);
+    });
+
+    const defects = Object.fromEntries(hourKeys.map((key) => [
+        key,
+        orders.reduce((sum, order) => sum + (Number(order.defects?.[key]) || 0), 0),
+    ]));
+    const startDates = orders.map((order) => order.startDate).filter(Boolean).sort();
+    const finishDates = orders.map((order) => order.finishDate).filter(Boolean).sort();
+
+    return {
+        ...lineData,
+        orderNo: orders.map((order) => order.orderNo).filter(Boolean).join(" / "),
+        orderQty: sumOrderField(orders, "orderQty"),
+        totalInLine: sumOrderField(orders, "totalInLine"),
+        totalOutput: sumOrderField(orders, "totalOutput"),
+        orderInline: sumOrderField(orders, "orderInline"),
+        balanceInLine: sumOrderField(orders, "balanceInLine"),
+        qcRepairBack: sumOrderField(orders, "qcRepairBack"),
+        balanceDay: Math.max(...orders.map((order) => Number(order.balanceDay) || 0)),
+        input: sumOrderField(orders, "input"),
+        wHour: Math.max(...orders.map((order) => Number(order.wHour) || 0)),
+        hTarg: sumOrderField(orders, "hTarg"),
+        day: Math.max(...orders.map((order) => Number(order.day) || 0)),
+        startDate: startDates[0] ?? null,
+        finishDate: finishDates.at(-1) ?? null,
+        dailyRecords: [...recordsByDate.values()],
+        defects,
+    };
+}
 
 function TVLineDisplay() {
     const [currentTime, setCurrentTime] = useState("");
     const [showControls, setShowControls] = useState(false);
     const [zoom, setZoom] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [mockData, setMockData] = useState(null);
     const containerRef = useRef(null);
     const popupRef = useRef(null);
     const {name} = useParams();
 
-    const {data: data, isLoading, isSuccess, refetch} = useGetTvDataQuery({name}, {
-        pollingInterval: 300000,
-    });
-    const [h, m, s] = currentTime.split(":").map(Number);
+    // -- Query ----------------------------------------------------------
     const {
-        messages,
-        loading,
-        connectionState,
-        isConnected
-    } = useWebsocketServer(`/topic/messages/tv-data-update`);
+        data: serverData,
+        isLoading: serverIsLoading,
+        isSuccess: serverIsSuccess,
+        refetch,
+    } = useGetTvDataQuery({name}, {
+        pollingInterval: 300000,
+        skip: USE_MOCK_TV_LINE_API,
+    });
+
+    useEffect(() => {
+        if (!USE_MOCK_TV_LINE_API) return;
+        getMockTvLineDisplay().then(setMockData);
+    }, []);
+
+    const apiData = USE_MOCK_TV_LINE_API ? mockData : serverData;
+    const isLoading = USE_MOCK_TV_LINE_API ? !mockData : serverIsLoading;
+    const isSuccess = USE_MOCK_TV_LINE_API ? Boolean(mockData) : serverIsSuccess;
+
+    const orders = useMemo(
+        () => Array.isArray(apiData?.orders)
+            ? apiData.orders.filter((order) => order.status !== "COMPLETED")
+            : [],
+        [apiData]
+    );
+
+    // Merge all styles into one stable line view. The visual layout stays the
+    // same and does not rotate or create additional style rows.
+    const data = useMemo(() => {
+        if (!apiData) return apiData;
+        if (!Array.isArray(apiData.orders)) return apiData;
+        if (orders.length === 0) {
+            return {
+                ...apiData,
+                orderNo: "No active style",
+                orderQty: 0,
+                totalInLine: 0,
+                totalOutput: 0,
+                orderInline: 0,
+                balanceInLine: 0,
+                qcRepairBack: 0,
+                balanceDay: 0,
+                input: 0,
+                wHour: 0,
+                hTarg: 0,
+                day: 0,
+                startDate: null,
+                finishDate: null,
+                dailyRecords: [],
+                defects: {},
+            };
+        }
+        return mergeOrdersForDisplay(apiData, orders);
+    }, [apiData, orders]);
+    const [h, m, s] = currentTime.split(":").map(Number);
+    const { messages } = useWebsocketServer(`/topic/messages/tv-data-update`);
 
     // ─── Build hourly rows from dailyRecords (last 3 days) + defect row ───────
     const hourRowsRaw = useMemo(() => {
@@ -35,13 +138,7 @@ function TVLineDisplay() {
 
         // Sort descending by date, take latest 3
         const sorted = [...records]
-            .sort((a, b) => {
-                const toDate = (d) => {
-                    const [mm, dd] = d.split("-");
-                    return new Date(2025, Number(mm) - 1, Number(dd));
-                };
-                return toDate(b.date) - toDate(a.date);
-            })
+            .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
             .slice(0, 3);
 
         const todayDate = sorted[0]?.date ?? null;
@@ -118,10 +215,10 @@ function TVLineDisplay() {
 
     // ─── WebSocket refetch ────────────────────────────────────────────────────
     useEffect(() => {
-        if (messages.isUpdate === true) {
+        if (!USE_MOCK_TV_LINE_API && messages.isUpdate === true) {
             refetch();
         }
-    }, [messages]);
+    }, [messages, refetch]);
 
     // ─── Clock ────────────────────────────────────────────────────────────────
     useEffect(() => {
@@ -299,13 +396,16 @@ function TVLineDisplay() {
 
                 {/* Info rows */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", fontSize: "18px", fontWeight: "bold", marginBottom: "6px", gap: "2px" }}>
-                    <div><span>Order No.: </span><span style={{ color: "#c62828" }}>{data.orderNo}</span></div>
+                    <div>
+                        <span>Order No.: </span>
+                        <span style={{ color: "#c62828" }}>{data.orderNo}</span>
+                    </div>
                     <div><span>Total in line: </span><span style={{ color: "#c62828" }}>{data.totalInLine}</span></div>
                     <div><span>Balance In Line: </span><span style={{ color: "#c62828" }}>{data.balanceInLine}</span></div>
                     <div><span>Order Qty: </span><span style={{ color: "#c62828" }}>{data.orderQty}</span></div>
                     <div><span>Total Output: </span><span style={{ color: "#c62828" }}>{data.totalOutput}</span></div>
                     <div><span>QC Repair Back: </span><span style={{ color: "#c62828" }}>{data.qcRepairBack}</span></div>
-                    <div><span>Sew D. ST {dayjs(data.startDate).format("DD/MM")} F. {dayjs(data.finishDate).format("DD/MM")}</span></div>
+                    <div><span>Sew D. ST {data.startDate ? dayjs(data.startDate).format("DD/MM") : "—"} F. {data.finishDate ? dayjs(data.finishDate).format("DD/MM") : "—"}</span></div>
                     <div><span>Order Inline: </span><span style={{ color: "#c62828" }}>{data.orderInline}</span></div>
                     <div><span>Balance Day: </span><span style={{ fontWeight: "900" }}>{data.balanceDay}</span></div>
                 </div>

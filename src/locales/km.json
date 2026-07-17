@@ -210,5 +210,9 @@
   "analytics": "ការវិភាគទិន្នន័យ",
   "outputDetails": "ព័ត៌មានលម្អិតនៃលទ្ធផល",
   "productionLine": "ខ្សែសង្វាក់ផលិតកម្ម",
-  "goodOutputQty": "ចំនួនទិន្នផលល្អ"
+  "goodOutputQty": "ចំនួនទិន្នផលល្អ",
+  "defectDetails": "ព័ត៌មានលម្អិតនៃកំហុស",
+  "tvInput": "ទិន្នន័យចូលទូរទស្សន៍",
+  "home": "ទំព័រដើម",
+  "manufacturingAnalytics": "ការវិភាគលើការផលិត"
 }

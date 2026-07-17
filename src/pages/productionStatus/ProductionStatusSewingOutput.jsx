@@ -4,6 +4,9 @@ import ColumnChartOutputByLine from "../../components/chart/ColumnChartOutputByL
 import ChartOutputByBuyer from "../../components/chart/ChartOutputByBuyer.jsx";
 import ChartOutputByMO from "../../components/chart/ChartOutputByMO.jsx";
 import { useGetOutputTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
+import useWebsocketServer from "../../hook/useWebsocketServer.js";
+import { useEffect } from "react";
 
 function ProductionStatusSewingOutput() {
 
@@ -16,11 +19,19 @@ function ProductionStatusSewingOutput() {
              refetchInterval: 60000,
              pollingInterval: 60000
             });
+    const { messages } = useWebsocketServer(`/topic/messages/tv-data-update`);
+
+    // -- useEffect ------------------------------------------------------------------------------
+    useEffect(() => {
+        if (messages.isUpdate === true) {
+            refetch();
+        }
+    }, [messages, refetch]);
 
     let content;
 
     if (isLoadingOutputToday) {
-        content = <p>Loading...</p>;
+        content = <LoadingComponent/>;
     }
 
     if (outputToday) {

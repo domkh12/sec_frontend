@@ -206,5 +206,9 @@
   "analytics": "분석",
   "outputDetails": "출력 상세",
   "productionLine": "생산 라인",
-  "goodOutputQty": "양품 생산 수량"
+  "goodOutputQty": "양품 생산 수량",
+  "defectDetails": "불량 상세",
+  "tvInput": "TV 입력",
+  "home": "홈",
+  "manufacturingAnalytics": "제조 분석"
 }

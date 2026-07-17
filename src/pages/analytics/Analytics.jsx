@@ -17,6 +17,7 @@ import { setDateFrom, setDateTo } from "../../redux/feature/analysis/analysisSli
 import dayjs from "dayjs";
 import LoadingComponent from "../../components/ui/LoadingComponent";
 import useWebsocketServer from "../../hook/useWebsocketServer";
+import { useTranslation } from "react-i18next";
 
 export default function Analytics() {
     // -- state ---------------------------------------------------------------------------------------
@@ -29,6 +30,7 @@ export default function Analytics() {
     // console.log(dateFrom, dateTo);
     // -- Hook ----------------------------------------------------------------------------------------
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     // -- Query ---------------------------------------------------------------------------------------
     // if no data get last 28 day
@@ -73,7 +75,7 @@ export default function Analytics() {
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <FaChartBar className="text-blue-400" size={24} />
-                    <p className="text-white text-xl font-bold">Manufacturing Analytics</p>
+                    <p className="text-white text-xl font-bold">{t('manufacturingAnalytics')}</p>
                 </div>
             </div>
             
