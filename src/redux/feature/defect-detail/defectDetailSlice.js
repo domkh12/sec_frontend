@@ -15,7 +15,7 @@ const defectDetailSlice = createSlice({
             pageSize: 20,
             search: "",
             lineId: "",
-            styleId: "",
+            timeId: "",
         }
     },
     reducers: {

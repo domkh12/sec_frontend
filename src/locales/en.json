@@ -213,5 +213,11 @@
   "defectDetails": "Defect Details",
   "tvInput": "TV Input",
   "home": "Home",
-  "manufacturingAnalytics": "Manufacturing Analytics"
+  "manufacturingAnalytics": "Manufacturing Analytics",
+  "time": "Time",
+  "defectQty": "Defect Qty",
+  "defectDate": "Defect Date",
+  "reportDate": "Report Date",
+  "line": "Line",
+  "action": "Action"
 }

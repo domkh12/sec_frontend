@@ -214,5 +214,11 @@
   "defectDetails": "ព័ត៌មានលម្អិតនៃកំហុស",
   "tvInput": "ទិន្នន័យចូលទូរទស្សន៍",
   "home": "ទំព័រដើម",
-  "manufacturingAnalytics": "ការវិភាគលើការផលិត"
+  "manufacturingAnalytics": "ការវិភាគលើការផលិត",
+  "time": "ម៉ោង",
+  "defectQty": "ចំនួនទំនិញខូច",
+  "defectDate": "កាលបរិច្ឆេទខូច",
+  "reportDate": "កាលបរិច្ឆេទរាយការណ៍",
+  "line": "ខ្សែសង្វាក់",
+  "action": "សកម្មភាព"
 }

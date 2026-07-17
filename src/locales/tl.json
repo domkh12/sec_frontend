@@ -212,5 +212,11 @@
   "defectDetails": "Mga Detalye ng Depekto",
   "tvInput": "Input sa TV",
   "home": "Home",
-  "manufacturingAnalytics": "Analitika ng Paggawa"
+  "manufacturingAnalytics": "Analitika ng Paggawa",
+  "time": "Oras",
+  "defectQty": "Dami ng Depekto",
+  "defectDate": "Petsa ng Depekto",
+  "reportDate": "Petsa ng Ulat",
+  "line": "Linya",
+  "action": "Aksyon"
 }

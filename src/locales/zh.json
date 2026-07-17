@@ -211,5 +211,11 @@
   "defectDetails": "瑕疵详情",
   "tvInput": "电视输入",
   "home": "首页",
-  "manufacturingAnalytics": "制造分析"
+  "manufacturingAnalytics": "制造分析",
+  "time": "时间",
+  "defectQty": "瑕疵数量",
+  "defectDate": "瑕疵日期",
+  "reportDate": "报告日期",
+  "line": "线别",
+  "action": "操作"
 }

@@ -5,14 +5,18 @@ import TableCus from "../../components/table/TableCus";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetDefectDetailQuery } from "../../redux/feature/defect-detail/defectDetailApiSlice";
 import useDebounce from "../../hook/useDebounce";
-import { setFilterDefectDetail } from "../../redux/feature/defect-detail/defectDetailSlice";
+import { setDefectDetailDataForUpdate, setFilterDefectDetail, setIsOpenDialogAddOrEditDefectDetail } from "../../redux/feature/defect-detail/defectDetailSlice";
 import { useGetProductionLineLookupQuery } from "../../redux/feature/productionLine/productionLineApiSlice";
 import { useBreakpoints } from "../../hook/useBreakpoints";
 import LoadingComponent from "../../components/ui/LoadingComponent";
+import { useGetTimeLookupQuery } from "../../redux/feature/time/timeApiSlice";
+import { setIsOpenDeleteOutputDetailDialog } from "../../redux/feature/outputDetail/outputDetailSlice";
+import { useState } from "react";
 
 function DefectDetail() {
 
     // -- State -----------------------------------------------------------------
+    const [id, setId] = useState(null);
     
     // -- Selector --------------------------------------------------------------
     const filterValue                 = useSelector((state) => state.defectDetail.filter);
@@ -26,7 +30,9 @@ function DefectDetail() {
         pageSize: filterValue.pageSize,
         search: debounceSearch
     });
-
+    
+    const {data: timeData} = useGetTimeLookupQuery();
+    
     const {data: lineData} = useGetProductionLineLookupQuery();
 
     // -- Hook ------------------------------------------------------------------
@@ -49,6 +55,42 @@ function DefectDetail() {
         }
         dispatch(setFilterDefectDetail(newFilter));
     }
+
+    const handleChangePage = (event, newPage) => {
+            dispatch(setFilterDefectDetail({
+                ...filterValue,
+                pageNo: newPage + 1,
+            }));
+        };
+
+    const handleChangeRowsPerPage = (event, newValue) => {
+            dispatch(setFilterDefectDetail({
+                ...filterValue,
+                pageNo: 1,
+                pageSize: event.target.value,
+            }));
+        }; 
+        
+    const handleClearAllFilters = () => {
+              dispatch(setFilterDefectDetail({
+                  search: "",
+                  lineId: "",
+                  timeId: ""
+              }))
+          }  
+          
+    const handleEdit = (row) => {
+            dispatch(setIsOpenDialogAddOrEditDefectDetail(true));
+            dispatch(setDefectDetailDataForUpdate({
+                id: row.id,
+                qty: row.qty,
+            }));
+        };      
+
+    const handleDeleteOpen = (row) => {
+            dispatch(setIsOpenDeleteOutputDetailDialog(true));
+            setId(row.id);
+        };
 
     const columns = [
         {
@@ -134,6 +176,17 @@ function DefectDetail() {
                 })) || [])
             ]
         },
+        {
+            id: 'timeId',
+            label: t("time"),
+            width: isMd ? 150 : "100%",
+            options: [
+                ...(timeData?.map(id => ({
+                    value: id.id,
+                    label: id.name
+                })) || [])
+            ]
+        }
     ];
     
     let content;
@@ -148,15 +201,15 @@ function DefectDetail() {
              <TableCus
                     columns={columns}
                     data={defectDetailData}
-                    // handleChangePage={handleChangePage}
-                    // handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    // onEdit={handleEdit}
-                    // onDelete={handleDeleteOpen}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteOpen}
                     isFilterActive={true}
                     filterValue={filterValue}
                     handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('mo')}/${t('po')}/${t('style')}`}
-                    // onClearAllFilters={handleClearAllFilters}
+                    onClearAllFilters={handleClearAllFilters}
                     filterConfig={filterConfig}
                 />
         </div>

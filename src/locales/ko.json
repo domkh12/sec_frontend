@@ -210,5 +210,11 @@
   "defectDetails": "불량 상세",
   "tvInput": "TV 입력",
   "home": "홈",
-  "manufacturingAnalytics": "제조 분석"
+  "manufacturingAnalytics": "제조 분석",
+  "time": "시간",
+  "defectQty": "불량 수량",
+  "defectDate": "불량 발생일",
+  "reportDate": "보고일",
+  "line": "라인",
+  "action": "작업"
 }
