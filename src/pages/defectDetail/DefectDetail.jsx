@@ -3,15 +3,18 @@ import BackButton from "../../components/ui/BackButton";
 import { useTranslation } from "react-i18next";
 import TableCus from "../../components/table/TableCus";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetDefectDetailQuery } from "../../redux/feature/defect-detail/defectDetailApiSlice";
+import { useDeleteDefectDetailMutation, useGetDefectDetailQuery } from "../../redux/feature/defect-detail/defectDetailApiSlice";
 import useDebounce from "../../hook/useDebounce";
-import { setDefectDetailDataForUpdate, setFilterDefectDetail, setIsOpenDialogAddOrEditDefectDetail } from "../../redux/feature/defect-detail/defectDetailSlice";
+import { setAlertDefectDetail, setDefectDetailDataForUpdate, setFilterDefectDetail, setIsOpenDeleteDefectDetailDialog, setIsOpenDialogAddOrEditDefectDetail, setIsOpenSnackbarDefectDetail } from "../../redux/feature/defect-detail/defectDetailSlice";
 import { useGetProductionLineLookupQuery } from "../../redux/feature/productionLine/productionLineApiSlice";
 import { useBreakpoints } from "../../hook/useBreakpoints";
 import LoadingComponent from "../../components/ui/LoadingComponent";
 import { useGetTimeLookupQuery } from "../../redux/feature/time/timeApiSlice";
 import { setIsOpenDeleteOutputDetailDialog } from "../../redux/feature/outputDetail/outputDetailSlice";
 import { useState } from "react";
+import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete";
+import { Alert, Snackbar } from "@mui/material";
+import { useGetBuyerLookupQuery } from "../../redux/feature/buyer/buyerApiSlice";
 
 function DefectDetail() {
 
@@ -19,8 +22,17 @@ function DefectDetail() {
     const [id, setId] = useState(null);
     
     // -- Selector --------------------------------------------------------------
+    const alertDefectDetail           = useSelector((state) => state.defectDetail.alertDefectDetail); 
+    const isOpenSnackbar              = useSelector((state) => state.defectDetail.isOpenSnackbarDefectDetail);
+    const isOpenDeleteDialog          = useSelector((state) => state.defectDetail.isOpenDeleteDefectDetailDialog);
     const filterValue                 = useSelector((state) => state.defectDetail.filter);
     const debounceSearch              = useDebounce(filterValue.search, 500);
+    console.log(filterValue);
+    // -- Hook ------------------------------------------------------------------
+    const navigate = useNavigate();
+    const {t} = useTranslation();
+    const dispatch = useDispatch();
+    const {isMd} = useBreakpoints();
 
     // -- Query -----------------------------------------------------------------
     const {data: defectDetailData
@@ -28,18 +40,17 @@ function DefectDetail() {
     } = useGetDefectDetailQuery({
         pageNo: filterValue.pageNo,
         pageSize: filterValue.pageSize,
-        search: debounceSearch
+        search: debounceSearch,
+        lineId: filterValue.lineId,
+        buyerId: filterValue.buyerId,
+        reportDate: filterValue.reportDate
     });
     
-    const {data: timeData} = useGetTimeLookupQuery();
-    
     const {data: lineData} = useGetProductionLineLookupQuery();
+    const {data: buyerData} = useGetBuyerLookupQuery();
 
-    // -- Hook ------------------------------------------------------------------
-    const navigate = useNavigate();
-    const {t} = useTranslation();
-    const dispatch = useDispatch();
-    const {isMd} = useBreakpoints();
+    // -- Mutation ---------------------------------------------------------------
+    const [deleteDefectDetail, {isLoading: isLoadingDefectDetail}] = useDeleteDefectDetailMutation();
 
     // -- Handler ---------------------------------------------------------------
     const handleFilterChange = (key, value) => {
@@ -75,7 +86,8 @@ function DefectDetail() {
               dispatch(setFilterDefectDetail({
                   search: "",
                   lineId: "",
-                  timeId: ""
+                  buyerId: "",
+                  reportDate: "",
               }))
           }  
           
@@ -88,9 +100,22 @@ function DefectDetail() {
         };      
 
     const handleDeleteOpen = (row) => {
-            dispatch(setIsOpenDeleteOutputDetailDialog(true));
+            dispatch(setIsOpenDeleteDefectDetailDialog(true));
             setId(row.id);
         };
+
+     const handleDelete = async () => {
+            try {
+                await deleteDefectDetail({id: id}).unwrap();
+                dispatch(setIsOpenDeleteDefectDetailDialog(false));
+                dispatch(setAlertDefectDetail({type: "success", message: "Delete successfully"}));
+                dispatch(setIsOpenSnackbarDefectDetail(true));
+            }catch (error) {
+                dispatch(setIsOpenDeleteDefectDetailDialog(false));
+                dispatch(setAlertDefectDetail({type: "error", message: error.data.error.description}));
+                dispatch(setIsOpenSnackbarDefectDetail(true));
+            }
+        }    
 
     const columns = [
         {
@@ -177,16 +202,22 @@ function DefectDetail() {
             ]
         },
         {
-            id: 'timeId',
-            label: t("time"),
-            width: isMd ? 150 : "100%",
+            id: 'buyerId',
+            label: t("buyer"),
+            width: isMd ? 150 : "100%", 
             options: [
-                ...(timeData?.map(id => ({
+                ...(buyerData?.map(id => ({
                     value: id.id,
                     label: id.name
                 })) || [])
             ]
-        }
+        },
+        {
+            id: "reportDate",
+            label: t("reportDate"),
+            type: "date",
+            width: 180,
+        },
     ];
     
     let content;
@@ -212,6 +243,27 @@ function DefectDetail() {
                     onClearAllFilters={handleClearAllFilters}
                     filterConfig={filterConfig}
                 />
+            <DialogConfirmDelete
+                        isOpen={isOpenDeleteDialog}
+                        onClose={() => dispatch(setIsOpenDeleteDefectDetailDialog(false))}
+                        handleDelete={handleDelete}
+                        isSubmitting={isLoadingDefectDetail}
+                    />    
+            <Snackbar
+                        open={isOpenSnackbar}
+                        autoHideDuration={6000}
+                        onClose={() => dispatch(setIsOpenSnackbarDefectDetail(false))}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    >
+                        <Alert
+                            onClose={() => dispatch(setIsOpenSnackbarDefectDetail(false))}
+                            severity={alertDefectDetail.type}
+                            variant="filled"
+                            sx={{ width: '100%' }}
+                        >
+                            {alertDefectDetail.message}
+                        </Alert>
+                    </Snackbar>
         </div>
     )
 

@@ -8,8 +8,8 @@ const initialState = outputDetailAdapter.getInitialState();
 export const outputDetailApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getOutputDetail: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "", lineId = "", sizeId = ""}) => ({
-                url: `/output-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&sizeId=${sizeId}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", lineId = "", sizeId = "", buyerId = "", reportDate = ""}) => ({
+                url: `/output-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&sizeId=${sizeId}&buyerId=${buyerId}&reportDate=${reportDate}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

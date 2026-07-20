@@ -129,12 +129,12 @@ function PurchaseList() {
     const handleEdit = (row) => {
         dispatch(setIsOpenDialogAddOrEditPurchaseOrder(true));
         dispatch(setPurchaseOrderDataForUpdate({
-            id: row.id,
-            style: row.style.id,
-            po: row.po,
-            qty: row.qty,
-            shipmentDate: dayjs(row.shipmentDate),
-            buyer: row.buyer.id
+            id: row?.id,
+            style: row?.style?.id,
+            po: row?.po,
+            qty: row?.qty,
+            shipmentDate: dayjs(row?.shipmentDate),
+            buyer: row?.buyer?.id
         }));
     };
 
@@ -211,8 +211,8 @@ function PurchaseList() {
             label: "buyer",
             type: "autocomplete",
             options: buyerLookup?.map((buyer) => ({
-                value: buyer.id,
-                label: buyer.name,
+                value: buyer?.id,
+                label: buyer?.name,
             })),
         },
 
@@ -268,7 +268,7 @@ function PurchaseList() {
             label: t("style"),
             minWidth: 130,
             align: "left",
-            format: (style => style.styleNo)
+            format: (style => style?.styleNo)
         },
         {
             id: "qty",
@@ -288,7 +288,7 @@ function PurchaseList() {
             label: t("buyer"),
             minWidth: 130,
             align: "left",
-            format: (buyer => buyer.name)
+            format: (buyer => buyer?.name)
         },
         {
             id: "status",

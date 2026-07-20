@@ -17,6 +17,7 @@ import DialogAddEditCus from '../../components/dialog/DialogAddEditCus.jsx';
 import * as Yup from 'yup';
 import { Alert, Snackbar } from '@mui/material';
 import LoadingComponent from '../../components/ui/LoadingComponent.jsx';
+import { useGetBuyerLookupQuery } from '../../redux/feature/buyer/buyerApiSlice.js';
 
 
 function OutputDetail() {
@@ -38,11 +39,14 @@ function OutputDetail() {
     pageSize: filterValue.pageSize,
     search: debounceSearch,
     lineId: filterValue.lineId,
-    sizeId: filterValue.sizeId
+    sizeId: filterValue.sizeId,
+    buyerId: filterValue.buyerId,
+    reportDate: filterValue.reportDate
   });
 
   const {data: lineData} = useGetProductionLineLookupQuery();
   const {data: sizeData} = useGetSizeLookupQuery();
+  const {data: buyerData} = useGetBuyerLookupQuery();
 
   // -- mutation --------------------------------------------------------------------------------
   const [deleteOutputDetail, {isLoading: isLoadingOutputDetail}] = useDeleteOutputDetailMutation();
@@ -146,7 +150,9 @@ function OutputDetail() {
           dispatch(setFilterOutputDetail({
               search: "",
               lineId: "",
-              sizeId: ""
+              sizeId: "",
+              buyerId: "",
+              reportDate: "",
           }))
       }
 
@@ -242,6 +248,17 @@ function OutputDetail() {
             ]
         },
         {
+            id: 'buyerId',
+            label: t("buyer"),
+            width: isMd ? 150 : "100%",
+            options: [
+                ...(buyerData?.map(id => ({
+                    value: id.id,
+                    label: id.name
+                })) || [])
+            ]
+        },
+        {
             id: 'sizeId',
             label: t("size"),
             width: isMd ? 150 : "100%",
@@ -251,6 +268,12 @@ function OutputDetail() {
                     label: id.size
                 })) || [])
             ]
+        },
+        {
+            id: 'reportDate',
+            label: t("reportDate"),
+            type: "date",
+            width: isMd ? 160 : "100%",
         }
     ];
 

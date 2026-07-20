@@ -56,8 +56,7 @@ const wrapperStyle = {
     border: "1px solid rgba(255,255,255,0.18)",
     boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18), 0 8px 32px rgba(0,0,0,0.3)",
 };
-const searchTextField = {
-    minWidth: 200,
+const inputTextFieldSx = {
     width: "100%",
     "& .MuiInputBase-input": {
         color: "#fff",
@@ -86,6 +85,31 @@ const searchTextField = {
     "& .MuiInputAdornment-root .MuiSvgIcon-root": {
         fontSize: "1.2rem",
     },
+};
+
+const searchTextField = {
+    ...inputTextFieldSx,
+    minWidth: 200,
+};
+
+const dateTextField = {
+    ...inputTextFieldSx,
+    minWidth: 170,
+    width: 170,
+    '& input[type="date"]::-webkit-calendar-picker-indicator': {
+        cursor: "pointer",
+        filter: "invert(1)",
+        opacity: 0.75,
+    },
+};
+
+const formatDateFilterValue = (value) => {
+    if (!value) return "";
+
+    const [year, month, day] = String(value).split("-");
+    if (!year || !month || !day) return value;
+
+    return `${day}/${month}/${year}`;
 };
 
 // Active filter chip styles
@@ -163,7 +187,9 @@ const ActiveFilterChips = memo(function ActiveFilterChips({ filterConfig=[], fil
                 });
             } else {
                 const option = filter.options?.find((o) => String(o.value ?? o) === String(value));
-                const label = option?.label ?? value;
+                const label = filter.type === "date"
+                    ? formatDateFilterValue(value)
+                    : option?.label ?? value;
                 result.push({
                     key: filter.id,
                     label: `${filter.label}: ${label}`,
@@ -344,6 +370,37 @@ function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePag
                             if (filter.id === "excel") {
                                 return null;
                             }
+
+                            if (filter.type === "date") {
+                                return (
+                                    <TextField
+                                        key={filter.id}
+                                        type="date"
+                                        size="small"
+                                        variant="outlined"
+                                        label={filter.label}
+                                        value={filterValue?.[filter.id] || ""}
+                                        onChange={(e) => handleFilterChange(filter.id, e.target.value)}
+                                        disabled={filter.disabled || false}
+                                        required={filter.required || false}
+                                        error={filter.error || false}
+                                        helperText={filter.helperText}
+                                        sx={{
+                                            ...dateTextField,
+                                            width: filter.width || 170,
+                                            minWidth: filter.width || 170,
+                                        }}
+                                        slotProps={{
+                                            inputLabel: { shrink: true },
+                                            htmlInput: {
+                                                min: filter.min,
+                                                max: filter.max,
+                                            },
+                                        }}
+                                    />
+                                );
+                            }
+
                             return (
                                 <SelectFilter
                                     key={filter.id}
@@ -358,9 +415,8 @@ function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePag
                                     error={filter.error || false}
                                     helperText={filter.helperText}
                                 />
-                            )
-                        }
-                        )}
+                            );
+                        })}
                         <TextField
                             size="small"
                             placeholder={searchPlaceholderText}

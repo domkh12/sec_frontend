@@ -122,7 +122,6 @@ function ColumnChartOutputByLine({lineData}) {
                             border-radius: 8px;
                             background: #ededed;
                             margin-bottom: 5px;
-                            
                         ">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <span style="

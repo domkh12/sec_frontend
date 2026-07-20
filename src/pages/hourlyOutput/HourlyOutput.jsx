@@ -191,7 +191,7 @@
                                 ))
                             }
                         </div>
-                        <div className="col-span-8 p-5 border border-gray-400 rounded-2xl ">
+                        <div className="col-span-8 p-5 border border-gray-400 rounded-2xl h-[90vh] overflow-y-scroll">
                             <div className="flex justify-between items-center mb-2">
                                 <div>
                                     <p className="text-2xl">Welcome, {userProfile?.nameEn}</p>

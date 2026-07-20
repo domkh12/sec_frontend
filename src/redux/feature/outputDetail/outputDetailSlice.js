@@ -16,6 +16,8 @@ const outputDetailSlice = createSlice({
             search: "",
             lineId: "",
             styleId: "",
+            buyerId: "",
+            reportDate: "",
         }
     },
     reducers: {

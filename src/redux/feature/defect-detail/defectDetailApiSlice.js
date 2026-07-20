@@ -8,8 +8,8 @@ const initialState = defectDetailAdapter.getInitialState();
 export const defectDetailApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getDefectDetail: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = ""}) => ({
-                url: `/defect-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", reportDate = "", lineId = "", buyerId = ""}) => ({
+                url: `/defect-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&reportDate=${reportDate}&buyerId=${buyerId}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -38,9 +38,23 @@ export const defectDetailApiSlice = apiSlice.injectEndpoints({
             },
         }),
 
+        deleteDefectDetail: builder.mutation({
+            query: ({id}) => ({
+                url: `/defect-details/${id}`,
+                method: "DELETE",
+                body: [
+                    id,
+                ],
+            }),
+            invalidatesTags:(result, error, arg) => [
+                { type: "DefectDetail", id: "LIST" }
+            ],
+        }),
+
     }),
 });
 
 export const {
+    useDeleteDefectDetailMutation,
     useGetDefectDetailQuery
 } = defectDetailApiSlice;
