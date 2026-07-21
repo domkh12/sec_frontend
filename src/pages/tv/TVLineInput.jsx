@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-    Alert, Box, Button, Chip, CircularProgress, Collapse, Dialog, DialogActions,
+    Alert, Box, Button, Checkbox, Chip, CircularProgress, Collapse, Dialog, DialogActions,
     DialogContent, DialogTitle, Divider, LinearProgress, MenuItem, Paper, Select, Stack,
-    Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography,
+    Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, IconButton,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
@@ -10,6 +10,7 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import Groups2RoundedIcon from "@mui/icons-material/Groups2Rounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import TrendingUpRoundedIcon from "@mui/icons-material/TrendingUpRounded";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Form, Formik } from "formik";
@@ -19,9 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../../components/ui/BackButton.jsx";
 import CardList from "../../components/ui/CardList.jsx";
 import useAuth from "../../hook/useAuth.jsx";
-import { saveMockOrder } from "./mockTvLineApi.js";
 import { useGetStyleLookupQuery } from "../../redux/feature/style/styleApiSlice.js";
-import { useCreateOrderMutation, useCreateTvDataMutation, useGetTvDataQuery } from "../../redux/feature/tv/tvApiSlice.js";
+import { useCreateOrderMutation, useCreateTvDataMutation, useGetTvDataQuery, useUpdateTvDataMutation } from "../../redux/feature/tv/tvApiSlice.js";
 
 const HOUR_KEYS = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
 const HOUR_LABELS = { h8: "08:00", h9: "09:00", h10: "10:00", h11: "11:00", h13: "13:00", h14: "14:00", h15: "15:00", h16: "16:00", h17: "17:00", h18: "18:00" };
@@ -70,6 +70,41 @@ function NumberInput({ value, onChange, defect = false, disabled = false }) {
     );
 }
 
+function StyleSettingsDialog({ open, orders, checkedStyles, onToggle, onClose }) {
+    return (
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+            <DialogTitle fontWeight={800}>Style settings</DialogTitle>
+            <DialogContent dividers>
+                <Typography color="text.secondary" mb={1.5}>
+                    Checked styles are active. Completed and pending styles are unchecked.
+                </Typography>
+                <Stack spacing={0.75}>
+                    {orders.length === 0 && <Typography color="text.secondary">No styles found.</Typography>}
+                    {orders.map((order) => (
+                        <Paper key={order.id} variant="outlined" sx={{ p: 1, borderRadius: 2 }}>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <Checkbox
+                                    checked={Boolean(checkedStyles[order.id])}
+                                    onChange={(event) => onToggle(order.id, event.target.checked)}
+                                    inputProps={{ "aria-label": `Set ${order.orderNo} active` }}
+                                />
+                                <Box flex={1} minWidth={0}>
+                                    <Typography fontWeight={750} noWrap>{order.orderNo}</Typography>
+                                    <Typography variant="caption" color="text.secondary">{order.status ?? "PENDING"}</Typography>
+                                </Box>
+                            </Stack>
+                        </Paper>
+                    ))}
+                </Stack>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
+                <Button onClick={onClose}>Cancel</Button>
+                <Button variant="contained" onClick={onClose}>Save</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
 function TVLineInput() {
     const navigate = useNavigate();
     const { isAdmin } = useAuth();
@@ -77,6 +112,8 @@ function TVLineInput() {
     const [activeOrderId, setActiveOrderId] = useState(null);
     const [notice, setNotice] = useState(null);
     const [addOpen, setAddOpen] = useState(false);
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [checkedStyles, setCheckedStyles] = useState({});
     const [newStyleId, setNewStyleId] = useState("");
     const tvName = useParams().name;
 
@@ -86,6 +123,7 @@ function TVLineInput() {
     // -- Mutation --------------------------------------------------------
     const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
     const [createTvData, { isLoading: isCreatingTvData }] = useCreateTvDataMutation();
+    const [updateTvData] = useUpdateTvDataMutation();
 
     const {
         data: getTvData,
@@ -105,10 +143,11 @@ function TVLineInput() {
         queueMicrotask(() => {
             if (cancelled) return;
             setLineData({ ...getTvData, orders });
+            const activeOrders = orders.filter((order) => order.status === "ACTIVE");
             setActiveOrderId((currentId) => (
-                orders.some((order) => order.id === currentId)
+                activeOrders.some((order) => order.id === currentId)
                     ? currentId
-                    : (orders[0]?.id ?? null)
+                    : (activeOrders[0]?.id ?? null)
             ));
         });
 
@@ -117,7 +156,18 @@ function TVLineInput() {
         };
     }, [getTvData]);
 
-    const activeOrder = useMemo(() => lineData?.orders?.find((order) => order.id === activeOrderId), [lineData, activeOrderId]);
+    const activeOrders = useMemo(
+        () => (lineData?.orders ?? []).filter((order) => order.status === "ACTIVE"),
+        [lineData]
+    );
+    const activeOrder = useMemo(() => activeOrders.find((order) => order.id === activeOrderId), [activeOrders, activeOrderId]);
+
+    const openStyleSettings = () => {
+        setCheckedStyles(Object.fromEntries(
+            (lineData?.orders ?? []).map((order) => [order.id, order.status === "ACTIVE"])
+        ));
+        setSettingsOpen(true);
+    };
 
     const updateActiveOrder = useCallback((updater) => {
         setLineData((previous) => previous ? ({
@@ -230,9 +280,14 @@ function TVLineInput() {
                         <Typography color="text.secondary" mt={1} mb={3}>
                             Add the first order or style to start entering targets and hourly production.
                         </Typography>
-                        <Button variant="contained" size="large" startIcon={<AddRoundedIcon />} onClick={() => setAddOpen(true)} sx={{ borderRadius: 2, textTransform: "none", fontWeight: 800 }}>
-                            Add order
-                        </Button>
+                        <Stack direction="row" justifyContent="center" spacing={1}>
+                            <IconButton onClick={openStyleSettings} aria-label="Style settings" sx={{ border: "1px solid", borderColor: "divider", borderRadius: 2 }}>
+                                <SettingsRoundedIcon />
+                            </IconButton>
+                            <Button variant="contained" size="large" startIcon={<AddRoundedIcon />} onClick={() => setAddOpen(true)} sx={{ borderRadius: 2, textTransform: "none", fontWeight: 800 }}>
+                                Add order
+                            </Button>
+                        </Stack>
                     </Paper>
                 </Box>
 
@@ -252,6 +307,13 @@ function TVLineInput() {
                         <Button variant="contained" disabled={!newStyleId || isCreatingOrder} onClick={handleAddOrder}>{isCreatingOrder ? "Creating…" : "Create order"}</Button>
                     </DialogActions>
                 </Dialog>
+                <StyleSettingsDialog
+                    open={settingsOpen}
+                    orders={lineData?.orders ?? []}
+                    checkedStyles={checkedStyles}
+                    onToggle={(id, checked) => setCheckedStyles((current) => ({ ...current, [id]: checked }))}
+                    onClose={() => setSettingsOpen(false)}
+                />
             </CardList>
         );
     }
@@ -273,12 +335,17 @@ function TVLineInput() {
                             <Typography variant="h4" color="white" fontWeight={850}>Line {lineData?.line ?? "—"}</Typography>
                         </Box>
                     </Stack>
-                    <Button variant="contained" startIcon={<AddRoundedIcon />} onClick={() => setAddOpen(true)} sx={{ borderRadius: 2, textTransform: "none", fontWeight: 750 }}>Add order</Button>
+                    <Stack direction="row" spacing={1}>
+                        <IconButton onClick={openStyleSettings} aria-label="Style settings" sx={{ bgcolor: "white", borderRadius: 2, "&:hover": { bgcolor: "grey.100" } }}>
+                            <SettingsRoundedIcon />
+                        </IconButton>
+                        <Button variant="contained" startIcon={<AddRoundedIcon />} onClick={() => setAddOpen(true)} sx={{ borderRadius: 2, textTransform: "none", fontWeight: 750 }}>Add order</Button>
+                    </Stack>
                 </Stack>
 
                 <Paper elevation={0} sx={{ p: 1, mb: 2, borderRadius: 3, bgcolor: "rgba(255,255,255,.96)" }}>
                     <Stack direction={{ xs: "column", md: "row" }} gap={1}>
-                        {lineData?.orders?.map((order) => {
+                        {activeOrders.map((order) => {
                             const selected = order.id === activeOrderId;
                             const output = sumHours(order.dailyRecords?.find((record) => record.isToday));
                             return (
@@ -302,11 +369,58 @@ function TVLineInput() {
                 <Formik key={activeOrder.id} initialValues={toFormValues(activeOrder)} validationSchema={schema} enableReinitialize
                     onSubmit={async (values, { setSubmitting }) => {
                         const current = lineData?.orders?.find((order) => order.id === activeOrderId);
-                        const saved = { ...current, ...values, startDate: values.startDate?.format("YYYY-MM-DD") ?? null, finishDate: values.finishDate?.format("YYYY-MM-DD") ?? null };
-                        await saveMockOrder(saved);
-                        updateActiveOrder(() => saved);
-                        setNotice({ severity: "success", text: `${saved.orderNo} saved successfully.` });
-                        setSubmitting(false);
+                        const todayRecord = current?.dailyRecords?.find((record) => record.isToday)
+                            ?? current?.dailyRecords?.at(-1)
+                            ?? {};
+                        const saved = {
+                            ...current,
+                            ...values,
+                            startDate: values.startDate?.format("YYYY-MM-DD") ?? null,
+                            finishDate: values.finishDate?.format("YYYY-MM-DD") ?? null,
+                        };
+                        const payload = {
+                            tvName,
+                            tvOrderId: activeOrderId,
+                            line: lineData?.line,
+                            worker: Number(lineData?.worker) || 0,
+                            helper: Number(lineData?.helper) || 0,
+                            orderNo: saved.orderNo,
+                            status: saved.status,
+                            totalInLine: Number(saved.totalInLine) || 0,
+                            balanceInLine: Number(saved.balanceInLine) || 0,
+                            orderQty: Number(saved.orderQty) || 0,
+                            totalOutput: Number(saved.totalOutput) || 0,
+                            qcRepairBack: Number(saved.qcRepairBack) || 0,
+                            startDate: saved.startDate,
+                            finishDate: saved.finishDate,
+                            orderInline: Number(saved.orderInline) || 0,
+                            balanceDay: Number(saved.balanceDay) || 0,
+                            wHour: Number(saved.wHour) || 0,
+                            hTarg: Number(saved.hTarg) || 0,
+                            input: Number(saved.input) || 0,
+                            dTarg: Number(todayRecord.dTarg) || 0,
+                            ...HOUR_KEYS.reduce((result, key) => ({
+                                ...result,
+                                [key]: Number(todayRecord[key]) || 0,
+                                [`d${key}`]: Number(current?.defects?.[key]) || 0,
+                            }), {}),
+                        };
+
+                        try {
+                            await updateTvData(payload).unwrap();
+                            updateActiveOrder(() => saved);
+                            setNotice({ severity: "success", text: `${saved.orderNo} saved successfully.` });
+                            await refetch();
+                        } catch (error) {
+                            setNotice({
+                                severity: "error",
+                                text: error?.data?.error?.description
+                                    ?? error?.data?.message
+                                    ?? `Unable to save ${saved.orderNo}.`,
+                            });
+                        } finally {
+                            setSubmitting(false);
+                        }
                     }}>
                     {({ values, errors, touched, handleChange, handleBlur, setFieldValue, isSubmitting }) => (
                         <Form>
@@ -350,7 +464,7 @@ function TVLineInput() {
                                                         const total = sumHours(record); const rate = Number(record.dTarg) ? Math.round(total / Number(record.dTarg) * 100) : 0;
                                                         return <TableRow key={record.id} sx={{ bgcolor: record.isToday ? "#f7faff" : "#fff" }}>
                                                             <TableCell><Stack direction="row" spacing={1} alignItems="center"><Typography fontWeight={700}>{dayjs(record.date).format("DD MMM")}</Typography>{record.isToday && <Chip label="Today" size="small" color="primary" />}</Stack></TableCell>
-                                                            <TableCell align="center">{record.isToday ? <NumberInput value={record.dTarg} onChange={(value) => updateHour(record.id, "dTarg", value)} /> : <Typography fontWeight={650}>{record.dTarg}</Typography>}</TableCell>
+                                                            <TableCell align="center">{record.isToday && <Typography fontWeight={650}>{record.dTarg}</Typography>}</TableCell>
                                                             {HOUR_KEYS.map((key) => <TableCell key={key} align="center">{record.isToday ? <NumberInput value={record[key]} onChange={(value) => updateHour(record.id, key, value)} /> : (record[key] ?? "—")}</TableCell>)}
                                                             <TableCell align="center"><Typography fontWeight={850}>{total}</Typography></TableCell><TableCell align="center"><Chip label={`${rate}%`} size="small" color={rate >= 90 ? "success" : rate >= 70 ? "warning" : "error"} /></TableCell>
                                                         </TableRow>;
@@ -428,6 +542,13 @@ function TVLineInput() {
                 </DialogContent>
                 <DialogActions sx={{ p: 2 }}><Button onClick={() => setAddOpen(false)} disabled={isCreatingOrder}>Cancel</Button><Button variant="contained" disabled={!newStyleId || isCreatingOrder} onClick={handleAddOrder}>{isCreatingOrder ? "Creating…" : "Create order"}</Button></DialogActions>
             </Dialog>
+            <StyleSettingsDialog
+                open={settingsOpen}
+                orders={lineData?.orders ?? []}
+                checkedStyles={checkedStyles}
+                onToggle={(id, checked) => setCheckedStyles((current) => ({ ...current, [id]: checked }))}
+                onClose={() => setSettingsOpen(false)}
+            />
         </CardList>
     );
 }
