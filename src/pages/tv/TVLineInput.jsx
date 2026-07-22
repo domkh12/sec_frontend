@@ -465,7 +465,7 @@ function TVLineInput() {
                                                         return <TableRow key={record.id} sx={{ bgcolor: record.isToday ? "#f7faff" : "#fff" }}>
                                                             <TableCell><Stack direction="row" spacing={1} alignItems="center"><Typography fontWeight={700}>{dayjs(record.date).format("DD MMM")}</Typography>{record.isToday && <Chip label="Today" size="small" color="primary" />}</Stack></TableCell>
                                                             <TableCell align="center">{record.isToday && <Typography fontWeight={650}>{record.dTarg}</Typography>}</TableCell>
-                                                            {HOUR_KEYS.map((key) => <TableCell key={key} align="center">{record.isToday ? <NumberInput value={record[key]} onChange={(value) => updateHour(record.id, key, value)} /> : (record[key] ?? "—")}</TableCell>)}
+                                                            {HOUR_KEYS.map((key) => <TableCell key={key} align="center">{record.isToday && (record[key] ?? "—")}</TableCell>)}
                                                             <TableCell align="center"><Typography fontWeight={850}>{total}</Typography></TableCell><TableCell align="center"><Chip label={`${rate}%`} size="small" color={rate >= 90 ? "success" : rate >= 70 ? "warning" : "error"} /></TableCell>
                                                         </TableRow>;
                                                     })}

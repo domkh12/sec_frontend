@@ -25,7 +25,7 @@ const MOCK_TV_GENERAL_DATA = [
         styles: [
             {
                 orderNo: "Style1", sewStart: "01/07", day: 10,
-                hour: 45, tarH: 45, tarDay: 360, yFinish: 550, defects: 2,
+                wHour: 10, tarH: 45, tarDay: 360, yFinish: 550, defects: 2,
                 h8: 40, h9: 46, h10: 44, h11: 48, h13: 0,
                 h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
             },
@@ -40,13 +40,13 @@ const MOCK_TV_GENERAL_DATA = [
         styles: [
             {
                 orderNo: "Style2-A", sewStart: "04/06", day: 37,
-                hour: 52, tarH: 52, tarDay: 416, yFinish: 800, defects: 3,
+                wHour: 10, tarH: 52, tarDay: 416, yFinish: 800, defects: 3,
                 h8: 50, h9: 54, h10: 51, h11: 55, h13: 0,
                 h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
             },
             {
                 orderNo: "Style2-B", sewStart: "10/07", day: 1,
-                hour: 40, tarH: 40, tarDay: 320, yFinish: 120, defects: 1,
+                wHour: 8, tarH: 40, tarDay: 320, yFinish: 120, defects: 1,
                 h8: 0, h9: 0, h10: 0, h11: 22, h13: 0,
                 h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
             },
@@ -60,7 +60,7 @@ const MOCK_TV_GENERAL_DATA = [
         styles: [
             {
                 orderNo: "Style3", sewStart: "07/07", day: 4,
-                hour: 48, tarH: 48, tarDay: 384, yFinish: 50, defects: 0,
+                wHour: 8, tarH: 48, tarDay: 384, yFinish: 50, defects: 0,
                 h8: 47, h9: 50, h10: 45, h11: 49, h13: 0,
                 h14: 0, h15: 0, h16: 0, h17: 0, h18: 0,
             },
@@ -119,7 +119,7 @@ function buildTotal(rows) {
     });
     return {
         line: "", orderNo: "Factory ALL    Total", sewStart: "", day: "", worker: totalWorker, helper: totalHelper,
-        hour: "", tarH: totalTarH, tarDay: totalTarDay, tarNow: totalTarNow, dif: totalDif,
+        wHour: "", tarH: totalTarH, tarDay: totalTarDay, tarNow: totalTarNow, dif: totalDif,
         finishPct: totalFinishPct, finish: totalFinish, yFinish: totalYFinish,
         defects: totalDefects, defPct: totalDefPct,
         ...hourTotals,
@@ -212,7 +212,7 @@ function DataTable({ rows, total }) {
                     </td>
                 )}
                 {/* Hour */}
-                <td className={tdCls}>{row.hour}</td>
+                <td className={tdCls}>{row.wHour}</td>
                 {/* Tar/H */}
                 <td className={tdCls}>{row.tarH}</td>
                 {/* Tar/Day */}
@@ -220,7 +220,9 @@ function DataTable({ rows, total }) {
                 {/* Tar/Now */}
                 <td className={`${tdCls} ${fw}`}>{row.tarNow || ""}</td>
                 {/* DIF */}
-                <td className={`${tdCls} ${row.dif < 0 ? "text-red-600" : "text-green-600"} font-bold`}>{row.dif || ""}</td>
+                <td className={`${tdCls} ${row.dif < 0 ? "text-red-600" : "text-green-600"} font-bold`}>
+                    {row.dif ?? ""}
+                </td>
                 {/* Finish% with bar */}
                 <FinishCell pct={row.finishPct} />
                 {/* Finish */}
@@ -233,7 +235,7 @@ function DataTable({ rows, total }) {
                 {/* Def.% */}
                 <td className={`${tdCls} font-bold`}
                     style={{ textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
-                    {row.defPct > 0 ? `${row.defPct}%` : ""}
+                    {row.defPct != null ? `${row.defPct}%` : ""}
                 </td>
                 {/* Hour columns */}
                 {HOUR_KEYS.map((k) => (
