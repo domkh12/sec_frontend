@@ -492,6 +492,16 @@ function TVLineInput() {
                                     <Paper elevation={0} sx={{ p: 2.5, borderRadius: 3 }}>
                                         <Typography fontWeight={800} mb={2}>Targets & capacity</Typography>
                                         <Stack spacing={2}>
+                                            <TextField
+                                                type="number"
+                                                label="Line"
+                                                value={lineData?.line ?? ""}
+                                                onChange={(event) => setLineData((previous) => ({
+                                                    ...previous,
+                                                    line: Math.max(Number(event.target.value), 0),
+                                                }))}
+                                                inputProps={{ min: 0 }}
+                                            />
                                             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.25 }}>
                                                 <TextField
                                                     type="number"
@@ -516,7 +526,7 @@ function TVLineInput() {
                                             </Box>
                                             <TextField type="number" name="hTarg" label="Hourly target" value={values.hTarg} onChange={handleChange} error={touched.hTarg && Boolean(errors.hTarg)} helperText={touched.hTarg && errors.hTarg} />
                                             <TextField type="number" name="wHour" label="Working hours" value={values.wHour} onChange={handleChange} />
-                                            <Metric label="Order balance" value={balance.toLocaleString()} helper="pieces remaining" tone="#d97706" icon={<CalendarMonthRoundedIcon fontSize="small" />} />
+                                            
                                         </Stack>
                                     </Paper>
                                     <Button type="submit" variant="contained" size="large" startIcon={<SaveRoundedIcon />} disabled={isSubmitting} sx={{ py: 1.5, borderRadius: 2.5, textTransform: "none", fontWeight: 800 }}>{isSubmitting ? "Saving…" : `Save ${values.orderNo}`}</Button>
