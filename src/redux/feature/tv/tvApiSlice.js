@@ -136,10 +136,20 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        updateTvOrder: builder.mutation({
+            query: (styles) => ({
+                url: `/tvs`,
+                method: "PATCH",
+                body: styles,
+            }),
+            invalidatesTags: [{type: "Tv", id: "LIST"}],
+        }),
+
     }),
 });
 
 export const {
+    useUpdateTvOrderMutation,
     useCreateOrderMutation,
     useCreateNewStyleMutation,
     useUpdateTvDataMutation,

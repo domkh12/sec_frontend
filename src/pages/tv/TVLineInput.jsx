@@ -21,7 +21,7 @@ import BackButton from "../../components/ui/BackButton.jsx";
 import CardList from "../../components/ui/CardList.jsx";
 import useAuth from "../../hook/useAuth.jsx";
 import { useGetStyleLookupQuery } from "../../redux/feature/style/styleApiSlice.js";
-import { useCreateOrderMutation, useCreateTvDataMutation, useGetTvDataQuery, useUpdateTvDataMutation } from "../../redux/feature/tv/tvApiSlice.js";
+import { useCreateOrderMutation, useCreateTvDataMutation, useGetTvDataQuery, useUpdateTvDataMutation, useUpdateTvOrderMutation } from "../../redux/feature/tv/tvApiSlice.js";
 
 const HOUR_KEYS = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
 const HOUR_LABELS = { h8: "08:00", h9: "09:00", h10: "10:00", h11: "11:00", h13: "13:00", h14: "14:00", h15: "15:00", h16: "16:00", h17: "17:00", h18: "18:00" };
@@ -70,7 +70,7 @@ function NumberInput({ value, onChange, defect = false, disabled = false }) {
     );
 }
 
-function StyleSettingsDialog({ open, orders, checkedStyles, onToggle, onClose }) {
+function StyleSettingsDialog({ open, orders, checkedStyles, onToggle, onClose, onSave }) {
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle fontWeight={800}>Style settings</DialogTitle>
@@ -99,7 +99,7 @@ function StyleSettingsDialog({ open, orders, checkedStyles, onToggle, onClose })
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
                 <Button onClick={onClose}>Cancel</Button>
-                <Button variant="contained" onClick={onClose}>Save</Button>
+                <Button variant="contained" onClick={onSave}>Save</Button>
             </DialogActions>
         </Dialog>
     );
@@ -124,6 +124,7 @@ function TVLineInput() {
     const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
     const [createTvData, { isLoading: isCreatingTvData }] = useCreateTvDataMutation();
     const [updateTvData] = useUpdateTvDataMutation();
+    const [updateTvOrder] = useUpdateTvOrderMutation();
 
     const {
         data: getTvData,
@@ -167,6 +168,17 @@ function TVLineInput() {
             (lineData?.orders ?? []).map((order) => [order.id, order.status === "ACTIVE"])
         ));
         setSettingsOpen(true);
+    };
+
+    const handleSaveStyleSettings = async () => {
+        const styles = (lineData?.orders ?? []).map((order) => ({
+            id: order.id,
+            status: checkedStyles[order.id] ? "ACTIVE" : "COMPLETED",
+        }));
+
+        console.log("Style settings:", styles);
+        await updateTvOrder(styles).unwrap();
+        setSettingsOpen(false);
     };
 
     const updateActiveOrder = useCallback((updater) => {
@@ -313,6 +325,7 @@ function TVLineInput() {
                     checkedStyles={checkedStyles}
                     onToggle={(id, checked) => setCheckedStyles((current) => ({ ...current, [id]: checked }))}
                     onClose={() => setSettingsOpen(false)}
+                    onSave={handleSaveStyleSettings}
                 />
             </CardList>
         );
@@ -558,6 +571,7 @@ function TVLineInput() {
                 checkedStyles={checkedStyles}
                 onToggle={(id, checked) => setCheckedStyles((current) => ({ ...current, [id]: checked }))}
                 onClose={() => setSettingsOpen(false)}
+                onSave={handleSaveStyleSettings}
             />
         </CardList>
     );
