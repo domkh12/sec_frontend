@@ -7,11 +7,15 @@ import { useGetOutputTodayQuery } from "../../redux/feature/analysis/analysisApi
 import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setFetchedAtOutputToday } from "../../redux/feature/analysis/analysisSlice.js";
 
 function ProductionStatusSewingOutput() {
+    // -- Selector ------------------------------------------------------------------------------
+    const fetchedAtOutputToday = useSelector((s) => s.analysis.fetchedAtOutputToday);
 
     // -- Queries -------------------------------------------------------------------------------
-    const {data: outputToday, isLoading: isLoadingOutputToday, refetch, isFetching: isFetchingOutputToday} = useGetOutputTodayQuery("outputToday",
+    const {data: outputToday, isSuccess, isLoading: isLoadingOutputToday, refetch, isFetching: isFetchingOutputToday} = useGetOutputTodayQuery("outputToday",
          {refetchOnMountOrArgChange: true,
              refetchOnFocus: true, 
              refetchOnReconnect: true, 
@@ -21,12 +25,24 @@ function ProductionStatusSewingOutput() {
             });
     const { messages } = useWebsocketServer(`/topic/messages/tv-data-update`);
 
+    // -- Hook -----------------------------------------------------------------------------------
+    const dispatch = useDispatch();
+
     // -- useEffect ------------------------------------------------------------------------------
     useEffect(() => {
         if (messages.isUpdate === true) {
             refetch();
         }
     }, [messages, refetch]);
+
+    useEffect(() => {
+        if(isSuccess){
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            dispatch(setFetchedAtOutputToday(`${hours}:${minutes}`))
+        }
+    },[isSuccess])
 
     let content;
 
@@ -40,7 +56,7 @@ function ProductionStatusSewingOutput() {
             <div className="card-glass flex flex-col sm:flex-row justify-between items-start sm:items-center text-white">
                 <div>
                     <p className="text-[clamp(0.5rem,4vw,1.3rem)] text-nowrap">WIP | Daily Production Dashboard / Real-Time</p>
-                    <p className="text-[clamp(0.5rem,4vw,1rem)]">Live · Sewing Output · Updated 10:07:27</p>
+                    <p className="text-[clamp(0.5rem,4vw,1rem)]">Live · Sewing Output · Updated: {fetchedAtOutputToday}</p>
                 </div>
                 <button className="button-glass" disabled={isLoadingOutputToday || isFetchingOutputToday} onClick={() => {refetch()}}><RefreshIcon className={` ${isLoadingOutputToday || isFetchingOutputToday ? 'animate-spin' : ''}`}/> Refresh</button>
             </div>

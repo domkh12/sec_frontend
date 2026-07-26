@@ -16,10 +16,10 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
             providesTags: (result) => {
                 if (result?.ids) {
                     return [
-                        { type: "Tv", id: "LIST" },
-                        ...result.ids.map((id) => ({ type: "Tv", id })),
+                        {type: "Tv", id: "LIST"},
+                        ...result.ids.map((id) => ({type: "Tv", id})),
                     ];
-                } else return [{ type: "Tv", id: "LIST" }];
+                } else return [{type: "Tv", id: "LIST"}];
             },
         }),
 
@@ -36,10 +36,10 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
             providesTags: (result) => {
                 if (result?.ids) {
                     return [
-                        { type: "TvData", id: "LIST" },
-                        ...result.ids.map((id) => ({ type: "TvData", id })),
+                        {type: "TvData", id: "LIST"},
+                        ...result.ids.map((id) => ({type: "TvData", id})),
                     ];
-                } else return [{ type: "TvData", id: "LIST" }];
+                } else return [{type: "TvData", id: "LIST"}];
             },
         }),
 
@@ -56,10 +56,10 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
             providesTags: (result) => {
                 if (result?.ids) {
                     return [
-                        { type: "TvGeneralData", id: "LIST" },
-                        ...result.ids.map((id) => ({ type: "TvGeneralData", id })),
+                        {type: "TvGeneralData", id: "LIST"},
+                        ...result.ids.map((id) => ({type: "TvGeneralData", id})),
                     ];
-                } else return [{ type: "TvGeneralData", id: "LIST" }];
+                } else return [{type: "TvGeneralData", id: "LIST"}];
             },
         }),
 
@@ -71,7 +71,9 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "Tv", id: "LIST" }],
+            invalidatesTags: [
+                {type: "Tv", id: "LIST"}
+            ],
         }),
 
         createTvData: builder.mutation({
@@ -80,7 +82,9 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 params: { tvOrderId },
             }),
-            invalidatesTags: [{ type: "TvData", id: "LIST" }],
+            invalidatesTags: [
+                {type: "TvData", id: "LIST"}
+            ],
         }),
 
         createNewStyle: builder.mutation({
@@ -88,7 +92,9 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                 url: `/tvs/data/${name}/style`,
                 method: "POST",
             }),
-            invalidatesTags: [{ type: "TvData", id: "LIST" }],
+            invalidatesTags: [
+                {type: "TvData", id: "LIST"}
+            ],
         }),
 
         updateTvData: builder.mutation({
@@ -99,7 +105,9 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                     ...initialState
                 },
             }),
-            invalidatesTags: [{ type: "TvData", id: "LIST" }],
+            invalidatesTags: [
+                {type: "TvData", id: "LIST"}
+            ],
         }),
 
         updateTv: builder.mutation({
@@ -110,7 +118,9 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                     ...initialTvData,
                 },
             }),
-            invalidatesTags: [{type: "Tv", id: "LIST"}],
+            invalidatesTags: [
+                {type: "Tv", id: "LIST"}
+            ],
         }),
 
         deleteTv: builder.mutation({
@@ -121,7 +131,9 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                     id,
                 },
             }),
-            invalidatesTags: [{ type: "Tv", id: "LIST" }],
+            invalidatesTags: [
+                { type: "Tv", id: "LIST" }
+            ],
         }),
 
         createOrder: builder.mutation({
@@ -131,18 +143,21 @@ export const tvsApiSlice = apiSlice.injectEndpoints({
                 params: { tvName, styleId },
             }),
             invalidatesTags: [
-                { type: "Order", id: "LIST" },
-                { type: "TvData", id: "LIST" },
+                {type:  "Order",   id: "LIST" },
+                {type:  "TvData",  id: "LIST" },
             ],
         }),
 
         updateTvOrder: builder.mutation({
             query: (styles) => ({
-                url: `/tvs`,
+                url: `/tvs/orders`,
                 method: "PATCH",
                 body: styles,
             }),
-            invalidatesTags: [{type: "Tv", id: "LIST"}],
+            invalidatesTags: [
+                {type:  "Tv",       id: "LIST"},
+                {type:  "TvData",   id: "LIST" }
+            ],
         }),
 
     }),

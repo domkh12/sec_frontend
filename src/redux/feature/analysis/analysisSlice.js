@@ -5,9 +5,11 @@ const analysisSlice = createSlice({
     initialState: {
         dateFrom: "",
         dateTo: "",
-        dataKey: "output"
+        dataKey: "output",
+        fetchedAtOutputToday: ""
     },
     reducers: {
+        setFetchedAtOutputToday: (state, action) => {state.fetchedAtOutputToday = action.payload;},
         setDataKey: (state, action) => {state.dataKey = action.payload;},
         setDateFrom: (state, action) => {state.dateFrom = action.payload;},
         setDateTo: (state, action) => {state.dateTo = action.payload;},
@@ -16,6 +18,7 @@ const analysisSlice = createSlice({
 });
 
 export const {
+    setFetchedAtOutputToday,
     setDataKey,
     setDateFrom,
     setDateTo
