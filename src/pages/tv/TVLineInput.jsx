@@ -3,6 +3,8 @@ import {
     Alert, Box, Button, Checkbox, Chip, CircularProgress, Collapse, Dialog, DialogActions,
     DialogContent, DialogTitle, Divider, LinearProgress, MenuItem, Paper, Select, Stack,
     Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, IconButton,
+    FormControlLabel,
+    FormGroup,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
@@ -440,7 +442,21 @@ function TVLineInput() {
                             <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", xl: "minmax(0, 1fr) 330px" }, gap: 2 }}>
                                 <Stack spacing={2} minWidth={0}>
                                     <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 }, borderRadius: 3 }}>
-                                        <Box mb={2}><Typography variant="h6" fontWeight={800}>Order details</Typography><Typography variant="body2" color="text.secondary">Identity, dates and production quantities for this style.</Typography></Box>
+                                        <div className="mb-2 flex justify-between items-start">
+                                            <div>
+                                            <Typography variant="h6" fontWeight={800}>Order details</Typography>
+                                            <Typography variant="body2" color="text.secondary">Identity, dates and production quantities for this style.</Typography>
+                                            </div>
+                                            <FormGroup>
+                                                <FormControlLabel 
+                                                    control={<Checkbox />} 
+                                                    name="isNewStyle"
+                                                    onChange={(event) => setFieldValue("isNewStyle", event.target.checked)}
+                                                    checked={values.isNewStyle}
+                                                    label="New Style" 
+                                                />
+                                            </FormGroup>
+                                        </div>
                                         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }, gap: 2 }}>
                                             <TextField
                                                 name="orderNo"
@@ -482,7 +498,7 @@ function TVLineInput() {
                                                             <TableCell align="center"><Typography fontWeight={850}>{total}</Typography></TableCell><TableCell align="center"><Chip label={`${rate}%`} size="small" color={rate >= 90 ? "success" : rate >= 70 ? "warning" : "error"} /></TableCell>
                                                         </TableRow>;
                                                     })}
-                                                    <TableRow sx={{ bgcolor: "#fffafa" }}><TableCell><Typography color="error.main" fontWeight={800}>Defects</Typography></TableCell><TableCell align="center">—</TableCell>{HOUR_KEYS.map((key) => <TableCell key={key} align="center"><NumberInput defect value={activeOrder?.defects?.[key]} onChange={(value) => updateHour(null, key, value, true)} /></TableCell>)}<TableCell align="center"><Typography color="error.main" fontWeight={850}>{defectTotal}</Typography></TableCell><TableCell align="center">—</TableCell></TableRow>
+                                                    <TableRow sx={{ bgcolor: "#fffafa" }}><TableCell><Typography color="error.main" fontWeight={800}>Defects</Typography></TableCell><TableCell align="center">—</TableCell>{HOUR_KEYS.map((key) => <TableCell key={key} align="center"><p className="text-red-600 font-semibold">{activeOrder?.defects?.[key] ?? "—"}</p></TableCell>)}<TableCell align="center"><Typography color="error.main" fontWeight={850}>{defectTotal}</Typography></TableCell><TableCell align="center">—</TableCell></TableRow>
                                                 </TableBody>
                                             </Table>
                                         </Box>

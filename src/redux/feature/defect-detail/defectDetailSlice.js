@@ -10,6 +10,7 @@ const defectDetailSlice = createSlice({
         isOpenSnackbarDefectDetail: false,
         isOpenDeleteDefectDetailDialog: false,
         alertDefectDetail: {type: "success", message: ""},
+        fetchedTimeDefect: "",
         filter: {
             pageNo: 1,
             pageSize: 20,
@@ -20,6 +21,9 @@ const defectDetailSlice = createSlice({
         }
     },
     reducers: {
+        setFetchedTimeDefect: (state, action) => {
+            state.fetchedTimeDefect = action.payload;
+        },
         setFilterDefectDetail: (state, action) => {
             state.filter = action.payload;
         },
@@ -48,6 +52,7 @@ const defectDetailSlice = createSlice({
 });
 
 export const {
+    setFetchedTimeDefect,
     setFilterDefectDetail,
     setIsOpenDeleteDefectDetailDialog,
     setAlertDefectDetail,

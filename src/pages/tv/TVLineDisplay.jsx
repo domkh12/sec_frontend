@@ -5,13 +5,9 @@ import {Backdrop} from "@mui/material";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
 import dayjs from "dayjs";
 import NumberFlow from "@number-flow/react";
-import { getMockTvLineDisplay } from "./mockTvLineApi.js";
-import { useGetProductionLineLookupQuery } from "../../redux/feature/productionLine/productionLineApiSlice.js";
 
 // ─── Hour keys ────────────────────────────────────────────────────────────────
 const hourKeys = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
-// Change to false to use GET /tvs/{name} from Spring Boot.
-const USE_MOCK_TV_LINE_API = true;
 
 const sumOrderField = (orders, field) => orders.reduce(
     (sum, order) => sum + (Number(order[field]) || 0), 0
@@ -69,36 +65,30 @@ function TVLineDisplay() {
     const [showControls, setShowControls] = useState(false);
     const [zoom, setZoom] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [mockData, setMockData] = useState(null);
     const containerRef = useRef(null);
     const popupRef = useRef(null);
     const {name} = useParams();
 
     // -- Query ----------------------------------------------------------
     const {
-        data: serverData,
-        isLoading: serverIsLoading,
-        isSuccess: serverIsSuccess,
+        data: apiData,
+        isLoading,
+        isSuccess,
         refetch,
     } = useGetTvDataQuery({name}, {
         pollingInterval: 300000,
-        skip: USE_MOCK_TV_LINE_API,
     });
-
-    useEffect(() => {
-        if (!USE_MOCK_TV_LINE_API) return;
-        getMockTvLineDisplay().then(setMockData);
-    }, []);
-
-    const apiData = USE_MOCK_TV_LINE_API ? mockData : serverData;
-    const isLoading = USE_MOCK_TV_LINE_API ? !mockData : serverIsLoading;
-    const isSuccess = USE_MOCK_TV_LINE_API ? Boolean(mockData) : serverIsSuccess;
 
     const orders = useMemo(
         () => Array.isArray(apiData?.orders)
             ? apiData.orders.filter((order) => order.status !== "COMPLETED")
             : [],
         [apiData]
+    );
+
+    const newStyleOrders = useMemo(
+        () => orders.filter((order) => order.isNewStyle === true),
+        [orders]
     );
 
     // Merge all styles into one stable line view. The visual layout stays the
@@ -188,6 +178,22 @@ function TVLineDisplay() {
     );
     const todayQtyCalc = todayRow ? todayRow.total : 0;
 
+    const newStyleData = useMemo(() => {
+        if (!apiData || newStyleOrders.length === 0) return null;
+        return mergeOrdersForDisplay(apiData, newStyleOrders);
+    }, [apiData, newStyleOrders]);
+
+    const newStyleTodayRecord = useMemo(() => {
+        const records = newStyleData?.dailyRecords ?? [];
+        return records.find((record) => record.isToday)
+            ?? [...records].sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())[0]
+            ?? null;
+    }, [newStyleData]);
+
+    const newStyleTodayQty = newStyleTodayRecord
+        ? hourKeys.reduce((sum, key) => sum + (Number(newStyleTodayRecord[key]) || 0), 0)
+        : 0;
+
     // ─── Calculate Rate% ──────────────────────────────────────────────────────
     const hourRows = useMemo(() =>
             hourRowsWithTotal.map((row) => {
@@ -202,20 +208,20 @@ function TVLineDisplay() {
         [hourRowsWithTotal, todayQtyCalc]);
 
     // ─── Target summary values ────────────────────────────────────────────────
-    const H_TARG = data?.hTarg ?? 0;
-    const D_TARG = todayRow?.dTarg ?? 0;
-    const W_HOUR = data?.wHour ?? 0;
-    const INPUT  = data?.input ?? 0;
+    const H_TARG = newStyleData?.hTarg ?? 0;
+    const D_TARG = newStyleTodayRecord?.dTarg ?? 0;
+    const W_HOUR = newStyleData?.wHour ?? 0;
+    const INPUT  = newStyleData?.input ?? 0;
 
-    const completedHours = todayRow
-        ? hourKeys.filter((k) => typeof todayRow[k] === "number" && todayRow[k] > 0).length
+    const completedHours = newStyleTodayRecord
+        ? hourKeys.filter((k) => Number(newStyleTodayRecord[k]) > 0).length
         : 0;
     const nowTarCalc = completedHours * H_TARG;
-    const difQtyCalc = todayQtyCalc - nowTarCalc;
+    const difQtyCalc = newStyleTodayQty - nowTarCalc;
 
     // ─── WebSocket refetch ────────────────────────────────────────────────────
     useEffect(() => {
-        if (!USE_MOCK_TV_LINE_API && messages.isUpdate === true) {
+        if (messages.isUpdate === true) {
             refetch();
         }
     }, [messages, refetch]);
@@ -282,7 +288,7 @@ function TVLineDisplay() {
         dTarg:    { value: String(D_TARG),        color: "#c62828" },
         hTarg:    { value: String(H_TARG),        color: "#c62828" },
         input:    { value: String(INPUT),         color: "#1565c0" },
-        todayQty: { value: String(todayQtyCalc),  color: "#1565c0" },
+        todayQty: { value: String(newStyleTodayQty), color: "#1565c0" },
         nowTar:   { value: String(nowTarCalc),    color: "#1565c0" },
         difQty:   { value: String(difQtyCalc),    color: difQtyCalc < 0 ? "#c62828" : "#1565c0" },
     };

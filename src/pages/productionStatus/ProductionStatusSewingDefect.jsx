@@ -12,6 +12,8 @@ import { useMediaQuery } from "@mui/material";
 import StatCardsDash from "../../components/card/StatCardsDash.jsx";
 import { useGetDefectTodayQuery } from "../../redux/feature/analysis/analysisApiSlice.js";
 import useWebsocketServer from "../../hook/useWebsocketServer.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setFetchedTimeDefect } from "../../redux/feature/defect-detail/defectDetailSlice.js";
 
 const DEFAULT_TARGET_DEFECT_RATE = 2.5;
 
@@ -245,8 +247,11 @@ const DefectBarLabel = forwardRef(function DefectBarLabel({ x, y, width, childre
 
 function ProductionStatusSewingDefect() {
 
+    // -- Selector ----------------------------------------------------------------------------------------
+    const fetchedTimeDefect = useSelector((s) => s.defectDetail.fetchedTimeDefect);
+
     // -- Query ----------------------------------------------------------------------------------------
-    const { data: defectToday, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday, refetch: refetchDefectToday } = useGetDefectTodayQuery("defectToday",
+    const { data: defectToday, isSuccess, isLoading: isLoadingDefectToday, refetch, isFetching: isFetchingDefectToday, refetch: refetchDefectToday } = useGetDefectTodayQuery("defectToday",
          {refetchOnMountOrArgChange: true,
             refetchOnFocus: true, 
             refetchOnReconnect: true, 
@@ -256,12 +261,34 @@ function ProductionStatusSewingDefect() {
         });
     const { messages } = useWebsocketServer(`/topic/messages/tv-data-update`);
 
+    // -- Hook ----------------------------------------------------------------------------------------
+    const dispatch = useDispatch();
+
     // -- useEffect ----------------------------------------------------------------------------------------
     useEffect(() => {
         if (messages.isUpdate === true) {
             refetchDefectToday();
         }
     }, [messages, refetchDefectToday]);
+
+    useEffect(() => {
+        if (isSuccess){
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+
+            // Check whether AM or PM
+            let newformat = hours >= 12 ? "PM" : "AM";
+
+            // Find current hour in AM-PM Format
+            hours = hours % 12;
+
+            // To display "0" as "12"
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            dispatch(setFetchedTimeDefect(`${hours}:${minutes} ${newformat}`));
+        }
+    }, [isSuccess])
 
     const shouldRotateLineLabels = useMediaQuery("(max-width:1535px)");
 
@@ -334,7 +361,6 @@ function ProductionStatusSewingDefect() {
         setLastUpdated(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     };
 
-    const displayUpdatedAt = defectToday?.data?.updatedAt ?? defectToday?.updatedAt ?? dashboard.updatedAt ?? lastUpdated;
     const riskLines = dashboard.lineAnalysis.filter((line) => line.defectRate > dashboard.targetDefectRate);
     const topDefect = dashboard.defectMix[0] ?? { type: "-", qty: 0, rate: 0 };
     const highestDefectLine = [...dashboard.lineAnalysis].sort((a, b) => b.defect - a.defect)[0];
@@ -351,7 +377,7 @@ function ProductionStatusSewingDefect() {
             <div className="card-glass flex flex-col gap-4 sm:flex-row justify-between items-start sm:items-center text-white">
                 <div>
                     <p className="text-[clamp(1rem,4vw,1.3rem)] text-nowrap">WIP | Sewing Defect Dashboard / Real-Time</p>
-                    <p className="text-[clamp(0.8rem,3vw,1rem)] text-white/75">Live | Sewing Defect | Updated {displayUpdatedAt}</p>
+                    <p className="text-[clamp(0.8rem,3vw,1rem)] text-white/75">Live | Sewing Defect | Updated {fetchedTimeDefect}</p>
                 </div>
                 <button className="button-glass" onClick={refreshDashboard} disabled={isLoadingDefectToday || isFetchingDefectToday}>
                     <RefreshIcon className={isLoadingDefectToday || isFetchingDefectToday ? "animate-spin" : ""} /> Refresh

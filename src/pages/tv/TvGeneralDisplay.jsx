@@ -270,11 +270,6 @@ export default function TvGeneralDisplay() {
         `/topic/messages/tv-data-update`
     );
 
-    const isOnline = useOnlineStatus(
-        `${import.meta.env.VITE_API_FRONTEND_URL ||  "http://localhost:3000"}`,
-        3000
-    );
-
     const { data: tvGeneralData, isLoading, isSuccess, refetch } = useGetTvGeneralDataQuery(undefined, {
         pollingInterval: 300000,
     });
@@ -295,15 +290,6 @@ export default function TvGeneralDisplay() {
     useEffect(() => {
         if (messages.isUpdate === true) refetch();
     }, [messages, refetch]);
-
-    // check online and then reload page and wait 9s before reload
-    useEffect(() => {
-        if(!isOnline){
-            setTimeout(() => {
-                window.location.reload();
-            }, 9000)
-        }
-    }, [isOnline])
     
     const computedRows = isSuccess && Array.isArray(tvGeneralData)
         ? tvGeneralData.flatMap(expandLineStyles).map(calcRow)
