@@ -310,9 +310,8 @@ function TVLineDisplay() {
     ];
 
     const getRateColor = (rate) => {
-        if (rate >= 90) return "#1565c0";
-        if (rate >= 70) return "#2e7d32";
-        if (rate >= 50) return "#f9a825";
+        if (rate >= 80) return "#2e7d32";
+        if (rate >= 60) return "#f9a825";
         return "#c62828";
     };
 

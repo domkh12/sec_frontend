@@ -73,8 +73,8 @@ function buildTotal(rows) {
 
 // ─── Color helpers ────────────────────────────────────────────────────────────
 function getBarColor(pct) {
-    if (pct >= 100) return "#16a34a";
-    if (pct >= 50)  return "#eab308";
+    if (pct >= 80) return "#16a34a";
+    if (pct >= 60)  return "#eab308";
     return "#dc2626";
 }
 
@@ -258,7 +258,7 @@ function CtrlButton({ icon, label, onClick, active }) {
 export default function TvGeneralDisplay() {
     const [now, setNow]                   = useState(new Date());
     const [showControls, setShowControls] = useState(false);
-    const [zoom, setZoom]                 = useState(0.68);
+    const [zoom, setZoom]                 = useState(0.70);
     const [isFullscreen, setIsFullscreen] = useState(false);
     // -- Hooks --------------------------------------------------------------------------------------------
 

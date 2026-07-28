@@ -23,7 +23,7 @@ import BackButton from "../../components/ui/BackButton.jsx";
 import CardList from "../../components/ui/CardList.jsx";
 import useAuth from "../../hook/useAuth.jsx";
 import { useGetStyleLookupQuery } from "../../redux/feature/style/styleApiSlice.js";
-import { useCreateOrderMutation, useCreateTvDataMutation, useGetTvDataQuery, useUpdateTvDataMutation, useUpdateTvOrderMutation } from "../../redux/feature/tv/tvApiSlice.js";
+import { useCreateOrderMutation, useCreateTvDataMutation, useGetTvDataQuery, useUpdateTvDataMutation, useUpdateTvOrderMutation, useUpdateTvOrderNewStyleMutation } from "../../redux/feature/tv/tvApiSlice.js";
 
 const HOUR_KEYS = ["h8", "h9", "h10", "h11", "h13", "h14", "h15", "h16", "h17", "h18"];
 const HOUR_LABELS = { h8: "08:00", h9: "09:00", h10: "10:00", h11: "11:00", h13: "13:00", h14: "14:00", h15: "15:00", h16: "16:00", h17: "17:00", h18: "18:00" };
@@ -127,6 +127,7 @@ function TVLineInput() {
     const [createTvData, { isLoading: isCreatingTvData }] = useCreateTvDataMutation();
     const [updateTvData] = useUpdateTvDataMutation();
     const [updateTvOrder] = useUpdateTvOrderMutation();
+    const [updateTvOrderNewStyle, { isLoading: isUpdatingNewStyle }] = useUpdateTvOrderNewStyleMutation();
 
     const {
         data: getTvData,
@@ -189,6 +190,31 @@ function TVLineInput() {
             orders: (previous.orders ?? []).map((order) => order.id === activeOrderId ? updater(order) : order),
         }) : previous);
     }, [activeOrderId]);
+
+    const handleNewStyleChange = async (isNewStyle, setFieldValue) => {
+        const previousValue = Boolean(activeOrder?.isNewStyle);
+        setFieldValue("isNewStyle", isNewStyle);
+
+        try {
+            await updateTvOrderNewStyle({
+                id: activeOrderId,
+                isNewStyle,
+            }).unwrap();
+            updateActiveOrder((order) => ({ ...order, isNewStyle }));
+            setNotice({
+                severity: "success",
+                text: `${activeOrder?.orderNo ?? "Order"} new style setting updated.`,
+            });
+        } catch (error) {
+            setFieldValue("isNewStyle", previousValue);
+            setNotice({
+                severity: "error",
+                text: error?.data?.error?.description
+                    ?? error?.data?.message
+                    ?? "Unable to update the new style setting.",
+            });
+        }
+    };
 
     const updateHour = (recordId, key, value, isDefect = false) => {
         updateActiveOrder((order) => isDefect
@@ -449,10 +475,10 @@ function TVLineInput() {
                                             </div>
                                             <FormGroup>
                                                 <FormControlLabel 
-                                                    control={<Checkbox />} 
+                                                    control={<Checkbox disabled={isUpdatingNewStyle} />} 
                                                     name="isNewStyle"
-                                                    onChange={(event) => setFieldValue("isNewStyle", event.target.checked)}
-                                                    checked={values.isNewStyle}
+                                                    onChange={(event) => handleNewStyleChange(event.target.checked, setFieldValue)}
+                                                    checked={Boolean(values.isNewStyle)}
                                                     label="New Style" 
                                                 />
                                             </FormGroup>

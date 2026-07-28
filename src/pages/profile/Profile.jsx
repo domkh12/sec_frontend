@@ -171,6 +171,10 @@ function Profile() {
                                         <p>Name English</p>
                                         <CustomTextField1 name="lastName" value={user.nameEn}/>
                                     </div>
+                                      <div>
+                                        <p>Employee ID</p>
+                                        <CustomTextField1 name="employeeId" value={user.empId} disabled/>
+                                    </div>
                                     <div>
                                         <p>Phone number</p>
                                         <CustomNumberInput name="phone" value={user.phoneNumber}/>

@@ -58,16 +58,13 @@ function MenuAdmin(){
                         />
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("style")}</Typography>
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("po")}</Typography>
+                        <MenuButton title={`${t("po")}`} iconPath={"/images/order-fulfillment.png"} onClick={() => navigate("purchase-orders")}/>
                         <MenuButton title={`${t("style")}`} iconPath={"/images/football-shirt.png"} onClick={() => navigate("products")}/>
+                        <MenuButton title={`${t("table.buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("buyers")}/>
                         <MenuButton title={`${t("table.color")}`} iconPath={"/images/color-wheel.png"} onClick={() => navigate("colors")}/>
                         <MenuButton title={`${t("table.size")}`} iconPath={"/images/measuring-tape.png"} onClick={() => navigate("sizes")}/>
                         <MenuButton title={`${t("table.defectType")}`} iconPath={"/images/defect-type.png"} onClick={() => navigate("defect-types")}/>
-                    </div>
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t("po")}</Typography>
-                        <MenuButton title={`${t("po")}`} iconPath={"/images/order-fulfillment.png"} onClick={() => navigate("purchase-orders")}/>
-                        <MenuButton title={`${t("table.buyer")}`} iconPath={"/images/investor.png"} onClick={() => navigate("buyers")}/>
 
                     </div>
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
@@ -109,6 +106,14 @@ function MenuAdmin(){
                             title={`${t('tvInput')}`}
                             iconPath={"/images/smart-tv.png"}
                             onClick={() => navigate("tv-menu")}
+                        />
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('report')}</Typography>
+                        <MenuButton
+                            title={`${t('report')}`}
+                            iconPath={"/images/report.png"}
+                            onClick={() => navigate("#")}
                         />
                     </div>
                 </div>

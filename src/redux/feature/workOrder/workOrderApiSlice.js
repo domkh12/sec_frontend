@@ -107,7 +107,8 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: [
                 {type:  "WorkOrder",        id: "LIST"},
                 {type:  "PurchaseOrder",    id: "LIST"},
-                {type:  "WorkOrderByLine",  id: "LIST"}
+                {type:  "WorkOrderByLine",  id: "LIST"},
+                {type:  "WorkOrderStats",   id: "LIST" }
             ],
         }),
 
