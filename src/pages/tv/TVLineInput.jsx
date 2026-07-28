@@ -46,6 +46,7 @@ const toFormValues = (order) => {
     delete values.defects;
     values.startDate = order.startDate ? dayjs(order.startDate) : null;
     values.finishDate = order.finishDate ? dayjs(order.finishDate) : null;
+    values.remark = order.remark ?? "";
     return values;
 };
 
@@ -439,6 +440,7 @@ function TVLineInput() {
                             wHour: Number(saved.wHour) || 0,
                             hTarg: Number(saved.hTarg) || 0,
                             input: Number(saved.input) || 0,
+                            remark: saved.remark ?? "",
                             dTarg: Number(todayRecord.dTarg) || 0,
                             ...HOUR_KEYS.reduce((result, key) => ({
                                 ...result,
@@ -581,6 +583,14 @@ function TVLineInput() {
                                             </Box>
                                             <TextField type="number" name="hTarg" label="Hourly target" value={values.hTarg} onChange={handleChange} error={touched.hTarg && Boolean(errors.hTarg)} helperText={touched.hTarg && errors.hTarg} />
                                             <TextField type="number" name="wHour" label="Working hours" value={values.wHour} onChange={handleChange} />
+                                            <TextField
+                                                name="remark"
+                                                label="Remark"
+                                                value={values.remark ?? ""}
+                                                onChange={handleChange}
+                                                multiline
+                                                minRows={3}
+                                            />
                                             
                                         </Stack>
                                     </Paper>
