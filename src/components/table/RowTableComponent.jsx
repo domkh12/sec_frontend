@@ -69,6 +69,7 @@ function RowTableComponent({
             PENDING: {background: "rgba(249,115,22,0.15)", border: "1px solid rgba(249,115,22,0.45)", color: "#fdba74"},
             DELAYED: {background: "rgba(220, 38, 38, 0.15)", border: "1px solid rgba(220, 38, 38, 0.45)", color: "#f87171"},
             IN_PROGRESS:  { background: "rgba(168,85,247,0.15)",  border: "1px solid rgba(168,85,247,0.45)",  color: "#d8b4fe" },
+            COMPLETED:  { background: "rgba(34,197,94,0.15)",   border: "1px solid rgba(34,197,94,0.45)",   color: "#86efac" },
         };
 
         const STATUS_DEFAULT = { background: "rgba(148,163,184,0.15)", border: "1px solid rgba(148,163,184,0.35)", color: "#cbd5e1" };
@@ -191,17 +192,17 @@ function RowTableComponent({
                                         </Tooltip>
                                         )
                                     }
-                                    {onView && (
-                                        <Tooltip title={tView}>
-                                            <Button onClick={handleView} sx={viewBtnSx}>
-                                                <Visibility sx={{ fontSize: 15 }} />
-                                            </Button>
-                                        </Tooltip>
-                                    )}
                                     {onEdit && (
                                         <Tooltip title={tEdit}>
                                             <Button onClick={handleEdit} sx={editBtnSx}>
                                                 <Edit sx={{ fontSize: 15 }} />
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                    {onView && (
+                                        <Tooltip title={tView}>
+                                            <Button onClick={handleView} sx={viewBtnSx}>
+                                                <Visibility sx={{ fontSize: 15 }} />
                                             </Button>
                                         </Tooltip>
                                     )}
@@ -391,18 +392,17 @@ function RowTableComponent({
                                                                                     <TableCell key={col.id} align={col.align ?? "left"} sx={cellSx}>
                                                                                         {col.id === "action" ? (
                                                                                             <Box sx={actionBoxSx}>
-
-                                                                                                {onView && (
-                                                                                                    <Tooltip title={tView}>
-                                                                                                        <Button onClick={handleView} sx={viewBtnSx}>
-                                                                                                            <Visibility sx={{ fontSize: 15 }} />
-                                                                                                        </Button>
-                                                                                                    </Tooltip>
-                                                                                                )}
                                                                                                 {onEdit && (
                                                                                                     <Tooltip title={tEdit}>
                                                                                                         <Button onClick={handleEdit} sx={editBtnSx}>
                                                                                                             <Edit sx={{ fontSize: 15 }} />
+                                                                                                        </Button>
+                                                                                                    </Tooltip>
+                                                                                                )}
+                                                                                                {onView && (
+                                                                                                    <Tooltip title={tView}>
+                                                                                                        <Button onClick={handleView} sx={viewBtnSx}>
+                                                                                                            <Visibility sx={{ fontSize: 15 }} />
                                                                                                         </Button>
                                                                                                     </Tooltip>
                                                                                                 )}

@@ -9,6 +9,8 @@ const workOrderSlice = createSlice({
         workOrderDataForUpdate: null,
         isOpenSnackbarWorkOrder: false,
         isOpenDeleteWorkOrderDialog: false,
+        isOpenViewWorkOrderDialog: false,
+        workOrderDataForView: null,
         alertWorkOrder: {type: "success", message: ""},
         filter: {
             pageNo: 1,
@@ -17,6 +19,12 @@ const workOrderSlice = createSlice({
         }
     },
     reducers: {
+        setWorkOrderDataForView: (state, action) => {
+            state.workOrderDataForView = action.payload;
+        },
+        setIsOpenViewWorkOrderDialog: (state, action) => {
+            state.isOpenViewWorkOrderDialog = action.payload;
+        },
         setFilterWorkOrder: (state, action) => {
             state.filter = action.payload;
         },
@@ -45,6 +53,8 @@ const workOrderSlice = createSlice({
 });
 
 export const {
+    setWorkOrderDataForView,
+    setIsOpenViewWorkOrderDialog,
     setFilterWorkOrder,
     setIsOpenDeleteWorkOrderDialog,
     setAlertWorkOrder,

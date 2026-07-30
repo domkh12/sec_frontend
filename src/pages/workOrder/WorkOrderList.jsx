@@ -28,7 +28,8 @@ import {
 import {
     setAlertWorkOrder, setFilterWorkOrder, setIsOpenDeleteWorkOrderDialog,
     setIsOpenDialogAddOrEditWorkOrder,
-    setIsOpenSnackbarWorkOrder, setWorkOrderDataForUpdate
+    setIsOpenSnackbarWorkOrder, setIsOpenViewWorkOrderDialog, setWorkOrderDataForUpdate,
+    setWorkOrderDataForView
 } from "../../redux/feature/workOrder/workOrderSlice.js";
 import dayjs from "dayjs";
 import {useGetColorQuery} from "../../redux/feature/color/colorApiSlice.js";
@@ -42,6 +43,7 @@ import {setAlertMaterial, setIsOpenSnackbarMaterial} from "../../redux/feature/m
 import {useUploadFileMutation} from "../../redux/feature/file/fileApiSlice.js";
 import {useGetPurchaseOrderLookupQuery} from "../../redux/feature/purchaseOrder/purchaseOrderApiSlice.js";
 import {useGetDeptLookupQuery} from "../../redux/feature/department/departmentApiSlice.js";
+import DialogViewAnalyticWO from "../../components/dialog/DialogViewAnalyticWO.jsx";
 
 function WorkOrderList() {
     const [id, setId] = useState(null);
@@ -59,6 +61,7 @@ function WorkOrderList() {
     const alertWO            = useSelector((state) => state.workOrder.alertWorkOrder);
     const isOpenDeleteDialog    = useSelector((state) => state.workOrder.isOpenDeleteWorkOrderDialog);
     const filterValue           = useSelector((state) => state.workOrder.filter);
+    const isOpenViewDialog      = useSelector((state) => state.workOrder.isOpenViewWorkOrderDialog);
 
     // -- Mutation -------------------------------------------------------------------------------------------------
     const[createWorkOrder, {isLoading: isLoadingCreateWO}] = useCreateWorkOrderMutation();
@@ -222,6 +225,11 @@ function WorkOrderList() {
             dispatch(setAlertBuyer({type: "error", message: error.data.error.description}));
             dispatch(setIsOpenSnackbarBuyer(true));
         }
+    }
+
+    const handleView = (row) => {
+        dispatch(setIsOpenViewWorkOrderDialog(true));
+        dispatch(setWorkOrderDataForView(row));
     }
 
     const handleClearAllFilters = () => {
@@ -477,6 +485,7 @@ function WorkOrderList() {
                     data={workOrderData}
                     handleChangePage={handleChangePage}
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    onView={handleView}
                     onEdit={handleEdit}
                     onDelete={handleDeleteOpen}
                     isFilterActive={true}
@@ -503,6 +512,10 @@ function WorkOrderList() {
                     />
                 )
             }
+            <DialogViewAnalyticWO 
+                isOpen={isOpenViewDialog}
+                handleClose={() => dispatch(setIsOpenViewWorkOrderDialog(false))}
+            />
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
