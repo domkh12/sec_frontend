@@ -45,16 +45,22 @@ function calcRow(row) {
     return { ...row, finish, tarNow, dif, finishPct, defPct };
 }
 
+function safeNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : 0;
+}
+
 // ─── Compute TOTAL row ────────────────────────────────────────────────────────
 function buildTotal(rows) {
-    const totalWorker  = rows.reduce((s, r) => s + (r.worker  ?? 0), 0);
-    const totalHelper  = rows.reduce((s, r) => s + (r.helper  ?? 0), 0);
-    const totalTarH    = rows.reduce((s, r) => s + (r.tarH    ?? 0), 0);
-    const totalTarDay  = rows.reduce((s, r) => s + (r.tarDay  ?? 0), 0);
-    const totalTarNow  = rows.reduce((s, r) => s + (r.tarNow  ?? 0), 0);
-    const totalFinish  = rows.reduce((s, r) => s + (r.finish  ?? 0), 0);
-    const totalYFinish = rows.reduce((s, r) => s + (r.yFinish ?? 0), 0);
-    const totalDefects = rows.reduce((s, r) => s + (r.defects ?? 0), 0);
+    const totalWorker  = rows.reduce((s, r) => s + safeNumber(r.worker), 0);
+    const totalHelper  = rows.reduce((s, r) => s + safeNumber(r.helper), 0);
+    const totalTarH    = rows.reduce((s, r) => s + safeNumber(r.tarH), 0);
+    const totalTarDay  = rows.reduce((s, r) => s + safeNumber(r.tarDay), 0);
+    const totalTarNow  = rows.reduce((s, r) => s + safeNumber(r.tarNow), 0);
+    const totalFinish  = rows.reduce((s, r) => s + safeNumber(r.finish), 0);
+    const totalYFinish = rows.reduce((s, r) => s + safeNumber(r.yFinish), 0);
+    const totalDefects = rows.reduce((s, r) => s + safeNumber(r.defects), 0);
+  
     const totalDif       = totalFinish - totalTarNow || 0;
     const totalFinishPct = totalTarDay > 0 ? Math.round((totalFinish / totalTarDay) * 1000) / 10 : 0;
     const totalDefPct    = totalFinish > 0 ? Math.round((totalDefects / totalFinish) * 1000) / 10 : 0;
@@ -166,7 +172,7 @@ function DataTable({ rows, total }) {
                 <td className={`${tdCls} ${fw}`}>{row.tarNow || ""}</td>
                 {/* DIF */}
                 <td className={`${tdCls} ${row.dif < 0 ? "text-red-600" : "text-green-600"} font-bold`}>
-                    {row.dif ?? "0"}
+                    {row.orderNo ? row.dif : ""}
                 </td>
                 {/* Finish% with bar */}
                 <FinishCell pct={row.finishPct} />
@@ -180,7 +186,7 @@ function DataTable({ rows, total }) {
                 {/* Def.% */}
                 <td className={`${tdCls} font-bold`}
                     style={{ textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
-                    {row.defPct != null ? `${row.defPct}%` : ""}
+                    {row.orderNo && row.defPct != null ? `${row.defPct}%` : ""}
                 </td>
                 {/* Hour columns */}
                 {HOUR_KEYS.map((k) => (

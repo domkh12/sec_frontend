@@ -432,7 +432,7 @@ function ProductionStatusSewingDefect() {
                             <SectionHeader
                                 icon={<BarChartRoundedIcon className="text-white/80" />}
                                 title="Line Defect Hotspots"
-                                subtitle={`${dashboard.lineAnalysis.length} lines | ${dashboard.totalDefect} defects | API line order`}
+                                subtitle={`${dashboard.lineAnalysis.length} lines | ${dashboard.totalDefect} defects`}
                             />
                             <div className="rounded-full border border-white/15 bg-white/10 px-4 py-1 text-sm text-white">
                                 Target: {dashboard.targetDefectRate}%
@@ -517,7 +517,7 @@ function ProductionStatusSewingDefect() {
                     <div className="sub-card-glass">
                         <SectionHeader
                             icon={<DonutLargeRoundedIcon className="text-white/80" />}
-                            title="Defect Type Mix"
+                            title="Defect Type"
                             subtitle={`${topDefect.type} contributes ${topDefect.rate}%`}
                         />
                         <div className="mt-4 h-[320px]">

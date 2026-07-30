@@ -51,10 +51,25 @@ export const defectDetailApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        updateDefectQty: builder.mutation({
+            query: ({id, qty}) => ({
+                url: `/defect-details/${id}?qty=${qty}`,
+                method: "PATCH",
+                body: [
+                    id,
+                    qty
+                ],
+            }),
+            invalidatesTags:(result, error, arg) => [
+                { type: "DefectDetail", id: "LIST" }
+            ],
+        }),
+
     }),
 });
 
 export const {
+    useUpdateDefectQtyMutation,
     useDeleteDefectDetailMutation,
     useGetDefectDetailQuery
 } = defectDetailApiSlice;

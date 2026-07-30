@@ -3,7 +3,7 @@ import BackButton from "../../components/ui/BackButton";
 import { useTranslation } from "react-i18next";
 import TableCus from "../../components/table/TableCus";
 import { useDispatch, useSelector } from "react-redux";
-import { useDeleteDefectDetailMutation, useGetDefectDetailQuery } from "../../redux/feature/defect-detail/defectDetailApiSlice";
+import { useDeleteDefectDetailMutation, useGetDefectDetailQuery, useUpdateDefectQtyMutation } from "../../redux/feature/defect-detail/defectDetailApiSlice";
 import useDebounce from "../../hook/useDebounce";
 import { setAlertDefectDetail, setDefectDetailDataForUpdate, setFilterDefectDetail, setIsOpenDeleteDefectDetailDialog, setIsOpenDialogAddOrEditDefectDetail, setIsOpenSnackbarDefectDetail } from "../../redux/feature/defect-detail/defectDetailSlice";
 import { useGetProductionLineLookupQuery } from "../../redux/feature/productionLine/productionLineApiSlice";
@@ -15,6 +15,8 @@ import { useState } from "react";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete";
 import { Alert, Snackbar } from "@mui/material";
 import { useGetBuyerLookupQuery } from "../../redux/feature/buyer/buyerApiSlice";
+import DialogAddEditCus from "../../components/dialog/DialogAddEditCus";
+import * as Yup from 'yup';
 
 function DefectDetail() {
 
@@ -27,7 +29,9 @@ function DefectDetail() {
     const isOpenDeleteDialog          = useSelector((state) => state.defectDetail.isOpenDeleteDefectDetailDialog);
     const filterValue                 = useSelector((state) => state.defectDetail.filter);
     const debounceSearch              = useDebounce(filterValue.search, 500);
-    console.log(filterValue);
+    const isOpen                      = useSelector((state) => state.defectDetail.isOpenDialogAddOrEditDefectDetail);
+    const defectDetailDataForUpdate   = useSelector((state) => state.defectDetail.defectDetailDataForUpdate);
+    
     // -- Hook ------------------------------------------------------------------
     const navigate = useNavigate();
     const {t} = useTranslation();
@@ -51,6 +55,7 @@ function DefectDetail() {
 
     // -- Mutation ---------------------------------------------------------------
     const [deleteDefectDetail, {isLoading: isLoadingDefectDetail}] = useDeleteDefectDetailMutation();
+    const [updateDefectQty, {isLoading: isLoadingUpdate}] = useUpdateDefectQtyMutation();
 
     // -- Handler ---------------------------------------------------------------
     const handleFilterChange = (key, value) => {
@@ -95,7 +100,7 @@ function DefectDetail() {
             dispatch(setIsOpenDialogAddOrEditDefectDetail(true));
             dispatch(setDefectDetailDataForUpdate({
                 id: row.id,
-                qty: row.qty,
+                defectQty: row.defectQty,
             }));
         };      
 
@@ -115,23 +120,60 @@ function DefectDetail() {
                 dispatch(setAlertDefectDetail({type: "error", message: error.data.error.description}));
                 dispatch(setIsOpenSnackbarDefectDetail(true));
             }
-        }    
+        }
+
+     const handleClose = () => {
+             dispatch(setIsOpenDialogAddOrEditDefectDetail(false));
+             dispatch(setDefectDetailDataForUpdate(null));
+         }      
+     
+    const handleSubmit = async (values, {resetForm}) => {
+                    console.log(values);
+                try{
+                    if (defectDetailDataForUpdate) {
+                        await updateDefectQty({
+                            id: defectDetailDataForUpdate.id,
+                            qty: values.defectQty
+                        }).unwrap();
+                        dispatch(setAlertDefectDetail({type: "success", message: "Update successfully"}));
+                        dispatch(setDefectDetailDataForUpdate(null));
+                        dispatch(setIsOpenSnackbarDefectDetail(true));
+                        dispatch(setIsOpenDialogAddOrEditDefectDetail(false));
+                        resetForm();
+                    }
+                    
+                } catch (error) {
+                    console.log(error);
+                    dispatch(setAlertDefectDetail({type: "error", message: error.data.error.description}));
+                    dispatch(setIsOpenSnackbarDefectDetail(true));
+                }
+            };
+         
+      const validationSchema = Yup.object().shape({
+             defectQty: Yup.number().required(t("validation.required"))
+         });    
 
     const columns = [
         {
             id: "reportDate",
             label: t("reportDate"),
-            minWidth: 130,
+            minWidth: 110,
             align: "left",
             isDescription: true,
             // cut string from 0 to space
             format: (value) => value?.slice(0, value?.indexOf(" ")),
             description: (value) => value?.slice(value?.indexOf(" ") + 1),
         },
+         {
+            id: "image",
+            label: t("image"),
+            minWidth: 110,
+            align: "left",
+        },
         {
             id: "mo",
             label: t("mo"),
-            minWidth: 130,
+            minWidth: 110,
             align: "left",
         },
         {
@@ -158,7 +200,7 @@ function DefectDetail() {
         {
             id: "defectQty",
             label: t("defectQty"),
-            minWidth: 130,
+            minWidth: 100,
             align: "left",
         },
         {
@@ -219,6 +261,10 @@ function DefectDetail() {
             width: 180,
         },
     ];
+
+    const fields = [
+        { name: "defectQty",     label: "qty",     type: "number" }
+    ];
     
     let content;
 
@@ -248,7 +294,20 @@ function DefectDetail() {
                         onClose={() => dispatch(setIsOpenDeleteDefectDetailDialog(false))}
                         handleDelete={handleDelete}
                         isSubmitting={isLoadingDefectDetail}
-                    />    
+                    /> 
+            <DialogAddEditCus
+                fields={fields}
+                title={"Update Defect Detail"}
+                isOpen={isOpen}
+                onClose={handleClose}
+                isUpdate={true}
+                validationSchema={validationSchema}
+                handleSubmit={handleSubmit}
+                isSubmitting={isLoadingUpdate}
+                initialValues={{
+                    defectQty: defectDetailDataForUpdate?.defectQty ?? 0
+                }}/>    
+
             <Snackbar
                         open={isOpenSnackbar}
                         autoHideDuration={6000}

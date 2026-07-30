@@ -18,11 +18,12 @@ import useAuth from "../../hook/useAuth.jsx";
 import Seo from "../../components/seo/Seo.jsx";
 import CustomTextField1 from "../../components/input/CustomTextField1.jsx";
 import CustomNumberInput from "../../components/input/CustomNumberInput.jsx";
+import LoadingComponent from "../../components/ui/LoadingComponent.jsx";
 
 // ── Validation Schema ──────────────────────────────────────────────────────────
 const validationSchema = Yup.object({
-    firstName: Yup.string().required(t("validation.required")),
-    lastName:  Yup.string().required(t("validation.required")),
+    nameEn: Yup.string().required(t("validation.required")),
+    nameKh:  Yup.string().required(t("validation.required")),
     phone:     Yup.string().matches(/^\+?[0-9\s\-()]{7,20}$/, t("validation.invalidPhone")),
     birthday: Yup.mixed()
         .nullable()
@@ -54,20 +55,22 @@ function Profile() {
     const dispatch = useDispatch();
     const isOpenSnackbar = useSelector((state) => state.auth.isOpenSnackbarProfile);
     const alertProfile = useSelector((state) => state.auth.alert);
-    const [updateProfile, { isLoading }] = useUpdateUserProfileMutation();
+    const [updateProfile, { isLoading, isSuccess }] = useUpdateUserProfileMutation();
     const {upload, isLoading: isLoadingUpload} = useFileUpload();
     const initialValues = {
-        firstName: user.firstName   ?? "",
-        lastName:  user.lastName    ?? "",
-        phone:     user.phoneNumber ?? "",
-        birthday:  user.dateOfBirth ? dayjs(user.dateOfBirth) : null,
+        employeeId: user.employeeId ?? "",
+        nameEn:     user.nameEn   ?? "",
+        nameKh:     user.nameKh    ?? "",
+        phone:      user.phoneNumber ?? "",
+        birthday:   user.dateOfBirth ? dayjs(user.dateOfBirth) : null,
     };
 
     const handleSubmit = async (values) => {
         try {
             await updateProfile({
-                firstName:   values.firstName,
-                lastName:    values.lastName,
+                nameEn:   values.nameEn,
+                employeeId:  user.employeeId,
+                nameKh:    values.nameKh,
                 phoneNumber: values.phone,
                 dateOfBirth: values.birthday ? values.birthday.format("YYYY-MM-DD") : null,  // format before sending
             }).unwrap();
@@ -115,7 +118,11 @@ function Profile() {
         else if (isViewer) navigate("/tv");
     }
 
-    return (
+    let content;
+
+    if (user === null) content = <LoadingComponent />;
+
+    if(user) content = (
         <div className="card-glass text-amber-50">
             <Seo title="Profile" />
             <BackButton onClick={navigateToHome} />
@@ -161,33 +168,87 @@ function Profile() {
                                 width: "100%",
                              }}
                         >
-                            <Form>
-                                <div className="w-full grid grid-cols-2 gap-5">
+                            {({ 
+                                values,
+                                errors,
+                                touched,
+                                handleChange,
+                                handleSubmit,
+                                setFieldValue
+                            }) => (
+                                <Form>
+                                <div className="w-full grid grid-cols-2 gap-5 mb-4">
                                     <div>
                                         <p>Name Khmer</p>
-                                        <CustomTextField1 name="firstName" value={user.nameKh}/>
+                                        <CustomTextField1
+                                            name="nameKh"
+                                            value={values.nameKh}
+                                            onChange={handleChange}
+                                            error={touched.nameKh && Boolean(errors.nameKh)}
+                                            helperText={touched.nameKh && errors.nameKh}
+                                            />
                                     </div>
                                     <div>
                                         <p>Name English</p>
-                                        <CustomTextField1 name="lastName" value={user.nameEn}/>
+                                        <CustomTextField1 
+                                            name="nameEn"
+                                            value={values.nameEn}
+                                            onChange={handleChange}
+                                            error={touched.nameEn && Boolean(errors.nameEn)}
+                                            helperText={touched.nameEn && errors.nameEn}
+                                            
+                                        />
                                     </div>
                                       <div>
                                         <p>Employee ID</p>
-                                        <CustomTextField1 name="employeeId" value={user.empId} disabled/>
+                                        <CustomTextField1 
+                                        name="employeeId" 
+                                        value={user.employeeId} 
+                                        onChange={handleChange}
+                                        error={touched.employeeId && Boolean(errors.employeeId)}
+                                        helperText={touched.employeeId && errors.employeeId}
+                                        />
                                     </div>
                                     <div>
                                         <p>Phone number</p>
-                                        <CustomNumberInput name="phone" value={user.phoneNumber}/>
+                                        <CustomNumberInput
+                                         name="phone" 
+                                         value={user.phoneNumber} 
+                                         onChange={handleChange}
+                                         error={touched.phone && Boolean(errors.phone)}
+                                         helperText={touched.phone && errors.phone}
+                                         />
                                     </div>
                                 </div>
-                                
+                                <div className="flex justify-end">
+                                    <button className="button-glass w-40" type="submit">Save</button>
+                                </div>
                             </Form>
+                            )}
+                            
                         </Formik>
                     </div>    
                 </div>
             </div>
+            <Snackbar
+                open={isOpenSnackbar}
+                autoHideDuration={6000}
+                onClose={() => dispatch(setIsOpenSnackbarProfile(false))}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                >
+                    <Alert
+                        onClose={() => dispatch(setIsOpenSnackbarProfile(false))}
+                        severity={alertProfile.type}
+                        variant="filled"
+                        sx={{ width: '100%' }}
+                    >
+                        {alertProfile.message}
+                    </Alert>
+            </Snackbar>
         </div>
-    );
+    )
+
+    return content;
 }
 
 export default Profile;
