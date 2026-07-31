@@ -12,11 +12,11 @@ const STATUS_STYLE = {
 
 // TODO: remove once backend returns real per-stage progress
 const STATIC_STAGE_PROGRESS = {
-  Cutting: 100,
-  Sewing: 80,
-  Ironing: 60,
-  QC: 40,
-  Packing: 10,
+  Cutting: 0,
+  Sewing: 0,
+  Ironing: 0,
+  QC: 0,
+  Packing: 0,
 };
 
 function stageKey(lineName = "") {
