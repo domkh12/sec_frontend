@@ -74,7 +74,6 @@ function WorkOrderList() {
     const debounceSearch = useDebounce(filterValue.search, 500);
 
     // -- Query ----------------------------------------------------------------------------------------------------
-
     const {data: colorData} = useGetColorQuery({
         pageNo: 1,
         pageSize: 1000
@@ -91,10 +90,8 @@ function WorkOrderList() {
     const {data: workOrderStatData} = useGetWorkOrderStatsQuery();
     const {data: poData} = useGetPurchaseOrderLookupQuery();
     const { data: deptData } = useGetDeptLookupQuery();
-    console.log(deptData)
 
     // -- Handler --------------------------------------------------------------------------------------------------
-
     const handleChangePage = (event, newPage) => {
         dispatch(setFilterWorkOrder({
             ...filterValue,
@@ -512,10 +509,15 @@ function WorkOrderList() {
                     />
                 )
             }
-            <DialogViewAnalyticWO 
-                isOpen={isOpenViewDialog}
-                handleClose={() => dispatch(setIsOpenViewWorkOrderDialog(false))}
-            />
+            {
+                isOpenViewDialog && (
+                     <DialogViewAnalyticWO 
+                        isOpen={isOpenViewDialog}
+                        handleClose={() => dispatch(setIsOpenViewWorkOrderDialog(false))}
+                    />
+                )
+            }
+           
             <Snackbar
                 open={isOpenSnackbar}
                 autoHideDuration={6000}
