@@ -17,7 +17,7 @@ function ColumnChartOutputByLine({lineData}) {
     //     { x: 'Line 7', y: 63, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12467', qty: 63 }] },
     //     { x: 'Line 8', y: 60, buyer: 'Buyer 3', mos: [{ mo: 'GPAR12468', qty: 25 }, { mo: 'GPAR12469', qty: 35 }] },
     // ];
- console.log("Line Data for Chart:", lineData);
+
     const peak = useMemo(() => {
         return lineData?.reduce((max, line) => line.y > max ? line.y : max, 0);
     }, [lineData]);
@@ -27,7 +27,7 @@ function ColumnChartOutputByLine({lineData}) {
         return peakLine?.x || 'N/A';
     }, [lineData]);
 
-     const test = lineData?.reduce((acc, line) => {console.log(acc); return acc}, null);
+     const test = lineData?.reduce((acc, line) => { return acc}, null);
 
     const stringToColor = (str) => {
         let hash = 0;

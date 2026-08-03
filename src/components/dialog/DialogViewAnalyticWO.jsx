@@ -10,20 +10,6 @@ const STATUS_STYLE = {
   PENDING: { bg: "#eceff1", color: "#546e7a" },
 };
 
-// TODO: remove once backend returns real per-stage progress
-const STATIC_STAGE_PROGRESS = {
-  Cutting: 0,
-  Sewing: 0,
-  Ironing: 0,
-  QC: 0,
-  Packing: 0,
-};
-
-function stageKey(lineName = "") {
-  // "Cutting-L" / "Sewing-L1" -> "Cutting" / "Sewing"
-  return lineName.split("-")[0];
-}
-
 function Detail({ label, value }) {
   return (
     <div>
@@ -61,15 +47,23 @@ function StageGauge({ label, value }) {
 function DialogViewAnalyticWO({ isOpen, handleClose }) {
   const workOrderDataForView = useSelector((state) => state.workOrder.workOrderDataForView);
 
-  // dedupe stages by name — payload currently sends each line twice,
-  // and collapses "Cutting-L" / "Sewing-L1" down to their stage name
+  // Departments are already deduped/aggregated on the backend (departmentOutput).
+  // Compute a % progress per department based on output vs work order qty.
   const stages = useMemo(() => {
-    const seen = new Map();
-    (workOrderDataForView?.lines ?? []).forEach((l) => {
-      const key = stageKey(l.line);
-      if (!seen.has(key)) seen.set(key, key);
+    const qty = workOrderDataForView?.qty ?? 0;
+    const departments = workOrderDataForView?.departmentOutput ?? [];
+
+    return departments.map((dept) => {
+      const percent = qty > 0
+        ? Math.min(100, Math.round((dept.output / qty) * 100))
+        : 0;
+
+      return {
+        id: dept.id,
+        label: dept.name,
+        value: percent,
+      };
     });
-    return [...seen.values()];
   }, [workOrderDataForView]);
 
   const statusStyle = STATUS_STYLE[workOrderDataForView?.status] ?? STATUS_STYLE.PENDING;
@@ -133,21 +127,20 @@ function DialogViewAnalyticWO({ isOpen, handleClose }) {
 
         <Divider className="mb-4" />
 
-        {/* One gauge per production stage — single row, connected by a pipeline */}
+        {/* One gauge per department — driven by real backend output data */}
         {stages.length > 0 && (
           <div>
             <p className="text-sm font-semibold text-gray-600 mb-3">Production progress</p>
             <div className="relative flex flex-nowrap justify-between items-start gap-1">
-              {/* connector line, sits behind the gauges at their vertical center */}
               <div
                 className="absolute left-0 right-0 h-[2px] bg-gray-200 z-0"
                 style={{ top: 28 }}
               />
               {stages.map((stage) => (
                 <StageGauge
-                  key={stage}
-                  label={stage}
-                  value={STATIC_STAGE_PROGRESS[stage] ?? 0}
+                  key={stage.id}
+                  label={stage.label}
+                  value={stage.value}
                 />
               ))}
             </div>

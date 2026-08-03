@@ -15,7 +15,7 @@ function ChartOutputByBuyer({buyers}) {
             <div className="flex flex-col gap-3">
             {
                 buyers?.map((buyer, index) =>(
-                    <div className="relative flex items-center justify-between gap-2 w-full border border-blue-400 px-4 py-3 rounded-2xl overflow-hidden">
+                    <div className="relative flex items-center justify-between gap-2 w-full border border-blue-400 px-4 py-3 rounded-2xl overflow-hidden" key={index}>
                         <div className="absolute top-0 left-0 h-full w-full bg-blue-500 opacity-20 z-0"></div>
                         <div className="flex gap-2.5 items-center">
                             <p className="text-white w-10 h-10 bg-blue-500 flex justify-center items-center p-3 rounded-xl font-bold">{index + 1}</p>

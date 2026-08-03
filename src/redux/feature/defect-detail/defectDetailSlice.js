@@ -18,6 +18,7 @@ const defectDetailSlice = createSlice({
             lineId: "",
             buyerId: "",
             reportDate: "",
+            typeId: "",
         }
     },
     reducers: {

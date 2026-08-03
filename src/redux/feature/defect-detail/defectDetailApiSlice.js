@@ -8,8 +8,8 @@ const initialState = defectDetailAdapter.getInitialState();
 export const defectDetailApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getDefectDetail: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "", reportDate = "", lineId = "", buyerId = ""}) => ({
-                url: `/defect-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&reportDate=${reportDate}&buyerId=${buyerId}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", reportDate = "", lineId = "", buyerId = "", defectTypeId = ""}) => ({
+                url: `/defect-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&reportDate=${reportDate}&buyerId=${buyerId}&defectTypeId=${defectTypeId}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

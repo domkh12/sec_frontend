@@ -17,6 +17,7 @@ import { Alert, Snackbar } from "@mui/material";
 import { useGetBuyerLookupQuery } from "../../redux/feature/buyer/buyerApiSlice";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus";
 import * as Yup from 'yup';
+import { useGetDefectTypeLookupQuery } from "../../redux/feature/defect-type/defectTypeApiSlice";
 
 function DefectDetail() {
 
@@ -47,11 +48,14 @@ function DefectDetail() {
         search: debounceSearch,
         lineId: filterValue.lineId,
         buyerId: filterValue.buyerId,
-        reportDate: filterValue.reportDate
+        reportDate: filterValue.reportDate,
+        defectTypeId: filterValue.typeId,
     });
     
     const {data: lineData} = useGetProductionLineLookupQuery();
     const {data: buyerData} = useGetBuyerLookupQuery();
+    const {data: defectTypeData} = useGetDefectTypeLookupQuery();
+    console.log("defectTypeData", defectTypeData);
 
     // -- Mutation ---------------------------------------------------------------
     const [deleteDefectDetail, {isLoading: isLoadingDefectDetail}] = useDeleteDefectDetailMutation();
@@ -198,9 +202,15 @@ function DefectDetail() {
             format: (value) => value?.name,
         },
         {
+            id: "type",
+            label: t("defectType"),
+            minWidth: 150,
+            align: "left",
+        },
+        {
             id: "defectQty",
             label: t("defectQty"),
-            minWidth: 100,
+            minWidth: 90,
             align: "left",
         },
         {
@@ -249,6 +259,17 @@ function DefectDetail() {
             width: isMd ? 150 : "100%", 
             options: [
                 ...(buyerData?.map(id => ({
+                    value: id.id,
+                    label: id.name
+                })) || [])
+            ]
+        },
+        {
+            id: 'typeId',
+            label: t("defectType"),
+            width: isMd ? 150 : "100%",
+            options: [
+                ...(defectTypeData?.map(id => ({
                     value: id.id,
                     label: id.name
                 })) || [])
