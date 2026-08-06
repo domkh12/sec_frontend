@@ -4,7 +4,7 @@ import { FaCalendarAlt, FaArrowRight } from "react-icons/fa";
 export default function DateRangePicker({ label = "Date Range", onChange, start, end }) {
   const [startDate, setStartDate] = useState(start || "");
   const [endDate, setEndDate] = useState(end || "");
-
+  
   const handleStart = (e) => {
     setStartDate(e.target.value);
     if (onChange) onChange({ start: e.target.value, end: endDate });

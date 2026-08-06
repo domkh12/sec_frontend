@@ -219,5 +219,8 @@
   "defectDate": "Defect Date",
   "reportDate": "Report Date",
   "line": "Line",
-  "action": "Action"
+  "action": "Action",
+  "defectType": "Defect Type",
+  "report": "Report",
+  "overview": "Overview"
 }

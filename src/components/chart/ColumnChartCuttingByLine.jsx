@@ -3,8 +3,8 @@ import {useMemo, useState} from "react";
 import {Tab, Tabs} from "@mui/material";
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 
-function ColumnChartOutputByLine({lineData}) {
-    const [tab, setTab] = useState("Output");
+function ColumnChartCuttingByLine({lineData}) {
+    const [tab, setTab] = useState("Input");
 
     const peak = useMemo(() => {
         return lineData?.reduce((max, line) => line.y > max ? line.y : max, 0);
@@ -195,7 +195,7 @@ function ColumnChartOutputByLine({lineData}) {
             <div className="w-full flex  justify-between items-center flex-wrap">
                 <div className="flex items-center gap-2.5">
                     <BarChartRoundedIcon className="text-white/80"/>
-                    <p className="text-white">Production Output by Line <br/>
+                    <p className="text-white">Production Cutting by Line <br/>
                         <span className="text-[13px] font-medium text-white/80">{lineData?.length} lines · {lineData?.reduce((acc, line) => acc + line.y, 0)} total pcs · Colored by Buyer</span>
                     </p>
                 </div>
@@ -235,8 +235,8 @@ function ColumnChartOutputByLine({lineData}) {
                               "& .MuiTabs-indicator": { display: "none" },
                           }}
                     >
-                        <Tab label="Output" value="Output" />
                         <Tab label="Input" value="Input" />
+                        <Tab label="Output" value="Output" />
                     </Tabs>
                 </div>
             </div>
@@ -271,4 +271,4 @@ function ColumnChartOutputByLine({lineData}) {
     )
 }
 
-export default ColumnChartOutputByLine;
+export default ColumnChartCuttingByLine;

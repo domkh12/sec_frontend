@@ -431,7 +431,7 @@ function ProductionStatusSewingDefect() {
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <SectionHeader
                                 icon={<BarChartRoundedIcon className="text-white/80" />}
-                                title="Line Defect Hotspots"
+                                title="Line Defect"
                                 subtitle={`${dashboard.lineAnalysis.length} lines | ${dashboard.totalDefect} defects`}
                             />
                             <div className="rounded-full border border-white/15 bg-white/10 px-4 py-1 text-sm text-white">

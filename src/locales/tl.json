@@ -218,5 +218,8 @@
   "defectDate": "Petsa ng Depekto",
   "reportDate": "Petsa ng Ulat",
   "line": "Linya",
-  "action": "Aksyon"
+  "action": "Aksyon",
+  "defectType": "Uri ng Depekto",
+  "report": "Ulat",
+  "overview": "Pangkalahatang-tanaw"
 }

@@ -21,15 +21,15 @@ function Detail({ label, value }) {
 
 function StageGauge({ label, value }) {
   return (
-    <div className="relative z-10 flex flex-col items-center min-w-0 bg-white px-1">
+    <div className="relative z-10 flex flex-col items-center min-w-0 bg-white" style={{ width: 72 }}>
       <Gauge
         value={value}
         startAngle={0}
         endAngle={360}
         innerRadius="75%"
         outerRadius="100%"
-        width={56}
-        height={56}
+        width={72}
+        height={72}
         text={`${value}%`}
         sx={{
           [`& .${gaugeClasses.valueText}`]: { fontSize: 11, fontWeight: 700 },
@@ -41,6 +41,15 @@ function StageGauge({ label, value }) {
         {label}
       </p>
     </div>
+  );
+}
+
+function StageConnector({ active }) {
+  return (
+    <div
+      className={`flex-1 h-[5px] ${active ? "bg-[#52b202]" : "bg-gray-200"}`}
+      style={{ marginTop: 31 }}
+    />
   );
 }
 
@@ -131,17 +140,14 @@ function DialogViewAnalyticWO({ isOpen, handleClose }) {
         {stages.length > 0 && (
           <div>
             <p className="text-sm font-semibold text-gray-600 mb-3">Production progress</p>
-            <div className="relative flex flex-nowrap justify-between items-start gap-1">
-              <div
-                className="absolute left-0 right-0 h-[2px] bg-gray-200 z-0"
-                style={{ top: 28 }}
-              />
-              {stages.map((stage) => (
-                <StageGauge
-                  key={stage.id}
-                  label={stage.label}
-                  value={stage.value}
-                />
+            <div className="flex flex-nowrap items-start">
+              {stages.map((stage, idx) => (
+                <div key={stage.id} className="flex items-start" style={{ flex: idx === stages.length - 1 ? "0 0 auto" : 1 }}>
+                  <StageGauge label={stage.label} value={stage.value} />
+                  {idx < stages.length - 1 && (
+                    <StageConnector active={stage.value > 0 && stages[idx + 1].value > 0} />
+                  )}
+                </div>
               ))}
             </div>
           </div>

@@ -20,6 +20,18 @@ export const analysisApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getInputToday: builder.query({
+            query: () => ({
+                url: `/analysis/input-today`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [
+                { type: "InputToday", id: "LIST" }
+            ],
+        }),
+
 
         getOutputToday: builder.query({
             query: () => ({
@@ -63,6 +75,7 @@ export const analysisApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetInputTodayQuery,
     useGetDefectTodayQuery,
     useGetOutputLast48hrsQuery,
     useGetAnalysisQuery,

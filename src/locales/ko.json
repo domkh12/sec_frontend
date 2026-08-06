@@ -216,5 +216,8 @@
   "defectDate": "불량 발생일",
   "reportDate": "보고일",
   "line": "라인",
-  "action": "작업"
+  "action": "작업",
+  "defectType": "불량 유형",
+  "report": "보고서",
+  "overview": "개요"
 }

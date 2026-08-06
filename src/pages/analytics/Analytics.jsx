@@ -24,10 +24,9 @@ export default function Analytics() {
     const [value, setValue] = useState(0);
 
     // -- selector ------------------------------------------------------------------------------------
-    const dateFrom      = useSelector((state) => state.analysis.dateFrom);
-    const dateTo        = useSelector((state) => state.analysis.dateTo);
-    
-    // console.log(dateFrom, dateTo);
+    const dateFrom      = useSelector((state) => state?.analysis?.dateFrom || dayjs().subtract(28, "day").format("YYYY-MM-DD"));
+    const dateTo        = useSelector((state) => state?.analysis?.dateTo || dayjs().format("YYYY-MM-DD"));
+
     // -- Hook ----------------------------------------------------------------------------------------
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -94,7 +93,7 @@ export default function Analytics() {
                         }}
                     >
                         <Tab 
-                            label="Overview" 
+                            label={t('overview')}
                             value={0} 
                             sx={{ 
                                 color: '#94a3b8', 
@@ -109,6 +108,8 @@ export default function Analytics() {
                         
                     </Tabs>
                     <DateRangePicker
+                        start={dateFrom}
+                        end={dateTo}
                         onChange={({ start, end }) => {
                             dispatch(setDateFrom(start));
                             dispatch(setDateTo(end));

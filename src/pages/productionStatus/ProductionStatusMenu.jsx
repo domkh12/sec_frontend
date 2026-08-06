@@ -10,7 +10,7 @@ function ProductionStatusMenu() {
         <div className="card-glass">
             <BackButton onClick={() => navigate("/admin")}/>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="button-glass flex flex-col" style={{margin: "0"}} onClick={() => navigate("#") }>
+                <button className="button-glass flex flex-col" style={{margin: "0"}} onClick={() => navigate("wip-cutting") }>
                     <img src="/images/cutting.png" alt="sewing output" className="w-1/3 h-auto"/>
                     <Typography variant="h5" sx={{color: "white"}}>WIP Cutting</Typography>
                 </button>

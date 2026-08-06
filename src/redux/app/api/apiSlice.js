@@ -101,7 +101,8 @@ export const apiSlice = createApi({
     "OutputDetail",
     "OutputLast48hrs",
     "DefectToday",
-    "DefectDetail"
+    "DefectDetail",
+    "InputToday"
   ],
   endpoints: (builder) => ({}),
 });

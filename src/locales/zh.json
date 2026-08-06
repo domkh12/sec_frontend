@@ -217,5 +217,8 @@
   "defectDate": "瑕疵日期",
   "reportDate": "报告日期",
   "line": "线别",
-  "action": "操作"
+  "action": "操作",
+  "defectType": "瑕疵类型",
+  "report": "报告",
+  "overview": "概览"
 }
