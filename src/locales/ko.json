@@ -219,5 +219,6 @@
   "action": "작업",
   "defectType": "불량 유형",
   "report": "보고서",
-  "overview": "개요"
+  "overview": "개요",
+  "totalPackedQty": "총 포장 수량"
 }

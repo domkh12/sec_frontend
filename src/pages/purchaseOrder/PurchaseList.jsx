@@ -273,7 +273,13 @@ function PurchaseList() {
         {
             id: "qty",
             label: t("totalOrderQty"),
-            minWidth: 130,
+            minWidth: 110,
+            align: "left",
+        },
+         {
+            id: "totalPackedQty",
+            label: t("totalPackedQty"),
+            minWidth: 110,
             align: "left",
         },
         {
@@ -286,7 +292,7 @@ function PurchaseList() {
         {
             id: "buyer",
             label: t("buyer"),
-            minWidth: 130,
+            minWidth: 120,
             align: "left",
             format: (buyer => buyer?.name)
         },

@@ -220,5 +220,6 @@
   "action": "操作",
   "defectType": "瑕疵类型",
   "report": "报告",
-  "overview": "概览"
+  "overview": "概览",
+  "totalPackedQty": "打包总数量"
 }

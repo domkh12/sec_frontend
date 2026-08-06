@@ -221,5 +221,6 @@
   "action": "Aksyon",
   "defectType": "Uri ng Depekto",
   "report": "Ulat",
-  "overview": "Pangkalahatang-tanaw"
+  "overview": "Pangkalahatang-tanaw",
+  "totalPackedQty": "Kabuuan ng Na-pack na Dami"
 }

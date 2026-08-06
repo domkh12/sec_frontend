@@ -227,7 +227,6 @@ function UserList(){
             label: t("table.role"),
             width: isMd ? 150 : "100%",
             options: [
-                { value: 'all', label: t('filter.all') },
                 // You can dynamically generate these from roleData
                 ...(roleData?.ids?.map(id => ({
                     value: roleData.entities[id].id,
@@ -240,7 +239,6 @@ function UserList(){
             label: t("table.status"),
             width: isMd ? 150 : "100%",
             options: [
-                { value: 'all', label: t('filter.all') },
                 { value: 'Active', label: t('Active') },
                 { value: 'Inactive', label: t('Inactive') },
                 { value: 'Blocked', label: t('Blocked') }
@@ -251,7 +249,6 @@ function UserList(){
             label: t("table.deptAndLine"),
             width: isMd ? 150 : "100%",
             options: [
-                { value: 'all', label: t('filter.all') },
                 ...(deptData?.ids?.map(id => ({
                     value: deptData.entities[id].id,
                     label: deptData.entities[id].department

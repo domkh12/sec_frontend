@@ -47,7 +47,7 @@ function ProductionStatusCutting() {
                         <StatCardsDash
                             title="Active Style"
                             theme="violet"
-                            value={0}
+                            value={inputToday?.activeStyle ?? 0}
                             icon={<img src="/images/t-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
                             unit="PCS"
                         />

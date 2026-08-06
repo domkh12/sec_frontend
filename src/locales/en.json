@@ -222,5 +222,6 @@
   "action": "Action",
   "defectType": "Defect Type",
   "report": "Report",
-  "overview": "Overview"
+  "overview": "Overview",
+  "totalPackedQty": "Total Packed Qty"
 }
