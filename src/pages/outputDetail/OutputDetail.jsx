@@ -280,7 +280,32 @@ function OutputDetail() {
             label: t("reportDate"),
             type: "date",
             width: isMd ? 160 : "100%",
-        }
+        },
+        {
+            id: 'excel',
+            // isLoading: isLoadingGetReportMaterial,
+            onClick: async () => {
+                // const res = await materialReportExcel().unwrap();
+
+                // // Create blob
+                // const blob = new Blob([res], {
+                //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                // });
+
+                // // Create URL
+                // const url = window.URL.createObjectURL(blob);
+
+                // const link = document.createElement("a");
+                // link.href = url;
+                // link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
+                // document.body.appendChild(link);
+                // link.click();
+
+                // // Cleanup
+                // link.remove();
+                // window.URL.revokeObjectURL(url);
+            }
+        },
     ];
 
     const fields = [

@@ -23,15 +23,15 @@ body{
 
 .bg-main::before {
   content: '';
-  position: fixed;    /* fixed goes on pseudo, not parent */
-  inset: 0;           /* top/right/bottom/left: 0 */
+  position: fixed;  
+  inset: 0;          
   background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), 
                     url(".././images/bg.jpg");
   background-repeat: no-repeat;
-  background-size: cover;   /* use cover instead of 150% */
+  background-size: cover;  
   background-position: center center;
-  z-index: -1;        /* sit behind content */
-  will-change: transform; /* promote to own GPU layer */
+  z-index: -1;        
+  will-change: transform; 
 }
 
 .card-glass{

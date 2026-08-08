@@ -306,8 +306,11 @@ function ProductionStatusSewingDefect() {
         const defectRate = totalOutput ? (totalDefect / totalOutput) * 100 : 0;
         const affectedLines = lines.filter((line) => line.defect > 0).length;
         const runningLines = lines.filter((line) => line.mos?.length > 0).length;
-        const activeStyles = new Set(lines.map((line) => line.style).filter(Boolean)).size;
-
+       const activeStyles = new Set(
+                                lines
+                                    .map((line) => String(line.style ?? "").trim().toLowerCase())
+                                    .filter((style) => style && style !== "-")
+                            ).size;
         const lineAnalysis = lines
             .map((line) => ({
                 ...line,

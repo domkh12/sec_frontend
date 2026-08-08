@@ -54,7 +54,7 @@ function ProductionStatusCutting() {
                         <StatCardsDash
                             title="Balance WIP"
                             theme="rose"
-                            value={0}
+                            value={inputToday?.balanceCutting ?? 0}
                             icon={<img src="/images/t-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
                             unit="PCS"
                         />
