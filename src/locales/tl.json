@@ -222,5 +222,8 @@
   "defectType": "Uri ng Depekto",
   "report": "Ulat",
   "overview": "Pangkalahatang-tanaw",
-  "totalPackedQty": "Kabuuan ng Na-pack na Dami"
+  "totalPackedQty": "Kabuuan ng Na-pack na Dami",
+  "dispatchCartons": "Mga Na-dispatch na Karton",
+  "reciveCartons": "Mga Natanggap na Karton",
+  "wHBundles": "Mga Bundle sa Bodega"
 }

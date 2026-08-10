@@ -13,6 +13,7 @@ import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
 
 // Lazy load everything else
+const WhBundle = lazy(() => import("./pages/whBundle/WhBundle.jsx"));
 const ProductionStatusCutting = lazy(() => import("./pages/productionStatus/ProductionStatusCutting.jsx"));
 const DefectDetail = lazy(() => import("./pages/defectDetail/DefectDetail.jsx"));
 const OutputDetail = lazy(() => import("./pages/outputDetail/OutputDetail.jsx"));
@@ -139,6 +140,8 @@ function App() {
                                   <Route index element={<MenuTv/>}/>
                                   <Route path=":name" element={<TVLineInput/>}/>
                               </Route>
+
+                              <Route path="wh-bundles" element={<WhBundle/>}/>
                           </Route>
                       </Route>
 

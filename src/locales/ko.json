@@ -220,5 +220,8 @@
   "defectType": "불량 유형",
   "report": "보고서",
   "overview": "개요",
-  "totalPackedQty": "총 포장 수량"
+  "totalPackedQty": "총 포장 수량",
+  "dispatchCartons": "출고 카톤 수량",
+  "reciveCartons": "입고 카톤 수량",
+  "wHBundles": "창고 번들 수량"
 }

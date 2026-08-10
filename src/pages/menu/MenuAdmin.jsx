@@ -129,6 +129,21 @@ function MenuAdmin(){
                         iconPath={"/images/warehouse.png"}
                         onClick={() => navigate("materials")}
                     />
+                    <MenuButton
+                        title={`${t('wHBundles')}`}
+                        iconPath={"/images/qr-white.png"}
+                        onClick={() => navigate("wh-bundles")}
+                    />
+                    <MenuButton
+                        title={`${t('reciveCartons')}`}
+                        iconPath={"/images/receive.png"}
+                        onClick={() => navigate("wh-bundles")}
+                    />
+                    <MenuButton
+                        title={`${t('dispatchCartons')}`}
+                        iconPath={"/images/dispatch.png"}
+                        onClick={() => navigate("wh-bundles")}
+                    />
                 </div>
             </div>
 

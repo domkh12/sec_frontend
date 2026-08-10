@@ -224,5 +224,8 @@
   "defectType": "ប្រភេទនៃទំនិញខូច",
   "report": "របាយការណ៍",
   "overview": "ទិដ្ឋភាពទូទៅ",
-  "totalPackedQty": "ចំនួនច្រកវេចខ្ចប់សរុប"
+  "totalPackedQty": "ចំនួនច្រកវេចខ្ចប់សរុប",
+  "dispatchCartons": "ចំនួនកេសបញ្ជូនចេញ",
+  "reciveCartons": "ចំនួនកេសទទួល",
+  "wHBundles": "ចំនួនបាច់ក្នុងឃ្លាំង"
 }

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {useTranslation} from "react-i18next";
+import { FaPlus } from "react-icons/fa6";
 
-function ButtonAddNew({onClick, title= "buttons.addNew"}) {
+function ButtonAddNew({onClick, title= "buttons.addNew", icon=<FaPlus className="w-4 h-4 text-white/90"/>}) {
     const [pressed, setPressed] = useState(false);
     const {t} = useTranslation();
     const handleClick = () => {
@@ -32,20 +33,8 @@ function ButtonAddNew({onClick, title= "buttons.addNew"}) {
         <span className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-b from-white/15 via-transparent to-white/5" />
 
         {/* Plus icon */}
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="relative w-4 h-4 text-white/90 drop-shadow"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-
+        {icon}
+       
         {/* Label */}
         <span className="relative text-sm font-light tracking-wide text-white/90 drop-shadow">
             {t(`${title}`)}

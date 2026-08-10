@@ -35,7 +35,7 @@ function ProductionStatusCutting() {
                             theme="sunset"
                             value={inputToday?.totalJob ?? 0}
                             icon={<img src="/images/t-shirt.png" alt="T Shirt" className="w-10 h-auto" />}
-                            unit="PCS"
+                            unit="Job"
                         />
                         <StatCardsDash
                             title="Total Cutting"

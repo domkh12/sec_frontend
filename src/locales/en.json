@@ -223,5 +223,8 @@
   "defectType": "Defect Type",
   "report": "Report",
   "overview": "Overview",
-  "totalPackedQty": "Total Packed Qty"
+  "totalPackedQty": "Total Packed Qty",
+  "dispatchCartons": "Dispatch Cartons",
+  "reciveCartons": "Receive Cartons",
+  "wHBundles": "WH Bundles"
 }

@@ -221,5 +221,8 @@
   "defectType": "瑕疵类型",
   "report": "报告",
   "overview": "概览",
-  "totalPackedQty": "打包总数量"
+  "totalPackedQty": "打包总数量",
+  "dispatchCartons": "发货箱数",
+  "reciveCartons": "收货箱数",
+  "wHBundles": "仓库捆数"
 }
