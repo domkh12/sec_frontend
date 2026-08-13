@@ -40,8 +40,12 @@ const materialSlice = createSlice({
         stockOutDataForDelete: null,
         stockInDataForDelete: null,
         updateStockQtyData: null,
+        isOpenDialogAddOrEditWhBundle: false,
     },
     reducers: {
+        setIsOpenDialogAddOrEditWhBundle: (state, action) => {
+            state.isOpenDialogAddOrEditWhBundle = action.payload;
+        },
         setUpdateStockQtyData: (state, action) => {
             state.updateStockQtyData = action.payload;
         },
@@ -112,6 +116,7 @@ const materialSlice = createSlice({
 });
 
 export const {
+    setIsOpenDialogAddOrEditWhBundle,
     setUpdateStockQtyData,
     setStockInDataForDelete,
     setStockOutDataForDelete,

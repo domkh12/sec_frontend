@@ -13,6 +13,7 @@ import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
 
 // Lazy load everything else
+const RackList = lazy(() => import("./pages/rack/RackList.jsx"));
 const WhBundle = lazy(() => import("./pages/whBundle/WhBundle.jsx"));
 const ProductionStatusCutting = lazy(() => import("./pages/productionStatus/ProductionStatusCutting.jsx"));
 const DefectDetail = lazy(() => import("./pages/defectDetail/DefectDetail.jsx"));
@@ -142,6 +143,7 @@ function App() {
                               </Route>
 
                               <Route path="wh-bundles" element={<WhBundle/>}/>
+                              <Route path="racks" element={<RackList/>}/>
                           </Route>
                       </Route>
 

@@ -1,16 +1,32 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BackButton from "../../components/ui/BackButton";
 import ButtonAddNew from "../../components/ui/ButtonAddNew";
 import { useNavigate } from "react-router-dom";
 import { BsQrCode } from "react-icons/bs";
 import TableCus from "../../components/table/TableCus";
 import { useTranslation } from "react-i18next";
+import DialogAddEditCus from "../../components/dialog/DialogAddEditCus";
+import { setIsOpenDialogAddOrEditWhBundle } from "../../redux/feature/material/materialSlice";
+import * as Yup from "yup";
+
 function WhBundle() {
+
+    // -- Selectors ---------------------------------------------------------------------------
+    const isOpen = useSelector((state) => state.material.isOpenDialogAddOrEditWhBundle);
 
     // -- Hooks -------------------------------------------------------------------------------
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {t} = useTranslation();
+
+    // -- Functions ----------------------------------------------------------------------------
+    const handleSubmit = ({values}) => {
+        console.log("values", values);
+    }
+
+    const handleClose = () => {
+        dispatch(setIsOpenDialogAddOrEditWhBundle(false));
+    }
 
     const columns = [
          {
@@ -70,6 +86,15 @@ function WhBundle() {
             align: "left",
         },
     ]
+
+    const fields = [
+       
+        
+    ];
+
+    const validationSchema = Yup.object().shape({
+            // name: Yup.string().required(t("validation.required"))
+        });
     
 
     return (
@@ -77,7 +102,7 @@ function WhBundle() {
             <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
-                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditPurchaseOrder(true))} title={"Generate WH Bundle"} icon={<BsQrCode className="w-4 h-4 text-white/90" />}/>
+                    <ButtonAddNew onClick={() => dispatch(setIsOpenDialogAddOrEditWhBundle(true))} title={"Generate WH Bundle"} icon={<BsQrCode className="w-4 h-4 text-white/90" />}/>
                 </div>
 
                 <TableCus
@@ -95,6 +120,21 @@ function WhBundle() {
                     // onClearAllFilters={handleClearAllFilters}
                 />
             </div>
+             {
+                isOpen && (
+                    <DialogAddEditCus
+                        fields={fields}
+                        // title={woDataForUpdate ? "Update Work order" : "Create Work order"}
+                        isOpen={isOpen}
+                        onClose={handleClose}
+                        // isUpdate={!!woDataForUpdate}
+                        validationSchema={validationSchema}
+                        handleSubmit={handleSubmit}
+                        // initialValues={woDataForUpdate ? woDataForUpdate : initialValues}
+                        // isSubmitting={isLoadingUploadFile || isLoadingCreateWO || isLoadingUpdateWO}
+                    />
+                )
+            }
         </div>
     )
 }

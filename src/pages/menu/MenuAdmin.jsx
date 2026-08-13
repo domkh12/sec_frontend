@@ -137,12 +137,17 @@ function MenuAdmin(){
                     <MenuButton
                         title={`${t('reciveCartons')}`}
                         iconPath={"/images/receive.png"}
-                        onClick={() => navigate("wh-bundles")}
+                        onClick={() => navigate("#")}
                     />
                     <MenuButton
                         title={`${t('dispatchCartons')}`}
                         iconPath={"/images/dispatch.png"}
-                        onClick={() => navigate("wh-bundles")}
+                        onClick={() => navigate("#")}
+                    />
+                    <MenuButton
+                        title={`${t('rack')}`}
+                        iconPath={"/images/rack.png"}
+                        onClick={() => navigate("racks")}
                     />
                 </div>
             </div>
