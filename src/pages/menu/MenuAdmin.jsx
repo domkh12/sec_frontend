@@ -125,9 +125,9 @@ function MenuAdmin(){
                 <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
                     <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('rawMaterials')}</Typography>
                     <MenuButton
-                        title={`${t('whRawMaterials')}`}
+                        title={`${t('warehouse')}`}
                         iconPath={"/images/warehouse.png"}
-                        onClick={() => navigate("materials")}
+                        onClick={() => navigate("warehouse")}
                     />
                     <MenuButton
                         title={`${t('wHBundles')}`}

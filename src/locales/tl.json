@@ -225,5 +225,7 @@
   "totalPackedQty": "Kabuuan ng Na-pack na Dami",
   "dispatchCartons": "Mga Na-dispatch na Karton",
   "reciveCartons": "Mga Natanggap na Karton",
-  "wHBundles": "Mga Bundle sa Bodega"
+  "wHBundles": "Mga Bundle sa Bodega",
+  "address": "Tirahan",
+  "city": "Lungsod"
 }

@@ -226,5 +226,7 @@
   "totalPackedQty": "Total Packed Qty",
   "dispatchCartons": "Dispatch Cartons",
   "reciveCartons": "Receive Cartons",
-  "wHBundles": "WH Bundles"
+  "wHBundles": "WH Bundles",
+  "address": "Address",
+  "city": "City"
 }

@@ -22,6 +22,7 @@ import purchaseOrderReducer from "../feature/purchaseOrder/purchaseOrderSlice.js
 import analysisReducer from "../feature/analysis/analysisSlice.js"
 import outputDetailReducer from "../feature/outputDetail/outputDetailSlice.js"
 import defectDetailReducer from "../feature/defect-detail/defectDetailSlice.js"
+import warehouseReducer from "../feature/warehouse/warehouseSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -46,7 +47,8 @@ const store = configureStore({
     purchaseOrder: purchaseOrderReducer,
     analysis: analysisReducer,
     outputDetail: outputDetailReducer,
-    defectDetail: defectDetailReducer
+    defectDetail: defectDetailReducer,
+    warehouse: warehouseReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
