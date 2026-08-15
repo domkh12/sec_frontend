@@ -81,11 +81,21 @@ export const outputDetailApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
+        getOutputDetailReportExcel: builder.mutation({
+            query: ({search = "", lineId = "", sizeId = "", buyerId = "", reportDate = ""}) => ({
+                url: `/output-details/report-excel?search=${search}&lineId=${lineId}&sizeId=${sizeId}&buyerId=${buyerId}&reportDate=${reportDate}`,
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+                responseHandler: (response) => response.blob(),
+            }),
+        }),
 
     }),
 });
 
 export const {
+    useGetOutputDetailReportExcelMutation,
     useUpdateOutputQtyMutation,
     useDeleteOutputDetailMutation,
     useCreateOutputDetailMutation,

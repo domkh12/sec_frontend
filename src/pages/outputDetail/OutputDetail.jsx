@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import TableCus from '../../components/table/TableCus.jsx';
 import { useTranslation } from 'react-i18next';
-import {useDeleteOutputDetailMutation, useGetOutputDetailQuery, useUpdateOutputQtyMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
+import {useDeleteOutputDetailMutation, useGetOutputDetailQuery, useGetOutputDetailReportExcelMutation, useUpdateOutputQtyMutation} from "../../redux/feature/hourlyOutput/outputDetailApiSlice.js";
 import dayjs from 'dayjs';
 import { setAlertOutputDetail, setFilterOutputDetail, setIsOpenDeleteOutputDetailDialog, setIsOpenDialogAddOrEditOutputDetail, setIsOpenSnackbarOutputDetail, setOutputDetailDataForUpdate } from '../../redux/feature/outputDetail/outputDetailSlice.js';
 import useDebounce from '../../hook/useDebounce.jsx';
@@ -51,6 +51,7 @@ function OutputDetail() {
   // -- mutation --------------------------------------------------------------------------------
   const [deleteOutputDetail, {isLoading: isLoadingOutputDetail}] = useDeleteOutputDetailMutation();
   const [updateOutputQty, {isLoading: isLoadingUpdateOutputQty}] = useUpdateOutputQtyMutation();
+  const [getReportOutputDetailExcel, {isLoading: isLoadingGetReportOutputDetail}] = useGetOutputDetailReportExcelMutation();
  
   // -- hook ---------------------------------------------------------------------------------
   const dispatch  = useDispatch();
@@ -283,29 +284,35 @@ function OutputDetail() {
         },
         {
             id: 'excel',
-            // isLoading: isLoadingGetReportMaterial,
+            isLoading: isLoadingGetReportOutputDetail,
+
             onClick: async () => {
-                // const res = await materialReportExcel().unwrap();
+                const res = await getReportOutputDetailExcel({
+                    ...filterValue
+                }).unwrap();
 
-                // // Create blob
-                // const blob = new Blob([res], {
-                //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                // });
+                // Create blob
+                const blob = new Blob([res], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
 
-                // // Create URL
-                // const url = window.URL.createObjectURL(blob);
+                // Create URL
+                const url = window.URL.createObjectURL(blob);
 
-                // const link = document.createElement("a");
-                // link.href = url;
-                // link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
-                // document.body.appendChild(link);
-                // link.click();
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
+                document.body.appendChild(link);
+                link.click();
 
-                // // Cleanup
-                // link.remove();
-                // window.URL.revokeObjectURL(url);
+                // Cleanup
+                link.remove();
+                window.URL.revokeObjectURL(url);
             }
         },
+        {
+            id: 'print',
+        }
     ];
 
     const fields = [
@@ -334,6 +341,7 @@ function OutputDetail() {
             searchPlaceholderText={`${t('mo')}/${t('po')}/${t('style')}`}
             onClearAllFilters={handleClearAllFilters}
             filterConfig={filterConfig}
+            
         />
 
         <DialogConfirmDelete

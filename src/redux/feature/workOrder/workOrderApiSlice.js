@@ -108,7 +108,8 @@ export const workOrderApiSlice = apiSlice.injectEndpoints({
                 {type:  "WorkOrder",        id: "LIST"},
                 {type:  "PurchaseOrder",    id: "LIST"},
                 {type:  "WorkOrderByLine",  id: "LIST"},
-                {type:  "WorkOrderStats",   id: "LIST" }
+                {type:  "WorkOrderStats",   id: "LIST" },
+                { type: "WorkOrderLookup", id: "LIST" },
             ],
         }),
 

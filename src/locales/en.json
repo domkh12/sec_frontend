@@ -228,5 +228,6 @@
   "reciveCartons": "Receive Cartons",
   "wHBundles": "WH Bundles",
   "address": "Address",
-  "city": "City"
+  "city": "City",
+  "rack": "Rack"
 }

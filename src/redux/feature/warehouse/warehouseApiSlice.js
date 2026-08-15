@@ -49,8 +49,8 @@ export const warehouseApiSlice = apiSlice.injectEndpoints({
         }),
 
         updateWarehouse: builder.mutation({
-            query: ({id, ...initialWarehouseData}) => ({
-                url: `/warehouses/${id}`,
+            query: ({uuid, ...initialWarehouseData}) => ({
+                url: `/warehouses/${uuid}`,
                 method: "PUT",
                 body: {
                     ...initialWarehouseData,
@@ -60,15 +60,17 @@ export const warehouseApiSlice = apiSlice.injectEndpoints({
         }),
 
         deleteWarehouse: builder.mutation({
-            query: ({ id }) => ({
-                url: `/warehouses/${id}`,
+            query: ({ uuid }) => ({
+                url: `/warehouses/${uuid}`,
                 method: "DELETE",
                 body: {
-                    id,
+                    uuid,
                 },
             }),
             invalidatesTags: (result, error, arg) => [{ type: "Warehouse", id: "LIST" }],
         }),
+        
+        
 
     }),
 });

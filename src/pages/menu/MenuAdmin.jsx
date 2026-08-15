@@ -130,6 +130,11 @@ function MenuAdmin(){
                         onClick={() => navigate("warehouse")}
                     />
                     <MenuButton
+                        title={`${t('rack')}`}
+                        iconPath={"/images/rack.png"}
+                        onClick={() => navigate("racks")}
+                    />
+                    <MenuButton
                         title={`${t('wHBundles')}`}
                         iconPath={"/images/qr-white.png"}
                         onClick={() => navigate("wh-bundles")}
@@ -143,11 +148,6 @@ function MenuAdmin(){
                         title={`${t('dispatchCartons')}`}
                         iconPath={"/images/dispatch.png"}
                         onClick={() => navigate("#")}
-                    />
-                    <MenuButton
-                        title={`${t('rack')}`}
-                        iconPath={"/images/rack.png"}
-                        onClick={() => navigate("racks")}
                     />
                 </div>
             </div>

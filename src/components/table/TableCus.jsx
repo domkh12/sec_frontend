@@ -11,6 +11,8 @@ import SelectFilter from "../select/SelectFilter.jsx";
 import RowTableComponent from "./RowTableComponent.jsx";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import {green} from "@mui/material/colors";
+import { AiFillPrinter } from "react-icons/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 // ── Stable style objects (defined OUTSIDE component — never recreated) ──────
 const cellSx = {
@@ -436,11 +438,35 @@ function TableCus({onToggleActive, tToggleActive, columns, data, handleChangePag
                         />
                         {
                             filterConfig?.map((filter) => (
-                                filter.id === "excel" && (
-                                        <Button loading={filter.isLoading} key={filter.id} onClick={filter.onClick} variant="contained" sx={{bgcolor: green[600], minWidth: 100}} startIcon={<PiMicrosoftExcelLogoFill/>}>
-                                            Excel
+                                filter.id === "excel" ? (
+                                        <Button key={filter.id} 
+                                            onClick={(e) => {
+                                                if (filter.isLoading) return; 
+                                                filter.onClick?.(e);
+                                                }}
+                                            variant="contained" 
+                                            sx={{
+                                                bgcolor: green[600], minWidth: 100,
+                                                ...(filter.isLoading && {
+                                                    cursor: "default",
+                                                    pointerEvents: "none",
+                                                }),
+                                            }} 
+                                            startIcon={filter.isLoading ? (<AiOutlineLoading3Quarters className="animate-spin"/>) : (<PiMicrosoftExcelLogoFill/>)}>
+                                        Excel
                                         </Button>
-                                    )
+                                    ) : filter.id === "print" ? (
+                                        <Button key={filter.id} 
+                                            onClick={(e) => {
+                                                if (filter.isLoading) return;
+                                                filter.onClick?.(e);
+                                            }} 
+                                            variant="contained" 
+                                            sx={{minWidth: 100}} 
+                                            startIcon={filter.isLoading ? (<AiOutlineLoading3Quarters className="animate-spin"/>) : (<AiFillPrinter/>)}>
+                                        Print
+                                        </Button>
+                                    ) : null
                             ))
                         }
 

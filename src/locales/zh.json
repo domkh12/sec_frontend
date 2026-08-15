@@ -226,5 +226,6 @@
   "reciveCartons": "收货箱数",
   "wHBundles": "仓库捆数",
   "address": "地址",
-  "city": "城市"
+  "city": "城市",
+  "rack": "货架"
 }

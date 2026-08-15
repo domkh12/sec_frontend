@@ -3,32 +3,46 @@ import BackButton from "../../components/ui/BackButton";
 import TableCus from "../../components/table/TableCus";
 import { useTranslation } from "react-i18next";
 import ButtonAddNew from "../../components/ui/ButtonAddNew";
-import { useCreateWarehouseMutation, useGetWarehouseQuery } from "../../redux/feature/warehouse/warehouseApiSlice";
+import { useCreateWarehouseMutation, useDeleteWarehouseMutation, useGetWarehouseQuery, useUpdateWarehouseMutation } from "../../redux/feature/warehouse/warehouseApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus";
-import { setIsOpenDialogAddOrEditWarehouse, setWarehouseDataForUpdate } from "../../redux/feature/warehouse/warehouseSlice";
+import { setAlertWarehouse, setFilterWarehouse, setIsOpenDeleteWarehouseDialog, setIsOpenDialogAddOrEditWarehouse, setIsOpenSnackbarWarehouse, setWarehouseDataForUpdate } from "../../redux/feature/warehouse/warehouseSlice";
+import { Alert, Snackbar } from "@mui/material";
+import useDebounce from "../../hook/useDebounce";
+import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete";
+import { useState } from "react";
 
 function WarehouseList() {
+    // -- State -------------------------------------------------------------------
+    const [uuid, setUuid] = useState(null);
+    console.log("uuid", uuid);
 
     // -- Selector ----------------------------------------------------------------
     const isOpen                   = useSelector((s) => s.warehouse.isOpenDialogAddOrEditWarehouse);
     const warehouseDataForUpdate   = useSelector((s) => s.warehouse.warehouseDataForUpdate);
-
-    // -- Query ----------------------------------------------------------------
-    const {data: warehouseData} = useGetWarehouseQuery({
-        refetchOnMountOrArgChange: true,
-        pageNo: 1,
-        pageSize: 20,
-
-    });
-    
-    // -- Mutation ----------------------------------------------------------------
-    const [createWarehouse, {isLoading: isLoadingCreateWarehouse}] = useCreateWarehouseMutation();
+    const isOpenSnackbarWarehouse  = useSelector((s) => s.warehouse.isOpenSnackbarWarehouse);
+    const alertWarehouse           = useSelector((s) => s.warehouse.alertWarehouse);
+    const filterValue              = useSelector((s) => s.warehouse.filter);
+    const isOpenDeleteDialog       = useSelector((s) => s.warehouse.isOpenDeleteWarehouseDialog);
 
     // -- Hook --------------------------------------------------------------------
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { t } = useTranslation();
+    const search = useDebounce(filterValue.search, 500);
+
+    // -- Query ----------------------------------------------------------------
+    const {data: warehouseData} = useGetWarehouseQuery({
+        refetchOnMountOrArgChange: true,
+        pageNo: filterValue.pageNo,
+        pageSize: filterValue.pageSize,
+        search: search,
+    });
+    
+    // -- Mutation ----------------------------------------------------------------
+    const [createWarehouse, {isLoading: isLoadingCreateWarehouse}] = useCreateWarehouseMutation();
+    const [updateWarehouse, {isLoading: isLoadingUpdateWarehouse}] = useUpdateWarehouseMutation();
+    const [deleteWarehouse, {isLoading: isLoadingDeleteWarehouse}] = useDeleteWarehouseMutation();
 
     // -- Function ----------------------------------------------------------------
 
@@ -38,12 +52,24 @@ function WarehouseList() {
     }
 
     const handleSubmit = async (values) => {
-        console.log("handleSubmit", values);
+
         try {
-            await createWarehouse(values).unwrap();
-            handleClose();
+            if (warehouseDataForUpdate) {
+                await updateWarehouse({uuid: warehouseDataForUpdate.uuid, ...values}).unwrap();
+                dispatch(setAlertWarehouse({type: "success", message: "Update successfully"}));
+                dispatch(setIsOpenSnackbarWarehouse(true));
+                handleClose();
+            }else{
+                await createWarehouse(values).unwrap();
+                dispatch(setAlertWarehouse({type: "success", message: "Create successfully"}));
+                dispatch(setIsOpenSnackbarWarehouse(true));
+                handleClose();
+            }
         } catch (err) {
             console.error("Failed to create warehouse: ", err);
+            dispatch(setAlertWarehouse({type: "error", message: err.data?.error?.description || "Failed to create warehouse"}));
+            dispatch(setIsOpenSnackbarWarehouse(true));
+
         }
     }
 
@@ -51,6 +77,34 @@ function WarehouseList() {
         console.log("handleEdit", warehouse);
         dispatch(setIsOpenDialogAddOrEditWarehouse(true));
         dispatch(setWarehouseDataForUpdate(warehouse));
+    }
+
+    const handleDeleteOpen = (warehouse) => {
+        setUuid(warehouse.uuid);
+        console.log("warehouse.uuid", warehouse.uuid);
+        dispatch(setIsOpenDeleteWarehouseDialog(true));
+    }
+
+    const handleDelete = async () => {
+        try {
+            await deleteWarehouse({uuid: uuid}).unwrap();
+            dispatch(setIsOpenDeleteWarehouseDialog(false));
+            dispatch(setAlertWarehouse({type: "success", message: "Delete successfully"}));
+            dispatch(setIsOpenSnackbarWarehouse(true));
+        } catch (error) {
+            dispatch(setIsOpenDeleteWarehouseDialog(false));
+            dispatch(setAlertWarehouse({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarWarehouse(true));
+        }
+    }
+
+
+    const handleFilterChange = (key, value) => {
+        const newFilter = {
+                ...filterValue,
+                [key]: value,
+            }
+        dispatch(setFilterWarehouse(newFilter));
     }
 
     const columns = [
@@ -117,10 +171,10 @@ function WarehouseList() {
                     // handleChangeRowsPerPage={handleChangeRowsPerPage}
                     // onView={handleView}
                     onEdit={handleEdit}
-                    // onDelete={handleDeleteOpen}
+                    onDelete={handleDeleteOpen}
                     isFilterActive={true}
-                    // filterValue={filterValue}
-                    // handleFilterChange={handleFilterChange}
+                    filterValue={filterValue}
+                    handleFilterChange={handleFilterChange}
                     searchPlaceholderText={`${t('Code/Name/Address/City')}`}
                     // onClearAllFilters={handleClearAllFilters}
                     // onToggleActive={(entity) => handleToggleActive(entity)}
@@ -135,14 +189,32 @@ function WarehouseList() {
                         title={warehouseDataForUpdate ? "Update Warehouse" : "Create Warehouse"}
                         isOpen={isOpen}
                         onClose={handleClose}
-                        // isUpdate={!!woDataForUpdate}
+                        isUpdate={!!warehouseDataForUpdate}
                         // validationSchema={validationSchema}
                         handleSubmit={handleSubmit}
                         initialValues={warehouseDataForUpdate ? warehouseDataForUpdate : initialValues}
-                        // isSubmitting={isLoadingUploadFile || isLoadingCreateWO || isLoadingUpdateWO}
+                        isSubmitting={isLoadingCreateWarehouse || isLoadingUpdateWarehouse}
                     />
                 )
             }
+
+            <Snackbar
+                open={isOpenSnackbarWarehouse}
+                autoHideDuration={6000}
+                onClose={() => dispatch(setIsOpenSnackbarWarehouse(false))}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert
+                    onClose={() => dispatch(setIsOpenSnackbarWarehouse(false))}
+                    severity={alertWarehouse.type}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {alertWarehouse.message}
+                </Alert>
+            </Snackbar>
+
+            <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteWarehouseDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteWarehouse}/>
             
         </div>
     )

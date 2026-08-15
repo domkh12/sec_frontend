@@ -225,5 +225,6 @@
   "reciveCartons": "입고 카톤 수량",
   "wHBundles": "창고 번들 수량",
   "address": "주소",
-  "city": "도시"
+  "city": "도시",
+  "rack": "렉"
 }
