@@ -629,6 +629,39 @@ function DialogAddEditCus({
                         }}
                     />
                 );
+            case "isActive":
+                return wrap(
+                    <div className="flex items-center justify-start gap-3 py-1">
+                        <label className="relative inline-block w-11 h-6 cursor-pointer shrink-0">
+                            <input
+                                type="checkbox"
+                                className="peer sr-only"
+                                checked={!!values[field.name]}
+                                onChange={(e) => setFieldValue(field.name, e.target.checked)}
+                                onBlur={handleBlur}
+                                name={field.name}
+                            />
+
+                            {/* Track + Handle */}
+                            <div
+                                className="absolute inset-0 rounded-full bg-[#ddd] shadow-[inset_0_0_0_1.5px_#ccc] transition-colors duration-300 ease-in-out
+                                        peer-checked:bg-[#05c46b] peer-checked:shadow-[inset_0_0_0_1.5px_#04b360]
+                                        after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:h-[18px] after:w-[18px]
+                                        after:rounded-full after:bg-white after:shadow-[0_1px_3px_rgba(0,0,0,0.25)]
+                                        after:transition-transform after:duration-300 after:ease-in-out
+                                        peer-checked:after:translate-x-[20px]
+                                        peer-checked:after:shadow-[0_1px_3px_rgba(0,0,0,0.25),0_0_0_2px_#05c46b]"
+                            />
+                        </label>
+
+                        <span className="text-sm text-white/70 font-medium">
+                            {t(field.label)}
+                            {isRequired && (
+                                <span className="text-red-400 ml-1">*</span>
+                            )}
+                        </span>
+                    </div>
+                );    
             case "image":
                 return wrap(
                     <>

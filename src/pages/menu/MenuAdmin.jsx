@@ -122,34 +122,45 @@ function MenuAdmin(){
             <div className="flex flex-col justify-center items-center w-full sm:w-auto">
                 <Typography variant="h6" sx={{color: yellow[600]}}>{t('warehouse')}</Typography>
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
-                <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                    <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('rawMaterials')}</Typography>
-                    <MenuButton
-                        title={`${t('warehouse')}`}
-                        iconPath={"/images/warehouse.png"}
-                        onClick={() => navigate("warehouse")}
-                    />
-                    <MenuButton
-                        title={`${t('rack')}`}
-                        iconPath={"/images/rack.png"}
-                        onClick={() => navigate("racks")}
-                    />
-                    <MenuButton
-                        title={`${t('wHBundles')}`}
-                        iconPath={"/images/qr-white.png"}
-                        onClick={() => navigate("wh-bundles")}
-                    />
-                    <MenuButton
-                        title={`${t('reciveCartons')}`}
-                        iconPath={"/images/receive.png"}
-                        onClick={() => navigate("#")}
-                    />
-                    <MenuButton
-                        title={`${t('dispatchCartons')}`}
-                        iconPath={"/images/dispatch.png"}
-                        onClick={() => navigate("#")}
-                    />
+                <div className="flex flex-wrap justify-center items-start gap-5">
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('rawMaterials')}</Typography>
+                        <MenuButton
+                            title={`${t('warehouse')}`}
+                            iconPath={"/images/warehouse.png"}
+                            onClick={() => navigate("warehouse")}
+                        />
+                        <MenuButton
+                            title={`${t('rack')}`}
+                            iconPath={"/images/rack.png"}
+                            onClick={() => navigate("racks")}
+                        />
+                        <MenuButton
+                            title={`${t('reciveCartons')}`}
+                            iconPath={"/images/receive.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
+                            title={`${t('dispatchCartons')}`}
+                            iconPath={"/images/dispatch.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
+                            title={`${t('wHBundles')}`}
+                            iconPath={"/images/qr-white.png"}
+                            onClick={() => navigate("wh-bundles")}
+                        />
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('inventory')}</Typography>
+                        <MenuButton
+                            title={`${t('receipt')}`}
+                            iconPath={"/images/invoice.png"}
+                            onClick={() => navigate("warehouse")}
+                        />
+                    </div>
                 </div>
+                
             </div>
 
         </div>

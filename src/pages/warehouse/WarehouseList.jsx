@@ -11,11 +11,12 @@ import { Alert, Snackbar } from "@mui/material";
 import useDebounce from "../../hook/useDebounce";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete";
 import { useState } from "react";
+import Seo from "../../components/seo/Seo";
+import LoadingComponent from "../../components/ui/LoadingComponent";
 
 function WarehouseList() {
     // -- State -------------------------------------------------------------------
     const [uuid, setUuid] = useState(null);
-    console.log("uuid", uuid);
 
     // -- Selector ----------------------------------------------------------------
     const isOpen                   = useSelector((s) => s.warehouse.isOpenDialogAddOrEditWarehouse);
@@ -32,11 +33,9 @@ function WarehouseList() {
     const search = useDebounce(filterValue.search, 500);
 
     // -- Query ----------------------------------------------------------------
-    const {data: warehouseData} = useGetWarehouseQuery({
+    const {data: warehouseData, isLoading: isLoadingWarehouseData, isSuccess: isSuccessWarehouseData} = useGetWarehouseQuery({
         refetchOnMountOrArgChange: true,
-        pageNo: filterValue.pageNo,
-        pageSize: filterValue.pageSize,
-        search: search,
+        ...filterValue,
     });
     
     // -- Mutation ----------------------------------------------------------------
@@ -98,6 +97,21 @@ function WarehouseList() {
         }
     }
 
+    const handleChangePage = (event, newPage) => {
+            dispatch(setFilterWarehouse({
+                ...filterValue,
+                pageNo: newPage + 1,
+            }));
+        };
+    
+        const handleChangeRowsPerPage = (event, newValue) => {
+            dispatch(setFilterWarehouse({
+                ...filterValue,
+                pageSize: event.target.value,
+                pageNo: 1,
+            }))
+        };
+
 
     const handleFilterChange = (key, value) => {
         const newFilter = {
@@ -156,9 +170,13 @@ function WarehouseList() {
         city: "",
     };
 
+    let content;
 
-    return (
-        <div className="pb-10">
+    if (isLoadingWarehouseData) content = <LoadingComponent/>;
+
+    if (isSuccessWarehouseData) content = (
+<div className="pb-10">
+            <Seo title="Warehouse List"/>
             <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
@@ -167,8 +185,8 @@ function WarehouseList() {
                 <TableCus
                     columns={columns}
                     data={warehouseData}
-                    // handleChangePage={handleChangePage}
-                    // handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
                     // onView={handleView}
                     onEdit={handleEdit}
                     onDelete={handleDeleteOpen}
@@ -217,7 +235,11 @@ function WarehouseList() {
             <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteWarehouseDialog(false))} handleDelete={handleDelete} isSubmitting={isLoadingDeleteWarehouse}/>
             
         </div>
-    )
+    );
+
+
+    return content;
+
 }
 
 export default WarehouseList;

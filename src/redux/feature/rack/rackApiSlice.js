@@ -49,8 +49,8 @@ export const rackApiSlice = apiSlice.injectEndpoints({
         }),
 
         updateRack: builder.mutation({
-            query: ({id, ...initialRackData}) => ({
-                url: `/racks/${id}`,
+            query: ({uuid, ...initialRackData}) => ({
+                url: `/racks/${uuid}`,
                 method: "PUT",
                 body: {
                     ...initialRackData,
@@ -60,11 +60,11 @@ export const rackApiSlice = apiSlice.injectEndpoints({
         }),
 
         deleteRack: builder.mutation({
-            query: ({ id }) => ({
-                url: `/racks/${id}`,
+            query: ({ uuid }) => ({
+                url: `/racks/${uuid}`,
                 method: "DELETE",
                 body: {
-                    id,
+                    uuid,
                 },
             }),
             invalidatesTags: (result, error, arg) => [{ type: "Rack", id: "LIST" }],

@@ -45,7 +45,10 @@ export const warehouseApiSlice = apiSlice.injectEndpoints({
                     ...initialState,
                 },
             }),
-            invalidatesTags: [{ type: "Warehouse", id: "LIST" }],
+            invalidatesTags: [
+                {type: "Warehouse",       id: "LIST" },
+                {type: "WarehouseLookup", id: "LIST"}
+            ],
         }),
 
         updateWarehouse: builder.mutation({
@@ -56,7 +59,10 @@ export const warehouseApiSlice = apiSlice.injectEndpoints({
                     ...initialWarehouseData,
                 },
             }),
-            invalidatesTags: [{type: "Warehouse", id: "LIST"}],
+            invalidatesTags: [
+                {type: "Warehouse", id: "LIST"},
+                {type: "WarehouseLookup", id: "LIST"}
+            ],
         }),
 
         deleteWarehouse: builder.mutation({
@@ -69,13 +75,22 @@ export const warehouseApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, arg) => [{ type: "Warehouse", id: "LIST" }],
         }),
-        
-        
+
+        getWarehouseLookup: builder.query({
+            query: () => ({
+                url: "/warehouses/lookup",
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError;
+                },
+            }),
+            providesTags: [{ type: "WarehouseLookup", id: "LIST" }],
+        }),
 
     }),
 });
 
 export const {
+    useGetWarehouseLookupQuery,
     useUpdateWarehouseMutation,
     useDeleteWarehouseMutation,
     useCreateWarehouseMutation,

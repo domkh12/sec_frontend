@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDataKey } from "../../redux/feature/analysis/analysisSlice";
 import { Divider } from "@mui/material";
 import BarChartOutput48h from "../../components/chart/BarChartOutput48h";
+import { useTranslation } from "react-i18next";
 
 export default function Overview({data, outputLast48hrsData}) {
 
@@ -25,6 +26,7 @@ export default function Overview({data, outputLast48hrsData}) {
 
   // -- Hook --------------------------------------------------------------------------------------
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const outputLast48hrsRows = Array.isArray(outputLast48hrsData) ? outputLast48hrsData : [];
   const totalOutputLast48hrs = outputLast48hrsRows.reduce((total, item) => {
     return total + Number(item?.output || 0);
@@ -39,7 +41,7 @@ export default function Overview({data, outputLast48hrsData}) {
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             <StatCardAnalytics 
-              title="Total Input" 
+              title={t("totalCutting")} 
               value={data?.totalInput || 0} 
               growth={data?.totalInputComparison?.changePercent}
               icon={FaBox}
@@ -52,7 +54,7 @@ export default function Overview({data, outputLast48hrsData}) {
               border="border-l-0"
             />
             <StatCardAnalytics 
-              title="Total Output" 
+              title={t("totalSewing")} 
               value={data?.totalOutput || 0} 
               growth={data?.totalOutputComparison?.changePercent}
               icon={FaCheckCircle}

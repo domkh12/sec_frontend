@@ -226,5 +226,10 @@
   "wHBundles": "창고 번들 수량",
   "address": "주소",
   "city": "도시",
-  "rack": "렉"
+  "rack": "렉",
+  "qr": "QR 코드",
+  "rackCode": "렉 코드",
+  "totalCutting": "총 재단",
+  "totalSewing": "총 봉제",
+  "receipt": "영수증"
 }

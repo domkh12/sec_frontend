@@ -229,5 +229,10 @@
   "wHBundles": "WH Bundles",
   "address": "Address",
   "city": "City",
-  "rack": "Rack"
+  "rack": "Rack",
+  "qr": "QR Code",
+  "rackCode": "Rack Code",
+  "totalCutting": "Total Cutting",
+  "totalSewing": "Total Sewing",
+  "receipt": "Receipt"
 }

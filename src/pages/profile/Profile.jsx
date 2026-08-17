@@ -139,6 +139,9 @@ function Profile() {
                         Notifications
                     </button>
                     <button>
+                        Theme
+                    </button>
+                    <button>
                         Help
                     </button>
                 </div>

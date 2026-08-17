@@ -227,5 +227,10 @@
   "wHBundles": "仓库捆数",
   "address": "地址",
   "city": "城市",
-  "rack": "货架"
+  "rack": "货架",
+  "qr": "二维码",
+  "rackCode": "货架编号",
+  "totalCutting": "裁床总计",
+  "totalSewing": "车缝总计",
+  "receipt": "收据"
 }

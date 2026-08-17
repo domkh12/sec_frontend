@@ -228,5 +228,11 @@
   "wHBundles": "Mga Bundle sa Bodega",
   "address": "Tirahan",
   "city": "Lungsod",
-  "rack": "Lalagyan"
+  "rack": "Lalagyan",
+  "qr": "QR Code",
+  "rackCode": "Koda ng Lalagyan",
+  "totalCutting": "Kabuuan ng Tabas",
+  "totalSewing": "Kabuuan ng Tahi",
+  "receipt": "Resibo"
+  
 }
