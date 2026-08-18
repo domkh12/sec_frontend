@@ -234,5 +234,7 @@
   "rackCode": "Rack Code",
   "totalCutting": "Total Cutting",
   "totalSewing": "Total Sewing",
-  "receipt": "Receipt"
+  "receipt": "Receipt",
+  "unitCode": "Unit Code",
+  "unitName": "Unit Name"
 }

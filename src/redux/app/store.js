@@ -24,6 +24,7 @@ import outputDetailReducer from "../feature/outputDetail/outputDetailSlice.js"
 import defectDetailReducer from "../feature/defect-detail/defectDetailSlice.js"
 import warehouseReducer from "../feature/warehouse/warehouseSlice.js"
 import rackReducer from "../feature/rack/rackSlice.js"
+import unitReducer from "../feature/unit/unitSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -51,6 +52,7 @@ const store = configureStore({
     defectDetail: defectDetailReducer,
     warehouse: warehouseReducer,
     rack: rackReducer,
+    unit: unitReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

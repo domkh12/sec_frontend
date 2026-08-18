@@ -233,6 +233,8 @@
   "rackCode": "Koda ng Lalagyan",
   "totalCutting": "Kabuuan ng Tabas",
   "totalSewing": "Kabuuan ng Tahi",
-  "receipt": "Resibo"
+  "receipt": "Resibo",
+  "unitCode": "Koda ng Sukat",
+  "unitName": "Pangalan ng Sukat"
   
 }

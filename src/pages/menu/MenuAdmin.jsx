@@ -158,6 +158,16 @@ function MenuAdmin(){
                             iconPath={"/images/invoice.png"}
                             onClick={() => navigate("warehouse")}
                         />
+                        <MenuButton
+                            title={`${t('unit')}`}
+                            iconPath={"/images/weight-lifting.png"}
+                            onClick={() => navigate("units")}
+                        />
+                         <MenuButton
+                            title={`${t('supplier')}`}
+                            iconPath={"/images/supplier.png"}
+                            onClick={() => navigate("warehouse")}
+                        />
                     </div>
                 </div>
                 

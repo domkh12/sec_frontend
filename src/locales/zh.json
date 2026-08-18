@@ -232,5 +232,7 @@
   "rackCode": "货架编号",
   "totalCutting": "裁床总计",
   "totalSewing": "车缝总计",
-  "receipt": "收据"
+  "receipt": "收据",
+  "unitCode": "计量单位代码",
+  "unitName": "计量单位名称"
 }

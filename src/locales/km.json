@@ -235,5 +235,7 @@
   "rackCode": "កូដធ្នើរ",
   "totalCutting": "ចំនួនកាត់សរុប",
   "totalSewing": "ចំនួនដេរសរុប",
-  "receipt": "ប័ណ្ណទទួល"
+  "receipt": "ប័ណ្ណទទួល",
+  "unitCode": "កូដខ្នាត",
+  "unitName": "ឈ្មោះខ្នាត"
 }

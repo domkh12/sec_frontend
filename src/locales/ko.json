@@ -231,5 +231,7 @@
   "rackCode": "렉 코드",
   "totalCutting": "총 재단",
   "totalSewing": "총 봉제",
-  "receipt": "영수증"
+  "receipt": "영수증",
+  "unitCode": "단위 코드",
+  "unitName": "단위명"
 }
