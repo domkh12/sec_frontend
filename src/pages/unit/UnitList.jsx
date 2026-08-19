@@ -1,25 +1,31 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setAlertUnit, setIsOpenDialogAddOrEditUnit, setIsOpenSnackbarUnit } from "../../redux/feature/unit/unitSlice";
+import { setAlertUnit, setFilterUnit, setIsOpenDeleteUnitDialog, setIsOpenDialogAddOrEditUnit, setIsOpenSnackbarUnit, setPageNoUnit, setPageSizeUnit, setUnitDataForUpdate } from "../../redux/feature/unit/unitSlice";
 import BackButton from "../../components/ui/BackButton";
 import ButtonAddNew from "../../components/ui/ButtonAddNew";
 import TableCus from "../../components/table/TableCus";
 import { useTranslation } from "react-i18next";
 import DialogAddEditCus from "../../components/dialog/DialogAddEditCus";
-import { useCreateUnitMutation, useGetUnitQuery } from "../../redux/feature/unit/unitApiSlice";
+import { useCreateUnitMutation, useDeleteUnitMutation, useGetUnitQuery, useUpdateUnitMutation } from "../../redux/feature/unit/unitApiSlice";
 import { Alert, Snackbar } from "@mui/material";
 import LoadingComponent from "../../components/ui/LoadingComponent";
 import useDebounce from "../../hook/useDebounce";
+import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete";
+import { useState } from "react";
 
 function UnitList() {
 
     // -- State ----------------------------------------------
+    const [uuid, setUuid] = useState(null);
+
+    // -- Selector ----------------------------------------------
     const isOpen                = useSelector(state => state.unit.isOpenDialogAddOrEditUnit);
     const unitDataForUpdate     = useSelector(state => state.unit.unitDataForUpdate);
     const isOpenSnackbarUnit    = useSelector(state => state.unit.isOpenSnackbarUnit);
     const alertUnit             = useSelector(state => state.unit.alertUnit);
     const filterValue           = useSelector(state => state.unit.filter);
     const search                = useDebounce(filterValue.search, 500);
+    const isOpenDeleteDialog    = useSelector(state => state.unit.isOpenDeleteUnitDialog);
 
     // -- Query ----------------------------------------------
     const { data: unitData, isLoading, isSuccess } = useGetUnitQuery({
@@ -35,16 +41,36 @@ function UnitList() {
 
     // -- Mutation -------------------------------------------
     const [createUnit, { isLoading: isCreateUnitLoading }] = useCreateUnitMutation();
+    const [updateUnit, { isLoading: isUpdateUnitLoading }] = useUpdateUnitMutation();
+    const [deleteUnit, { isLoading: isDeleteUnitLoading }] = useDeleteUnitMutation();
 
     // -- Function -------------------------------------------
     const handleClose = () => {
         dispatch(setIsOpenDialogAddOrEditUnit(false));
     } 
 
+    const handleDelete = async () => {
+        try {
+            await deleteUnit({uuid: uuid}).unwrap();
+            dispatch(setIsOpenDeleteUnitDialog(false));
+            dispatch(setAlertUnit({type: "success", message: "Delete successfully"}));
+            dispatch(setIsOpenSnackbarUnit(true));
+        } catch (error) {
+            dispatch(setIsOpenDeleteUnitDialog(false));
+            dispatch(setAlertUnit({type: "error", message: error.data.error.description}));
+            dispatch(setIsOpenSnackbarUnit(true));
+        }
+    }
+
     const handleSubmit = async (values) => {
         try {
-            await createUnit(values).unwrap();
-            dispatch(setAlertUnit({type: "success", message: "Create successfully"}));
+            if (unitDataForUpdate) {
+                await updateUnit({uuid: unitDataForUpdate.uuid, ...values}).unwrap();
+                dispatch(setAlertUnit({type: "success", message: "Update successfully"}));
+            }else{
+                await createUnit(values).unwrap();
+                dispatch(setAlertUnit({type: "success", message: "Create successfully"}));
+            }
             dispatch(setIsOpenSnackbarUnit(true));
             handleClose();
         } catch (err) {
@@ -53,6 +79,45 @@ function UnitList() {
             dispatch(setIsOpenSnackbarUnit(true));
         }
     }
+
+    const handleEdit = (row) => {
+        dispatch(setUnitDataForUpdate(row));
+        dispatch(setIsOpenDialogAddOrEditUnit(true));
+    }
+
+    const handleDeleteOpen = (row) => {
+        setUuid(row.uuid);
+        dispatch(setIsOpenDeleteUnitDialog(true));
+    }
+
+    const handleFilterChange = (key, value) => {
+        const newFilter = {
+            ...filterValue,
+            [key]: value,
+        }
+        dispatch(setFilterUnit(newFilter));
+    }
+
+    const handleClearAllFilters = () => {
+        dispatch(setFilterUnit({
+            search: "",
+        }));
+    }
+
+    const handleChangePage = (event, newPage) => {
+        dispatch(setFilterUnit({
+            ...filterValue,
+            pageNo: newPage + 1,
+        }));
+    };
+    
+    const handleChangeRowsPerPage = (event, newValue) => {
+        dispatch(setFilterUnit({
+            ...filterValue,
+            pageSize: event.target.value,
+            pageNo: 1,
+        }))
+    };
 
     const columns = [
         {
@@ -100,18 +165,15 @@ function UnitList() {
                  <TableCus
                     columns={columns}
                     data={unitData}
-                    // handleChangePage={handleChangePage}
-                    // handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    // // onView={handleView}
-                    // onEdit={handleEdit}
-                    // onDelete={handleDeleteOpen}
-                    // isFilterActive={true}
-                    // filterValue={filterValue}
-                    // handleFilterChange={handleFilterChange}
-                    // searchPlaceholderText={`${t('Code/Name/Address/City')}`}
-                    // onClearAllFilters={handleClearAllFilters}
-                    // onToggleActive={(entity) => handleToggleActive(entity)}
-                    // tToggleActive="Toggle status"
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteOpen}
+                    isFilterActive={true}
+                    filterValue={filterValue}
+                    handleFilterChange={handleFilterChange}
+                    searchPlaceholderText={`${t('unitCode')} / ${t('unitName')}`}
+                    onClearAllFilters={handleClearAllFilters}
                 />
             </div>
 
@@ -127,7 +189,7 @@ function UnitList() {
                         // validationSchema={validationSchema}
                         handleSubmit={handleSubmit}
                         initialValues={unitDataForUpdate ? unitDataForUpdate : initialValues}
-                        isSubmitting={isCreateUnitLoading}
+                        isSubmitting={isCreateUnitLoading || isUpdateUnitLoading}
                     />
                 )
             }
@@ -147,6 +209,8 @@ function UnitList() {
                     {alertUnit.message}
                 </Alert>
             </Snackbar>
+
+             <DialogConfirmDelete isOpen={isOpenDeleteDialog} onClose={() => dispatch(setIsOpenDeleteUnitDialog(false))} handleDelete={handleDelete} isSubmitting={isDeleteUnitLoading}/>
         </div>
     )
 

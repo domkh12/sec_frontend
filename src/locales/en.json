@@ -236,5 +236,10 @@
   "totalSewing": "Total Sewing",
   "receipt": "Receipt",
   "unitCode": "Unit Code",
-  "unitName": "Unit Name"
+  "unitName": "Unit Name",
+  "supplier": "Supplier",
+  "supplierName": "공급업체명",
+  "contactPerson": "담당자",
+  "email": "이메일",
+  "phone": "전화번호"
 }

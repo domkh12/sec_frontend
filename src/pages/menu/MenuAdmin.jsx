@@ -166,7 +166,7 @@ function MenuAdmin(){
                          <MenuButton
                             title={`${t('supplier')}`}
                             iconPath={"/images/supplier.png"}
-                            onClick={() => navigate("warehouse")}
+                            onClick={() => navigate("suppliers")}
                         />
                     </div>
                 </div>

@@ -235,6 +235,11 @@
   "totalSewing": "Kabuuan ng Tahi",
   "receipt": "Resibo",
   "unitCode": "Koda ng Sukat",
-  "unitName": "Pangalan ng Sukat"
+  "unitName": "Pangalan ng Sukat",
+  "supplier": "Tagatustos",
+  "supplierName": "Pangalan ng Tagatustos",
+  "contactPerson": "Taong Makikipag-ugnayan",
+  "email": "Email",
+  "phone": "Telepono"
   
 }

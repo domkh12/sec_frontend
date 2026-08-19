@@ -104,13 +104,13 @@ function WarehouseList() {
             }));
         };
     
-        const handleChangeRowsPerPage = (event, newValue) => {
-            dispatch(setFilterWarehouse({
-                ...filterValue,
-                pageSize: event.target.value,
-                pageNo: 1,
-            }))
-        };
+    const handleChangeRowsPerPage = (event, newValue) => {
+        dispatch(setFilterWarehouse({
+            ...filterValue,
+            pageSize: event.target.value,
+            pageNo: 1,
+        }))
+    };
 
 
     const handleFilterChange = (key, value) => {

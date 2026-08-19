@@ -13,6 +13,7 @@ import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
 
 // Lazy load everything else
+const SupplierList = lazy(() => import("./pages/supplier/SupplierList.jsx"));
 const UnitList = lazy(() => import("./pages/unit/UnitList.jsx"));
 const WarehouseList = lazy(() => import("./pages/warehouse/WarehouseList.jsx"));
 const RackList = lazy(() => import("./pages/rack/RackList.jsx"));
@@ -148,6 +149,7 @@ function App() {
                               <Route path="racks" element={<RackList/>}/>
                               <Route path="warehouse" element={<WarehouseList/>}/>
                               <Route path="units" element={<UnitList/>}/>
+                              <Route path="suppliers" element={<SupplierList/>}/>
                           </Route>
                       </Route>
 

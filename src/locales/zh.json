@@ -234,5 +234,10 @@
   "totalSewing": "车缝总计",
   "receipt": "收据",
   "unitCode": "计量单位代码",
-  "unitName": "计量单位名称"
+  "unitName": "计量单位名称",
+  "supplier": "供应商",
+  "supplierName": "供应商名称",
+  "contactPerson": "联系人",
+  "email": "电子邮箱",
+  "phone": "电话"
 }

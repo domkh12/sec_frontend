@@ -237,5 +237,10 @@
   "totalSewing": "ចំនួនដេរសរុប",
   "receipt": "ប័ណ្ណទទួល",
   "unitCode": "កូដខ្នាត",
-  "unitName": "ឈ្មោះខ្នាត"
+  "unitName": "ឈ្មោះខ្នាត",
+  "supplier": "អ្នកផ្គត់ផ្គង់",
+  "supplierName": "ឈ្មោះអ្នកផ្គត់ផ្គង់",
+  "contactPerson": "អ្នកទំនាក់ទំនង",
+  "email": "អ៊ីមែល",
+  "phone": "លេខទូរស័ព្ទ"
 }

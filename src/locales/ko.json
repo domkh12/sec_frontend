@@ -233,5 +233,10 @@
   "totalSewing": "총 봉제",
   "receipt": "영수증",
   "unitCode": "단위 코드",
-  "unitName": "단위명"
+  "unitName": "단위명",
+  "supplier": "공급업체",
+  "supplierName": "공급업체명",
+  "contactPerson": "담당자",
+  "email": "이메일",
+  "phone": "전화번호"
 }
