@@ -238,8 +238,8 @@
   "unitCode": "Unit Code",
   "unitName": "Unit Name",
   "supplier": "Supplier",
-  "supplierName": "공급업체명",
-  "contactPerson": "담당자",
-  "email": "이메일",
-  "phone": "전화번호"
+  "supplierName": "Supplier Name",
+  "contactPerson": "Contact Person",
+  "email": "Email",
+  "phone": "Phone"
 }
