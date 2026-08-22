@@ -241,5 +241,9 @@
   "supplierName": "Supplier Name",
   "contactPerson": "Contact Person",
   "email": "Email",
-  "phone": "Phone"
+  "phone": "Phone",
+  "receiptDate": "Receipt Date",
+  "receiptNumber": "Receipt Number",
+  "totalQty": "Total Quantity",
+  "remark": "Remark"
 }

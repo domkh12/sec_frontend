@@ -156,7 +156,7 @@ function MenuAdmin(){
                         <MenuButton
                             title={`${t('receipt')}`}
                             iconPath={"/images/invoice.png"}
-                            onClick={() => navigate("warehouse")}
+                            onClick={() => navigate("receipts")}
                         />
                         <MenuButton
                             title={`${t('unit')}`}

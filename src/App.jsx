@@ -11,8 +11,11 @@ import LoadingComponent from "./components/ui/LoadingComponent.jsx";
 import MenuTvViewer from "./pages/menu/MenuTvViewer.jsx";
 import LayoutWarehouse from "./pages/layout/LayoutWarehouse.jsx";
 import HourlyOutput from "./pages/hourlyOutput/HourlyOutput.jsx";
+import LayoutScanner from "./pages/layout/LayoutScanner.jsx";
+import PutawayScreen from "./pages/layout/PutawayScreen.jsx";
 
 // Lazy load everything else
+const ReceiptList = lazy(() => import("./pages/receipt/ReceiptList.jsx"));    
 const SupplierList = lazy(() => import("./pages/supplier/SupplierList.jsx"));
 const UnitList = lazy(() => import("./pages/unit/UnitList.jsx"));
 const WarehouseList = lazy(() => import("./pages/warehouse/WarehouseList.jsx"));
@@ -60,7 +63,8 @@ function App() {
           <Route path="/login" element={<Login/>}/>
           <Route path="/unauthorize" element={<Unauthorize/>}/>
           <Route path="*" element={<NotFound/>}/>
-
+            <Route path="/operator" element={<LayoutScanner/>}/> 
+            <Route path="/putaway" element={<PutawayScreen/>}/> 
           {/* Protected routes */}
           <Route element={<PersistLogin/>}>
               <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]}/>}>
@@ -150,6 +154,7 @@ function App() {
                               <Route path="warehouse" element={<WarehouseList/>}/>
                               <Route path="units" element={<UnitList/>}/>
                               <Route path="suppliers" element={<SupplierList/>}/>
+                              <Route path="receipts" element={<ReceiptList/>}/>
                           </Route>
                       </Route>
 

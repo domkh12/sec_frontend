@@ -26,6 +26,7 @@ import warehouseReducer from "../feature/warehouse/warehouseSlice.js"
 import rackReducer from "../feature/rack/rackSlice.js"
 import unitReducer from "../feature/unit/unitSlice.js"
 import supplierReducer from "../feature/supplier/supplierSlice.js"
+import receiptReducer from "../feature/receipt/receiptSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -54,7 +55,8 @@ const store = configureStore({
     warehouse: warehouseReducer,
     rack: rackReducer,
     unit: unitReducer,
-    supplier: supplierReducer
+    supplier: supplierReducer,
+    receipt: receiptReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

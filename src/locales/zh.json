@@ -239,5 +239,9 @@
   "supplierName": "供应商名称",
   "contactPerson": "联系人",
   "email": "电子邮箱",
-  "phone": "电话"
+  "phone": "电话",
+  "receiptDate": "收据日期",
+  "receiptNumber": "收据编号",
+  "totalQty": "总数量",
+  "remark": "备注"
 }

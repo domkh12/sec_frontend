@@ -238,5 +238,9 @@
   "supplierName": "공급업체명",
   "contactPerson": "담당자",
   "email": "이메일",
-  "phone": "전화번호"
+  "phone": "전화번호",
+  "receiptDate": "영수증 일자",
+  "receiptNumber": "영수증 번호",
+  "totalQty": "총 수량",
+  "remark": "비고"
 }

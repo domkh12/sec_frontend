@@ -175,7 +175,7 @@ function WarehouseList() {
     if (isLoadingWarehouseData) content = <LoadingComponent/>;
 
     if (isSuccessWarehouseData) content = (
-<div className="pb-10">
+        <div className="pb-10">
             <Seo title="Warehouse List"/>
             <div className="card-glass">
                 <div className="flex justify-between items-center">

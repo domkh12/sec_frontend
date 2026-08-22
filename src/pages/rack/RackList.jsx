@@ -124,15 +124,14 @@ function RackList() {
   ]
 
   const fields = [
-        { name: "code",     label: "rackCode",     type: "text" },
-        { name: "warehouseUuid",     
-          label: "warehouse",     
-          type: "autocomplete", 
-          options: warehouseLookupData?.map((warehouse) => ({label: warehouse.name, value: warehouse.uuid})),
-        },
-        { name: "isActive", label: "active", type: "isActive" },
-        
-    ];
+      { name: "code",     label: "rackCode",     type: "text" },
+      { name: "warehouseUuid",     
+        label: "warehouse",     
+        type: "autocomplete", 
+        options: warehouseLookupData?.map((warehouse) => ({label: warehouse.name, value: warehouse.uuid})),
+      },
+      { name: "isActive", label: "active", type: "isActive" }, 
+  ];
   const initialValues = {
         code: "",
         isActive: true,
@@ -166,20 +165,20 @@ function RackList() {
         />
 
         {
-                isOpen && (
-                    <DialogAddEditCus
-                        fields={fields}
-                        title={rackDataForUpdate ? "Update Rack" : "Create Rack"}
-                        isOpen={isOpen}
-                        onClose={handleClose}
-                        isUpdate={!!rackDataForUpdate}
-                        // validationSchema={validationSchema}
-                        handleSubmit={handleSubmit}
-                        initialValues={rackDataForUpdate ? rackDataForUpdate : initialValues}
-                        // isSubmitting={isLoadingCreateRack || isLoadingUpdateRack}
-                    />
-                )
-            }
+            isOpen && (
+                <DialogAddEditCus
+                    fields={fields}
+                    title={rackDataForUpdate ? "Update Rack" : "Create Rack"}
+                    isOpen={isOpen}
+                    onClose={handleClose}
+                    isUpdate={!!rackDataForUpdate}
+                    // validationSchema={validationSchema}
+                    handleSubmit={handleSubmit}
+                    initialValues={rackDataForUpdate ? rackDataForUpdate : initialValues}
+                    // isSubmitting={isLoadingCreateRack || isLoadingUpdateRack}
+                />
+            )
+        }
 
       </div>
       <Snackbar

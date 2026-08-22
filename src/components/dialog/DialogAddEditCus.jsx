@@ -718,6 +718,17 @@ function DialogAddEditCus({
 
                     </>
                 )
+            case "textarea":
+                return wrap(
+                    <TextField
+                        {...commonProps}
+                        multiline
+                        rows={field.rows || 4} // Defaults to 4 rows, but you can override it in your field config
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values[field.name] || ""}
+                    />
+                );
             case "steps":
 
                 return (
