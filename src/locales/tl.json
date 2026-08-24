@@ -244,5 +244,6 @@
   "receiptDate": "Petsa ng Resibo",
   "receiptNumber": "Numero ng Resibo",
   "totalQty": "Kabuuang Dami",
-  "remark": "Pansin"
+  "remark": "Pansin",
+  "phoneNumber": "Numero ng Telepono"
 }

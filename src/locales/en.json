@@ -245,5 +245,6 @@
   "receiptDate": "Receipt Date",
   "receiptNumber": "Receipt Number",
   "totalQty": "Total Quantity",
-  "remark": "Remark"
+  "remark": "Remark",
+  "phoneNumber": "Phone Number"
 }

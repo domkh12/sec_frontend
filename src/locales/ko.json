@@ -242,5 +242,6 @@
   "receiptDate": "영수증 일자",
   "receiptNumber": "영수증 번호",
   "totalQty": "총 수량",
-  "remark": "비고"
+  "remark": "비고",
+  "phoneNumber": "전화번호"
 }

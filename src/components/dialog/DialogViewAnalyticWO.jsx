@@ -115,7 +115,7 @@ function DialogViewAnalyticWO({ isOpen, handleClose }) {
         {/* Image */}
         <div className="rounded-xl overflow-hidden bg-gray-50 mb-4 flex items-center justify-center h-40">
           <img
-            src={workOrderDataForView?.image ?? "/images/placeholder.png"}
+            src={workOrderDataForView?.image ? workOrderDataForView?.image : "/images/placeholder.png"}
             className="max-h-40 object-contain"
             alt={workOrderDataForView?.mo}
           />

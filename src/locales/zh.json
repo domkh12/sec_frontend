@@ -243,5 +243,6 @@
   "receiptDate": "收据日期",
   "receiptNumber": "收据编号",
   "totalQty": "总数量",
-  "remark": "备注"
+  "remark": "备注",
+  "phoneNumber": "电话号码"
 }

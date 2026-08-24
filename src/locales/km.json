@@ -246,5 +246,6 @@
   "receiptDate": "កាលបរិច្ឆេទប័ណ្ណទទួល",
   "receiptNumber": "លេខប័ណ្ណទទួល",
   "totalQty": "បរិមាណសរុប",
-  "remark": "ចំណាំ"
+  "remark": "ចំណាំ",
+  "phoneNumber": "លេខទូរស័ព្ទ"
 }

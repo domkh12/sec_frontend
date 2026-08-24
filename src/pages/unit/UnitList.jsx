@@ -12,6 +12,7 @@ import LoadingComponent from "../../components/ui/LoadingComponent";
 import useDebounce from "../../hook/useDebounce";
 import DialogConfirmDelete from "../../components/dialog/DialogConfirmDelete";
 import { useState } from "react";
+import Seo from "../../components/seo/Seo";
 
 function UnitList() {
 
@@ -133,6 +134,12 @@ function UnitList() {
             align: "left",
         },
         {
+            id: "description",
+            label: t("description"),
+            minWidth: 130,
+            align: "left",
+        },
+        {
             id: "action",
             label: t("action"),
             minWidth: 130,
@@ -144,11 +151,13 @@ function UnitList() {
     const fields = [
         { name: "unitCode",     label: "unitCode",     type: "text" },
         { name: "unitName",     label: "unitName",     type: "text" },
+        { name: "description",  label: "description",  type: "text" }
     ];
 
     const initialValues = {
         unitCode: "",
         unitName: "",
+        description: ""
     };
 
     let content;
@@ -157,6 +166,7 @@ function UnitList() {
 
     if(isSuccess) content = (
         <div className="pb-10">
+            <Seo title="Unit List"/>
             <div className="card-glass">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => navigate("/admin")}/>
