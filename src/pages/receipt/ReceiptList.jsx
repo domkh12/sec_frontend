@@ -237,10 +237,10 @@ function ReceiptList() {
                     // onView={handleView}
                     onEdit={handleEdit}
                     onDelete={handleDeleteOpen}
-                    // isFilterActive={true}
+                    isFilterActive={true}
                     // filterValue={filterValue}
                     // handleFilterChange={handleFilterChange}
-                    // searchPlaceholderText={`${t('Code/Name/Address/City')}`}
+                    searchPlaceholderText={`${t('receiptNumber')}`}
                     // onClearAllFilters={handleClearAllFilters}
                     // onToggleActive={(entity) => handleToggleActive(entity)}
                     // tToggleActive="Toggle status"
