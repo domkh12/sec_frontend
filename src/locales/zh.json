@@ -130,14 +130,6 @@
   "filter": {
     "all": "全部"
   },
-  "material": {
-    "information": "材料信息",
-    "stockInForm": "入库表单",
-    "stockInHistory": "入库历史",
-    "image": "材料图片",
-    "stockOutForm": "出库表单",
-    "stockOutHistory": "出库历史"
-  },
   "stats": {
     "total_departments": "部门总数",
     "total_lines": "生产线总数",
@@ -244,5 +236,8 @@
   "receiptNumber": "收据编号",
   "totalQty": "总数量",
   "remark": "备注",
-  "phoneNumber": "电话号码"
+  "phoneNumber": "电话号码",
+  "fromDate": "起始日期",
+  "toDate": "截止日期",
+  "material": "物料"
 }

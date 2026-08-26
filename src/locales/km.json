@@ -136,14 +136,6 @@
   "filter": {
     "all": "ទាំងអស់"
   },
-  "material": {
-    "information": "ព័ត៌មានសម្ភារៈ",
-    "stockInForm": "បែបបទស្តុកចូល",
-    "stockInHistory": "ប្រវត្តិចូលស្តុក",
-    "image": "រូបភាពសម្ភារៈ",
-    "stockOutForm": "ទម្រង់ស្តុកចេញ",
-    "stockOutHistory": "ប្រវត្តិស្តុកចេញ"
-  },
   "stats": {
     "total_departments": "ដេប៉ាតឺម៉ង់សរុប",
     "total_lines": "ខ្សែសង្វាក់ផលិតកម្ម",
@@ -247,5 +239,8 @@
   "receiptNumber": "លេខប័ណ្ណទទួល",
   "totalQty": "បរិមាណសរុប",
   "remark": "ចំណាំ",
-  "phoneNumber": "លេខទូរស័ព្ទ"
+  "phoneNumber": "លេខទូរស័ព្ទ",
+  "fromDate": "ចាប់ពីថ្ងៃ",
+  "toDate": "ដល់ថ្ងៃ",
+  "material": "វត្ថុធាតុដើម"
 }

@@ -8,8 +8,8 @@ const initialState = outputDetailAdapter.getInitialState();
 export const outputDetailApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getOutputDetail: builder.query({
-            query: ({ pageNo = 1, pageSize = 20, search = "", lineId = "", sizeId = "", buyerId = "", reportDate = ""}) => ({
-                url: `/output-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&sizeId=${sizeId}&buyerId=${buyerId}&reportDate=${reportDate}`,
+            query: ({ pageNo = 1, pageSize = 20, search = "", lineId = "", sizeId = "", buyerId = "", fromDate = "", toDate = ""}) => ({
+                url: `/output-details?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}&lineId=${lineId}&sizeId=${sizeId}&buyerId=${buyerId}&fromDate=${fromDate}&toDate=${toDate}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -82,8 +82,8 @@ export const outputDetailApiSlice = apiSlice.injectEndpoints({
         }),
 
         getOutputDetailReportExcel: builder.mutation({
-            query: ({search = "", lineId = "", sizeId = "", buyerId = "", reportDate = ""}) => ({
-                url: `/output-details/report-excel?search=${search}&lineId=${lineId}&sizeId=${sizeId}&buyerId=${buyerId}&reportDate=${reportDate}`,
+            query: ({search = "", lineId = "", sizeId = "", buyerId = "", fromDate = "", toDate = ""}) => ({
+                url: `/output-details/report-excel?search=${search}&lineId=${lineId}&sizeId=${sizeId}&buyerId=${buyerId}&fromDate=${fromDate}&toDate=${toDate}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },

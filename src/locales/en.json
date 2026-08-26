@@ -135,14 +135,6 @@
   "filter": {
     "all": "All"
   },
-  "material": {
-    "information": "Material Information",
-    "stockInForm": "Stock In Form",
-    "stockInHistory": "Stock In History",
-    "image": "Material Image",
-    "stockOutForm": "Stock Out Form",
-    "stockOutHistory": "Stock Out History"
-  },
   "stats": {
     "total_departments": "Total Departments",
     "total_lines": "Production Lines",
@@ -246,5 +238,8 @@
   "receiptNumber": "Receipt Number",
   "totalQty": "Total Quantity",
   "remark": "Remark",
-  "phoneNumber": "Phone Number"
+  "phoneNumber": "Phone Number",
+  "fromDate": "From Date",
+  "toDate": "To Date",
+  "material": "Material"
 }

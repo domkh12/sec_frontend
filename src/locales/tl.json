@@ -135,14 +135,6 @@
   "filter": {
     "all": "Lahat"
   },
-  "material": {
-    "information": "Impormasyon ng Materyales",
-    "stockInForm": "Form ng Stock In",
-    "stockInHistory": "Kasaysayan ng Stock In",
-    "image": "Larawan ng Materyales",
-    "stockOutForm": "Form ng Stock Out",
-    "stockOutHistory": "Kasaysayan ng Stock Out"
-  },
   "stats": {
     "total_departments": "Kabuuan ng mga Departamento",
     "total_lines": "Kabuuan ng mga Linya",
@@ -245,5 +237,8 @@
   "receiptNumber": "Numero ng Resibo",
   "totalQty": "Kabuuang Dami",
   "remark": "Pansin",
-  "phoneNumber": "Numero ng Telepono"
+  "phoneNumber": "Numero ng Telepono",
+  "fromDate": "Mula sa Petsa",
+  "toDate": "Hanggang sa Petsa",
+  "material": "Materyales"
 }

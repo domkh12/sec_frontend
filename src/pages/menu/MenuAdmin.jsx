@@ -136,6 +136,11 @@ function MenuAdmin(){
                             onClick={() => navigate("racks")}
                         />
                         <MenuButton
+                            title={`${t('material')}`}
+                            iconPath={"/images/fabric-pattern.png"}
+                            onClick={() => navigate("#")}
+                        />
+                        <MenuButton
                             title={`${t('reciveCartons')}`}
                             iconPath={"/images/receive.png"}
                             onClick={() => navigate("#")}

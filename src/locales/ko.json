@@ -136,14 +136,6 @@
   "filter": {
     "all": "전체"
   },
-  "material": {
-    "information": "자재 정보",
-    "stockInForm": "입고 양식",
-    "stockInHistory": "입고 내역",
-    "image": "자재 이미지",
-    "stockOutForm": "출고 양식",
-    "stockOutHistory": "출고 내역"
-  },
   "stats": {
     "total_departments": "총 부서 수",
     "total_lines": "총 생산 라인",
@@ -243,5 +235,8 @@
   "receiptNumber": "영수증 번호",
   "totalQty": "총 수량",
   "remark": "비고",
-  "phoneNumber": "전화번호"
+  "phoneNumber": "전화번호",
+  "fromDate": "시작일",
+  "toDate": "종료일",
+  "material": "원자재"
 }

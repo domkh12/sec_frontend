@@ -41,7 +41,8 @@ function OutputDetail() {
     lineId: filterValue.lineId,
     sizeId: filterValue.sizeId,
     buyerId: filterValue.buyerId,
-    reportDate: filterValue.reportDate
+    fromDate: filterValue.fromDate,
+    toDate: filterValue.toDate
   });
 
   const {data: lineData} = useGetProductionLineLookupQuery();
@@ -277,8 +278,14 @@ function OutputDetail() {
             ]
         },
         {
-            id: 'reportDate',
-            label: t("reportDate"),
+            id: 'fromDate',
+            label: t("fromDate"),
+            type: "date",
+            width: isMd ? 160 : "100%",
+        },
+        {
+            id: 'toDate',
+            label: t("toDate"),
             type: "date",
             width: isMd ? 160 : "100%",
         },
@@ -310,9 +317,6 @@ function OutputDetail() {
                 window.URL.revokeObjectURL(url);
             }
         },
-        {
-            id: 'print',
-        }
     ];
 
     const fields = [

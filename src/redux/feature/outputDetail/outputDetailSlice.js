@@ -17,7 +17,8 @@ const outputDetailSlice = createSlice({
             lineId: "",
             styleId: "",
             buyerId: "",
-            reportDate: "",
+            fromDate: "",
+            toDate: "",
         }
     },
     reducers: {
