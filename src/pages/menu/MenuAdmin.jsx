@@ -124,7 +124,7 @@ function MenuAdmin(){
                 <Divider variant="middle" sx={{width: "100%", backgroundColor: yellow[600], height: 3}}/>
                 <div className="flex flex-wrap justify-center items-start gap-5">
                     <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('rawMaterials')}</Typography>
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('locations')}</Typography>
                         <MenuButton
                             title={`${t('warehouse')}`}
                             iconPath={"/images/warehouse.png"}
@@ -135,10 +135,37 @@ function MenuAdmin(){
                             iconPath={"/images/rack.png"}
                             onClick={() => navigate("racks")}
                         />
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('rawMaterials')}</Typography>
                         <MenuButton
                             title={`${t('material')}`}
                             iconPath={"/images/fabric-pattern.png"}
                             onClick={() => navigate("#")}
+                        />
+                        <MenuButton 
+                            title={`${t("materialColor")}`} 
+                            iconPath={"/images/color-wheel.png"} 
+                            onClick={() => navigate("material-colors")}
+                        />
+                        <MenuButton
+                            title={`${t('unit')}`}
+                            iconPath={"/images/weight-lifting.png"}
+                            onClick={() => navigate("units")}
+                        />
+                         <MenuButton
+                            title={`${t('supplier')}`}
+                            iconPath={"/images/supplier.png"}
+                            onClick={() => navigate("suppliers")}
+                        />
+                        
+                    </div>
+                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
+                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('inventory')}</Typography>
+                        <MenuButton
+                            title={`${t('receipt')}`}
+                            iconPath={"/images/invoice.png"}
+                            onClick={() => navigate("receipts")}
                         />
                         <MenuButton
                             title={`${t('reciveCartons')}`}
@@ -153,25 +180,7 @@ function MenuAdmin(){
                         <MenuButton
                             title={`${t('wHBundles')}`}
                             iconPath={"/images/qr-white.png"}
-                            onClick={() => navigate("wh-bundles")}
-                        />
-                    </div>
-                    <div className="flex flex-wrap flex-col gap-4 my-10 justify-center items-center">
-                        <Typography variant={"body1"} sx={{color: yellow[600]}}>{t('inventory')}</Typography>
-                        <MenuButton
-                            title={`${t('receipt')}`}
-                            iconPath={"/images/invoice.png"}
-                            onClick={() => navigate("receipts")}
-                        />
-                        <MenuButton
-                            title={`${t('unit')}`}
-                            iconPath={"/images/weight-lifting.png"}
-                            onClick={() => navigate("units")}
-                        />
-                         <MenuButton
-                            title={`${t('supplier')}`}
-                            iconPath={"/images/supplier.png"}
-                            onClick={() => navigate("suppliers")}
+                            onClick={() => navigate("#")}
                         />
                     </div>
                 </div>

@@ -15,6 +15,7 @@ import LayoutScanner from "./pages/layout/LayoutScanner.jsx";
 import PutawayScreen from "./pages/layout/PutawayScreen.jsx";
 
 // Lazy load everything else
+const MaterialColorList = lazy(() => import("./pages/materialColor/MaterialColorList.jsx"));   
 const ReceiptList = lazy(() => import("./pages/receipt/ReceiptList.jsx"));    
 const SupplierList = lazy(() => import("./pages/supplier/SupplierList.jsx"));
 const UnitList = lazy(() => import("./pages/unit/UnitList.jsx"));
@@ -155,6 +156,7 @@ function App() {
                               <Route path="units" element={<UnitList/>}/>
                               <Route path="suppliers" element={<SupplierList/>}/>
                               <Route path="receipts" element={<ReceiptList/>}/>
+                              <Route path="material-colors" element={<MaterialColorList/>}/>
                           </Route>
                       </Route>
 

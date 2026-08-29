@@ -238,5 +238,9 @@
   "phoneNumber": "전화번호",
   "fromDate": "시작일",
   "toDate": "종료일",
-  "material": "원자재"
+  "material": "원자재",
+  "materialColor": "원자재 색상",
+  "locations": "위치 목록",
+  "inventoryOperations": "재고 관리 작업",
+  "inventory": "재고"
 }

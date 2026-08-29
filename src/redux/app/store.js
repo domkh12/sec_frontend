@@ -27,6 +27,7 @@ import rackReducer from "../feature/rack/rackSlice.js"
 import unitReducer from "../feature/unit/unitSlice.js"
 import supplierReducer from "../feature/supplier/supplierSlice.js"
 import receiptReducer from "../feature/receipt/receiptSlice.js"
+import materialColorReducer from "../feature/materialColor/materialColorSlice.js"
 
 const store = configureStore({
   reducer: {
@@ -56,7 +57,8 @@ const store = configureStore({
     rack: rackReducer,
     unit: unitReducer,
     supplier: supplierReducer,
-    receipt: receiptReducer
+    receipt: receiptReducer,
+    materialColor: materialColorReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -241,5 +241,9 @@
   "phoneNumber": "Phone Number",
   "fromDate": "From Date",
   "toDate": "To Date",
-  "material": "Material"
+  "material": "Material",
+  "materialColor": "Material Color",
+  "locations": "Locations",
+  "inventoryOperations": "Inventory Operations",
+  "inventory": "Inventory"
 }

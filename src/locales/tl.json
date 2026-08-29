@@ -240,5 +240,9 @@
   "phoneNumber": "Numero ng Telepono",
   "fromDate": "Mula sa Petsa",
   "toDate": "Hanggang sa Petsa",
-  "material": "Materyales"
+  "material": "Materyales",
+  "materialColor": "Kulay ng Materyales",
+  "locations": "Mga Lokasyon",
+  "inventoryOperations": "Mga Operasyon ng Imbentaryo",
+  "inventory": "Imbentaryo"
 }

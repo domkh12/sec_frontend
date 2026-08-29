@@ -239,5 +239,9 @@
   "phoneNumber": "电话号码",
   "fromDate": "起始日期",
   "toDate": "截止日期",
-  "material": "物料"
+  "material": "物料",
+  "materialColor": "物料颜色",
+  "locations": "库位",
+  "inventoryOperations": "库存操作",
+  "inventory": "库存"
 }
