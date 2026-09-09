@@ -243,5 +243,6 @@
   "materialColor": "物料颜色",
   "locations": "库位",
   "inventoryOperations": "库存操作",
-  "inventory": "库存"
+  "inventory": "库存",
+  "materialColorName": "物料颜色名称"
 }

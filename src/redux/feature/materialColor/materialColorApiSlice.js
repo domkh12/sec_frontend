@@ -9,7 +9,7 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getMaterialColor: builder.query({
             query: ({ pageNo = 1, pageSize = 20, search = "" }) => ({
-                url: `/materialColors?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
+                url: `/material-colors?pageNo=${pageNo}&pageSize=${pageSize}&search=${search}`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -39,7 +39,7 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
 
         getMaterialColorStats: builder.query({
             query: () => ({
-                url: `/materialColors/stats`,
+                url: `/material-colors/stats`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -51,7 +51,7 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
 
         getMaterialColorFiles: builder.query({
             query: ({id}) => ({
-                url: `/materialColors/${id}/files`,
+                url: `/material-colors/${id}/files`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -63,7 +63,7 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
 
         getMaterialColorLookup: builder.query({
             query: () => ({
-                url: `/materialColors/lookup`,
+                url: `/material-colors/lookup`,
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError;
                 },
@@ -73,7 +73,7 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
 
         createMaterialColor: builder.mutation({
             query: (initialState) => ({
-                url: "/materialColors",
+                url: "/material-colors",
                 method: "POST",
                 body: {
                     ...initialState,
@@ -87,8 +87,8 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
         }),
 
         updateMaterialColor: builder.mutation({
-            query: ({id, ...initialMaterialColorData}) => ({
-                url: `/materialColors/${id}`,
+            query: ({uuid, ...initialMaterialColorData}) => ({
+                url: `/material-colors/${uuid}`,
                 method: "PUT",
                 body: {
                     ...initialMaterialColorData,
@@ -101,26 +101,12 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
-        uploadMaterialColorFile: builder.mutation({
-            query: ({id, ...initialMaterialColorData}) => ({
-                url: `/materialColors/${id}/file-upload`,
-                method: "PUT",
-                body: {
-                    ...initialMaterialColorData,
-                },
-            }),
-            invalidatesTags: [
-                {type: "MaterialColor", id: "LIST"},
-                { type: "MaterialColorFile", id: "LIST" }
-            ],
-        }),
-
         deleteMaterialColor: builder.mutation({
-            query: ({ id }) => ({
-                url: `/materialColors/${id}`,
+            query: ({ uuid }) => ({
+                url: `/material-colors/${uuid}`,
                 method: "DELETE",
                 body: {
-                    id,
+                    uuid,
                 },
             }),
             invalidatesTags: (result, error, arg) => [
@@ -134,9 +120,6 @@ export const materialColorApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetMaterialColorFilesQuery,
-    useUploadMaterialColorFileMutation,
-    useGetMaterialColorStatsQuery,
     useGetMaterialColorLookupQuery,
     useUpdateMaterialColorMutation,
     useDeleteMaterialColorMutation,

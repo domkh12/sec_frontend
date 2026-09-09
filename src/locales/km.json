@@ -246,5 +246,6 @@
   "materialColor": "ពណ៌វត្ថុធាតុដើម",
   "locations": "ទីតាំង",
   "inventoryOperations": "ប្រតិបត្តិការស្តុក",
-  "inventory": "ស្តុក"
+  "inventory": "ស្តុក",
+  "materialColorName": "ឈ្មោះពណ៌វត្ថុធាតុដើម"
 }

@@ -15,7 +15,7 @@ import { useGetSizeLookupQuery } from '../../redux/feature/size/sizeApiSlice.js'
 import DialogConfirmDelete from '../../components/dialog/DialogConfirmDelete.jsx';
 import DialogAddEditCus from '../../components/dialog/DialogAddEditCus.jsx';
 import * as Yup from 'yup';
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Box, LinearProgress, Snackbar, Typography } from '@mui/material';
 import LoadingComponent from '../../components/ui/LoadingComponent.jsx';
 import { useGetBuyerLookupQuery } from '../../redux/feature/buyer/buyerApiSlice.js';
 
@@ -23,7 +23,12 @@ import { useGetBuyerLookupQuery } from '../../redux/feature/buyer/buyerApiSlice.
 function OutputDetail() {
     // -- State -----------------------------------------------------------------------------------------
     const [id, setId] = useState(null);
-
+    const [downloadToast, setDownloadToast] = useState({
+        open: false,
+        percent: 0,
+        status: "idle",
+        message: "",
+    });
   // -- selector ----------------------------------------------------------------------------
   const filterValue                 = useSelector((state) => state.outputDetail.filter);
   const debounceSearch              = useDebounce(filterValue.search, 500);
@@ -61,7 +66,48 @@ function OutputDetail() {
   const {isMd}    = useBreakpoints();
 
   // -- Handler ------------------------------------------------------------------------------
+    const closeDownloadToast = () => {
+        setDownloadToast((prev) => ({ ...prev, open: false }));
+    };
 
+    const handleExcelDownload = async () => {
+        setDownloadToast({
+            open: true,
+            status: "loading",
+            message: "Downloading…",
+        });
+
+        try {
+            const res = await getReportOutputDetailExcel({
+                ...filterValue,
+            }).unwrap();
+
+            const blob = new Blob([res], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `output-detail-${dayjs().format("YYYY-MM-DD")}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            setDownloadToast({
+                open: true,
+                status: "success",
+                message: "Saved to your computer",
+            });
+        } catch (error) {
+            setDownloadToast({
+                open: true,
+                status: "error",
+                message: error?.data?.error?.description || "Download failed",
+            });
+        }
+    };
    const handleDelete = async () => {
         try {
             await deleteOutputDetail({id: id}).unwrap();
@@ -290,32 +336,9 @@ function OutputDetail() {
             width: isMd ? 160 : "100%",
         },
         {
-            id: 'excel',
+            id: "excel",
             isLoading: isLoadingGetReportOutputDetail,
-
-            onClick: async () => {
-                const res = await getReportOutputDetailExcel({
-                    ...filterValue
-                }).unwrap();
-
-                // Create blob
-                const blob = new Blob([res], {
-                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                });
-
-                // Create URL
-                const url = window.URL.createObjectURL(blob);
-
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = url.substring(url.lastIndexOf("/"), url.length); // file name
-                document.body.appendChild(link);
-                link.click();
-
-                // Cleanup
-                link.remove();
-                window.URL.revokeObjectURL(url);
-            }
+            onClick: handleExcelDownload,
         },
     ];
 
@@ -365,19 +388,53 @@ function OutputDetail() {
             isSubmitting={isLoadingUpdateOutputQty}
             initialValues={!outputDetailDataForUpdate ? {qty: 0} : {qty: outputDetailDataForUpdate?.qty}}/>
         <Snackbar
-            open={isOpenSnackbar}
-            autoHideDuration={6000}
-            onClose={() => dispatch(setIsOpenSnackbarOutputDetail(false))}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            open={downloadToast.open}
+            onClose={closeDownloadToast}
+            autoHideDuration={downloadToast.status === "loading" ? null : 2500}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-            <Alert
-                onClose={() => dispatch(setIsOpenSnackbarOutputDetail(false))}
-                severity={alertOutputDetail.type}
-                variant="filled"
-                sx={{ width: '100%' }}
+            <Box
+                sx={{
+                    width: 320,
+                    p: 1.5,
+                    borderRadius: 2,
+                    bgcolor: "#111827",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    color: "#fff",
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+                }}
             >
-                {alertOutputDetail.message}
-            </Alert>
+                <Typography sx={{ fontSize: 13, fontWeight: 700, mb: 0.3 }}>
+                    output-detail.xlsx
+                </Typography>
+                <Typography sx={{ fontSize: 12, color: "rgba(255,255,255,0.65)", mb: 1 }}>
+                    {downloadToast.message}
+                </Typography>
+
+                {downloadToast.status === "loading" && (
+                    <LinearProgress
+                        variant="indeterminate"
+                        sx={{
+                            height: 6,
+                            borderRadius: 99,
+                            bgcolor: "rgba(255,255,255,0.1)",
+                            "& .MuiLinearProgress-bar": { bgcolor: "#22c55e" },
+                        }}
+                    />
+                )}
+
+                {downloadToast.status === "success" && (
+                    <Alert severity="success" variant="filled" sx={{ py: 0 }}>
+                        Download complete
+                    </Alert>
+                )}
+
+                {downloadToast.status === "error" && (
+                    <Alert severity="error" variant="filled" sx={{ py: 0 }}>
+                        {downloadToast.message}
+                    </Alert>
+                )}
+            </Box>
         </Snackbar>
     </div>
     )

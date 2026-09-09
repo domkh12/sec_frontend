@@ -244,5 +244,6 @@
   "materialColor": "Kulay ng Materyales",
   "locations": "Mga Lokasyon",
   "inventoryOperations": "Mga Operasyon ng Imbentaryo",
-  "inventory": "Imbentaryo"
+  "inventory": "Imbentaryo",
+  "materialColorName": "Pangalan ng Kulay ng Materyales"
 }

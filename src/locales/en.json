@@ -245,5 +245,6 @@
   "materialColor": "Material Color",
   "locations": "Locations",
   "inventoryOperations": "Inventory Operations",
-  "inventory": "Inventory"
+  "inventory": "Inventory",
+  "materialColorName": "Material Color Name"
 }
