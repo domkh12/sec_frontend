@@ -247,8 +247,27 @@ function RowTableComponent({
                                 </Box>
                             ) : col.id === "image" ? (
                                 <>
-                                <Box onClick={() => setImagePreview(true)} sx={{width: "full", height: "60px", overflow: "hidden", cursor: "pointer"}}>
-                                    <img src={entity[col.id] || "/images/placeholder.png"} alt={entity.name} loading="lazy" decoding="async" className="object-contain object-center w-full h-full" />
+                                <Box
+                                    onClick={() =>
+                                        setImagePreview(
+                                        entity.qrCodeImage
+                                            ? `data:image/png;base64,${entity.qrCodeImage}`
+                                            : entity.image || "/images/placeholder.png"
+                                        )
+                                    }
+                                    sx={{ width: "100%", height: "60px", overflow: "hidden", cursor: "pointer" }}
+                                >
+                                    <img
+                                    src={
+                                        entity.qrCodeImage
+                                        ? `data:image/png;base64,${entity.qrCodeImage}`
+                                        : entity.image || "/images/placeholder.png"
+                                    }
+                                    alt={entity.code || entity.name || "QR"}
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="object-contain object-center w-full h-full"
+                                    />
                                 </Box>
                                 <Dialog
                                     open={!!imagePreview}
@@ -271,7 +290,7 @@ function RowTableComponent({
                                     </DialogActions>
                                     <DialogContent>
                                         <img
-                                            src={entity[col.id] || "/images/placeholder.png"}
+                                            src={imagePreview || "/images/placeholder.png"}
                                             alt="preview"
                                             className="object-contain object-center w-full h-full rounded-lg"
                                         />
